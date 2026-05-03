@@ -64,7 +64,7 @@ const CAREER_PHASES: TimelinePhase[] = [
   {
     key: 0,
     title: 'Platform v1.0 Released',
-    date: '1 Mar 2005',
+    date: 'Jan 2015',
     color: 'secondary',
     side: 'left',
     variant: 'marker',
@@ -77,7 +77,7 @@ const CAREER_PHASES: TimelinePhase[] = [
     shortTitle: 'Junior Dev',
     description:
       'First professional role — building and maintaining customer-facing e-commerce features. Learned the difference between code that works and code that ships.',
-    date: 'Sep 2007 – May 2010',
+    date: 'Mar 2016 – Oct 2018',
     side: 'right',
     color: 'secondary',
     done: true,
@@ -93,7 +93,7 @@ const CAREER_PHASES: TimelinePhase[] = [
         shortTitle: 'First solo deploy',
         title: 'First solo production deploy',
         description:
-          'First time pushing to production without a senior watching. It worked. Refreshed the page six times to be sure.',
+          'First solo production deploy — no incidents. Verified smoke tests three times before signing off.',
         icon: msIcon('solar:rocket-bold'),
         color: 'secondary',
         done: true,
@@ -110,7 +110,7 @@ const CAREER_PHASES: TimelinePhase[] = [
     variant: 'life-event',
     icon: icon('solar:planet-bold'),
     description:
-      'Three days of talks, hallway conversations, and the first time I understood that the community was the product too.',
+      'Three days of talks and hallway conversations. A first-hand look at the people building the open-source tools used every day.',
     details: ['Met the people behind the tools I used daily', 'Submitted first open-source PR'],
   },
   {
@@ -433,13 +433,13 @@ export const MarkerVariant: Story = {
           {
             key: 0,
             title: 'Platform v1.0 Released',
-            date: '1 Mar 2005',
+            date: 'Jan 2015',
             color: 'secondary',
             side: 'left',
             variant: 'marker',
             icon: icon('solar:star-bold'),
             description:
-              'First public release of the core platform library — published to npm after six months of internal use.',
+              'First public release of the core platform library — six months of internal use before the npm publish.',
           },
           {
             key: 1,
@@ -447,7 +447,7 @@ export const MarkerVariant: Story = {
             shortTitle: 'Junior Dev',
             description:
               'First professional role — PHP, jQuery, and the invaluable experience of a first production incident.',
-            date: 'Sep 2007 – May 2010',
+            date: 'Mar 2016 – Oct 2018',
             side: 'right',
             color: 'secondary',
             done: true,
@@ -457,7 +457,7 @@ export const MarkerVariant: Story = {
                 date: 'Mar 2009',
                 shortTitle: 'First solo deploy',
                 title: 'First solo production deploy',
-                description: 'First push to production without supervision. It worked.',
+                description: 'First solo production deploy — zero incidents, no rollback needed.',
                 icon: msIcon('solar:rocket-bold'),
                 color: 'secondary',
                 done: true,
@@ -555,7 +555,7 @@ export const LifeEventVsMarker: Story = {
           {
             key: 0,
             title: 'Platform v1.0 Released',
-            date: '1 Mar 2005',
+            date: 'Jan 2015',
             color: 'secondary',
             side: 'left',
             variant: 'marker',
@@ -568,7 +568,7 @@ export const LifeEventVsMarker: Story = {
             shortTitle: 'Junior Dev',
             description:
               'First professional role building customer-facing features for a retail platform.',
-            date: 'Sep 2007 – May 2010',
+            date: 'Mar 2016 – Oct 2018',
             side: 'right',
             color: 'secondary',
             done: true,
@@ -579,7 +579,7 @@ export const LifeEventVsMarker: Story = {
                 shortTitle: 'First production deploy',
                 title: 'First production deploy',
                 description:
-                  'First solo deploy to production without a rollback. Refreshed six times.',
+                  'First solo production deploy — zero incidents, smoke tests passed first run.',
                 icon: msIcon('solar:rocket-bold'),
                 color: 'secondary',
                 done: true,
@@ -918,7 +918,9 @@ export const FooterSlot: Story = {
                 fontWeight: 600,
                 '&:hover': { color: 'primary.main', borderColor: 'primary.main' },
               }}
-              onClick={() => alert('Playing modem sound — button click did NOT toggle the card.')}
+              onClick={() =>
+                console.warn('Playing modem sound — button click did NOT toggle the card.')
+              }
             >
               {/* Minimum 20 px: interactive icons (inside clickable button) must be >= 20 px. */}
               <GiselleIcon icon="solar:play-bold" width={20} />

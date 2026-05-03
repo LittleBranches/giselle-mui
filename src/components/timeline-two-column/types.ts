@@ -190,7 +190,7 @@ export type TimelinePhase = {
    * to the card but aren't part of the expandable detail section.
    *
    * ```tsx
-   * footer={<ModemSoundButton />}
+   * footer={<PlayButton />}
    * ```
    */
   footer?: ReactNode;
