@@ -194,8 +194,106 @@ to non-focused cards.
 
 ---
 
+## Bug 2 — Hover feedback loop introduced by an incorrect fix (commit `4d865ea`)
+
+**Symptom:** After Bug 1 was fixed (toggle restored), hovering milestone cards caused
+them to flicker — rapidly opening and closing, or snapping in and out of the hover state.
+
+**Root cause:** The `ResizeObserver` added in commit `651173d` fires on **any** size change
+to the observed element. This included the title growing from `shortTitle` to the full `m.title`
+when `isHovered` became `true`. The chain:
+
+```
+mouseenter → setIsHovered(true) → displayTitle = m.title (taller card)
+→ ResizeObserver fires → msHeightMapRef updated → setMeasureVersion(v+1)
+→ TimelineTwoColumn re-renders → msSlotHeights updated → <li> minHeight grows
+→ all milestone dots shift (top: X% of taller <li>)
+→ card under cursor has moved → mouseleave
+→ setIsHovered(false) → displayTitle = shortTitle (shorter card)
+→ ResizeObserver fires → msHeightMapRef updated → setMeasureVersion(v+1)
+→ TimelineTwoColumn re-renders → msSlotHeights updated → <li> minHeight shrinks
+→ all milestone dots shift back
+→ card under cursor → mouseenter again → infinite loop
+```
+
+**Incorrect fix applied:** `isHovered` was removed from `displayTitle`. The condition
+`isExpanded || isHovered ? m.title : (m.shortTitle ?? m.title)` was changed to
+`isExpanded ? m.title : (m.shortTitle ?? m.title)`. This stopped the loop but broke
+the three-level title disclosure (full title no longer showed on hover).
+
+---
+
+## Bug 3 — Expand causes enormous layout shift (introduced with ResizeObserver in `651173d`)
+
+**Symptom:** Clicking any milestone card to expand it caused all milestone cards to
+shift dramatically. The expanded card moved off-screen in many cases.
+
+**Root cause:** Same ResizeObserver, different trigger. When a `Collapse` component
+opens, the card grows from ~80px to ~300px+. The ResizeObserver fires and records the
+expanded height as the new slot height. `msSlotHeights` updates. The `<li>` minHeight
+becomes `(N+1) * 316` (for N milestones). All cards' `top: X%` positions are recalculated
+against this enormous height. The expanded card is now at `(i+1)/(N+1) * 316*(N+1) = (i+1)*316`
+pixels from the top — far below its original position, and often off-screen.
+
+---
+
+## Final fix — Remove ResizeObserver entirely (commit `0c82104`)
+
+**Design decision:** The `ResizeObserver` approach is fundamentally incompatible with
+absolute-percentage milestone positioning. Any measurement system that updates
+`msSlotHeights` in response to user interaction (expand, hover) creates a
+measurement → layout → measurement feedback cycle.
+
+**The correct architecture:**
+
+```
+mount / sorted change
+  ↓
+ref callbacks fire (onMeasure)        — synchronously, during React commit phase
+  ↓
+useLayoutEffect([sorted]) runs        — after all ref callbacks, before browser paint
+  ↓
+msSlotHeights computed from ref map   — slot heights frozen until sorted changes
+  ↓
+li minHeight set                      — stable, never updated during interaction
+  ↓
+cards at top: X%                      — stable, never updated during interaction
+```
+
+**Key invariants:**
+- `onMeasure` ref callback fires only when an element mounts or unmounts. The wrapper Box
+  is never remounted during expand/hover — only its children change. So `onMeasure` is
+  never called during user interaction.
+- `useLayoutEffect` depends only on `[sorted]`. Expanding a card or hovering a card does
+  not change `sorted`, so the effect never re-runs.
+- `msSlotHeights` is therefore frozen at the collapsed-card heights. All dot positions
+  are stable throughout expand, collapse, hover, and hover-end.
+
+**Hover title restored:** With no ResizeObserver watching, changing `displayTitle` on
+hover does not trigger any measurement update or layout shift. The three-level disclosure
+is safe: `displayTitle = isExpanded || isHovered ? m.title : (m.shortTitle ?? m.title)`.
+
+---
+
+## Three-bug cascade — timeline
+
+| # | Bug | Introduced | Fixed | Symptoms |
+|---|-----|-----------|-------|---------|
+| 1 | Toggle → open-only | `651173d` | `84dfd55` | hover permanently blocked after expanding any card |
+| 2 | Hover feedback loop | `651173d` (RO) | `4d865ea` (incorrectly) | cards flickered on hover |
+| 2b | Hover title regression | `4d865ea` (incorrect fix) | `0c82104` | full title no longer shown on hover |
+| 3 | Expand layout shift | `651173d` (RO) | `0c82104` | all milestone cards shift on expand, expanded card goes off-screen |
+
+**Root cause of bugs 2, 2b, 3:** A single architectural error — `ResizeObserver` feeding
+back into layout state during user interaction. Corrected by removing ResizeObserver and
+using a one-shot measurement approach.
+
+---
+
 ## Related
 
-- Fix commit: `84dfd55`  
+- Fix commit (Bug 1): `84dfd55`  
+- Fix commit (Bug 2 — incorrect): `4d865ea`  
+- Fix commit (final — Bugs 2b + 3): `0c82104`  
 - Original PR description: [`docs/pr-messages/feature-timeline-improvements.md`](../pr-messages/feature-timeline-improvements.md)  
 - Blog post: [#43 — I Pushed Broken Code Because I Trusted AI (And the Approve-All Button)](../../rm/presentation/alexrebula/docs/blog-post-ideas/ai/43-ai-regression-approve-all-and-discipline.md)  
