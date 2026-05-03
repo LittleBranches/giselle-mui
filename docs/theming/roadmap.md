@@ -38,7 +38,7 @@ See [`theming-nextjs.md`](./theming-nextjs.md) for full usage examples and integ
 
 ## Roadmap for giselle-mui
 
-### Phase A — Ship standalone theme token utilities (Medium priority)
+### Phase A — Ship standalone theme token utilities ✅ Done — 4 May 2026
 
 **Goal:** Ship the small theme-building primitives needed by any MUI v7 project
 as named exports from `giselle-mui`, so consuming projects have them out of the box.
@@ -49,7 +49,7 @@ as named exports from `giselle-mui`, so consuming projects have them out of the 
 | Add `createPaletteChannel(hex)` to `giselle-mui/src/utils/`      | ✅     |
 | Add `pxToRem(px)` and `remToPx(rem)` to `giselle-mui/src/utils/` | ✅     |
 | Export all theme utilities from `giselle-mui/src/index.ts`       | ✅     |
-| Add tests for all theme utilities                                | ✅     |
+| Add tests for all theme utilities (22 tests in `theme-utils.test.ts`) | ✅ |
 | Update `theming-nextjs.md` to show usage from giselle-mui        | ✅     |
 
 ### Phase B — Giselle brand theme preset (Medium priority)

@@ -5,8 +5,9 @@ sidebar_label: 'RoadmapTimeline Plan'
 
 # Timeline / Roadmap Component — Planning Notes
 
-> **Status:** Planning phase. Not yet implemented.
-> **Candidate component name:** `RoadmapTimeline`
+> **Status:** Planning phase. `TimelineTwoColumn` is shipped. `RoadmapTimeline` (a lighter `@mui/lab`-based variant) is not yet implemented.
+> **Component shipped:** `TimelineTwoColumn` — see `src/components/timeline-two-column/`
+> **Next component:** `RoadmapTimeline`
 
 ---
 
@@ -16,11 +17,11 @@ The reference implementation in the private portfolio (`alexrebula`) has been sp
 
 Planned variants (portfolio → giselle-mui extraction candidates):
 
-| Variant                                              | giselle-mui candidate? | Blocker                                                              |
+| Variant                                              | giselle-mui candidate? | Status                                                               |
 | ---------------------------------------------------- | ---------------------- | -------------------------------------------------------------------- |
-| `TimelineTwoColumn` (base, vertical alternating)     | ✅ Yes                 | `varAlpha` + `Chip variant="soft"` (Minimals) must be replaced first |
-| `TimelineHorizontal` (click/swipe, horizontal track) | ✅ Yes                 | Same Minimals blockers; no `framer-motion` needed                    |
-| `TimelineCompact` (single-column, mobile/sidebar)    | ✅ Yes                 | Cleanest — least Minimals surface                                    |
+| `TimelineTwoColumn` (base, vertical alternating)     | ✅ Yes                 | ✅ Shipped — `src/components/timeline-two-column/`                    |
+| `TimelineHorizontal` (click/swipe, horizontal track) | ✅ Yes                 | ⬜ Not started                                                       |
+| `TimelineCompact` (single-column, mobile/sidebar)    | ✅ Yes                 | ⬜ Not started                                                       |
 | `TimelineAnimated` (Framer Motion + parallax)        | ❌ No                  | `framer-motion` is not an allowed giselle-mui peer dep               |
 
 **The `TimelinePhase` type is the stable public API.** Extend additively (optional fields only). All variants accept `phases: TimelinePhase[]`.
@@ -110,14 +111,13 @@ the type can be extended without a breaking change.
 
 ## `varAlpha` dependency
 
-The component needs `varAlpha` for the scenario step background tint. Phase A of
-`theming-roadmap.md` ships this as an internal utility:
+The component uses `varAlpha` for the scenario step background tint. `varAlpha` is
+exported from `src/utils/theme-utils.ts` and available from `@alexrebula/giselle-mui`
+as of Phase A (4 May 2026). This prerequisite is met.
 
 ```ts
-import { varAlpha } from '../utils/theme';
+import { varAlpha } from '@alexrebula/giselle-mui';
 ```
-
-Phase A is therefore a prerequisite for this component.
 
 ---
 
@@ -213,119 +213,35 @@ export default {
 
 ---
 
-## Overlap detection and the planned date-repair UI (future)
+## Overlap detection and the date-repair UI
 
-### What is already shipped
+### What is shipped
 
-`detectPhaseOverlaps(phases)` in `utils.ts` identifies phases whose date ranges
-intersect. The result is wired into `TimelineTwoColumn` via `overlappingKeys`:
-each conflicting phase card shows a `⚠ Date overlap` corner badge. The badge
-carries a `dateConflictLabel` tooltip string — the parent can pass a
-human-readable explanation (e.g. `"Overlaps with Phase B (Apr–Jun 2025)"`).
+The following are all shipped and fully tested:
 
-The badge, tooltip, and detection are fully functional and tested.
+**`utils.ts`:**
+- `detectPhaseOverlaps(phases)` — identifies phases whose date ranges intersect; wired into `TimelineTwoColumn` via `overlappingKeys`; each conflicting card shows a `⚠ Date overlap` corner badge
+- `resolveOverlaps(phases)` — pure function that shifts conflicting phases to be end-to-end sequential (preserves phase order, does not compress durations)
+- `dateToMonthIndex(dateStr)` — converts a `'Mon YYYY'` string to a 0-based integer month index
+- `monthIndexToDate(index)` — converts a month index back to a `'Mon YYYY'` string
+- `sortMilestonesAsc` / `sortMilestonesDesc` — milestone sort helpers
 
-### What is not yet built — `PhaseWarningPopover` with range-slider repair UI
+**`phase-warning-popover.tsx`** (internal — not exported from barrel):
+- `parsePhaseRange(phase)` — resolves a phase's date string to `{ startIdx, endIdx }`; returns `null` for year-only strings to avoid silently rewriting imprecise dates
+- `getConnectedOverlapGroup(phases, startKey)` — BFS from the triggering phase to collect its connected overlap cluster; unrelated overlaps elsewhere on the timeline are excluded
+- `PhaseWarningPopover` component — MUI `Popper` + `Paper` + `ClickAwayListener` with stacked colored range sliders, a mini timeline ruler, and a "Make sequential" button. Apply/Cancel buttons confirm before pushing `onPhasesChange`.
 
-#### Trigger
+The corner badge, tooltip, detection, and the full repair UI are functional and have 26 tests.
 
-The existing `⚠ Date overlap` corner badge on `PhaseCard` becomes the trigger.
-Clicking it opens a **custom popover** (MUI `Popper` + `Paper`, not the basic
-`Tooltip`). The popover is rich enough to host sliders and a mini-timeline — a
-basic tooltip string cannot do that.
+### Remaining work
 
-The popover is also the host for **all** warnings and errors on a phase, not
-just overlaps. Future warning types (missing date, invalid date range, duplicate
-key, etc.) render as a list in the same popover above the slider section.
-
-#### Popover layout (top to bottom)
-
-```
-┌─────────────────────────────────────────────────────┐
-│  ⚠ 1 warning                              [×]       │
-│  ─────────────────────────────────────────────────  │
-│  ⚠ Date overlap with Phase B (3 months shared)      │
-│  ─────────────────────────────────────────────────  │
-│  Phase A  ███████████░░░░  Apr 2025 – Sep 2025       │  ← colored range slider
-│  Phase B  ░░░░░███████████  Jul 2025 – Dec 2025      │  ← colored range slider
-│                                                     │
-│  ────────────────────────────────────────────────   │
-│  [Apr 25]──[A]──[B]──[Dec 25]                       │  ← mini timeline ruler
-│                                                     │
-│                        [Make sequential]            │
-└─────────────────────────────────────────────────────┘
-```
-
-#### Range sliders
-
-- One horizontal **MUI `Slider`** per conflicting phase, stacked vertically.
-- Each slider is a **range slider** (`value: [startIndex, endIndex]`) mapping
-  month indices to the phase's date range. Dragging either thumb adjusts the
-  phase's start or end date in real time.
-- Each slider is colored with the phase's `color` palette key
-  (`theme.vars.palette[phase.color].main`).
-- The sliders share a common `min`/`max` axis (the earliest start month to the
-  latest end month across all conflicting phases + 2 months of padding).
-- As thumbs are dragged, the mini timeline ruler updates live and overlap
-  highlighting updates live. A phase whose overlap is resolved turns green (no
-  longer flagged).
-
-#### Mini timeline ruler
-
-- A narrow horizontal strip below the sliders showing all phases in the
-  overlapping group as colored segments on a shared time axis.
-- Tick marks at month or quarter boundaries.
-- Segments that still overlap are shown with a hatched/striped fill; resolved
-  segments are shown solid.
-- This is a pure visual read-out — not interactive itself.
-
-#### "Make sequential" button
-
-- Calls a pure function `resolveOverlaps(phases): TimelinePhase[]` (to be added
-  to `utils.ts`) that shifts conflicting phases to be end-to-end sequential:
-  - Preserves phase order.
-  - Sets each conflicting phase's start to the previous phase's end + 1 month.
-  - Does not compress any phase below its original duration.
-- The result is applied to the local slider state immediately. The user can
-  review the proposed fix in the sliders before committing.
-- A **"Apply"** / **"Cancel"** button pair appears after "Make sequential" is
-  clicked, so the user confirms before the changes propagate to `onPhasesChange`.
-
-#### Implementation notes
-
-- **Controlled mode is a prerequisite.** The popover needs `onPhasesChange`
-  callback prop on `TimelineTwoColumn` to push the updated date ranges back to
-  the consumer. Controlled mode is not yet designed.
-- **`resolveOverlaps(phases)`** must be a pure function in `utils.ts` — written
-  and tested before any UI is wired.
-- **Month-index helpers:** `dateToMonthIndex(dateStr): number` and
-  `monthIndexToDate(n, endOfMonth?: boolean): string` — convert between the
-  existing `'Apr 2025'` / `'Apr 2025 – Sep 2025'` string format and the integer
-  index the Slider needs.
-- **No MUI `Tooltip` wrapper.** The popover is a `Popper` + `ClickAwayListener`
-  - `Paper` combination so it can host rich interactive content. MUI's `Tooltip`
-    is display-only and does not support focus management inside interactive
-    children.
-- The `PhaseWarningPopover` component lives in the `timeline-two-column/`
-  folder as an internal sub-component (not exported from the package barrel).
-- **Copyright note:** the visual pattern of stacked colored range sliders is
-  inspired by a Minimals component demo. The implementation must be written from
-  scratch using MUI `Slider` — no code from the Minimals source.
-
-#### Prerequisites in order
-
-1. `resolveOverlaps(phases)` pure function + tests in `utils.ts`
-2. Month-index helpers + tests in `utils.ts`
-3. Controlled mode design (`onPhasesChange` prop shape)
-4. `PhaseWarningPopover` component (reads controlled state, calls
-   `onPhasesChange` on Apply)
-5. Wire `PhaseWarningPopover` into `PhaseCard` corner badge (replace plain
-   string tooltip with popover trigger)
+- **`onPhasesChange` controlled-mode prop** on `TimelineTwoColumn` — `PhaseWarningPopover` calls this to push updated date ranges to the consumer. The prop shape is designed but not yet wired to the component's root.
+- **Wire `PhaseWarningPopover` into `PhaseCard`** — replace the current plain string tooltip with the popover trigger.
 
 ---
 
 ## Related
 
-- [theming-roadmap.md](./theming-roadmap.md) — Phase A (`varAlpha` utility) is a prerequisite
+- [theming/roadmap.md](../theming/roadmap.md) — Phase A (`varAlpha` utility) shipped 4 May 2026; Phases B/C pending
 - [alexrebula docs/roadmap.md](../../rm/presentation/alexrebula/docs/roadmap.md) — milestone tracking
-- `alexrebula/src/sections/ziga/view.tsx` — reference implementation (private repo, do not copy code)
+- `alexrebula/src/sections/career-timeline/` — reference implementation in production (private repo, do not copy code)

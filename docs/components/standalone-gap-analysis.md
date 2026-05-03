@@ -45,7 +45,7 @@ See [`theming/roadmap.md`](../theming/roadmap.md) Phases A → B → C for the f
 **Dependency chain (must go in order):**
 
 ```
-Phase A: varAlpha, createPaletteChannel, pxToRem  ←  replaces minimal-shared/utils
+Phase A: varAlpha, createPaletteChannel, pxToRem  ←  ✅ Done (4 May 2026)
     ↓
 Phase B: giselleTheme (Giselle brand palette)
     ↓
@@ -74,7 +74,7 @@ are currently only available by depending on Minimals (or reimplementing them fr
 
 | Component                               | Source                             | What needs to change                                           |
 | --------------------------------------- | ---------------------------------- | -------------------------------------------------------------- |
-| `FloatingSubNav` / `FloatingControlBar` | `src/components/floating-sub-nav/` | Replace `varAlpha` (Phase A first) + `Iconify` → `GiselleIcon` |
+| `FloatingSubNav` / `FloatingControlBar` | `src/components/floating-sub-nav/` | Replace `Iconify` → `GiselleIcon` |
 
 ### Need to be written from scratch
 
@@ -134,9 +134,9 @@ Minimals-dependent and would be replaced by `GiselleThemeProvider` + `GiselleSet
 ✅ IconActionBar
 
 # Theming — Phase A → B → C
-⬜ varAlpha                     (Phase A)
-⬜ createPaletteChannel          (Phase A)
-⬜ pxToRem / remToPx             (Phase A)
+✅ varAlpha                     (Phase A — 4 May 2026)
+✅ createPaletteChannel          (Phase A — 4 May 2026)
+✅ pxToRem / remToPx             (Phase A — 4 May 2026)
 ⬜ giselleTheme                  (Phase B)
 ⬜ GiselleThemeProvider          (Phase C)  ← structural blocker
 
@@ -144,7 +144,7 @@ Minimals-dependent and would be replaced by `GiselleThemeProvider` + `GiselleSet
 ⬜ TwoColumnShowcaseRow          (ready to extract)
 ⬜ OptionWithBlurb               (ready to extract)
 ⬜ SectionPendingLoader          (needs Iconify → GiselleIcon)
-⬜ FloatingControlBar            (needs Phase A + Iconify → GiselleIcon)
+⬜ FloatingControlBar            (needs Iconify → GiselleIcon)
 ⬜ SectionContainer              (write from scratch)
 ⬜ HeroSection                   (write from scratch)
 ⬜ FAQAccordion                  (write from scratch)

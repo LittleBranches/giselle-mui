@@ -137,14 +137,14 @@ At the start of every new Copilot session in this package, read these files:
 | `createIconRegistrar`                 | `src/utils/create-icon-registrar.ts`  | ✅ Shipped + tested |
 | `TimelineTwoColumn`                   | `src/components/timeline-two-column/` | ✅ Shipped + tested |
 | `IconActionBar`                       | `src/components/icon-action-bar/`     | ✅ Shipped + tested |
+| `varAlpha`, `createPaletteChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts` | ✅ Shipped + tested (Phase A — 4 May 2026) |
 
 ### Next planned work (priority order)
 
-1. **Phase A theme utilities** — `varAlpha`, `createPaletteChannel`, `pxToRem` / `remToPx` in `src/utils/`. Prerequisite for Phase B and C. See `docs/theming/roadmap.md` Phase A table.
-2. **Phase B — Giselle brand theme preset** — define the Giselle green + amber palette as `giselleTheme` using `extendTheme()`. Export from `src/index.ts`. See `docs/theming/roadmap.md` Phase B.
-3. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/theming/roadmap.md` Phase C.
-4. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
-5. **RoadmapTimeline component** — requires Phase A first. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
+1. **Phase B — Giselle brand theme preset** — define the Giselle green + amber palette as `giselleTheme` using `extendTheme()`. Export from `src/index.ts`. See `docs/theming/roadmap.md` Phase B.
+2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/theming/roadmap.md` Phase C.
+3. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
+4. **RoadmapTimeline component** — Phase A prerequisite (`varAlpha`) is now met. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
 
 ### Additional allowed peer dependencies
 
