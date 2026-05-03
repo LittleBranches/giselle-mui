@@ -209,14 +209,17 @@ export default function App({ Component, pageProps }: AppProps) {
 
 ### `varAlpha(channel, alpha)`
 
-Converts a CSS-variable palette channel to an `rgba()` CSS string. MUI v7 exposes
-colours as space-separated RGB channels (e.g. `theme.vars.palette.primary.mainChannel`).
+Converts a CSS-variable palette channel to an `rgba()` CSS string using CSS Color 4
+slash syntax. MUI v7 exposes colours as space-separated RGB channels
+(e.g. `theme.vars.palette.primary.mainChannel`). The slash syntax works with both
+literal channel strings and CSS `var()` references.
 
 ```ts
 import { varAlpha } from '@alexrebula/giselle-mui';
 
 sx={(theme) => ({
   backgroundColor: varAlpha(theme.vars.palette.primary.mainChannel, 0.08),
+  // → "rgba(99 102 241 / 0.08)"
 })}
 ```
 

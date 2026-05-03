@@ -10,34 +10,78 @@ import Button from '@mui/material/Button';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 import type { TimelinePhase } from './types';
-import {
-  parseFirstDate,
-  parseSortableDate,
-  monthIndexToDate,
-  detectPhaseOverlaps,
-  resolveOverlaps,
-} from './utils';
+import { dateToMonthIndex, monthIndexToDate, resolveOverlaps } from './utils';
 
 // ----------------------------------------------------------------------
 
 /** Internal representation of a single phase's date range as month indices. */
-type PhaseRange = { startIdx: number; endIdx: number };
+export type PhaseRange = { startIdx: number; endIdx: number };
 
-/** Resolve a phase's date string to a [startIdx, endIdx] pair. */
-function parsePhaseRange(phase: TimelinePhase): PhaseRange | null {
-  const startMs = parseFirstDate(phase.date);
-  const endMs = parseSortableDate(phase.date);
-  if (startMs === null || endMs === null) return null;
-  const d1 = new Date(startMs);
-  const d2 = new Date(endMs);
-  return {
-    startIdx: d1.getFullYear() * 12 + d1.getMonth(),
-    endIdx: d2.getFullYear() * 12 + d2.getMonth(),
-  };
+/**
+ * Resolve a phase's date string to a [startIdx, endIdx] pair.
+ *
+ * Returns `null` for year-only strings like `~1994` or `2022 – Now` — those
+ * are excluded from the slider UI to avoid silently rewriting non-month dates
+ * (e.g. converting `~1994` to `Jan 1994` on Apply).
+ */
+export function parsePhaseRange(phase: TimelinePhase): PhaseRange | null {
+  const parts = phase.date.split(/\s*[–-]\s*/u);
+  const startIdx = dateToMonthIndex(parts[0] ?? '');
+  const endIdx = dateToMonthIndex(parts[parts.length - 1] ?? '');
+  if (startIdx === null) return null;
+  return { startIdx, endIdx: endIdx ?? startIdx };
+}
+
+/**
+ * Returns the connected overlap group for `startKey`.
+ *
+ * Builds a pairwise overlap adjacency graph from phase ranges, then does BFS
+ * from `startKey` to collect only the phases that overlap directly or
+ * transitively with the triggering phase. Unrelated overlap groups elsewhere
+ * on the timeline are excluded.
+ */
+export function getConnectedOverlapGroup(
+  phases: TimelinePhase[],
+  startKey: number
+): TimelinePhase[] {
+  const ranges = phases
+    .map((p) => {
+      const r = parsePhaseRange(p);
+      return r ? { key: p.key, ...r } : null;
+    })
+    .filter((r): r is { key: number; startIdx: number; endIdx: number } => r !== null);
+
+  const adjacency = new Map<number, Set<number>>();
+  for (let i = 0; i < ranges.length; i++) {
+    for (let j = i + 1; j < ranges.length; j++) {
+      const a = ranges[i]!;
+      const b = ranges[j]!;
+      if (a.startIdx <= b.endIdx && b.startIdx <= a.endIdx) {
+        if (!adjacency.has(a.key)) adjacency.set(a.key, new Set());
+        if (!adjacency.has(b.key)) adjacency.set(b.key, new Set());
+        adjacency.get(a.key)!.add(b.key);
+        adjacency.get(b.key)!.add(a.key);
+      }
+    }
+  }
+
+  // BFS from startKey to find the connected component.
+  const visited = new Set<number>();
+  const queue = [startKey];
+  while (queue.length > 0) {
+    const key = queue.shift()!;
+    if (visited.has(key)) continue;
+    visited.add(key);
+    adjacency.get(key)?.forEach((neighbor) => {
+      if (!visited.has(neighbor)) queue.push(neighbor);
+    });
+  }
+
+  return phases.filter((p) => visited.has(p.key));
 }
 
 /** Compute the shared slider axis bounds from current override values. */
-function computeAxis(overrides: Map<number, PhaseRange>): { min: number; max: number } {
+export function computeAxis(overrides: Map<number, PhaseRange>): { min: number; max: number } {
   let min = Infinity;
   let max = -Infinity;
   overrides.forEach(({ startIdx, endIdx }) => {
@@ -51,7 +95,7 @@ function computeAxis(overrides: Map<number, PhaseRange>): { min: number; max: nu
 }
 
 /** Returns true when any two ranges in the overrides still overlap. */
-function hasRemainingOverlaps(overrides: Map<number, PhaseRange>): boolean {
+export function hasRemainingOverlaps(overrides: Map<number, PhaseRange>): boolean {
   const ranges = Array.from(overrides.values());
   for (let i = 0; i < ranges.length; i++) {
     for (let j = i + 1; j < ranges.length; j++) {
@@ -67,7 +111,7 @@ function hasRemainingOverlaps(overrides: Map<number, PhaseRange>): boolean {
  * Apply current overrides to the conflicting phases, rebuilding their date strings.
  * Returns a new array — does not mutate the input.
  */
-function applyOverrides(
+export function applyOverrides(
   conflictingPhases: TimelinePhase[],
   overrides: Map<number, PhaseRange>
 ): TimelinePhase[] {
@@ -84,7 +128,10 @@ function applyOverrides(
 }
 
 /** Merge updated phases back into the full phases array by phase key. */
-function mergeIntoAll(allPhases: TimelinePhase[], updated: TimelinePhase[]): TimelinePhase[] {
+export function mergeIntoAll(
+  allPhases: TimelinePhase[],
+  updated: TimelinePhase[]
+): TimelinePhase[] {
   const byKey = new Map(updated.map((p) => [p.key, p]));
   return allPhases.map((p) => byKey.get(p.key) ?? p);
 }
@@ -223,12 +270,13 @@ export function PhaseWarningPopover({
   currentPhase,
   onPhasesChange,
 }: PhaseWarningPopoverProps) {
-  // Compute the conflict group: all phases that appear in the overlap map.
-  const conflictingPhases = useMemo(() => {
-    const overlapMap = detectPhaseOverlaps(allPhases);
-    const overlappingKeys = new Set(overlapMap.keys());
-    return allPhases.filter((p) => overlappingKeys.has(p.key));
-  }, [allPhases]);
+  // Compute the conflict group: only phases in the same connected overlap cluster
+  // as currentPhase. This prevents the popover from showing (or allowing Apply to
+  // modify) phases from unrelated overlap groups elsewhere in the timeline.
+  const conflictingPhases = useMemo(
+    () => getConnectedOverlapGroup(allPhases, currentPhase.key),
+    [allPhases, currentPhase.key]
+  );
 
   const [overrides, setOverrides] = useState<Map<number, PhaseRange>>(() => new Map());
   const [pendingApply, setPendingApply] = useState(false);

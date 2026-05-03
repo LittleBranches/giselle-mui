@@ -5,20 +5,25 @@ import { createPaletteChannel, pxToRem, remToPx, varAlpha } from './theme-utils'
 // ----------------------------------------------------------------------
 
 describe('varAlpha', () => {
-  it('produces a valid rgba string from a space-separated channel', () => {
-    expect(varAlpha('99 102 241', 0.08)).toBe('rgba(99, 102, 241, 0.08)');
+  it('produces a valid rgba slash-syntax string from a space-separated channel', () => {
+    expect(varAlpha('99 102 241', 0.08)).toBe('rgba(99 102 241 / 0.08)');
   });
 
   it('handles alpha = 0 (fully transparent)', () => {
-    expect(varAlpha('0 0 0', 0)).toBe('rgba(0, 0, 0, 0)');
+    expect(varAlpha('0 0 0', 0)).toBe('rgba(0 0 0 / 0)');
   });
 
   it('handles alpha = 1 (fully opaque)', () => {
-    expect(varAlpha('255 255 255', 1)).toBe('rgba(255, 255, 255, 1)');
+    expect(varAlpha('255 255 255', 1)).toBe('rgba(255 255 255 / 1)');
   });
 
   it('handles fractional alpha values', () => {
-    expect(varAlpha('10 20 30', 0.5)).toBe('rgba(10, 20, 30, 0.5)');
+    expect(varAlpha('10 20 30', 0.5)).toBe('rgba(10 20 30 / 0.5)');
+  });
+
+  it('works with a CSS var() reference (does not modify the channel string)', () => {
+    const cssVar = 'var(--mui-palette-primary-mainChannel)';
+    expect(varAlpha(cssVar, 0.08)).toBe(`rgba(${cssVar} / 0.08)`);
   });
 });
 
@@ -43,7 +48,7 @@ describe('createPaletteChannel', () => {
 
   it('round-trips with varAlpha to produce a valid rgba string', () => {
     const channel = createPaletteChannel('#6366f1');
-    expect(varAlpha(channel, 0.08)).toBe('rgba(99, 102, 241, 0.08)');
+    expect(varAlpha(channel, 0.08)).toBe('rgba(99 102 241 / 0.08)');
   });
 
   it('throws for a 3-digit shorthand hex', () => {

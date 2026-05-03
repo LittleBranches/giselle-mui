@@ -9,17 +9,24 @@
 // ----------------------------------------------------------------------
 
 /**
- * Produces an `rgba(r, g, b, alpha)` string from a CSS-variable channel value.
+ * Produces an `rgba(channel / alpha)` string from a CSS-variable channel value.
  *
  * MUI v7 CSS Variables mode exposes palette colours as space-separated RGB
  * channels (e.g. `theme.vars.palette.primary.mainChannel → "99 102 241"`).
- * This helper converts that channel string + an alpha value to a valid CSS
- * colour expression.
+ * This helper converts that channel string + an alpha value to a valid CSS Color 4
+ * expression using slash syntax.
  *
- * @param channel - Space-separated RGB string, e.g. `"99 102 241"`. Matches the
- *   format of `theme.vars.palette[color].mainChannel` in MUI v7.
+ * **Why slash syntax, not comma syntax:**
+ * The channel value can be either a literal string (`"99 102 241"`) or a
+ * CSS `var(--mui-palette-primary-mainChannel)` reference. Slash syntax
+ * (`rgba(var(...) / 0.08)`) is valid CSS and works in all cases. The older
+ * comma syntax (`rgba(var(...), 0.08)`) does not work with CSS var references
+ * because a single var cannot substitute multiple comma-separated arguments.
+ *
+ * @param channel - Space-separated RGB string or CSS `var()` reference.
+ *   Matches the format of `theme.vars.palette[color].mainChannel` in MUI v7.
  * @param alpha - Opacity value between `0` (fully transparent) and `1` (fully opaque).
- * @returns A valid `rgba(...)` CSS string.
+ * @returns A valid CSS Color 4 `rgba(channel / alpha)` string.
  *
  * @example
  * ```tsx
@@ -29,7 +36,7 @@
  * ```
  */
 export function varAlpha(channel: string, alpha: number): string {
-  return `rgba(${channel.replace(/ /g, ', ')}, ${alpha})`;
+  return `rgba(${channel} / ${alpha})`;
 }
 
 // ----------------------------------------------------------------------

@@ -236,7 +236,8 @@ function CardCornerAlertBadge({
         justifyContent: 'center',
         bgcolor: hasError ? 'error.main' : 'warning.dark',
         color: 'common.white',
-        boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
+        boxShadow: (theme) =>
+          `0 2px 6px rgba(${(theme.vars!.palette.grey as unknown as Record<string, string>)['900Channel']} / 0.3)`,
         cursor: onClick ? 'pointer' : 'help',
         pointerEvents: 'auto',
         '&:focus-visible': {
