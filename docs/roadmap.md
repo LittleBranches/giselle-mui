@@ -221,3 +221,163 @@ A blank `create-next-app` project can install `@alexrebula/giselle-mui`, add
 components — no proprietary theme, no reimplemented patterns.
 
 Full gap analysis: [`docs/components/standalone-gap-analysis.md`](../components/standalone-gap-analysis.md)
+
+---
+
+### Phase F — DetailsDrawer (Medium priority)
+
+**Goal:** Export a reusable `<DetailsDrawer>` component — a slide-in panel from the right edge
+of the viewport, styled to MUI theme tokens, with zero Minimals dependency. This is the
+universal shell for any detail or edit view in the library: timeline item details, settings,
+preview panels, and any future per-item UI.
+
+**Design principle — shell only, content via slot:**
+
+`DetailsDrawer` is a pure layout container. It owns:
+- The slide-in/out animation (CSS transition, not Framer Motion — no extra dep)
+- The backdrop overlay (semi-transparent, click-to-close)
+- The close button in the header
+- The header title slot (`ReactNode`)
+- The body content slot (`children`)
+- The footer action slot (`ReactNode` — for Save / Cancel buttons in edit mode)
+
+It does NOT own:
+- Any knowledge of timelines, items, or data shapes
+- Any internal fetch or state beyond `open`/`onClose`
+
+**Width:** responsive — `100vw` on xs/sm, `480px` on md+. Controlled by `width` prop with
+that default. Stays within `xs: '100%', md: 480` using MUI `sx`.
+
+**Inspiration source (non-negotiable copyright note):**
+The interaction model is inspired by the Minimals `SettingsDrawer` pattern, but this
+component is written **entirely from scratch** in giselle-mui. No code, no utility
+functions, no styled-component definitions are copied from Minimals. The pattern (slide-in
+drawer with overlay, header, body, close button) is a standard UI primitive — it is not
+proprietary to Minimals.
+
+**Props interface:**
+
+```tsx
+export interface DetailsDrawerProps {
+  /** Controls open/closed state. */
+  open: boolean;
+  /** Called when the user closes the drawer (close button or backdrop click). */
+  onClose: () => void;
+  /** Optional header title. */
+  title?: ReactNode;
+  /** Optional footer slot — use for Save / Cancel buttons in edit mode. */
+  footer?: ReactNode;
+  /** Override drawer width. @default { xs: '100%', md: 480 } */
+  width?: number | string | Record<string, number | string>;
+  /** Content to display inside the drawer body. */
+  children?: ReactNode;
+  /** MUI sx prop for the root Paper element. */
+  sx?: SxProps<Theme>;
+}
+```
+
+| Task                                                                              | Status |
+| --------------------------------------------------------------------------------- | ------ |
+| Implement `DetailsDrawer` — slide animation, backdrop, close button, slots        | ⬜     |
+| Responsive width: `{ xs: '100%', md: 480 }` default, overridable via `width` prop | ⬜     |
+| Export from `src/index.ts` + barrel `src/components/details-drawer/index.ts`     | ⬜     |
+| Storybook story: empty, with title, with footer, with full `TimelineItemDetails` inside | ⬜ |
+| Vitest test: renders open/closed, close button calls `onClose`, backdrop click calls `onClose` | ⬜ |
+| README: why this exists, design decisions, copyright note                         | ⬜     |
+
+---
+
+### Phase G — TimelineItemDetails (Medium priority)
+
+**Goal:** Export a `<TimelineItemDetails>` component — the universal read/edit panel for
+any timeline item (phase, milestone, life event, scenario). Rendered inside `DetailsDrawer`,
+it displays the full item data in a structured, Asana-inspired layout.
+
+**Why this belongs in giselle-mui:**
+
+Every timeline variant this library will ever export (TimelineTwoColumn, the planned
+RoadmapTimeline, a future ProjectTimeline) shares the same conceptual structure: an item has
+a title, a date, a description, sub-items, photos, links, and status metadata. The details
+view is non-trivial to implement correctly (accessible field layout, read/edit mode toggle,
+photo grid, nested sub-item list). Encoding it here means no consumer ever reimplements it.
+
+**Layout — Asana task detail model:**
+
+```
+┌────────────────────────────────────────┐
+│  [Status chip]  [Date]                 │  ← top metadata row
+│  Title (h2, editable in edit mode)     │
+│  Short description (subtitle)          │
+│                                        │
+│  ── Details ─────────────────────────  │
+│  Long description / body               │
+│                                        │
+│  ── Sub-items ───────────────────────  │
+│  ○ Sub-item 1                          │
+│  ○ Sub-item 2                          │
+│                                        │
+│  ── Photos ──────────────────────────  │
+│  [img]  [img]  [img]                   │  ← row of thumbnails
+│                                        │
+│  ── Links / related ─────────────────  │
+│  • link 1                              │
+└────────────────────────────────────────┘
+```
+
+**Two modes — read and edit:**
+
+- **Read mode (Phase G v1):** All fields rendered as static text/chips/images. No form
+  controls. This is the primary deliverable.
+- **Edit mode (Phase G v2, separate milestone):** Fields become controlled MUI inputs
+  (`TextField`, `DatePicker`, etc.). A `onSave(updatedItem)` callback is called on submit.
+  The drawer `footer` slot shows Save / Cancel. Edit mode is **not** in scope for v1.
+
+**Data shape — generic, not timeline-specific:**
+
+`TimelineItemDetails` accepts a `TimelineItemDetailData` interface that maps to the common
+subset of `TimelinePhase` and `Milestone` from `TimelineTwoColumn`. This avoids coupling
+the details component to any one timeline type:
+
+```ts
+export interface TimelineItemDetailData {
+  title: string;
+  shortTitle?: string;
+  date?: string;
+  description?: string;
+  details?: string[];         // bullet list items
+  photos?: Array<{ src: string; alt: string }>;
+  color?: HighlightedPaletteKey;
+  done?: boolean;
+  overdue?: boolean;
+  links?: Array<{ label: string; href: string }>;
+  /** Any extra fields the consumer wants to display. */
+  extra?: Array<{ label: string; value: ReactNode }>;
+}
+```
+
+**Integration with TimelineTwoColumn:**
+
+`TimelineTwoColumn` will accept an `onItemClick?: (item: TimelineItemDetailData) => void`
+callback. When a phase card or milestone badge is clicked (not the done-dot), the callback
+fires with the normalised `TimelineItemDetailData`. The consumer opens `DetailsDrawer` and
+passes the data to `TimelineItemDetails`. This keeps `TimelineTwoColumn` and `DetailsDrawer`
+decoupled — the consumer owns the open/close state.
+
+**Prerequisite:** Phase F (`DetailsDrawer`) — `TimelineItemDetails` is always rendered
+inside a `DetailsDrawer`.
+
+| Task                                                                                   | Status |
+| -------------------------------------------------------------------------------------- | ------ |
+| Define `TimelineItemDetailData` interface in `types.ts`                                | ⬜     |
+| Implement `TimelineItemDetails` — read-only layout, all field slots                    | ⬜     |
+| Status chip: maps `color` + `done`/`overdue` to label + palette color                 | ⬜     |
+| Photo slot: responsive row of thumbnails with lightbox-ready click handler             | ⬜     |
+| Sub-items slot: styled list from `details[]` array                                     | ⬜     |
+| Links slot: anchor list with `GiselleIcon` icon per item                               | ⬜     |
+| Extra fields slot: `label: value` rows for consumer-defined metadata                   | ⬜     |
+| Export from `src/index.ts` + barrel `src/components/timeline-item-details/index.ts`   | ⬜     |
+| Storybook story: phase item, milestone item, overdue item, minimal item (no optionals) | ⬜     |
+| Vitest test: renders all slots, status chip label for each `color`/`done` combination | ⬜     |
+| README: why it exists, why it belongs here, design decisions                           | ⬜     |
+| Phase G v2: edit mode — controlled inputs, `onSave`, `onCancel` callbacks              | ⬜     |
+| Phase G v2: wire `TimelineTwoColumn.onItemClick` to open drawer with item data        | ⬜     |
