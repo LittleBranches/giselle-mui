@@ -1,62 +1,62 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
-import { createPaletteChannel, pxToRem, remToPx, varAlpha } from './theme-utils';
+import { channelAlpha, hexToChannel, pxToRem, remToPx } from './theme-utils';
 
 // ----------------------------------------------------------------------
 
-describe('varAlpha', () => {
+describe('channelAlpha', () => {
   it('produces a valid rgba slash-syntax string from a space-separated channel', () => {
-    expect(varAlpha('99 102 241', 0.08)).toBe('rgba(99 102 241 / 0.08)');
+    expect(channelAlpha('99 102 241', 0.08)).toBe('rgba(99 102 241 / 0.08)');
   });
 
   it('handles alpha = 0 (fully transparent)', () => {
-    expect(varAlpha('0 0 0', 0)).toBe('rgba(0 0 0 / 0)');
+    expect(channelAlpha('0 0 0', 0)).toBe('rgba(0 0 0 / 0)');
   });
 
   it('handles alpha = 1 (fully opaque)', () => {
-    expect(varAlpha('255 255 255', 1)).toBe('rgba(255 255 255 / 1)');
+    expect(channelAlpha('255 255 255', 1)).toBe('rgba(255 255 255 / 1)');
   });
 
   it('handles fractional alpha values', () => {
-    expect(varAlpha('10 20 30', 0.5)).toBe('rgba(10 20 30 / 0.5)');
+    expect(channelAlpha('10 20 30', 0.5)).toBe('rgba(10 20 30 / 0.5)');
   });
 
   it('works with a CSS var() reference (does not modify the channel string)', () => {
     const cssVar = 'var(--mui-palette-primary-mainChannel)';
-    expect(varAlpha(cssVar, 0.08)).toBe(`rgba(${cssVar} / 0.08)`);
+    expect(channelAlpha(cssVar, 0.08)).toBe(`rgba(${cssVar} / 0.08)`);
   });
 });
 
 // ----------------------------------------------------------------------
 
-describe('createPaletteChannel', () => {
+describe('hexToChannel', () => {
   it('converts a #-prefixed hex to a space-separated RGB channel', () => {
-    expect(createPaletteChannel('#6366f1')).toBe('99 102 241');
+    expect(hexToChannel('#6366f1')).toBe('99 102 241');
   });
 
   it('converts a bare hex without # prefix', () => {
-    expect(createPaletteChannel('6366f1')).toBe('99 102 241');
+    expect(hexToChannel('6366f1')).toBe('99 102 241');
   });
 
   it('converts pure black (#000000)', () => {
-    expect(createPaletteChannel('#000000')).toBe('0 0 0');
+    expect(hexToChannel('#000000')).toBe('0 0 0');
   });
 
   it('converts pure white (#ffffff)', () => {
-    expect(createPaletteChannel('#ffffff')).toBe('255 255 255');
+    expect(hexToChannel('#ffffff')).toBe('255 255 255');
   });
 
-  it('round-trips with varAlpha to produce a valid rgba string', () => {
-    const channel = createPaletteChannel('#6366f1');
-    expect(varAlpha(channel, 0.08)).toBe('rgba(99 102 241 / 0.08)');
+  it('round-trips with channelAlpha to produce a valid rgba string', () => {
+    const channel = hexToChannel('#6366f1');
+    expect(channelAlpha(channel, 0.08)).toBe('rgba(99 102 241 / 0.08)');
   });
 
   it('throws for a 3-digit shorthand hex', () => {
-    expect(() => createPaletteChannel('#fff')).toThrow('6-digit');
+    expect(() => hexToChannel('#fff')).toThrow('6-digit');
   });
 
   it('throws for a completely invalid hex string', () => {
-    expect(() => createPaletteChannel('zzzzzz')).toThrow('invalid hex value');
+    expect(() => hexToChannel('zzzzzz')).toThrow('invalid hex value');
   });
 });
 

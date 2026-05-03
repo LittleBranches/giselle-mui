@@ -45,7 +45,7 @@ See [`theming/roadmap.md`](../theming/roadmap.md) Phases A → B → C for the f
 **Dependency chain (must go in order):**
 
 ```
-Phase A: varAlpha, createPaletteChannel, pxToRem  ←  ✅ Done (4 May 2026)
+Phase A: channelAlpha, hexToChannel, pxToRem  ←  ✅ Done (4 May 2026)
     ↓
 Phase B: giselleTheme (Giselle brand palette)
     ↓
@@ -134,8 +134,8 @@ Minimals-dependent and would be replaced by `GiselleThemeProvider` + `GiselleSet
 ✅ IconActionBar
 
 # Theming — Phase A → B → C
-✅ varAlpha                     (Phase A — 4 May 2026)
-✅ createPaletteChannel          (Phase A — 4 May 2026)
+✅ channelAlpha                     (Phase A — 4 May 2026)
+✅ hexToChannel                     (Phase A — 4 May 2026)
 ✅ pxToRem / remToPx             (Phase A — 4 May 2026)
 ⬜ giselleTheme                  (Phase B)
 ⬜ GiselleThemeProvider          (Phase C)  ← structural blocker

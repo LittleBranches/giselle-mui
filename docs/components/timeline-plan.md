@@ -140,14 +140,14 @@ the type can be extended without a breaking change.
 
 ---
 
-## `varAlpha` dependency
+## `channelAlpha` dependency
 
-The component uses `varAlpha` for the scenario step background tint. `varAlpha` is
+The component uses `channelAlpha` for the scenario step background tint. `channelAlpha` is
 exported from `src/utils/theme-utils.ts` and available from `@alexrebula/giselle-mui`
 as of Phase A (4 May 2026). This prerequisite is met.
 
 ```ts
-import { varAlpha } from '@alexrebula/giselle-mui';
+import { channelAlpha } from '@alexrebula/giselle-mui';
 ```
 
 ---
@@ -208,6 +208,40 @@ export function getRoadmapData(): RoadmapSectionProps {
   return { steps: STEPS };
 }
 ```
+
+---
+
+## Hard blocker: TimelineTwoColumn cleanup overhaul
+
+**RoadmapTimeline must not be started until this overhaul is complete.**
+
+When `RoadmapTimeline` is built, it will share primitives with `TimelineTwoColumn` —
+the `TimelineDot` colouring logic, the `SpineConnector`, and likely the `PhaseCard`
+expand/collapse animations. Shared primitives that live in messy, complex source files
+get forked instead of shared. The overhaul makes sharing possible.
+
+Additionally: this is the top priority in the entire `alexrebula` project at this point in
+time. Every other timeline variant and every other component that reuses timeline primitives
+depends on `TimelineTwoColumn` being in a clean, well-structured state first.
+
+### Required before RoadmapTimeline can begin
+
+| Task | Why it matters |
+|---|---|
+| Extract all multi-property `sx` objects to `*.styles.ts` files | Reduces component file sizes; makes sx independently testable; prevents drift when multiple variants share the same visual rule |
+| Fix cognitive complexity in `phase-card.tsx` (currently 17 → must be ≤ 15) | Sonar gate will block the quality check on any file that shares logic with this one |
+| JSDoc pass on all exported functions and prop interfaces | `RoadmapTimeline` will export types; consistent JSDoc level across the component family is required before that |
+| Wire `onPhasesChange` controlled-mode prop to `TimelineTwoColumn` root | Designed and tested; not yet wired. Leaving it un-wired creates a half-finished API surface |
+| Wire `PhaseWarningPopover` into `PhaseCard` | Replace the current plain string tooltip. Also un-wired despite being built and tested |
+| Complete the CareerTimeline UX polish list (alexrebula Phase 1.2) | The final real-world usage pass that will surface any remaining rough edges before the primitive split |
+
+### Why the order matters
+
+1. **Styles extraction first** — makes the components scannable and lets you see clearly what logic is shared vs. component-specific before the split.
+2. **Cognitive complexity fix second** — can't pass the quality gate on the styles test files until the parent component itself passes.
+3. **JSDoc pass third** — once the files are clean and scannable, documenting them is fast. Doing it on messy files wastes time.
+4. **Wire the two un-wired features fourth** — they are already built; wiring them is low-risk and closes the loop on the current feature branch.
+5. **UX polish last** — the final consumer feedback pass. Changes here may touch the same files; doing it after the cleanup avoids re-cleaning.
 
 ---
 
@@ -273,6 +307,6 @@ The corner badge, tooltip, detection, and the full repair UI are functional and 
 
 ## Related
 
-- [theming/roadmap.md](../theming/roadmap.md) — Phase A (`varAlpha` utility) shipped 4 May 2026; Phases B/C pending
+- [theming/roadmap.md](../theming/roadmap.md) — Phase A (`channelAlpha` utility) shipped 4 May 2026; Phases B/C pending
 - [alexrebula docs/roadmap.md](../../rm/presentation/alexrebula/docs/roadmap.md) — milestone tracking
 - `alexrebula/src/sections/career-timeline/` — reference implementation in production (private repo, do not copy code)

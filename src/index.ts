@@ -5,7 +5,7 @@
 export { createIconRegistrar } from './utils/create-icon-registrar';
 export type { GiselleIconData, GiselleIconMap } from './utils/create-icon-registrar';
 
-export { varAlpha, createPaletteChannel, pxToRem, remToPx } from './utils/theme-utils';
+export { channelAlpha, hexToChannel, pxToRem, remToPx } from './utils/theme-utils';
 
 export { GiselleIcon } from './components/giselle-icon';
 export type { GiselleIconProps } from './components/giselle-icon';

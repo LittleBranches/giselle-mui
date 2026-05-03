@@ -113,7 +113,7 @@ library as its own thing. When updating or writing docs:
   or a copyright boundary.
 - Do not frame utilities or patterns as "what Minimals does" — describe what the
   utility does, independently.
-- The one-liner `varAlpha` helper is a standard MUI v7 pattern; it does not need
+- The one-liner `channelAlpha` helper is a standard MUI v7 pattern; it does not need
   to be attributed to any theme kit every time it appears.
 
 ## Session bootstrap: where Copilot should look first
@@ -137,14 +137,14 @@ At the start of every new Copilot session in this package, read these files:
 | `createIconRegistrar`                 | `src/utils/create-icon-registrar.ts`  | ✅ Shipped + tested |
 | `TimelineTwoColumn`                   | `src/components/timeline-two-column/` | ✅ Shipped + tested |
 | `IconActionBar`                       | `src/components/icon-action-bar/`     | ✅ Shipped + tested |
-| `varAlpha`, `createPaletteChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts` | ✅ Shipped + tested (Phase A — 4 May 2026) |
+| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts` | ✅ Shipped + tested (Phase A — 4 May 2026) |
 
 ### Next planned work (priority order)
 
 1. **Phase B — Giselle brand theme preset** — define the Giselle green + amber palette as `giselleTheme` using `extendTheme()`. Export from `src/index.ts`. See `docs/theming/roadmap.md` Phase B.
 2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/theming/roadmap.md` Phase C.
 3. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
-4. **RoadmapTimeline component** — Phase A prerequisite (`varAlpha`) is now met. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
+4. **RoadmapTimeline component** — Phase A prerequisite (`channelAlpha`) is now met. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
 
 ### Additional allowed peer dependencies
 
@@ -370,11 +370,11 @@ Inline `sx` objects that span more than ~3 properties must be extracted to a co-
 ```ts
 // phase-card.styles.ts
 import type { SxProps, Theme } from '@mui/material/styles';
-import { varAlpha } from '../../utils/theme-utils';
+import { channelAlpha } from '../../utils/theme-utils';
 
 // Static sx — no runtime args needed
 export const cornerBadgeSx: SxProps<Theme> = (theme) => ({
-  boxShadow: `0 2px 6px ${varAlpha(theme.vars!.palette.grey['900Channel'], 0.3)}`,
+  boxShadow: `0 2px 6px ${channelAlpha(theme.vars!.palette.grey['900Channel'], 0.3)}`,
 });
 
 // Dynamic sx — takes component props as args, returns SxProps

@@ -29,7 +29,7 @@ See [`theming-nextjs.md`](./theming-nextjs.md) for the recommended setup in a ne
 from `@alexrebula/giselle-mui`:
 
 ```ts
-import { varAlpha, createPaletteChannel, pxToRem, remToPx } from '@alexrebula/giselle-mui';
+import { channelAlpha, hexToChannel, pxToRem, remToPx } from '@alexrebula/giselle-mui';
 ```
 
 See [`theming-nextjs.md`](./theming-nextjs.md) for full usage examples and integration guide.
@@ -45,8 +45,8 @@ as named exports from `giselle-mui`, so consuming projects have them out of the 
 
 | Task                                                             | Status |
 | ---------------------------------------------------------------- | ------ |
-| Add `varAlpha(channel, alpha)` to `giselle-mui/src/utils/`       | ✅     |
-| Add `createPaletteChannel(hex)` to `giselle-mui/src/utils/`      | ✅     |
+| Add `channelAlpha(channel, alpha)` to `giselle-mui/src/utils/`       | ✅     |
+| Add `hexToChannel(hex)` to `giselle-mui/src/utils/`                  | ✅     |
 | Add `pxToRem(px)` and `remToPx(rem)` to `giselle-mui/src/utils/` | ✅     |
 | Export all theme utilities from `giselle-mui/src/index.ts`       | ✅     |
 | Add tests for all theme utilities (22 tests in `theme-utils.test.ts`) | ✅ |
@@ -193,7 +193,7 @@ Full design: [`docs/components/settings-provider-plan.md`](../components/setting
 so a blank Next.js project can assemble full pages with zero Minimals dependency and zero
 reimplementation of recurring patterns.
 
-**Prerequisite:** Phase A (`varAlpha`) — some primitives use CSS-variable alpha tints.
+**Prerequisite:** Phase A (`channelAlpha`) — some primitives use CSS-variable alpha tints.
 
 **Source material:** These patterns are already proven in alexrebula. They must be written
 from scratch in giselle-mui (copyright rule: no copy from the private repo).
@@ -205,14 +205,14 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 | Extract `TwoColumnShowcaseRow` — clean, zero Minimals, ready now                              | ⬜     |
 | Extract `OptionWithBlurb` — tiny wrapper, clean, zero Minimals                                | ⬜     |
 | Extract `SectionPendingLoader` — replace internal `Iconify` with `GiselleIcon`                | ⬜     |
-| Extract `FloatingControlBar` — replace `varAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | ⬜     |
+| Extract `FloatingControlBar` — replace `channelAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | ⬜     |
 
 **Write from scratch** (no copy from alexrebula — independent implementations):
 
 | Task                                                                                          | Status |
 | --------------------------------------------------------------------------------------------- | ------ |
 | `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot | ⬜     |
-| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `varAlpha` | ⬜     |
+| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha` | ⬜     |
 | `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand    | ⬜     |
 
 **When this phase is done:**
