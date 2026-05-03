@@ -182,6 +182,25 @@ Current required entries (keep in sync with `package.json`):
 
 ---
 
+## Git workflow rule — non-negotiable, no exceptions
+
+**Never push directly to `main`. Every change goes through a branch and a pull request.**
+
+```sh
+# ✅ correct — always
+git checkout -b feature/my-change
+# ... make changes ...
+git push origin feature/my-change
+# then open a PR on GitHub
+
+# ❌ forbidden — never
+git push origin main
+```
+
+This applies to all changes: code, docs, config, copilot-instructions. No exceptions.
+
+---
+
 ## Post-component workflow (enforce always — run after every new component is complete)
 
 After every new component is built, tests pass, and `check:verify` is green, run these
@@ -341,6 +360,74 @@ A Storybook story file is created **only when seeing the component in isolation 
 Use `argTypes: { control: false }` for `ReactNode` and `SxProps` slots. Every story that demonstrates colour variants must include all six palette keys: `primary`, `secondary`, `info`, `success`, `warning`, `error`.
 
 Every exported component must have a `Responsive` story that renders the component inside labeled containers at each MUI standard breakpoint width: xs (360px), sm (600px), md (900px), lg (1200px). Use `parameters: { layout: 'padded' }` on these stories. For grid-based components (cards in a collection), the column count should increase with width. Named component helpers are required when the story uses React hooks.
+
+### `*.styles.ts` companion files for sx extraction (enforce always)
+
+Inline `sx` objects that span more than ~3 properties must be extracted to a co-located `<component-name>.styles.ts` file. This makes components scannable and the style logic independently testable.
+
+**Pattern — non-negotiable:**
+
+```ts
+// phase-card.styles.ts
+import type { SxProps, Theme } from '@mui/material/styles';
+import { varAlpha } from '../../utils/theme-utils';
+
+// Static sx — no runtime args needed
+export const cornerBadgeSx: SxProps<Theme> = (theme) => ({
+  boxShadow: `0 2px 6px ${varAlpha(theme.vars!.palette.grey['900Channel'], 0.3)}`,
+});
+
+// Dynamic sx — takes component props as args, returns SxProps
+export const paperSx =
+  (done: boolean): SxProps<Theme> =>
+  (theme) => ({
+    opacity: done ? 0.6 : 1,
+    transition: theme.transitions.create('opacity'),
+  });
+```
+
+Then in the component: `sx={cornerBadgeSx}` or `sx={paperSx(done)}` — one token instead of 8 lines.
+
+**File naming:** `<component-name>.styles.ts` — plain `.ts`, not `.tsx`. These files contain no JSX.
+
+**Testing — mandatory:** Every `*.styles.ts` file must have a companion `*.styles.test.ts`. An `SxProps<Theme>` function is just `(theme: Theme) => CSSObject` — call it with a minimal mock theme and assert the returned object:
+
+```ts
+// phase-card.styles.test.ts
+// @vitest-environment jsdom
+import { describe, it, expect } from 'vitest';
+import { cornerBadgeSx, paperSx } from './phase-card.styles';
+import type { Theme } from '@mui/material/styles';
+
+const mockTheme = {
+  vars: { palette: { grey: { '900Channel': '33 43 54' } } },
+  transitions: { create: () => 'opacity 300ms' },
+} as unknown as Theme;
+
+describe('cornerBadgeSx', () => {
+  it('returns expected box-shadow using theme channel', () => {
+    const styles = (cornerBadgeSx as Function)(mockTheme);
+    expect(styles.boxShadow).toBe('0 2px 6px rgba(33 43 54 / 0.3)');
+  });
+});
+
+describe('paperSx', () => {
+  it('sets opacity 0.6 when done=true', () => {
+    expect((paperSx(true) as Function)(mockTheme).opacity).toBe(0.6);
+  });
+  it('sets opacity 1 when done=false', () => {
+    expect((paperSx(false) as Function)(mockTheme).opacity).toBe(1);
+  });
+});
+```
+
+**Regression tests for critical style rules:** Any style value that encodes a non-obvious design or accessibility decision (minimum size, required channel reference, WCAG contrast formula) must have a dedicated regression test that fails if the value is changed to something wrong. Do not leave these values guarded only by code review.
+
+**Enforcement checklist — run whenever a component file is edited:**
+
+1. Any new `sx={}` with more than ~3 properties → move to the styles file immediately
+2. Any existing inline `sx={}` touched during the edit → extract it at the same time (no mixed state)
+3. After extraction → run the styles test file to confirm the mock-theme assertions still pass
 
 ### Preferred `.dataset` over `getAttribute` in tests
 

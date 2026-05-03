@@ -934,13 +934,14 @@ export function PhaseCard({
               </Typography>
             )}
 
-            {phase.photo && (
+            {(phase.photos ?? (phase.photo ? [phase.photo] : null))?.map((p, i) => (
               <Box
+                key={i}
                 component="img"
-                src={phase.photo.src}
-                alt={phase.photo.alt}
+                src={p.src}
+                alt={p.alt}
                 sx={{
-                  mt: 2,
+                  mt: i === 0 ? 2 : 1,
                   width: '100%',
                   maxWidth: 200,
                   aspectRatio: '4/3',
@@ -951,7 +952,7 @@ export function PhaseCard({
                   display: 'block',
                 }}
               />
-            )}
+            ))}
 
             {/* Client logos */}
             {phase.clients && (
