@@ -4,11 +4,15 @@ import type { TimelinePhase, HighlightedPaletteKey, TimelinePlatformItem } from 
 
 import {
   useState,
+  useRef,
+  useCallback,
   type ReactNode,
   type KeyboardEventHandler,
   type Dispatch,
   type SetStateAction,
+  type Ref,
 } from 'react';
+import { PhaseWarningPopover } from './phase-warning-popover';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -168,9 +172,15 @@ type CardCornerAlert = { message: string; severity: 'error' | 'warning' };
 function CardCornerAlertBadge({
   alerts,
   columnSide = 'right',
+  onClick,
+  innerRef,
 }: {
   alerts: CardCornerAlert[];
   columnSide?: 'left' | 'right';
+  /** When provided, badge is a clickable button that opens the PhaseWarningPopover. */
+  onClick?: () => void;
+  /** Ref forwarded to the badge circle element — used as Popper anchor. */
+  innerRef?: Ref<HTMLElement>;
 }) {
   if (alerts.length === 0) return null;
   const hasError = alerts.some((a) => a.severity === 'error');
@@ -195,6 +205,53 @@ function CardCornerAlertBadge({
       ))}
     </Box>
   );
+  const badgeCircle = (
+    <Box
+      ref={innerRef}
+      role={onClick ? 'button' : undefined}
+      aria-label={`${alerts.length} issue${alerts.length !== 1 ? 's' : ''}`}
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+      sx={{
+        position: 'absolute',
+        top: 0,
+        ...(left !== undefined ? { left } : { right }),
+        zIndex: 10,
+        transform,
+        width: CORNER_ALERT_BADGE_SIZE,
+        height: CORNER_ALERT_BADGE_SIZE,
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: hasError ? 'error.main' : 'warning.dark',
+        color: 'common.white',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
+        cursor: onClick ? 'pointer' : 'help',
+        pointerEvents: 'auto',
+        '&:focus-visible': {
+          outline: '2px solid',
+          outlineColor: hasError ? 'error.main' : 'warning.dark',
+          outlineOffset: 2,
+        },
+      }}
+    >
+      <GiselleIcon icon="solar:danger-triangle-bold" width={CORNER_ALERT_ICON_SIZE} aria-hidden />
+    </Box>
+  );
+
+  if (onClick) return badgeCircle;
+
   return (
     <Tooltip
       title={tooltipContent}
@@ -212,35 +269,7 @@ function CardCornerAlertBadge({
         },
       }}
     >
-      <Box
-        aria-label={`${alerts.length} issue${alerts.length !== 1 ? 's' : ''}`}
-        tabIndex={0}
-        sx={{
-          position: 'absolute',
-          top: 0,
-          ...(left !== undefined ? { left } : { right }),
-          zIndex: 10,
-          transform,
-          width: CORNER_ALERT_BADGE_SIZE,
-          height: CORNER_ALERT_BADGE_SIZE,
-          borderRadius: '50%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          bgcolor: hasError ? 'error.main' : 'warning.dark',
-          color: 'common.white',
-          boxShadow: '0 2px 6px rgba(0,0,0,0.25)',
-          cursor: 'help',
-          pointerEvents: 'auto',
-          '&:focus-visible': {
-            outline: '2px solid',
-            outlineColor: hasError ? 'error.main' : 'warning.dark',
-            outlineOffset: 2,
-          },
-        }}
-      >
-        <GiselleIcon icon="solar:danger-triangle-bold" width={CORNER_ALERT_ICON_SIZE} aria-hidden />
-      </Box>
+      {badgeCircle}
     </Tooltip>
   );
 }
@@ -702,6 +731,12 @@ export type PhaseCardProps = Omit<BoxProps, 'children'> & {
    * When omitted, the badge is read-only — plain tooltip only.
    */
   onPhasesChange?: (updated: TimelinePhase[]) => void;
+  /**
+   * The full `phases` array from `TimelineTwoColumn` — passed down only when
+   * `onPhasesChange` is also provided. Used by `PhaseWarningPopover` to compute
+   * the conflict group and to merge updated dates on Apply.
+   */
+  allPhases?: TimelinePhase[];
 };
 
 /**
@@ -727,10 +762,16 @@ export function PhaseCard({
   isViewed = false,
   onMarkViewed,
   columnSide = 'right',
-  onPhasesChange: _onPhasesChange,
+  onPhasesChange,
+  allPhases,
   sx,
   ...other
 }: PhaseCardProps) {
+  const badgeRef = useRef<HTMLElement>(null);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const handleOpenPopover = useCallback(() => setPopoverOpen(true), []);
+  const handleClosePopover = useCallback(() => setPopoverOpen(false), []);
+  const popoverMode = Boolean(onPhasesChange && allPhases);
   const isDone = done ?? phase.done ?? false;
   const isOverdue = overdue ?? phase.overdue ?? false;
   const [internalExpanded, setInternalExpanded] = useState(false);
@@ -767,8 +808,25 @@ export function PhaseCard({
 
   return (
     <Box sx={[{ position: 'relative' }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
-      {/* Corner alert badge — groups overdue/date-conflict behind a single icon */}
-      <CardCornerAlertBadge alerts={cornerAlerts} columnSide={columnSide} />
+      {/* Corner alert badge — tooltip-only in read-only mode; clickable in popover mode */}
+      <CardCornerAlertBadge
+        alerts={cornerAlerts}
+        columnSide={columnSide}
+        onClick={popoverMode ? handleOpenPopover : undefined}
+        innerRef={popoverMode ? badgeRef : undefined}
+      />
+
+      {/* PhaseWarningPopover — only rendered when onPhasesChange + allPhases are provided */}
+      {popoverMode && onPhasesChange && allPhases && (
+        <PhaseWarningPopover
+          open={popoverOpen}
+          anchorEl={badgeRef.current}
+          onClose={handleClosePopover}
+          currentPhase={phase}
+          allPhases={allPhases}
+          onPhasesChange={onPhasesChange}
+        />
+      )}
 
       <Paper
         role={hasDetails ? 'button' : undefined}

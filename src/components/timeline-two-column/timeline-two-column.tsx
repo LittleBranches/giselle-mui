@@ -1034,6 +1034,7 @@ export function TimelineTwoColumn({
                 isViewed={effectiveViewedKeys.has(phaseViewKey)}
                 onMarkViewed={onMarkViewed ? () => onMarkViewed(phaseViewKey) : undefined}
                 onPhasesChange={onPhasesChange}
+                allPhases={onPhasesChange ? phases : undefined}
                 isExpanded={isThisPhaseExpanded}
                 onRequestExpand={() => handleExpandPhaseCard(phase.key)}
               />
