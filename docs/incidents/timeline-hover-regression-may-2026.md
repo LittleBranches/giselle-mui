@@ -157,22 +157,64 @@ by opening a browser and hovering.
 
 ---
 
-## What regression tests should be added
+## Regression tests added
 
-Add to `milestone-badge.interaction.test.ts` or a new integration test file:
+### `milestone-badge.logic.test.ts` — three-level `displayTitle` disclosure (8 tests)
 
-```ts
-// After opening a milestone card, clicking it again should collapse it.
-it('clicking an expanded card closes it (toggle behavior)', () => {
-  // render two cards, open card 0, click card 0 again, assert closed
-});
+Added in the same commit as the final fix (`0c82104`). The `computeDisplayTitle` helper is
+extracted as a pure function in the test file and covers the full state matrix:
 
-// After opening card 0, card 1's wrapper should not have pointerEvents: none.
-it('when one card is expanded, other card wrappers have pointerEvents auto', () => {
-  // render two cards, open card 0
-  // assert card 1 wrapper style.pointerEvents !== 'none'
-});
-```
+| State | Input | Expected output |
+|-------|-------|-----------------|
+| At rest, shortTitle defined | `isExpanded=false`, `isHovered=false` | `shortTitle` |
+| At rest, no shortTitle | `isExpanded=false`, `isHovered=false` | `title` |
+| Hovered (not expanded) | `isExpanded=false`, `isHovered=true` | `title` |
+| Expanded (not hovered) | `isExpanded=true`, `isHovered=false` | `title` |
+| Expanded + hovered | `isExpanded=true`, `isHovered=true` | `title` |
+| `[regression]` shortTitle absent → falls back to title | — | `title` |
+| `[regression]` hover restores title (Bug 2b guard) | `isHovered=true` | full `title`, not `shortTitle` |
+| `[regression]` hovered + shortTitle defined | `isHovered=true` | full `title`, not `shortTitle` |
+
+These are pure-logic tests (`renderToStaticMarkup` not needed). They guard against a repeat
+of Bug 2b (hover title accidentally removed from the disclosure model).
+
+### `timeline-two-column.interaction.test.ts` — `computeSlotHeights` invariant (5 tests)
+
+Added after extracting `computeSlotHeights` as an exported pure function. The tests cover:
+
+1. **Max + padding**: phase with two milestones of heights 80 and 100 → slot = 116 (max + 16)
+2. **No-op when unmeasured**: empty height map → no slot entry (guarded by `if (maxH > 0)`)
+3. **Skips empty phases**: phase with zero milestones → no slot entry
+4. **Multi-phase independence**: two phases compute separate slot heights without interference
+5. **`[regression]` Bug 3 signature guard**: verifies the function is `(phases, heightMap)` — no
+   expansion/interaction state parameter. Documents that if a `300px` expanded height were
+   erroneously passed in the height map, the result would be `316` (the Bug 3 layout-shift value),
+   proving the fix works by ensuring that height is *never* in the map during interaction.
+
+### Why the ref-callback mount-only invariant is not unit-tested
+
+The key architectural guarantee — that `onMeasure` never fires during expand/hover/collapse —
+is enforced structurally, not by a unit test:
+
+- `onMeasure` is a React ref callback attached to a Box wrapper that is always mounted.
+  React only calls ref callbacks when an element **mounts or unmounts**. The wrapper is never
+  remounted during user interaction; only its children (via `Collapse`) change.
+- `useLayoutEffect` has `[sorted]` in its dependency array. `sorted` is derived from the
+  `phases` prop, which does not change during interaction. Expanding or hovering a card does
+  not touch `phases`, so the effect never re-runs.
+
+These are React semantics guarantees, not application logic. A unit test for "does this effect
+run on expand?" would be testing React itself. The `computeSlotHeights` pure-function tests
+(above) document the correct input contract; the architectural tests document what inputs can
+never occur.
+
+### Remaining gap (not yet closed)
+
+The toggle behavior (click-to-expand, click-again-to-collapse) was tested via state-machine
+pure-logic tests added in commit `84dfd55`. The full render-path interaction test originally
+described as future work below has not been added. It would require rendering `TimelineTwoColumn`
+in JSDOM with real phase data, firing click events, and asserting `pointerEvents` style — which
+requires `CssVarsProvider` setup not yet in the test harness.
 
 ---
 

@@ -617,6 +617,41 @@ function buildMilestoneRow(
 // ----------------------------------------------------------------------
 
 /**
+ * Computes the `msSlotHeights` record from the measured card-height map.
+ *
+ * For each phase that has milestones, finds the tallest measured card and returns
+ * `maxCardHeight + 16` as the slot height. The 16px gap provides breathing room
+ * between vertically stacked milestone badges.
+ *
+ * DESIGN INVARIANT — this function is a **pure function of its two inputs**.
+ * It has no concept of expand/collapse/hover state. That is intentional: slot
+ * heights must never change during user interaction (see architectural comment
+ * on `msHeightMapRef` in `TimelineTwoColumn`). Any introduction of expansion or
+ * hover state into this function's signature would break that invariant.
+ *
+ * @internal — exported for unit tests only. Not part of the public API.
+ */
+export function computeSlotHeights(
+  phases: TimelinePhase[],
+  heightMap: Record<string, number>
+): Record<string, number> {
+  const result: Record<string, number> = {};
+  phases.forEach((phase) => {
+    const n = phase.milestones?.length ?? 0;
+    if (n === 0) return;
+    let maxH = 0;
+    for (let i = 0; i < n; i++) {
+      const h = heightMap[`${String(phase.key)}-${i}`] ?? 0;
+      if (h > maxH) maxH = h;
+    }
+    if (maxH > 0) {
+      result[String(phase.key)] = maxH + 16;
+    }
+  });
+  return result;
+}
+
+/**
  * Two-column alternating timeline.
  *
  * Phases are sorted automatically (active pinned first, then newest → oldest).
@@ -818,19 +853,7 @@ export function TimelineTwoColumn({
   const [msSlotHeights, setMsSlotHeights] = useState<Record<string, number>>({});
 
   useLayoutEffect(() => {
-    const result: Record<string, number> = {};
-    sorted.forEach((phase) => {
-      const n = phase.milestones?.length ?? 0;
-      if (n === 0) return;
-      let maxH = 0;
-      for (let i = 0; i < n; i++) {
-        const h = msHeightMapRef.current[`${String(phase.key)}-${i}`] ?? 0;
-        if (h > maxH) maxH = h;
-      }
-      if (maxH > 0) {
-        result[String(phase.key)] = maxH + 16;
-      }
-    });
+    const result = computeSlotHeights(sorted, msHeightMapRef.current);
     setMsSlotHeights((prev) => {
       const changed = Object.keys(result).some((k) => result[k] !== prev[k]);
       return changed ? result : prev;
