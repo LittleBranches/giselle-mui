@@ -27,6 +27,22 @@ export const MONTH_INDEX: Record<string, number> = {
   dec: 11,
 };
 
+/** Reverse of MONTH_INDEX — 0-based index to 3-letter abbreviated month name. */
+const MONTH_NAMES = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+] as const;
+
 /**
  * Parses the last date expression found in a date range string.
  *
@@ -231,4 +247,97 @@ export function detectPhaseOverlaps<T extends SortablePhase>(phases: T[]): Map<n
     result.set(key, `Date overlap with: ${others.join('; ')}`);
   });
   return result;
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * Converts the first "Mon YYYY" token in a date string to a linear month index.
+ *
+ * The index is `year × 12 + month` (0-based month):
+ * - Jan 2000 → 24000
+ * - Apr 2025 → 24303
+ *
+ * Returns null if no parseable month + year token is found.
+ */
+export function dateToMonthIndex(dateStr: string): number | null {
+  const re = /\b([a-z]+)\s*(\d{4})\b/i;
+  const m = re.exec(dateStr.trim());
+  if (!m) return null;
+  const monthKey = m[1]!.slice(0, 3).toLowerCase();
+  const month = MONTH_INDEX[monthKey];
+  const year = Number.parseInt(m[2]!, 10);
+  if (month === undefined || year < 1900 || year > 2099) return null;
+  return year * 12 + month;
+}
+
+/**
+ * Converts a linear month index back to a "Mon YYYY" date string.
+ *
+ * ```ts
+ * monthIndexToDate(24303) // → 'Apr 2025'
+ * ```
+ */
+export function monthIndexToDate(index: number): string {
+  const year = Math.floor(index / 12);
+  const month = index % 12;
+  return `${MONTH_NAMES[month]} ${year}`;
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * Returns a new array of phases with date ranges adjusted so no phases overlap.
+ *
+ * Algorithm:
+ * 1. Sort phases by start date ascending.
+ * 2. Walk through sorted phases; if a phase starts on or before the previous
+ *    phase ends, shift it forward: new start = prev end + 1 month (duration
+ *    preserved — the phase is never compressed).
+ * 3. Phases with unparseable dates are returned unchanged at the end.
+ *
+ * This is a pure function — it does not mutate the input array or any phase objects.
+ */
+export function resolveOverlaps<T extends SortablePhase>(phases: T[]): T[] {
+  type Indexed = { phase: T; startIdx: number; endIdx: number; duration: number };
+  const parseable: Indexed[] = [];
+  const unparseable: T[] = [];
+
+  for (const phase of phases) {
+    const startMs = parseFirstDate(phase.date);
+    const endMs = parseSortableDate(phase.date);
+    if (startMs === null || endMs === null) {
+      unparseable.push(phase);
+      continue;
+    }
+    const startDate = new Date(startMs);
+    const endDate = new Date(endMs);
+    const startIdx = startDate.getFullYear() * 12 + startDate.getMonth();
+    const endIdx = endDate.getFullYear() * 12 + endDate.getMonth();
+    parseable.push({ phase, startIdx, endIdx, duration: endIdx - startIdx });
+  }
+
+  // Sort by start date ascending; tie-break by key.
+  parseable.sort((a, b) => a.startIdx - b.startIdx || a.phase.key - b.phase.key);
+
+  // Shift any phase that overlaps the previous phase forward.
+  for (let i = 1; i < parseable.length; i++) {
+    const prev = parseable[i - 1]!;
+    const curr = parseable[i]!;
+    if (curr.startIdx <= prev.endIdx) {
+      curr.startIdx = prev.endIdx + 1;
+      curr.endIdx = curr.startIdx + curr.duration;
+    }
+  }
+
+  // Rebuild phases with updated date strings.
+  const resolved = parseable.map(({ phase, startIdx, endIdx, duration }) => {
+    const newDate =
+      duration === 0
+        ? monthIndexToDate(startIdx)
+        : `${monthIndexToDate(startIdx)} \u2013 ${monthIndexToDate(endIdx)}`;
+    return { ...phase, date: newDate } as T;
+  });
+
+  return [...resolved, ...unparseable];
 }
