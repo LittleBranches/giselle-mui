@@ -362,7 +362,9 @@ function resolveMilestoneState(
   localMilestoneDone: Record<string, boolean>
 ): { msDone: boolean; msColor: HighlightedPaletteKey } {
   const msDoneKey = `${phaseKey}-${mi}`;
-  const msDone = checklist ? (localMilestoneDone[msDoneKey] ?? false) : (ms.done ?? false);
+  const msDone = checklist
+    ? (localMilestoneDone[msDoneKey] ?? ms.done ?? false)
+    : (ms.done ?? false);
   const msIsOverdue = checklist && (ms.overdue ?? false) && !msDone;
   const msColorFromData =
     ms.color && ms.color !== 'inherit' && ms.color !== 'grey'
