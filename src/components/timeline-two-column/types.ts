@@ -295,4 +295,23 @@ export type TimelineTwoColumnProps = Omit<BoxProps, 'children'> & {
    * ```
    */
   expandableIcon?: ReactNode;
+  /**
+   * Called when the user applies a date-repair action (e.g. "Make sequential") from
+   * the `PhaseWarningPopover`. Receives the full updated `phases` array with corrected dates.
+   *
+   * **When provided:** the corner overlap-warning badge on each conflicting `PhaseCard`
+   * opens a rich `PhaseWarningPopover` with range sliders, a mini Gantt ruler, and
+   * Make sequential + Apply/Cancel controls.
+   *
+   * **When omitted (default):** the badge shows only a plain string tooltip — no interactive
+   * popover, no date editing. This is the read-only mode.
+   *
+   * Pair with a state setter to keep `phases` in sync:
+   *
+   * ```tsx
+   * const [phases, setPhases] = useState(initialPhases);
+   * <TimelineTwoColumn phases={phases} onPhasesChange={setPhases} />
+   * ```
+   */
+  onPhasesChange?: (updated: TimelinePhase[]) => void;
 };

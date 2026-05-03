@@ -683,6 +683,7 @@ export function TimelineTwoColumn({
   expandableIcon,
   viewedKeys,
   onMarkViewed,
+  onPhasesChange,
   sortOrder = 'desc',
   milestoneSlotHeight = 60,
   phaseCardGap = 90,
@@ -1032,6 +1033,7 @@ export function TimelineTwoColumn({
                 )}
                 isViewed={effectiveViewedKeys.has(phaseViewKey)}
                 onMarkViewed={onMarkViewed ? () => onMarkViewed(phaseViewKey) : undefined}
+                onPhasesChange={onPhasesChange}
                 isExpanded={isThisPhaseExpanded}
                 onRequestExpand={() => handleExpandPhaseCard(phase.key)}
               />

@@ -692,6 +692,16 @@ export type PhaseCardProps = Omit<BoxProps, 'children'> & {
    * - `'left'`: badge floats on the left top corner (mirrored, between spine and card edge).
    */
   columnSide?: 'left' | 'right';
+  /**
+   * Forwarded from `TimelineTwoColumn.onPhasesChange`.
+   *
+   * When provided, the corner overlap-warning badge opens a rich `PhaseWarningPopover`
+   * (range sliders + mini Gantt ruler + Apply/Cancel) instead of a plain string tooltip.
+   * The popover calls this with the full updated phases array on "Apply".
+   *
+   * When omitted, the badge is read-only — plain tooltip only.
+   */
+  onPhasesChange?: (updated: TimelinePhase[]) => void;
 };
 
 /**
@@ -717,6 +727,7 @@ export function PhaseCard({
   isViewed = false,
   onMarkViewed,
   columnSide = 'right',
+  onPhasesChange: _onPhasesChange,
   sx,
   ...other
 }: PhaseCardProps) {
