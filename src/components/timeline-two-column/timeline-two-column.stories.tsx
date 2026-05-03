@@ -947,3 +947,98 @@ export const FooterSlot: Story = {
   ),
   argTypes: { phases: { control: false }, sx: { control: false } },
 };
+
+// ----------------------------------------------------------------------
+
+const OVERLAPPING_PHASES: TimelinePhase[] = [
+  {
+    key: 1,
+    title: 'API Platform',
+    shortTitle: 'API Platform',
+    description:
+      'Designed and shipped a public REST API platform with rate limiting and versioning.',
+    date: 'Jan 2022 – Aug 2022',
+    color: 'primary',
+    side: 'right',
+    icon: icon('solar:servers-bold'),
+    details: ['REST + GraphQL endpoints', 'OAuth 2.0 authentication', 'Rate limiting at 1k rps'],
+  },
+  {
+    key: 2,
+    title: 'Data Pipeline',
+    shortTitle: 'Data Pipeline',
+    description: 'Built an event-driven data pipeline for real-time analytics ingestion.',
+    date: 'May 2022 – Dec 2022',
+    color: 'warning',
+    side: 'right',
+    icon: icon('solar:database-bold'),
+    details: ['Kafka event bus', 'Spark streaming jobs', '500 M events/day at peak'],
+  },
+];
+
+/**
+ * **Design decision: `onPhasesChange` prop — controlled vs read-only mode**
+ *
+ * The `⚠ Date overlap` corner badge has two modes determined by a single prop:
+ *
+ * - **Read-only (default):** `onPhasesChange` omitted → badge shows a plain string tooltip.
+ *   No interactive repair UI is shown. This is always safe — zero state to manage.
+ *
+ * - **Controlled mode:** `onPhasesChange` provided → badge becomes a clickable button that
+ *   opens `PhaseWarningPopover`. The popover hosts range sliders (one per conflicting phase),
+ *   a mini Gantt ruler, and Make sequential + Apply/Cancel controls. On Apply, the parent
+ *   receives the full updated `phases` array with corrected date strings.
+ *
+ * ### Why `Popper` + `ClickAwayListener`, not `Tooltip`
+ *
+ * MUI `Tooltip` is display-only — it does not support interactive children (sliders, buttons).
+ * Focus management inside a tooltip is undefined behaviour in MUI v7. `Popper` + `Paper` +
+ * `ClickAwayListener` gives us: full focus management, click-outside-to-close, and the ability
+ * to host any interactive content without fighting against the tooltip abstraction.
+ *
+ * ### Invariant this story protects
+ *
+ * The canvas shows two overlapping phases side by side:
+ * - **Left panel:** read-only — `onPhasesChange` omitted. Badge is tooltip-only.
+ * - **Right panel:** controlled — `onPhasesChange` wired to `useState`. Click the orange ⚠
+ *   badge to open the popover. Adjust sliders or use Make sequential, then Apply.
+ *
+ * A contributor must be able to verify both modes in the canvas without reading source code.
+ */
+export const ControlledModeOverlapRepair: Story = {
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        story:
+          'Two panels side by side — **left: read-only** (plain tooltip), **right: controlled** (`onPhasesChange` wired). ' +
+          'Click the orange ⚠ corner badge on the right panel to open the popover. ' +
+          'Adjust sliders or click "Make sequential", then Apply to see the phases update.',
+      },
+    },
+  },
+  render: function ControlledModeDemo() {
+    const [phases, setPhases] = useState<TimelinePhase[]>(OVERLAPPING_PHASES);
+    return (
+      <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+        <Box sx={{ flex: 1, minWidth: 340 }}>
+          <Typography variant="overline" sx={{ mb: 1, display: 'block', opacity: 0.6 }}>
+            Read-only (no onPhasesChange)
+          </Typography>
+          <TimelineTwoColumn phases={OVERLAPPING_PHASES} />
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 340 }}>
+          <Typography variant="overline" sx={{ mb: 1, display: 'block' }}>
+            Controlled — click ⚠ badge to repair
+          </Typography>
+          <TimelineTwoColumn phases={phases} onPhasesChange={setPhases} />
+        </Box>
+      </Box>
+    );
+  },
+  argTypes: {
+    phases: { control: false },
+    sx: { control: false },
+    onPhasesChange: { control: false },
+  },
+};

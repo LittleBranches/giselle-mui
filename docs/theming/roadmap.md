@@ -48,12 +48,12 @@ as named exports from `giselle-mui`, so consuming projects have them out of the 
 
 | Task                                                             | Status |
 | ---------------------------------------------------------------- | ------ |
-| Add `varAlpha(channel, alpha)` to `giselle-mui/src/utils/`       | ⬜     |
-| Add `createPaletteChannel(hex)` to `giselle-mui/src/utils/`      | ⬜     |
-| Add `pxToRem(px)` and `remToPx(rem)` to `giselle-mui/src/utils/` | ⬜     |
-| Export all theme utilities from `giselle-mui/src/index.ts`       | ⬜     |
-| Add tests for all theme utilities                                | ⬜     |
-| Update `theming-nextjs.md` to show usage from giselle-mui        | ⬜     |
+| Add `varAlpha(channel, alpha)` to `giselle-mui/src/utils/`       | ✅     |
+| Add `createPaletteChannel(hex)` to `giselle-mui/src/utils/`      | ✅     |
+| Add `pxToRem(px)` and `remToPx(rem)` to `giselle-mui/src/utils/` | ✅     |
+| Export all theme utilities from `giselle-mui/src/index.ts`       | ✅     |
+| Add tests for all theme utilities                                | ✅     |
+| Update `theming-nextjs.md` to show usage from giselle-mui        | ✅     |
 
 ### Phase B — Giselle brand theme preset (Medium priority)
 

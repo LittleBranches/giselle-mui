@@ -11,6 +11,9 @@ import {
   detectPhaseOverlaps,
   sortMilestonesAsc,
   sortMilestonesDesc,
+  dateToMonthIndex,
+  monthIndexToDate,
+  resolveOverlaps,
 } from './utils';
 
 // ----------------------------------------------------------------------
@@ -431,5 +434,133 @@ describe('sortMilestonesDesc', () => {
     expect(result[0]!.date).toBe('Jan 2020');
     expect(result[1]!.date).toBe('Feb 2018');
     expect(result[2]!.date).toBe('unknown');
+  });
+});
+
+// ----------------------------------------------------------------------
+
+describe('dateToMonthIndex', () => {
+  it('converts a single-month string to a linear index', () => {
+    // Jan 2000 = 2000 * 12 + 0 = 24000
+    expect(dateToMonthIndex('Jan 2000')).toBe(24000);
+    // Apr 2025 = 2025 * 12 + 3 = 24303
+    expect(dateToMonthIndex('Apr 2025')).toBe(24303);
+    // Dec 2025 = 2025 * 12 + 11 = 24311
+    expect(dateToMonthIndex('Dec 2025')).toBe(24311);
+  });
+
+  it('picks the FIRST month token in a range string', () => {
+    // 'Jul 2025 – Mar 2026' → Jul 2025 = 2025 * 12 + 6 = 24306
+    expect(dateToMonthIndex('Jul 2025 – Mar 2026')).toBe(24306);
+  });
+
+  it('is case-insensitive', () => {
+    expect(dateToMonthIndex('apr 2025')).toBe(24303);
+    expect(dateToMonthIndex('APR 2025')).toBe(24303);
+  });
+
+  it('returns null for unparseable strings', () => {
+    expect(dateToMonthIndex('present')).toBeNull();
+    expect(dateToMonthIndex('~1994')).toBeNull(); // year only, no month
+    expect(dateToMonthIndex('')).toBeNull();
+  });
+});
+
+// ----------------------------------------------------------------------
+
+describe('monthIndexToDate', () => {
+  it('converts a month index back to a "Mon YYYY" string', () => {
+    expect(monthIndexToDate(24000)).toBe('Jan 2000');
+    expect(monthIndexToDate(24303)).toBe('Apr 2025');
+    expect(monthIndexToDate(24311)).toBe('Dec 2025');
+  });
+
+  it('round-trips with dateToMonthIndex', () => {
+    const cases = ['Jan 2000', 'Apr 2025', 'Dec 2025', 'Mar 2026'];
+    for (const d of cases) {
+      expect(monthIndexToDate(dateToMonthIndex(d)!)).toBe(d);
+    }
+  });
+
+  it('correctly crosses year boundaries', () => {
+    // Dec 2025 + 1 month = Jan 2026
+    const dec2025 = dateToMonthIndex('Dec 2025')!;
+    expect(monthIndexToDate(dec2025 + 1)).toBe('Jan 2026');
+  });
+});
+
+// ----------------------------------------------------------------------
+
+/** Minimal phase factory for resolveOverlaps tests. */
+function ph(key: number, date: string) {
+  return { key, date, title: `Phase ${key}` };
+}
+
+describe('resolveOverlaps', () => {
+  it('returns phases unchanged when there are no overlaps', () => {
+    const phases = [ph(1, 'Jan 2025 – Mar 2025'), ph(2, 'Apr 2025 – Jun 2025')];
+    const result = resolveOverlaps(phases);
+    expect(result[0]!.date).toBe('Jan 2025 – Mar 2025');
+    expect(result[1]!.date).toBe('Apr 2025 – Jun 2025');
+  });
+
+  it('shifts the later phase forward when two phases overlap', () => {
+    // Phase A: Apr 2025 – Sep 2025 (duration 5 months)
+    // Phase B: Jul 2025 – Dec 2025 (overlaps A by 3 months)
+    // Expected: B shifts to Oct 2025 – Mar 2026
+    const phases = [ph(1, 'Apr 2025 – Sep 2025'), ph(2, 'Jul 2025 – Dec 2025')];
+    const result = resolveOverlaps(phases);
+    expect(result[0]!.date).toBe('Apr 2025 – Sep 2025');
+    expect(result[1]!.date).toBe('Oct 2025 – Mar 2026');
+  });
+
+  it('resolves a chain of three overlapping phases', () => {
+    // A: Jan 2025 – Jun 2025, B: Mar 2025 – Aug 2025, C: May 2025 – Oct 2025
+    // After resolution: A unchanged, B → Jul–Dec 2025, C → Jan–Jun 2026
+    const phases = [
+      ph(1, 'Jan 2025 – Jun 2025'),
+      ph(2, 'Mar 2025 – Aug 2025'),
+      ph(3, 'May 2025 – Oct 2025'),
+    ];
+    const result = resolveOverlaps(phases);
+    expect(result[0]!.date).toBe('Jan 2025 – Jun 2025');
+    expect(result[1]!.date).toBe('Jul 2025 – Dec 2025');
+    expect(result[2]!.date).toBe('Jan 2026 – Jun 2026');
+  });
+
+  it('preserves phase duration (does not compress phases)', () => {
+    // 6-month phases: A Jan–Jun, B Apr–Sep → B becomes Jul–Dec (still 6 months)
+    const phases = [ph(1, 'Jan 2025 – Jun 2025'), ph(2, 'Apr 2025 – Sep 2025')];
+    const result = resolveOverlaps(phases);
+    const [startStr, endStr] = result[1]!.date.split(' – ');
+    const startIdx = dateToMonthIndex(startStr!)!;
+    const endIdx = dateToMonthIndex(endStr!)!;
+    expect(endIdx - startIdx).toBe(5); // 5-index span = 6 months inclusive
+  });
+
+  it('handles single-month (point) phases', () => {
+    // A: Apr 2025 (single month), B: Apr 2025 (same month — overlaps)
+    // B should shift to May 2025
+    const phases = [ph(1, 'Apr 2025'), ph(2, 'Apr 2025')];
+    const result = resolveOverlaps(phases);
+    expect(result[0]!.date).toBe('Apr 2025');
+    expect(result[1]!.date).toBe('May 2025');
+  });
+
+  it('appends phases with unparseable dates at the end, unchanged', () => {
+    const phases = [ph(1, 'Jan 2025 – Mar 2025'), ph(2, 'present'), ph(3, 'Apr 2025 – Jun 2025')];
+    const result = resolveOverlaps(phases);
+    // Parseable phases first (sorted by start), then unparseable
+    expect(result[0]!.key).toBe(1);
+    expect(result[1]!.key).toBe(3);
+    expect(result[2]!.date).toBe('present');
+  });
+
+  it('does not mutate the input array or phase objects', () => {
+    const phases = [ph(1, 'Apr 2025 – Sep 2025'), ph(2, 'Jul 2025 – Dec 2025')];
+    const original = phases.map((p) => ({ ...p }));
+    resolveOverlaps(phases);
+    expect(phases[0]!.date).toBe(original[0]!.date);
+    expect(phases[1]!.date).toBe(original[1]!.date);
   });
 });

@@ -3,7 +3,7 @@
 **Introduced:** commit `651173d` (`feat(timeline): implement improvements for tooltips, marker variant, footer slot, and height measurement`)  
 **Fixed:** commit `84dfd55` (`fix(timeline): restore toggle behavior for milestone and phase card expansion`)  
 **Detected:** visually on Vercel branch preview — NOT by automated tests  
-**Symptom:** hovering milestone cards produced no visual feedback; the card background, border accent and shadow did not appear  
+**Symptom:** hovering milestone cards produced no visual feedback; the card background, border accent and shadow did not appear
 
 ---
 
@@ -21,13 +21,13 @@ const handleExpandMilestone = useCallback((phaseKey, milestoneIndex) => {
   setExpandedPhaseKey(null);
   setExpandedMilestoneMap((prev) => ({
     ...prev,
-    [k]: prev[k] === milestoneIndex ? null : milestoneIndex,  // toggle
+    [k]: prev[k] === milestoneIndex ? null : milestoneIndex, // toggle
   }));
 }, []);
 
 const handleExpandPhaseCard = useCallback((phaseKey) => {
   setExpandedMilestoneMap({});
-  setExpandedPhaseKey((prev) => (prev === phaseKey ? null : phaseKey));  // toggle
+  setExpandedPhaseKey((prev) => (prev === phaseKey ? null : phaseKey)); // toggle
 }, []);
 ```
 
@@ -38,14 +38,14 @@ const handleExpandMilestone = useCallback((phaseKey, milestoneIndex) => {
   const k = String(phaseKey);
   setExpandedPhaseKey(null);
   setExpandedMilestoneMap((prev) => {
-    if (prev[k] === milestoneIndex) return prev;  // early return — card stuck open
+    if (prev[k] === milestoneIndex) return prev; // early return — card stuck open
     return { ...prev, [k]: milestoneIndex };
   });
 }, []);
 
 const handleExpandPhaseCard = useCallback((phaseKey) => {
   setExpandedMilestoneMap({});
-  setExpandedPhaseKey(phaseKey);  // always opens, never toggles
+  setExpandedPhaseKey(phaseKey); // always opens, never toggles
 }, []);
 ```
 
@@ -111,9 +111,11 @@ both hover CSS pseudo-class events and click events for those cards.
 ### The collision
 
 With **toggle** behavior:
+
 - User clicks open card → `handleExpandMilestone` sets it to `null` → card closes → `anyExpanded = false` → `pointerEvents` restored → hover works everywhere
 
 With **open-only** behavior:
+
 - User clicks open card → `stopPropagation` blocks the document listener → `handleExpandMilestone` returns `prev` (early return) → card stays open → `anyExpanded` stays `true` → all other cards remain `pointerEvents: none` → **hover is permanently broken** until a click reaches a completely different DOM area
 
 In practice, users naturally try to click the open card to close it first. That click does
@@ -164,16 +166,16 @@ by opening a browser and hovering.
 Added in the same commit as the final fix (`0c82104`). The `computeDisplayTitle` helper is
 extracted as a pure function in the test file and covers the full state matrix:
 
-| State | Input | Expected output |
-|-------|-------|-----------------|
-| At rest, shortTitle defined | `isExpanded=false`, `isHovered=false` | `shortTitle` |
-| At rest, no shortTitle | `isExpanded=false`, `isHovered=false` | `title` |
-| Hovered (not expanded) | `isExpanded=false`, `isHovered=true` | `title` |
-| Expanded (not hovered) | `isExpanded=true`, `isHovered=false` | `title` |
-| Expanded + hovered | `isExpanded=true`, `isHovered=true` | `title` |
-| `[regression]` shortTitle absent → falls back to title | — | `title` |
-| `[regression]` hover restores title (Bug 2b guard) | `isHovered=true` | full `title`, not `shortTitle` |
-| `[regression]` hovered + shortTitle defined | `isHovered=true` | full `title`, not `shortTitle` |
+| State                                                  | Input                                 | Expected output                |
+| ------------------------------------------------------ | ------------------------------------- | ------------------------------ |
+| At rest, shortTitle defined                            | `isExpanded=false`, `isHovered=false` | `shortTitle`                   |
+| At rest, no shortTitle                                 | `isExpanded=false`, `isHovered=false` | `title`                        |
+| Hovered (not expanded)                                 | `isExpanded=false`, `isHovered=true`  | `title`                        |
+| Expanded (not hovered)                                 | `isExpanded=true`, `isHovered=false`  | `title`                        |
+| Expanded + hovered                                     | `isExpanded=true`, `isHovered=true`   | `title`                        |
+| `[regression]` shortTitle absent → falls back to title | —                                     | `title`                        |
+| `[regression]` hover restores title (Bug 2b guard)     | `isHovered=true`                      | full `title`, not `shortTitle` |
+| `[regression]` hovered + shortTitle defined            | `isHovered=true`                      | full `title`, not `shortTitle` |
 
 These are pure-logic tests (`renderToStaticMarkup` not needed). They guard against a repeat
 of Bug 2b (hover title accidentally removed from the disclosure model).
@@ -189,7 +191,7 @@ Added after extracting `computeSlotHeights` as an exported pure function. The te
 5. **`[regression]` Bug 3 signature guard**: verifies the function is `(phases, heightMap)` — no
    expansion/interaction state parameter. Documents that if a `300px` expanded height were
    erroneously passed in the height map, the result would be `316` (the Bug 3 layout-shift value),
-   proving the fix works by ensuring that height is *never* in the map during interaction.
+   proving the fix works by ensuring that height is _never_ in the map during interaction.
 
 ### Why the ref-callback mount-only invariant is not unit-tested
 
@@ -303,6 +305,7 @@ cards at top: X%                      — stable, never updated during interacti
 ```
 
 **Key invariants:**
+
 - `onMeasure` ref callback fires only when an element mounts or unmounts. The wrapper Box
   is never remounted during expand/hover — only its children change. So `onMeasure` is
   never called during user interaction.
@@ -319,12 +322,12 @@ is safe: `displayTitle = isExpanded || isHovered ? m.title : (m.shortTitle ?? m.
 
 ## Three-bug cascade — timeline
 
-| # | Bug | Introduced | Fixed | Symptoms |
-|---|-----|-----------|-------|---------|
-| 1 | Toggle → open-only | `651173d` | `84dfd55` | hover permanently blocked after expanding any card |
-| 2 | Hover feedback loop | `651173d` (RO) | `4d865ea` (incorrectly) | cards flickered on hover |
-| 2b | Hover title regression | `4d865ea` (incorrect fix) | `0c82104` | full title no longer shown on hover |
-| 3 | Expand layout shift | `651173d` (RO) | `0c82104` | all milestone cards shift on expand, expanded card goes off-screen |
+| #   | Bug                    | Introduced                | Fixed                   | Symptoms                                                           |
+| --- | ---------------------- | ------------------------- | ----------------------- | ------------------------------------------------------------------ |
+| 1   | Toggle → open-only     | `651173d`                 | `84dfd55`               | hover permanently blocked after expanding any card                 |
+| 2   | Hover feedback loop    | `651173d` (RO)            | `4d865ea` (incorrectly) | cards flickered on hover                                           |
+| 2b  | Hover title regression | `4d865ea` (incorrect fix) | `0c82104`               | full title no longer shown on hover                                |
+| 3   | Expand layout shift    | `651173d` (RO)            | `0c82104`               | all milestone cards shift on expand, expanded card goes off-screen |
 
 **Root cause of bugs 2, 2b, 3:** A single architectural error — `ResizeObserver` feeding
 back into layout state during user interaction. Corrected by removing ResizeObserver and
@@ -334,8 +337,8 @@ using a one-shot measurement approach.
 
 ## Related
 
-- Fix commit (Bug 1): `84dfd55`  
-- Fix commit (Bug 2 — incorrect): `4d865ea`  
-- Fix commit (final — Bugs 2b + 3): `0c82104`  
-- Original PR description: [`docs/pr-messages/feature-timeline-improvements.md`](../pr-messages/feature-timeline-improvements.md)  
-- Blog post: [#43 — I Pushed Broken Code Because I Trusted AI (And the Approve-All Button)](../../rm/presentation/alexrebula/docs/blog-post-ideas/ai/43-ai-regression-approve-all-and-discipline.md)  
+- Fix commit (Bug 1): `84dfd55`
+- Fix commit (Bug 2 — incorrect): `4d865ea`
+- Fix commit (final — Bugs 2b + 3): `0c82104`
+- Original PR description: [`docs/pr-messages/feature-timeline-improvements.md`](../pr-messages/feature-timeline-improvements.md)
+- Blog post: [#43 — I Pushed Broken Code Because I Trusted AI (And the Approve-All Button)](../../rm/presentation/alexrebula/docs/blog-post-ideas/ai/43-ai-regression-approve-all-and-discipline.md)

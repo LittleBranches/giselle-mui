@@ -1,21 +1,49 @@
 import type { Preview } from '@storybook/react';
-import { CssVarsProvider, extendTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-const theme = extendTheme({
+const muiDefaultTheme = createTheme({
+  cssVariables: true,
   colorSchemes: { light: true, dark: true },
 });
 
-// Wraps every story in MUI CssVarsProvider so that --mui-palette-* CSS custom
+// Registry of themes available in the Storybook toolbar.
+// Phase B: add 'giselle' entry once the Giselle brand palette ships in src/utils/.
+const themes: Record<string, typeof muiDefaultTheme> = {
+  'mui-default': muiDefaultTheme,
+};
+
+/**
+ * Toolbar dropdown — switch between registered themes in the Storybook canvas.
+ * Each `value` must match a key in the `themes` registry above.
+ * Phase B: add `{ value: 'giselle', title: 'Giselle' }` once the palette ships.
+ */
+export const globalTypes = {
+  theme: {
+    name: 'Theme',
+    defaultValue: 'mui-default',
+    toolbar: {
+      icon: 'paintbrush',
+      items: [{ value: 'mui-default', title: 'MUI Default' }],
+      dynamicTitle: true,
+    },
+  },
+};
+
+// Wraps every story in MUI ThemeProvider so that --mui-palette-* CSS custom
 // properties are injected into the DOM — required by giselle-mui components that
 // reference theme.vars.palette.* or var(--mui-palette-...) directly.
 const preview: Preview = {
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
-      <CssVarsProvider theme={theme}>
-        <Story />
-      </CssVarsProvider>
-    ),
+    (Story, context) => {
+      const key = context.globals['theme'] as string | undefined;
+      const selectedTheme = (key && themes[key]) || muiDefaultTheme;
+      return (
+        <ThemeProvider theme={selectedTheme}>
+          <Story />
+        </ThemeProvider>
+      );
+    },
   ],
   parameters: {
     layout: 'centered',
