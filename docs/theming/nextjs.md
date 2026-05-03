@@ -203,6 +203,58 @@ export default function App({ Component, pageProps }: AppProps) {
 
 ---
 
+## Theme utilities
+
+`@alexrebula/giselle-mui` exports a set of small helpers for building MUI v7 themes:
+
+### `varAlpha(channel, alpha)`
+
+Converts a CSS-variable palette channel to an `rgba()` CSS string. MUI v7 exposes
+colours as space-separated RGB channels (e.g. `theme.vars.palette.primary.mainChannel`).
+
+```ts
+import { varAlpha } from '@alexrebula/giselle-mui';
+
+sx={(theme) => ({
+  backgroundColor: varAlpha(theme.vars.palette.primary.mainChannel, 0.08),
+})}
+```
+
+### `createPaletteChannel(hex)`
+
+Converts a hex colour to a space-separated RGB channel string — the format MUI v7
+expects for `*Channel` palette slots in `extendTheme()`.
+
+```ts
+import { createPaletteChannel } from '@alexrebula/giselle-mui';
+
+const theme = extendTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: {
+          main: '#6366f1',
+          mainChannel: createPaletteChannel('#6366f1'), // "99 102 241"
+        },
+      },
+    },
+  },
+});
+```
+
+### `pxToRem(px)` / `remToPx(rem)`
+
+Typography scale helpers for consistent `rem` definitions.
+
+```ts
+import { pxToRem, remToPx } from '@alexrebula/giselle-mui';
+
+pxToRem(14)     // "0.875rem"
+remToPx(0.875)  // 14
+```
+
+---
+
 ## Roadmap note
 
 The `@alexrebula/giselle-mui` package is in beta. A dedicated Next.js integration example
