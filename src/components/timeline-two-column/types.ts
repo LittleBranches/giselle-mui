@@ -178,7 +178,8 @@ export type TimelinePhase = {
    */
   photo?: { src: string; alt: string };
   /**
-   * Multiple personal photos rendered as a small row of thumbnails below the description.
+   * Multiple personal photos rendered as stacked thumbnails below the description.
+   * Each photo is displayed as a rounded block image at `maxWidth: 200px`.
    * Use when you have two or more photos for the same moment. Takes precedence over `photo`
    * when both are provided.
    */
