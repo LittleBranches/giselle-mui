@@ -153,6 +153,24 @@ describe('resolvePhaseTooltip — dotTooltip override', () => {
     expect(resolvePhaseTooltip(false, 'primary', false, p)).toBe('Custom override');
     expect(resolvePhaseTooltip(true, 'primary', false, p)).toBe('Custom override');
   });
+
+  it('[regression] dotTooltip: "" suppresses computed tooltip — empty string is a valid override, not falsy-skipped', () => {
+    // "" != null → should short-circuit and return "" (suppressed tooltip).
+    // A truthy check would have ignored "" and fallen through to description/status.
+    const p = phase({ dotTooltip: '', description: 'Should be suppressed', date: 'Q1' });
+    expect(resolvePhaseTooltip(false, 'primary', false, p)).toBe('');
+    expect(resolvePhaseTooltip(true, 'primary', false, p)).toBe('');
+    expect(resolvePhaseTooltip(true, 'error', false, p)).toBe('');
+  });
+
+  it('[regression] dotTooltip: undefined does NOT suppress — falls through to computed tooltip', () => {
+    // undefined == null → should fall through; lock the != null boundary.
+    const p = phase({ dotTooltip: undefined, description: 'Visible description', date: 'Q1' });
+    // read-only: description is shown
+    expect(resolvePhaseTooltip(false, 'primary', false, p)).toBe('Visible description');
+    // checklist: status label is shown
+    expect(resolvePhaseTooltip(true, 'primary', true, p)).toBe('Done · Q1');
+  });
 });
 
 describe('resolvePhaseTooltip — checklist mode', () => {
@@ -229,6 +247,28 @@ describe('resolveMilestoneTooltip — dotTooltip override', () => {
   it('dotTooltip always wins', () => {
     const ms = milestone({ dotTooltip: 'Custom', description: 'Ignored' });
     expect(resolveMilestoneTooltip(false, 'primary', false, ms)).toBe('Custom');
+  });
+
+  it('[regression] dotTooltip: "" suppresses computed tooltip — empty string is a valid override, not falsy-skipped', () => {
+    // "" != null → should short-circuit and return "" (suppressed tooltip).
+    // A truthy check would have ignored "" and fallen through to description/status.
+    const ms = milestone({ dotTooltip: '', description: 'Should be suppressed', date: 'Q2' });
+    expect(resolveMilestoneTooltip(false, 'primary', false, ms)).toBe('');
+    expect(resolveMilestoneTooltip(true, 'primary', false, ms)).toBe('');
+    expect(resolveMilestoneTooltip(true, 'warning', false, ms)).toBe('');
+  });
+
+  it('[regression] dotTooltip: undefined does NOT suppress — falls through to computed tooltip', () => {
+    // undefined == null → should fall through; lock the != null boundary.
+    const ms = milestone({
+      dotTooltip: undefined,
+      description: 'Shipped stable release',
+      date: 'Q3',
+    });
+    // read-only: description is shown
+    expect(resolveMilestoneTooltip(false, 'primary', false, ms)).toBe('Shipped stable release');
+    // checklist: status label is shown
+    expect(resolveMilestoneTooltip(true, 'primary', true, ms)).toBe('Done · Q3');
   });
 });
 

@@ -10,6 +10,12 @@ import {
   type ReactNode,
 } from 'react';
 
+// SSR-safe layout effect — runs as useLayoutEffect on the client (synchronous, before
+// first paint) and falls back to useEffect on the server (no-op in SSR environments).
+// This prevents the React "useLayoutEffect does nothing on the server" warning for
+// consumers using Next.js or any other server-side renderer.
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
 import Box from '@mui/material/Box';
 import Timeline from '@mui/lab/Timeline';
 import Tooltip from '@mui/material/Tooltip';
@@ -266,7 +272,7 @@ export function resolvePhaseTooltip(
   done: boolean,
   phase: TimelinePhase
 ): string {
-  if (phase.dotTooltip) return phase.dotTooltip;
+  if (phase.dotTooltip != null) return phase.dotTooltip;
   if (checklist) return dotStatusLabel(color, done, phase.date);
   if (phase.description) return truncateDescription(phase.description);
   const label = phase.shortTitle ?? phase.title;
@@ -288,7 +294,7 @@ export function resolveMilestoneTooltip(
   done: boolean,
   ms: Milestone
 ): string {
-  if (ms.dotTooltip) return ms.dotTooltip;
+  if (ms.dotTooltip != null) return ms.dotTooltip;
   if (checklist) return dotStatusLabel(color, done, ms.date);
   if (ms.description) return truncateDescription(ms.description);
   const label = ms.shortTitle ?? ms.title;
@@ -798,9 +804,7 @@ export function TimelineTwoColumn({
         ...phase,
         milestones: phase.milestones ? sortMilestones(phase.milestones) : phase.milestones,
       })),
-    // sortMilestones is derived from sortOrder so adding sortOrder as dep is sufficient
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [phases, sortOrder]
+    [phases, sortOrder, sortMilestones]
   );
 
   // Detect phases whose date ranges overlap — shown as ⚠ Date overlap badge.
@@ -852,10 +856,14 @@ export function TimelineTwoColumn({
   const msHeightMapRef = useRef<Record<string, number>>({});
   const [msSlotHeights, setMsSlotHeights] = useState<Record<string, number>>({});
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const result = computeSlotHeights(sorted, msHeightMapRef.current);
     setMsSlotHeights((prev) => {
-      const changed = Object.keys(result).some((k) => result[k] !== prev[k]);
+      // Check both directions: a key appearing only in prev (removed phase) is also a change.
+      const prevKeys = Object.keys(prev);
+      const resultKeys = Object.keys(result);
+      const changed =
+        prevKeys.length !== resultKeys.length || resultKeys.some((k) => result[k] !== prev[k]);
       return changed ? result : prev;
     });
   }, [sorted]);
@@ -1227,7 +1235,7 @@ export function TimelineTwoColumn({
                           msSlotHeights[String(phase.key)] ?? milestoneSlotHeight,
                           yearLabelMarginBottom + 80
                         )
-                      : (msSlotHeights[String(phase.key)] ?? milestoneSlotHeight)),
+                      : Math.max(milestoneSlotHeight, msSlotHeights[String(phase.key)] ?? 0)),
                 }),
               }}
             >
