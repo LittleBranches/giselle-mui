@@ -134,76 +134,90 @@ describe('eye button — WCAG accessibility regression', () => {
 });
 
 // ---------------------------------------------------------------------------
-// displayTitle — two-level title disclosure (regression)
+// displayTitle — three-level title disclosure
 //
-// REGRESSION GUARD: hover state must NOT affect displayTitle.
+// MilestoneBadge uses a three-level disclosure model:
+//   collapsed (at rest)  → shortTitle (glanceable)
+//   collapsed (hovered)  → full title (preview before clicking)
+//   expanded             → full title
 //
-// When isHovered was part of the condition (isExpanded || isHovered), a
-// shortTitle → title change on mouseenter caused card height to increase.
-// That height change triggered the ResizeObserver, which called setMeasureVersion,
-// which re-rendered the parent TimelineTwoColumn, which updated msSlotHeights,
-// which changed the <li> minHeight, which shifted all milestone cards
-// (top: X% of a taller li = more pixels down). The card moved out from under
-// the cursor → mouseleave → card shrinks → cards shift back up → mouseenter
-// → infinite loop. Visual symptom: card appeared to flicker/open-close on hover.
+// This is safe because the ResizeObserver has been removed from
+// timeline-two-column.tsx. Slot heights are now computed only once — on mount
+// and when `sorted` changes — via ref callback + useLayoutEffect([sorted]).
+// Hovering does not change `sorted`, so no layout effect fires, so msSlotHeights
+// never updates during hover, and no layout shift occurs.
 //
-// The fix: displayTitle = isExpanded ? title : (shortTitle ?? title).
-// Hover is purely CSS — background, border, shadow — none of which change layout.
+// REGRESSION GUARD (expand): useLayoutEffect([sorted]) also ensures that expanding
+// a card does not update slot heights. A card expanding changes only local
+// component state in MilestoneBadge, not the `sorted` array in the parent, so
+// the layout effect is never re-triggered. The expanded card grows in place via
+// Collapse without moving any milestone dots.
 // ---------------------------------------------------------------------------
 
 /**
- * Mirrors: const displayTitle = isExpanded ? m.title : (m.shortTitle ?? m.title);
- *
- * Note: no isHovered parameter — hover must NEVER control displayTitle.
+ * Mirrors: const displayTitle = isExpanded || isHovered ? m.title : (m.shortTitle ?? m.title);
  */
 function computeDisplayTitle(
   title: string,
   shortTitle: string | undefined,
-  isExpanded: boolean
+  isExpanded: boolean,
+  isHovered: boolean
 ): string {
-  return isExpanded ? title : (shortTitle ?? title);
+  return isExpanded || isHovered ? title : (shortTitle ?? title);
 }
 
-describe('displayTitle — two-level title disclosure', () => {
-  it('collapsed (not expanded): shows shortTitle when defined', () => {
-    expect(computeDisplayTitle('Long descriptive title', 'Short', false)).toBe('Short');
+describe('displayTitle — three-level title disclosure', () => {
+  it('at rest (not expanded, not hovered): shows shortTitle when defined', () => {
+    expect(computeDisplayTitle('Long descriptive title', 'Short', false, false)).toBe('Short');
   });
 
-  it('collapsed (not expanded): shows full title when shortTitle is undefined', () => {
-    expect(computeDisplayTitle('Full Title', undefined, false)).toBe('Full Title');
+  it('at rest (not expanded, not hovered): falls back to full title when shortTitle is undefined', () => {
+    expect(computeDisplayTitle('Full Title', undefined, false, false)).toBe('Full Title');
   });
 
-  it('expanded: always shows full title regardless of shortTitle', () => {
-    expect(computeDisplayTitle('Long descriptive title', 'Short', true)).toBe(
+  it('hovered (not expanded): shows full title regardless of shortTitle', () => {
+    expect(computeDisplayTitle('Long descriptive title', 'Short', false, true)).toBe(
       'Long descriptive title'
     );
   });
 
-  it('expanded: shows full title even when shortTitle is undefined', () => {
-    expect(computeDisplayTitle('Full Title', undefined, true)).toBe('Full Title');
+  it('hovered (not expanded): shows full title when shortTitle is undefined', () => {
+    expect(computeDisplayTitle('Full Title', undefined, false, true)).toBe('Full Title');
   });
 
-  it('[regression] function has no isHovered parameter — hover cannot change displayTitle', () => {
-    // The mirror function computeDisplayTitle above has only 3 parameters.
-    // If someone adds isHovered back, this test will fail because the function
-    // signature changes and the old expected value becomes wrong.
-    //
-    // With shortTitle defined, collapsed state MUST return shortTitle.
-    // A third call with isHovered=true would need to change this — that's
-    // the regression we are guarding against.
-    const collapsed = computeDisplayTitle('Long descriptive title', 'Short', false);
-    expect(collapsed).toBe('Short'); // not 'Long descriptive title'
+  it('expanded (not hovered): shows full title', () => {
+    expect(computeDisplayTitle('Long descriptive title', 'Short', true, false)).toBe(
+      'Long descriptive title'
+    );
   });
 
-  it('[regression] collapsed card with shortTitle shows shortTitle, not full title', () => {
-    // Before the fix, hovering changed this to the full title, which caused
-    // the ResizeObserver + layout-shift feedback loop (cards flickering on hover).
-    const result = computeDisplayTitle(
+  it('expanded + hovered: shows full title', () => {
+    expect(computeDisplayTitle('Long descriptive title', 'Short', true, true)).toBe(
+      'Long descriptive title'
+    );
+  });
+
+  it('[regression] collapsed+hovered shows full title — hover title disclosure is intentional', () => {
+    // The ResizeObserver was removed from timeline-two-column.tsx so changing
+    // displayTitle on hover no longer triggers a slot-height update or layout shift.
+    // This regression test documents that hover title is an intentional feature,
+    // not a bug to be removed.
+    const hovered = computeDisplayTitle(
       'Platform Team — 20+ engineers across 3 verticals',
       'Platform Team',
+      false,
+      true
+    );
+    expect(hovered).toBe('Platform Team — 20+ engineers across 3 verticals');
+  });
+
+  it('[regression] collapsed+not-hovered shows shortTitle — at-rest glanceability preserved', () => {
+    const atRest = computeDisplayTitle(
+      'Platform Team — 20+ engineers across 3 verticals',
+      'Platform Team',
+      false,
       false
     );
-    expect(result).toBe('Platform Team');
-    expect(result).not.toBe('Platform Team — 20+ engineers across 3 verticals');
+    expect(atRest).toBe('Platform Team');
   });
 });

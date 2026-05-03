@@ -1,7 +1,7 @@
 import type { PaperProps } from '@mui/material/Paper';
 import type { TimelinePhase, HighlightedPaletteKey } from './types';
 
-import { useCallback, type ReactNode, type KeyboardEvent } from 'react';
+import { useCallback, useState, type ReactNode, type KeyboardEvent } from 'react';
 import type React from 'react';
 
 import Box from '@mui/material/Box';
@@ -108,17 +108,18 @@ export function MilestoneBadge({
     .toLowerCase();
   const detailsId = stableId ? `ms-details-${stableId}` : `ms-details-${titleSlug}`;
 
-  // Two-level title disclosure: collapsed shows shortTitle (glanceable),
-  // expanded reveals the full title.
+  // Three-level title disclosure:
+  //   collapsed (no hover)  → shortTitle (glanceable)
+  //   collapsed (hovered)   → full title (preview before clicking)
+  //   expanded              → full title
   //
-  // IMPORTANT: hover must NOT change displayTitle. Changing content on hover
-  // changes card height, which triggers the ResizeObserver, which updates
-  // msSlotHeights, which changes the <li> minHeight, which shifts all milestone
-  // cards (their top:X% becomes different pixels) — causing a mouseleave that
-  // shrinks the card back, which shifts cards again, creating an infinite loop.
-  // The CSS :hover pseudo-class still reveals the card background and border
-  // (non-layout properties) without causing this feedback.
-  const displayTitle = isExpanded ? m.title : (m.shortTitle ?? m.title);
+  // The ResizeObserver was removed (see timeline-two-column.tsx) so hover no
+  // longer triggers a slot-height update or a layout shift. It is now safe to
+  // change displayTitle on hover.
+  const [isHovered, setIsHovered] = useState(false);
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+  const displayTitle = isExpanded || isHovered ? m.title : (m.shortTitle ?? m.title);
 
   const handleClick = useCallback(() => {
     if (hasDetails) onRequestExpand();
@@ -143,6 +144,8 @@ export function MilestoneBadge({
       aria-controls={hasDetails ? detailsId : undefined}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       sx={[
         (theme) => ({
           p: 2,
@@ -351,7 +354,7 @@ export function MilestoneBadge({
         )}
       </Box>
 
-      {isExpanded && m.description && (
+      {(isExpanded || isHovered) && m.description && (
         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
           {m.description}
         </Typography>
