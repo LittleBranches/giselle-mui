@@ -39,7 +39,7 @@
     "check": "node scripts/quality-gate.js --fix",
     "check:verify": "node scripts/quality-gate.js --verify",
     "clean": "rm -rf dist storybook-static",
-    "postinstall": "node --input-type=module -e \"import('./scripts/setup-hooks.js').catch((error)=>{const isMissingSetupHooks=error?.code==='ERR_MODULE_NOT_FOUND'&&String(error?.message??'').includes('./scripts/setup-hooks.js');if(!isMissingSetupHooks){console.error('Failed to run scripts/setup-hooks.js during postinstall.');console.error(error);process.exitCode=1;}})\""
+    "postinstall": "node --input-type=module -e \"import('./scripts/setup-hooks.js').catch((error)=>{const isMissingSetupHooks=error?.code==='ERR_MODULE_NOT_FOUND'&&String(error?.message??'').includes('scripts/setup-hooks.js');if(!isMissingSetupHooks){console.error('Failed to run scripts/setup-hooks.js during postinstall.');console.error(error);process.exitCode=1;}})\""
   },
   "repository": {
     "type": "git",

@@ -79,6 +79,7 @@ vi.mock('./milestone-badge', async () => {
 vi.mock('./utils', () => ({
   sortPhasesByDate: (phases: unknown[]) => phases,
   sortMilestonesAsc: (milestones: unknown[]) => milestones,
+  sortMilestonesDesc: (milestones: unknown[]) => milestones,
   detectPhaseOverlaps: () => new Map(),
   parseFirstDate: () => null,
   getLastYear: () => null,

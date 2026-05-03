@@ -40,8 +40,9 @@ export type TimelinePhase = {
    * - EXPANDED (after click): full `title` + `description` + `details[]`
    */
   shortTitle?: string;
-  /** Short summary paragraph shown below the title on the default card view. */
-  description: string;
+  /** Short summary paragraph shown below the title on the default card view.
+   * Optional for `variant: 'marker'` entries, which have no card. */
+  description?: string;
   /** Human-readable date range (e.g. `'Jan 2020 – Mar 2022'`). Also used for automatic overdue detection in checklist mode. */
   date: string;
   /** Icon rendered inside the TimelineDot. Size is controlled via CSS (wrapping Box sets `& svg: { width, height }`) — pass any ReactNode icon slot. */
@@ -54,6 +55,18 @@ export type TimelinePhase = {
   done?: boolean;
   /** Optional expandable bullet-point details. */
   details?: string[];
+  /**
+   * Custom tooltip shown on the phase dot in the centre spine.
+   *
+   * When omitted the tooltip is computed automatically:
+   * - **Read-only mode:** first sentence of `description` (capped at 72 characters) →
+   *   falls back to `shortTitle ?? title` + `date` when `description` is absent.
+   * - **Checklist mode:** status label (`Done`, `Blocking`, etc.) + `date`.
+   *
+   * Set this explicitly to override the computed value with a custom metric, status
+   * note, or any text not derived from `description`.
+   */
+  dotTooltip?: string;
   /**
    * Tech stack icons for this entry. Each item provides a `ReactNode` icon and an accessible label.
    * Renders as a horizontal strip of icon slots with a tooltip per item.
@@ -73,8 +86,10 @@ export type TimelinePhase = {
   /**
    * 'scenario' — coloured left border + badge label (used in case-001 for departure scenarios).
    * 'life-event' — coloured left border + tinted background (used in career timeline).
+   * 'marker' — spine-only: dot + floating label, no card. For single point-in-time events
+   *             that don't warrant a full phase card (e.g. a certification date, a visa grant).
    */
-  variant?: 'scenario' | 'life-event';
+  variant?: 'scenario' | 'life-event' | 'marker';
   /** Label shown as a badge above the card when variant='scenario'. */
   scenarioLabel?: string;
   /** Marks this phase as past-due without being done.
@@ -110,6 +125,23 @@ export type TimelinePhase = {
     overdue?: boolean;
     /** Marks this milestone as newly added — renders a "NEW" dot near the title. Clear once seen. */
     new?: boolean;
+    /**
+     * Overrides the spine dot circle background colour.
+     * Accepts any CSS colour string (e.g. `'#111'`).
+     * Useful when a brand icon has a specific colour that clashes with the palette-derived background.
+     */
+    dotBg?: string;
+    /**
+     * Custom tooltip shown on the milestone dot in the centre spine.
+     *
+     * When omitted the tooltip is computed automatically:
+     * - **Read-only mode:** first sentence of `description` (capped at 72 characters) →
+     *   falls back to `shortTitle ?? title` + `date` when `description` is absent.
+     * - **Checklist mode:** status label (`Done`, `Blocking`, etc.) + `date`.
+     *
+     * Set this explicitly to override the computed value with a custom metric or note.
+     */
+    dotTooltip?: string;
   }>;
   /**
    * Client logos shown as a horizontal strip directly in the card (always visible).
@@ -150,6 +182,18 @@ export type TimelinePhase = {
    * @default 'left'
    */
   textAlign?: 'left' | 'right';
+  /**
+   * Optional footer slot rendered at the bottom of the card's always-visible content area,
+   * below all icon strips and above the expandable detail bullets.
+   *
+   * Use for interactive elements (play buttons, links, counters) that belong contextually
+   * to the card but aren't part of the expandable detail section.
+   *
+   * ```tsx
+   * footer={<ModemSoundButton />}
+   * ```
+   */
+  footer?: ReactNode;
 };
 
 export type TimelineTwoColumnProps = Omit<BoxProps, 'children'> & {

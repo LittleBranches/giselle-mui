@@ -21,6 +21,7 @@ Any developer building a career timeline or product roadmap with MUI v7 would in
 ### Column layout
 
 Each phase renders as **one `<li>`** containing a stack of flex rows:
+
 - Row 0: phase card | phase dot + spine | empty (or mirrored for `side='left'`)
 - Row 1..N: milestone card | ms dot + spine | empty (or mirrored)
 
@@ -32,11 +33,11 @@ The left/right content columns are extracted into a `TimelineColumn` local helpe
 
 ### Interactive modes
 
-| Mode | Dot behavior | Done state |
-|------|-------------|------------|
-| Read-only (default) | Click expands card details; no done toggle | From prop only |
-| Checklist (`checklist`) | Click toggles done; `role="checkbox"` | Local state, synced to `phases` prop |
-| Hero nav (`onPhaseSelect`) | Click fires callback; `role="button"` | From prop only |
+| Mode                       | Dot behavior                               | Done state                           |
+| -------------------------- | ------------------------------------------ | ------------------------------------ |
+| Read-only (default)        | Click expands card details; no done toggle | From prop only                       |
+| Checklist (`checklist`)    | Click toggles done; `role="checkbox"`      | Local state, synced to `phases` prop |
+| Hero nav (`onPhaseSelect`) | Click fires callback; `role="button"`      | From prop only                       |
 
 ### `phases` prop sync
 

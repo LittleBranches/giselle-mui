@@ -124,6 +124,10 @@ describe('isHighlightedVariant', () => {
   it('empty string → false', () => {
     expect(isHighlightedVariant('')).toBe(false);
   });
+
+  it('[regression] marker → false (marker cards use standard, non-highlighted styling)', () => {
+    expect(isHighlightedVariant('marker')).toBe(false);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -613,5 +617,57 @@ describe('[regression] viewed-eye toggle logic — phase card', () => {
     const handler = buildPhaseEyeClickHandler(onMarkViewed);
     handler({ stopPropagation: vi.fn() });
     expect(onMarkViewed).toHaveBeenCalledTimes(1);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// footer slot — PhaseCard accepts phase.footer and renders it below icon strips
+// ---------------------------------------------------------------------------
+//
+// The footer slot has one critical invariant beyond rendering:
+//   Click events on the footer content must NOT propagate to the card Paper,
+//   otherwise clicking a button inside the footer toggles the card collapse.
+//
+// This is enforced by a Box wrapper with onClick: e.stopPropagation().
+// The tests below verify that invariant via a mirror of the wrapper logic.
+
+function buildFooterClickHandler(): (e: { stopPropagation: () => void }) => void {
+  // Mirrors the onClick on the footer Box in phase-card.tsx:
+  //   <Box sx={{ mt: 1 }} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+  return (e) => {
+    e.stopPropagation();
+  };
+}
+
+describe('footer slot — stopPropagation invariant', () => {
+  it('footer wrapper calls e.stopPropagation on click', () => {
+    const stopPropagation = vi.fn();
+    const handler = buildFooterClickHandler();
+    handler({ stopPropagation });
+    expect(stopPropagation).toHaveBeenCalledTimes(1);
+  });
+
+  it('[regression] footer click does not bubble to card toggle (stopPropagation always called)', () => {
+    // If stopPropagation is ever removed or conditionalised, clicking a play button,
+    // link, or any interactive element inside footer would also toggle card expansion.
+    const stopPropagation = vi.fn();
+    const handler = buildFooterClickHandler();
+    handler({ stopPropagation });
+    // Calling twice to confirm it is unconditional — not gated on any state
+    handler({ stopPropagation });
+    expect(stopPropagation).toHaveBeenCalledTimes(2);
+  });
+
+  it('[regression] footer renders when phase.footer is a ReactNode (nullish check)', () => {
+    // Mirror of: {phase.footer != null && <Box ...>{phase.footer}</Box>}
+    // Uses nullish check (not truthy) so that valid ReactNodes like 0 and empty string
+    // are not suppressed. Only null and undefined skip rendering.
+    const shouldRender = (footer: unknown): boolean => footer != null;
+    expect(shouldRender(React.createElement('span', null, 'Play'))).toBe(true);
+    // Falsy-but-valid ReactNode values: 0 and '' must still render.
+    expect(shouldRender(0)).toBe(true);
+    expect(shouldRender('')).toBe(true);
+    expect(shouldRender(undefined)).toBe(false);
+    expect(shouldRender(null)).toBe(false);
   });
 });

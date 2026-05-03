@@ -99,9 +99,7 @@ export function MilestoneBadge({
 }: MilestoneBadgeProps) {
   // Right-align the collapsed view when in the left column so text sits flush
   // against the centre spine instead of leaving a gap at the right edge of the card.
-  // Alignment resets to left only when expanded; hover may reveal more text
-  // but must not change column alignment.
-  const [isHovered, setIsHovered] = useState(false);
+  // Alignment resets to left only when expanded.
   const rightAlign = columnSide === 'left' && !isExpanded;
   const hasDetails = !!m.details?.length;
   const colorKey = (m.color ?? 'primary') as HighlightedPaletteKey;
@@ -110,12 +108,18 @@ export function MilestoneBadge({
     .toLowerCase();
   const detailsId = stableId ? `ms-details-${stableId}` : `ms-details-${titleSlug}`;
 
-  // Two-level title disclosure: collapsed shows shortTitle (glanceable),
-  // hover or expanded reveals the full title.
-  const displayTitle = isExpanded || isHovered ? m.title : (m.shortTitle ?? m.title);
-
+  // Three-level title disclosure:
+  //   collapsed (no hover)  → shortTitle (glanceable)
+  //   collapsed (hovered)   → full title (preview before clicking)
+  //   expanded              → full title
+  //
+  // The ResizeObserver was removed (see timeline-two-column.tsx) so hover no
+  // longer triggers a slot-height update or a layout shift. It is now safe to
+  // change displayTitle on hover.
+  const [isHovered, setIsHovered] = useState(false);
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+  const displayTitle = isExpanded || isHovered ? m.title : (m.shortTitle ?? m.title);
 
   const handleClick = useCallback(() => {
     if (hasDetails) onRequestExpand();

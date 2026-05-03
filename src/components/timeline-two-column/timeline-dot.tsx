@@ -17,7 +17,7 @@ export type TimelineDotComponentProps = Omit<BoxProps, 'color' | 'onClick'> & {
   /**
    * Size variant.
    * - `'phase'`: 42px (all states). Active state adds a pulsing ring halo — no size change.
-   * - `'milestone'`: 32px fixed.
+   * - `'milestone'`: 34px fixed.
    * @default 'phase'
    */
   size?: 'phase' | 'milestone';
@@ -34,6 +34,12 @@ export type TimelineDotComponentProps = Omit<BoxProps, 'color' | 'onClick'> & {
    * and restart the spring-pop animation cleanly.
    */
   animationKey?: number;
+  /**
+   * Overrides the dot circle background colour. Accepts any CSS colour string (e.g. `'#111'`).
+   * Useful when a brand icon has a specific colour that clashes with the palette-derived background.
+   * Ignored when `done=true` — done dots always render success-green.
+   */
+  dotBg?: string;
   /** Makes the dot clickable. Omit for decorative (read-only) dots. */
   onClick?: () => void;
 };
@@ -41,7 +47,7 @@ export type TimelineDotComponentProps = Omit<BoxProps, 'color' | 'onClick'> & {
 // ----------------------------------------------------------------------
 
 function getDotSize(isMilestone: boolean): number {
-  return isMilestone ? 32 : 42;
+  return isMilestone ? 34 : 42;
 }
 
 function getIconSize(isMilestone: boolean): number {
@@ -149,6 +155,7 @@ export function TimelineDot({
   active = false,
   done = false,
   animationKey = 0,
+  dotBg,
   onClick,
   onKeyDown,
   role,
@@ -232,10 +239,17 @@ export function TimelineDot({
           alignItems: 'center',
           justifyContent: 'center',
           // All done dots: solid success-green fill with white icon (effectiveColor is already 'success').
-          bgcolor: theme.vars!.palette[effectiveColor]?.main ?? theme.vars!.palette.primary.main,
+          bgcolor:
+            !done && dotBg
+              ? dotBg
+              : (theme.vars!.palette[effectiveColor]?.main ?? theme.vars!.palette.primary.main),
           color: theme.vars!.palette.common.white,
           // Milestone: white separator border + colored drop shadow.
+          // boxSizing ensures padding + border are included in the 100%/100% dimensions
+          // so the circle never exceeds the outer 34px container regardless of box model reset.
           ...(isMilestone && {
+            boxSizing: 'border-box',
+            padding: '2px',
             border: '2px solid',
             borderColor: 'background.paper',
             boxShadow: `0 2px 8px rgba(${

@@ -1,6 +1,14 @@
 import type { TimelinePhase, HighlightedPaletteKey, TimelineTwoColumnProps } from './types';
 
-import { useMemo, useState, useEffect, useCallback, type ReactNode } from 'react';
+import {
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useLayoutEffect,
+  type ReactNode,
+} from 'react';
 
 import Box from '@mui/material/Box';
 import Timeline from '@mui/lab/Timeline';
@@ -16,6 +24,7 @@ import {
   parseLastDate,
   detectPhaseOverlaps,
   sortMilestonesAsc,
+  sortMilestonesDesc,
   sortPhasesByDate,
 } from './utils';
 
@@ -224,6 +233,68 @@ function dotStatusLabel(
   return date ? `${status} · ${date}` : status;
 }
 
+/**
+ * Returns the first sentence of a description, capped at `maxLen` characters.
+ *
+ * Used to populate dot tooltips in read-only mode with contextual information
+ * that is NOT already visible in any card state (title + date are already on the card).
+ */
+/** @internal — exported for unit tests only. Not part of the public API. */
+export function truncateDescription(s: string, maxLen = 72): string {
+  // Split only when a sentence-ending punctuation is followed by whitespace or end-of-string.
+  // This prevents splitting on decimal numbers (e.g. "TS 4.0") or abbreviations ("e.g.")
+  // where the period is NOT followed by whitespace.
+  const parts = s.split(/[.!?](?=\s|$)/);
+  const firstSentence = (parts[0] ?? '').trim();
+  const text = firstSentence.length > 0 ? firstSentence : s;
+  return text.length <= maxLen ? text : `${text.slice(0, maxLen).trimEnd()}…`;
+}
+
+/**
+ * Resolves the tooltip label for a phase dot.
+ *
+ * - Checklist mode: shows status label + date (useful for task/roadmap tracking).
+ * - Read-only mode: shows the **description preview** — information not visible in
+ *   any collapsed card state, giving the dot tooltip genuine added value over
+ *   just repeating the title + date already shown on the card.
+ * - `phase.dotTooltip` always wins if provided.
+ */
+/** @internal — exported for unit tests only. Not part of the public API. */
+export function resolvePhaseTooltip(
+  checklist: boolean,
+  color: HighlightedPaletteKey,
+  done: boolean,
+  phase: TimelinePhase
+): string {
+  if (phase.dotTooltip) return phase.dotTooltip;
+  if (checklist) return dotStatusLabel(color, done, phase.date);
+  if (phase.description) return truncateDescription(phase.description);
+  const label = phase.shortTitle ?? phase.title;
+  return phase.date ? `${label} · ${phase.date}` : label;
+}
+
+/**
+ * Resolves the tooltip label for a milestone dot.
+ *
+ * - Checklist mode: shows status label + date.
+ * - Read-only mode: shows the **description preview** — not visible without opening
+ *   the milestone card, so hovering the dot gives the user a genuine preview.
+ * - `ms.dotTooltip` always wins if provided.
+ */
+/** @internal — exported for unit tests only. Not part of the public API. */
+export function resolveMilestoneTooltip(
+  checklist: boolean,
+  color: HighlightedPaletteKey,
+  done: boolean,
+  ms: Milestone
+): string {
+  if (ms.dotTooltip) return ms.dotTooltip;
+  if (checklist) return dotStatusLabel(color, done, ms.date);
+  if (ms.description) return truncateDescription(ms.description);
+  const label = ms.shortTitle ?? ms.title;
+  return ms.date ? `${label} · ${ms.date}` : label;
+}
+
 /** Resolves the JSX prop bag for the phase-row TimelineDot. */
 function buildPhaseDotTsxProps(
   phase: TimelinePhase,
@@ -271,6 +342,8 @@ type MilestoneRowCtx = {
   onMarkViewed: ((key: string) => void) | undefined;
   handleToggleMilestone: (phaseKey: number, mi: number) => void;
   handleExpandMilestone: (phaseKey: number, milestoneIndex: number) => void;
+  /** Called with the mounted card element so the parent can measure its height. */
+  onMeasure: (mi: number, el: HTMLDivElement | null) => void;
 };
 
 /** Resolves done state and effective color for a milestone in checklist mode. */
@@ -364,12 +437,12 @@ function buildMilestoneRow(
 
   const wrapperBase = {
     position: 'absolute' as const,
-    zIndex: isThisMsExpanded ? 10 : 1,
+    zIndex: isThisMsExpanded ? 1000 : 1,
     transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease',
     // translateY(-50%) centers the card vertically on its dot (dot height = 30px, center = 15px)
     transform: 'translateY(-50%)',
-    // Raise hovered card above its siblings so nearby cards don't overlap it
-    '&:hover': { zIndex: 9 },
+    // Raise hovered card above adjacent phase cards so it is never overlapped
+    '&:hover': { zIndex: 999 },
     ...(suppressElevation && {
       filter: 'blur(1.5px)',
       opacity: 0.38,
@@ -405,6 +478,8 @@ function buildMilestoneRow(
       >
         {ctx.phaseSide === 'left' && (
           <Box
+            data-ms-card="true"
+            ref={(el: HTMLDivElement | null) => ctx.onMeasure(mi, el)}
             onClick={stopProp}
             sx={(theme) => ({
               ...wrapperBase,
@@ -476,14 +551,15 @@ function buildMilestoneRow(
             </Typography>
           )}
           <Tooltip
-            title={dotStatusLabel(msColor, msDone, ms.date)}
-            placement={ctx.phaseSide === 'left' ? 'right' : 'left'}
+            title={resolveMilestoneTooltip(ctx.checklist, msColor, msDone, ms)}
+            placement="top"
             arrow
           >
             <span>
               <TimelineDot
                 icon={ms.icon}
                 color={msColor}
+                dotBg={ms.dotBg}
                 size="milestone"
                 done={msDone}
                 onClick={msDotClickAction}
@@ -508,6 +584,8 @@ function buildMilestoneRow(
       >
         {ctx.phaseSide === 'right' && (
           <Box
+            data-ms-card="true"
+            ref={(el: HTMLDivElement | null) => ctx.onMeasure(mi, el)}
             onClick={stopProp}
             sx={(theme) => ({
               ...wrapperBase,
@@ -537,6 +615,41 @@ function buildMilestoneRow(
 }
 
 // ----------------------------------------------------------------------
+
+/**
+ * Computes the `msSlotHeights` record from the measured card-height map.
+ *
+ * For each phase that has milestones, finds the tallest measured card and returns
+ * `maxCardHeight + 16` as the slot height. The 16px gap provides breathing room
+ * between vertically stacked milestone badges.
+ *
+ * DESIGN INVARIANT — this function is a **pure function of its two inputs**.
+ * It has no concept of expand/collapse/hover state. That is intentional: slot
+ * heights must never change during user interaction (see architectural comment
+ * on `msHeightMapRef` in `TimelineTwoColumn`). Any introduction of expansion or
+ * hover state into this function's signature would break that invariant.
+ *
+ * @internal — exported for unit tests only. Not part of the public API.
+ */
+export function computeSlotHeights(
+  phases: TimelinePhase[],
+  heightMap: Record<string, number>
+): Record<string, number> {
+  const result: Record<string, number> = {};
+  phases.forEach((phase) => {
+    const n = phase.milestones?.length ?? 0;
+    if (n === 0) return;
+    let maxH = 0;
+    for (let i = 0; i < n; i++) {
+      const h = heightMap[`${String(phase.key)}-${i}`] ?? 0;
+      if (h > maxH) maxH = h;
+    }
+    if (maxH > 0) {
+      result[String(phase.key)] = maxH + 16;
+    }
+  });
+  return result;
+}
 
 /**
  * Two-column alternating timeline.
@@ -615,7 +728,11 @@ export function TimelineTwoColumn({
     const k = String(phaseKey);
     // Collapse any open phase card when a milestone opens.
     setExpandedPhaseKey(null);
-    // Toggle: clicking the same milestone again collapses it.
+    // Toggle: clicking an already-expanded card collapses it.
+    // The wrapper Box calls stopPropagation() on the expanded card's click, so the
+    // document listener never fires on that card — toggle is the only close path for
+    // milestone cards. Without toggle, the card gets stuck open and all other milestone
+    // cards remain suppressed (pointerEvents: none), breaking hover on the whole timeline.
     setExpandedMilestoneMap((prev) => ({
       ...prev,
       [k]: prev[k] === milestoneIndex ? null : milestoneIndex,
@@ -625,7 +742,7 @@ export function TimelineTwoColumn({
   const handleExpandPhaseCard = useCallback((phaseKey: number) => {
     // Collapse all milestones when a phase card opens.
     setExpandedMilestoneMap({});
-    // Toggle: clicking the same phase card again collapses it.
+    // Toggle: clicking an already-expanded phase card collapses it.
     setExpandedPhaseKey((prev) => (prev === phaseKey ? null : phaseKey));
   }, []);
 
@@ -671,13 +788,18 @@ export function TimelineTwoColumn({
     return d;
   }, []);
 
-  // Sort phases by date, then sort milestones within each phase ascending (earliest first).
+  // Sort phases by date, then sort milestones within each phase.
+  // Career timelines use 'desc' → milestones latest-first (matches the top-to-bottom newest-first flow).
+  // Roadmap timelines use 'asc' → milestones earliest-first.
+  const sortMilestones = sortOrder === 'asc' ? sortMilestonesAsc : sortMilestonesDesc;
   const sorted = useMemo(
     () =>
       sortPhasesByDate(phases, sortOrder).map((phase) => ({
         ...phase,
-        milestones: phase.milestones ? sortMilestonesAsc(phase.milestones) : phase.milestones,
+        milestones: phase.milestones ? sortMilestones(phase.milestones) : phase.milestones,
       })),
+    // sortMilestones is derived from sortOrder so adding sortOrder as dep is sufficient
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [phases, sortOrder]
   );
 
@@ -705,6 +827,39 @@ export function TimelineTwoColumn({
     return () => document.removeEventListener('click', handler);
   }, [anyExpanded]);
 
+  // Per-milestone card height measurement.
+  //
+  // Milestone cards are absolutely positioned at top:X% inside the phase <li>.
+  // The <li> minHeight must be tall enough for all dots to be evenly spaced.
+  // We measure each card's height during the React commit phase via ref callbacks
+  // (onMeasure), then compute the required slot height in a useLayoutEffect.
+  //
+  // DESIGN INVARIANT — measurements run only on mount and when `sorted` changes.
+  // They must NEVER run in response to user interaction (hover, expand, collapse):
+  //
+  //   • The ref callback fires only when an element mounts or unmounts. While a
+  //     card is expanding, its wrapper Box is NOT remounted — only its children
+  //     change. So onMeasure is never called during expand/collapse/hover.
+  //
+  //   • useLayoutEffect depends only on [sorted]. Expanding a card does not change
+  //     `sorted`, so the effect never re-runs during user interaction.
+  //
+  // This is intentionally simpler than a ResizeObserver approach. A ResizeObserver
+  // that fires on every size change (including expand/hover) creates a
+  // measurement → msSlotHeights update → <li> minHeight change → top:X% shift →
+  // mouseleave/mouseenter feedback loop that is impossible to break cleanly.
+  // The ref + layout-effect pattern avoids this class of bug entirely.
+  const msHeightMapRef = useRef<Record<string, number>>({});
+  const [msSlotHeights, setMsSlotHeights] = useState<Record<string, number>>({});
+
+  useLayoutEffect(() => {
+    const result = computeSlotHeights(sorted, msHeightMapRef.current);
+    setMsSlotHeights((prev) => {
+      const changed = Object.keys(result).some((k) => result[k] !== prev[k]);
+      return changed ? result : prev;
+    });
+  }, [sorted]);
+
   // Stable reference for the viewed-key lookup — avoids creating a new Set on every render
   // when the `viewedKeys` prop is undefined.
   const effectiveViewedKeys = viewedKeys ?? EMPTY_VIEWED_KEYS;
@@ -721,6 +876,108 @@ export function TimelineTwoColumn({
         {sorted.map((phase, i) => {
           const { isDone, isOverdue, dotColor, yearLabelValue, phaseMilestones, isLastPhase } =
             resolvePhaseState(phase, i, sorted, lastKey, checklist, localPhaseDone, today);
+
+          // ── Marker variant ──────────────────────────────────────────────────
+          // variant='marker': spine-only row — dot + floating label, no card.
+          // Use for single point-in-time events that don't need a full card
+          // (e.g. a certification, a visa grant, a birth date outside any period).
+          // The label floats to whichever side `phase.side` specifies (direct, not inverted).
+          if (phase.variant === 'marker') {
+            // Use resolvePhaseTooltip so the marker tooltip is consistent with all other
+            // phase dots: description preview → shortTitle + date → title fallback.
+            // Previously this fell back to bare `phase.title`, dropping date and shortTitle.
+            const markerTooltip = resolvePhaseTooltip(checklist, dotColor, isDone, phase);
+            return (
+              <Box
+                key={phase.key}
+                component="li"
+                data-testid="tl-item"
+                sx={{
+                  position: 'relative',
+                  overflow: 'visible',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  zIndex: 1,
+                  minHeight: 40,
+                }}
+              >
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  {/* Left label — shown when side === 'left' */}
+                  <Box
+                    sx={{
+                      flex: 1,
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      alignItems: 'center',
+                      pr: 1.5,
+                    }}
+                  >
+                    {phase.side === 'left' && (
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.secondary', fontWeight: 600, whiteSpace: 'nowrap' }}
+                      >
+                        {phase.shortTitle ?? phase.title}
+                        {phase.date && (
+                          <Box component="span" sx={{ ml: 0.75, fontWeight: 400, opacity: 0.7 }}>
+                            · {phase.date}
+                          </Box>
+                        )}
+                      </Typography>
+                    )}
+                  </Box>
+                  {/* Spine dot */}
+                  <Box
+                    data-col="center"
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      position: 'relative',
+                    }}
+                  >
+                    <Tooltip title={markerTooltip} placement="top" arrow>
+                      <span>
+                        <TimelineDot
+                          icon={phase.icon}
+                          color={dotColor}
+                          size="milestone"
+                          done={isDone}
+                        />
+                      </span>
+                    </Tooltip>
+                    {!isLastPhase && (
+                      <SpineConnector dotColor={dotColor} yearMilestone={yearLabelValue} />
+                    )}
+                  </Box>
+                  {/* Right label — shown when side !== 'left' */}
+                  <Box
+                    sx={{
+                      flex: 1,
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
+                      pl: 1.5,
+                    }}
+                  >
+                    {phase.side !== 'left' && (
+                      <Typography
+                        variant="caption"
+                        sx={{ color: 'text.secondary', fontWeight: 600, whiteSpace: 'nowrap' }}
+                      >
+                        {phase.shortTitle ?? phase.title}
+                        {phase.date && (
+                          <Box component="span" sx={{ ml: 0.75, fontWeight: 400, opacity: 0.7 }}>
+                            · {phase.date}
+                          </Box>
+                        )}
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
+              </Box>
+            );
+          }
 
           const { dotClickAction, dotKeyDownHandler, dotAriaLabel } = resolvePhaseDotHandlers(
             phase,
@@ -786,6 +1043,20 @@ export function TimelineTwoColumn({
             onMarkViewed,
             handleToggleMilestone,
             handleExpandMilestone,
+            onMeasure: (mi: number, el: HTMLDivElement | null) => {
+              // Record the card's collapsed height synchronously during the React
+              // commit phase. useLayoutEffect([sorted]) reads these values after all
+              // ref callbacks have fired and computes the slot heights once.
+              // This callback only fires on mount/unmount — never during
+              // expand/collapse or hover — so msSlotHeights remains stable during
+              // user interaction.
+              if (el) {
+                const h = el.offsetHeight;
+                if (h > 0) {
+                  msHeightMapRef.current[`${String(phase.key)}-${mi}`] = h;
+                }
+              }
+            },
           };
 
           const rows: ReactNode[] = [];
@@ -859,8 +1130,8 @@ export function TimelineTwoColumn({
                     </Typography>
                   )}
                   <Tooltip
-                    title={dotStatusLabel(dotColor, isDone, phase.date)}
-                    placement={phase.side === 'left' ? 'right' : 'left'}
+                    title={resolvePhaseTooltip(checklist, dotColor, isDone, phase)}
+                    placement="top"
                     arrow
                   >
                     <span>
@@ -925,6 +1196,10 @@ export function TimelineTwoColumn({
                 // Raise z-index when a milestone card is expanded so it floats
                 // above the next phase's row rather than being clipped behind it.
                 zIndex: expandedMiIdx === null ? 1 : 2,
+                // CSS :has() raises this <li> when any milestone card within it is hovered,
+                // preventing the next <li>'s phase card from painting over the hovered card.
+                // Supported: Chrome 121+, Firefox 121+, Safari 17+ (within browser support matrix).
+                '&:has([data-ms-card]:hover)': { zIndex: 3 },
                 // minHeight only applies when milestones are present — gives the spine
                 // enough height for all milestone dots to be evenly spaced.
                 // Phase card vertical gap is controlled by phaseCardGap (column paddingBottom)
@@ -948,8 +1223,11 @@ export function TimelineTwoColumn({
                   minHeight:
                     (phaseMilestones.length + 1) *
                     (yearLabelValue !== null
-                      ? Math.max(milestoneSlotHeight, yearLabelMarginBottom + 80)
-                      : milestoneSlotHeight),
+                      ? Math.max(
+                          msSlotHeights[String(phase.key)] ?? milestoneSlotHeight,
+                          yearLabelMarginBottom + 80
+                        )
+                      : (msSlotHeights[String(phase.key)] ?? milestoneSlotHeight)),
                 }),
               }}
             >

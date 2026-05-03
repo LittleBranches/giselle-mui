@@ -187,3 +187,41 @@ Full design: [`docs/components/settings-provider-plan.md`](../components/setting
 | Phase 3: `SettingsThemeBridge` — internal bridge wiring settings state into `GiselleThemeProvider`       | ⬜     |
 | Phase 3: `GiselleThemeAndSettingsProvider` convenience wrapper                                           | ⬜     |
 | Phase 3: Migration guide in README and `theming-nextjs.md`                                               | ⬜     |
+
+---
+
+### Phase E — Standalone project UI primitives (Medium priority)
+
+**Goal:** Export the layout and section primitives that every portfolio or product site needs,
+so a blank Next.js project can assemble full pages with zero Minimals dependency and zero
+reimplementation of recurring patterns.
+
+**Prerequisite:** Phase A (`varAlpha`) — some primitives use CSS-variable alpha tints.
+
+**Source material:** These patterns are already proven in alexrebula. They must be written
+from scratch in giselle-mui (copyright rule: no copy from the private repo).
+
+**Extraction candidates** (need only light cleanup — not a full rewrite):
+
+| Task                                                                                          | Status |
+| --------------------------------------------------------------------------------------------- | ------ |
+| Extract `TwoColumnShowcaseRow` — clean, zero Minimals, ready now                              | ⬜     |
+| Extract `OptionWithBlurb` — tiny wrapper, clean, zero Minimals                                | ⬜     |
+| Extract `SectionPendingLoader` — replace internal `Iconify` with `GiselleIcon`                | ⬜     |
+| Extract `FloatingControlBar` — replace `varAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | ⬜     |
+
+**Write from scratch** (no copy from alexrebula — independent implementations):
+
+| Task                                                                                          | Status |
+| --------------------------------------------------------------------------------------------- | ------ |
+| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot | ⬜     |
+| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `varAlpha` | ⬜     |
+| `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand    | ⬜     |
+
+**When this phase is done:**
+
+A blank `create-next-app` project can install `@alexrebula/giselle-mui`, add
+`GiselleThemeProvider` to `layout.tsx`, and assemble a full homepage from exported
+components — no proprietary theme, no reimplemented patterns.
+
+Full gap analysis: [`docs/components/standalone-gap-analysis.md`](../components/standalone-gap-analysis.md)

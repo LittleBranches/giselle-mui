@@ -9,6 +9,8 @@ import {
   parseSortableDate,
   parseFirstDate,
   detectPhaseOverlaps,
+  sortMilestonesAsc,
+  sortMilestonesDesc,
 } from './utils';
 
 // ----------------------------------------------------------------------
@@ -378,5 +380,56 @@ describe('detectPhaseOverlaps', () => {
       { key: 2, date: 'Jul 2025 – Dec 2025' }, // start = Jul 1 2025
     ];
     expect(detectPhaseOverlaps(phases).size).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// sortMilestonesAsc / sortMilestonesDesc
+// ---------------------------------------------------------------------------
+
+/** Minimal milestone shape for sorting tests. */
+function ms(date: string, title = date) {
+  return { date, title };
+}
+
+describe('sortMilestonesAsc', () => {
+  it('returns earliest milestone first', () => {
+    const result = sortMilestonesAsc([ms('Dec 2020'), ms('Mar 2019'), ms('Jun 2021')]);
+    expect(result.map((m) => m.date)).toEqual(['Mar 2019', 'Dec 2020', 'Jun 2021']);
+  });
+
+  it('milestones without parseable dates sort to the end', () => {
+    const result = sortMilestonesAsc([ms('Jan 2020'), ms('unknown'), ms('Feb 2018')]);
+    expect(result[0]!.date).toBe('Feb 2018');
+    expect(result[1]!.date).toBe('Jan 2020');
+    expect(result[2]!.date).toBe('unknown');
+  });
+
+  it('returns a new array (does not mutate the original)', () => {
+    const original = [ms('Jun 2021'), ms('Jan 2020')];
+    const sorted = sortMilestonesAsc(original);
+    expect(sorted).not.toBe(original);
+    expect(original[0]!.date).toBe('Jun 2021'); // original untouched
+  });
+});
+
+describe('sortMilestonesDesc', () => {
+  it('returns latest milestone first', () => {
+    const result = sortMilestonesDesc([ms('Mar 2019'), ms('Dec 2020'), ms('Jun 2021')]);
+    expect(result.map((m) => m.date)).toEqual(['Jun 2021', 'Dec 2020', 'Mar 2019']);
+  });
+
+  it('result is the exact reverse of sortMilestonesAsc for the same input', () => {
+    const milestones = [ms('Mar 2019'), ms('Dec 2020'), ms('Jun 2021')];
+    const asc = sortMilestonesAsc(milestones);
+    const desc = sortMilestonesDesc(milestones);
+    expect(desc.map((m) => m.date)).toEqual([...asc].reverse().map((m) => m.date));
+  });
+
+  it('milestones without parseable dates sort to the end regardless of direction', () => {
+    const result = sortMilestonesDesc([ms('Jan 2020'), ms('unknown'), ms('Feb 2018')]);
+    expect(result[0]!.date).toBe('Jan 2020');
+    expect(result[1]!.date).toBe('Feb 2018');
+    expect(result[2]!.date).toBe('unknown');
   });
 });

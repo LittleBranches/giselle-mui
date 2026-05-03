@@ -224,6 +224,40 @@ Checks (in order): Prettier → ESLint → `tsc --noEmit` → Vitest → tsup bu
 - Every story file must pass `tsc --noEmit`, ESLint, and Prettier — they are in `src/` and covered by all checks
 - Named component helpers (e.g. `function ToggleDemo()`) must be used whenever a story render function uses React hooks — anonymous arrow functions inside `render:` violate the `react-hooks/rules-of-hooks` ESLint rule
 
+### TimelineTwoColumn Storybook stories as design-decision documents — MANDATORY
+
+Every non-trivial design decision in `TimelineTwoColumn` **must** be documented as a
+dedicated Storybook story. Stories in this component are not just visual demos — they are
+the canonical source of truth for architectural decisions that would otherwise only live
+in PR descriptions or chat history.
+
+**A new story is mandatory for every:**
+
+- New component variant (`'marker'`, `'life-event'`, `'scenario'`) — document when to use
+  it vs. the alternatives, with side-by-side comparison if relevant
+- New prop that changes rendering behaviour — show the before/after in one story
+- Non-obvious layout rule (column placement invariant, marker side direction, z-index
+  stacking, overdue-dot colour) — make the rule visually verifiable in the canvas
+- Design decision that was reached through iteration — document what was tried, what was
+  wrong with it, and why the current approach was chosen
+
+**Story structure for decision-doc stories:**
+
+1. JSDoc on the export function: `title` → the rule or decision → why it was chosen →
+   what the alternative was → the invariant it protects
+2. `parameters.docs.description.story`: short markdown paragraph explaining what to observe
+3. Canvas: shows the rule in action, verifiable without reading the source code
+
+**Why this matters:**
+
+`TimelineTwoColumn` has accumulated non-obvious architectural decisions through real-world
+usage iterations (column inversion, marker `side` semantics, tooltip description previews,
+birthday placement as marker not milestone, done-dot colour enforcement, z-index stacking).
+A future contributor — or the next Copilot session — must be able to understand these
+decisions from the stories alone, without access to the original conversation.
+
+**The stories are the documentation. Write them first.**
+
 ---
 
 ## Code quality standards (enforce proactively — do not wait to be asked)

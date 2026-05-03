@@ -151,6 +151,21 @@ export function sortMilestonesAsc<T extends SortableMilestone>(milestones: T[]):
   });
 }
 
+/**
+ * Returns a new array of milestones sorted by date descending (latest first).
+ * Milestones without a parseable date sort to the end.
+ */
+export function sortMilestonesDesc<T extends SortableMilestone>(milestones: T[]): T[] {
+  return [...milestones].sort((a, b) => {
+    const da = a.date ? parseSortableDate(a.date) : null;
+    const db = b.date ? parseSortableDate(b.date) : null;
+    if (da === null && db === null) return 0;
+    if (da === null) return 1;
+    if (db === null) return -1;
+    return db - da;
+  });
+}
+
 // ----------------------------------------------------------------------
 
 /**
