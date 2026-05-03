@@ -260,7 +260,11 @@ describe('resolveMilestoneTooltip — dotTooltip override', () => {
 
   it('[regression] dotTooltip: undefined does NOT suppress — falls through to computed tooltip', () => {
     // undefined == null → should fall through; lock the != null boundary.
-    const ms = milestone({ dotTooltip: undefined, description: 'Shipped stable release', date: 'Q3' });
+    const ms = milestone({
+      dotTooltip: undefined,
+      description: 'Shipped stable release',
+      date: 'Q3',
+    });
     // read-only: description is shown
     expect(resolveMilestoneTooltip(false, 'primary', false, ms)).toBe('Shipped stable release');
     // checklist: status label is shown
