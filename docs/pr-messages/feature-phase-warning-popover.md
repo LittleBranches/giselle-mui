@@ -14,23 +14,27 @@ Also includes: Storybook `CssVarsProvider → ThemeProvider` migration (MUI v7 A
 ## Commits
 
 ### `chore(storybook)` — CssVarsProvider → ThemeProvider + theme toolbar
+
 - Replace deprecated `extendTheme`/`CssVarsProvider` with `createTheme`/`ThemeProvider`
 - Add `globalTypes` theme toolbar (`paintbrush` icon, `mui-default` entry, Phase B placeholder)
 - Update incident doc and add `PhaseWarningPopover` design spec to `docs/components/timeline-plan.md`
 
 ### `feat(timeline)` — P1/P2: dateToMonthIndex, monthIndexToDate, resolveOverlaps
+
 - `dateToMonthIndex(dateStr)` — `'Apr 2025'` → linear month index (`year×12+month`)
 - `monthIndexToDate(index)` — reverse: `24303` → `'Apr 2025'`
 - `resolveOverlaps(phases)` — shifts overlapping phases forward to be sequential; preserves duration; sorts by start date; leaves unparseable dates unchanged
 - 18 new tests (330 total)
 
 ### `feat(timeline)` — P3: onPhasesChange controlled-mode prop
+
 - `onPhasesChange?: (updated: TimelinePhase[]) => void` added to `TimelineTwoColumnProps` and `PhaseCardProps`
 - When provided: badge becomes a popover trigger (P4/P5)
 - When omitted: existing read-only tooltip behaviour unchanged
 - JSDoc documents the gating pattern with a `useState` usage example
 
 ### `feat(timeline)` — P4/P5: PhaseWarningPopover + PhaseCard wiring
+
 - **`phase-warning-popover.tsx`** — new internal sub-component (not exported from barrel):
   - Conflict group auto-computed via `detectPhaseOverlaps(allPhases)` on every open
   - One MUI range `Slider` per conflicting phase; all share a common month-index axis
@@ -45,6 +49,7 @@ Also includes: Storybook `CssVarsProvider → ThemeProvider` migration (MUI v7 A
 - **Story `ControlledModeOverlapRepair`** — side-by-side read-only vs controlled demo; documents Popper-not-Tooltip design decision
 
 ### `feat(utils)` — Phase A: varAlpha, createPaletteChannel, pxToRem, remToPx
+
 - `varAlpha(channel, alpha)` — `rgba()` from MUI v7 CSS-var channel string
 - `createPaletteChannel(hex)` — 6-digit hex → space-separated RGB channel
 - `pxToRem(px)` — `14` → `"0.875rem"` (16px baseline)
