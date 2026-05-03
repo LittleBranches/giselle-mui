@@ -11,6 +11,37 @@ sidebar_label: 'RoadmapTimeline Plan'
 
 ---
 
+## Why two timeline components
+
+`TimelineTwoColumn` and `RoadmapTimeline` solve different problems at different scales.
+
+### TimelineTwoColumn — the showcase component
+
+The full-featured career and project timeline. Purpose-built for presenting a dense body of professional history with visual impact.
+
+- **Two-column alternating layout** — phases stagger left and right down a centre spine. Each phase sits in one column; its milestones surface in the opposite column.
+- **Nested data model** — `phases[]` → each phase has its own `milestones[]`. The nesting is the point: phases give the macro shape, milestones give the detail.
+- **Expandable `PhaseCard`** — collapses to a concise header; expands to show full description, details list, platform strip, and photos.
+- **Overlap detection + date-repair UI** — `PhaseWarningPopover` lets the consumer visually correct overlapping date ranges without leaving the page.
+- **Eye-button tracking** — per-phase and per-milestone viewed state (wired to `PortfolioPreferencesProvider`).
+- **Custom spine** — `SpineConnector`, custom `TimelineDot`, done-state colouring, overdue colour, active pulsing ring.
+- Uses `@mui/lab/Timeline` as the root wrapper only. Every visual component beneath it is custom-built.
+- ~20 source files, 290 tests.
+
+### RoadmapTimeline — the documentation component
+
+A lightweight, single-column timeline for roadmap pages, changelogs, and documentation sites. Where `TimelineTwoColumn` is built for visual impact, `RoadmapTimeline` is built to be scannable, clean, and unobtrusive — the kind of thing you drop into a Docusaurus page beside prose.
+
+- **Flat data model** — a `steps[]` array with no nesting. No milestones, no phases-within-phases.
+- **Single-column** — left, right, or alternating content side, using `@mui/lab` layout props natively (`position="alternate"` etc.).
+- **Uses the full `@mui/lab` Timeline primitive stack** — `Timeline` + `TimelineItem` + `TimelineSeparator` + `TimelineConnector` + `TimelineContent` + `TimelineDot`. MUI handles the accessible markup; this component only adds colour and typed content. It is deliberately thin.
+- **Primary consumer: `giselle-docs`** — the Docusaurus documentation site for this library. The first page that will use it is the `giselle-mui` roadmap page (`/roadmaps/giselle-mui`).
+- No expansion, no eye buttons, no photos, no overlap detection, no two-column layout. Those belong to `TimelineTwoColumn`.
+
+**The deciding question:** If the timeline _is_ the page — the main showcase of a career or complex project — use `TimelineTwoColumn`. If the timeline is _on_ a page — supplementary context beside documentation prose, a changelog, or a simple product roadmap — use `RoadmapTimeline`.
+
+---
+
 ## Variant architecture intent (Apr 2026)
 
 The reference implementation in the private portfolio (`alexrebula`) has been split into focused sub-components — `PhaseCard`, `MilestoneBadge`, `SpineConnector`, `animations.ts` — all sharing a single `TimelinePhase` type as the data contract. This was done deliberately so that multiple layout variants can reuse the same card/badge primitives without forking the type or duplicating rendering logic.
