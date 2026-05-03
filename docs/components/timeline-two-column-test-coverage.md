@@ -22,21 +22,21 @@ expected outcome.
 
 ## Test file map
 
-| File                                           | What it covers                                                         |   Tests |
-| ---------------------------------------------- | ---------------------------------------------------------------------- | ------: |
-| `utils.test.ts`                                | Date parsing, phase sorting, overlap detection, month-index helpers    |      62 |
+| File                                           | What it covers                                                                                                    |   Tests |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------: |
+| `utils.test.ts`                                | Date parsing, phase sorting, overlap detection, month-index helpers                                               |      62 |
 | `phase-card.test.ts`                           | Variant, click/keyboard, expansion mode, status badges, platform strip, corner badge positioning, eye button WCAG |      57 |
-| `phase-warning-popover.test.ts`                | `parsePhaseRange`, `getConnectedOverlapGroup`, slider state, resolveOverlaps wiring | 26 |
-| `milestone-badge.interaction.test.ts`          | Card visibility, expand/collapse, keyboard, display-mode regressions   |      32 |
-| `timeline-two-column.tooltip.test.ts`          | Dot tooltip text, overdue label, active label, description preview     |      38 |
-| `milestone-badge.logic.test.ts`                | `hasDetails` interactivity gate, `displayTitle` three-level disclosure |      19 |
-| `timeline-two-column.interaction.test.ts`      | `handleExpandMilestone`, `handleExpandPhaseCard`, `computeSlotHeights` |      15 |
-| `timeline-dot.test.ts`                         | Rendering, done state, active-pulse attribute, click/keydown           |      17 |
-| `spine-connector.test.ts`                      | Year-boundary label, color variants, prop passthrough                  |      11 |
-| `milestone-badge.test.ts`                      | Readability minimum-size constants, eye button WCAG regression         |       6 |
-| `timeline-two-column.sort.test.ts`             | `sortOrder='key'` chronological sort                                   |       4 |
-| `timeline-two-column.column-placement.test.ts` | Milestone opposite-column structural invariant                         |       3 |
-| **Total**                                      |                                                                        | **290** |
+| `phase-warning-popover.test.ts`                | `parsePhaseRange`, `getConnectedOverlapGroup`, slider state, resolveOverlaps wiring                               |      26 |
+| `milestone-badge.interaction.test.ts`          | Card visibility, expand/collapse, keyboard, display-mode regressions                                              |      32 |
+| `timeline-two-column.tooltip.test.ts`          | Dot tooltip text, overdue label, active label, description preview                                                |      38 |
+| `milestone-badge.logic.test.ts`                | `hasDetails` interactivity gate, `displayTitle` three-level disclosure                                            |      19 |
+| `timeline-two-column.interaction.test.ts`      | `handleExpandMilestone`, `handleExpandPhaseCard`, `computeSlotHeights`                                            |      15 |
+| `timeline-dot.test.ts`                         | Rendering, done state, active-pulse attribute, click/keydown                                                      |      17 |
+| `spine-connector.test.ts`                      | Year-boundary label, color variants, prop passthrough                                                             |      11 |
+| `milestone-badge.test.ts`                      | Readability minimum-size constants, eye button WCAG regression                                                    |       6 |
+| `timeline-two-column.sort.test.ts`             | `sortOrder='key'` chronological sort                                                                              |       4 |
+| `timeline-two-column.column-placement.test.ts` | Milestone opposite-column structural invariant                                                                    |       3 |
+| **Total**                                      |                                                                                                                   | **290** |
 
 ---
 

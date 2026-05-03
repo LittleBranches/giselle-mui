@@ -40,7 +40,7 @@ Without this, a blank Next.js project still has to wire up a MUI `CssVarsProvide
 to get CSS variables mode working. `GiselleThemeProvider` is the one export that makes
 "zero Minimals" actually achievable — it replaces the entire Minimals `ThemeProvider` chain.
 
-See [`theming/roadmap.md`](../theming/roadmap.md) Phases A → B → C for the full spec.
+See [`roadmap.md`](../roadmap.md) Phases A → B → C for the full spec.
 
 **Dependency chain (must go in order):**
 
@@ -155,6 +155,6 @@ Minimals-dependent and would be replaced by `GiselleThemeProvider` + `GiselleSet
 
 ## Related
 
-- [`theming/roadmap.md`](../theming/roadmap.md) — Phase A, B, C spec
+- [`roadmap.md`](../roadmap.md) — Phase A, B, C spec
 - [`settings-provider-plan.md`](./settings-provider-plan.md) — GiselleSettingsProvider spec
 - [`timeline-plan.md`](./timeline-plan.md) — TimelineTwoColumn full plan

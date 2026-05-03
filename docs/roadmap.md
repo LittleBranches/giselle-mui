@@ -1,12 +1,11 @@
 ---
-sidebar_position: 3
+sidebar_position: 2
 sidebar_label: 'Roadmap'
 ---
 
-# Theming Roadmap
+# @alexrebula/giselle-mui — Roadmap
 
-> This file tracks the current state of the theming layer in `@alexrebula/giselle-mui`
-> and the work remaining to make the theme fully self-contained for consuming projects.
+> This file is the source of truth for the giselle-mui library build. It covers theme utilities (Phases A–D), components, and extraction candidates. Summary entries for completed phases bubble up to [`alexrebula/docs/roadmap.md`](../../rm/presentation/alexrebula/docs/roadmap.md) Phase 1.5.
 
 ---
 
@@ -19,7 +18,7 @@ import { extendTheme, CssVarsProvider } from '@mui/material/styles';
 ```
 
 There are zero external theme utility imports in this package.
-See [`theming-nextjs.md`](./theming-nextjs.md) for the recommended setup in a new project.
+See [`theming/nextjs.md`](./theming/nextjs.md) for the recommended setup in a new project.
 
 ---
 

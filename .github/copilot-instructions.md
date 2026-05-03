@@ -98,7 +98,7 @@ that saves every consumer from rediscovering it? If not, it should not be in thi
   milestones, and all expandable sub-information in full parity with the markdown source.
 
 - **Roadmap hierarchy bubble-up rule** — also defined in the `alexrebula` copilot instructions.
-  When a phase or milestone in `giselle-mui/docs/theming/roadmap.md` is completed or its date
+  When a phase or milestone in `giselle-mui/docs/roadmap.md` is completed or its date
   changes, the corresponding summary entry in `alexrebula/docs/roadmap.md` (Phase 1.5) and its
   `data.tsx` mirror must be updated in the same commit. The child roadmap is the source of
   truth for its own content; the ancestor holds a summary + link only, never a duplicate task list.
@@ -122,7 +122,7 @@ At the start of every new Copilot session in this package, read these files:
 
 | File                                                                      | Purpose                                                                                                        |
 | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [`docs/theming/roadmap.md`](../docs/theming/roadmap.md)                   | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
+| [`docs/roadmap.md`](../docs/roadmap.md)                   | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
 | [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md) | Full plan for `RoadmapTimeline` — next component to build                                                      |
 | [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                     | How to wire this library into a Next.js app                                                                    |
 
@@ -141,8 +141,8 @@ At the start of every new Copilot session in this package, read these files:
 
 ### Next planned work (priority order)
 
-1. **Phase B — Giselle brand theme preset** — define the Giselle green + amber palette as `giselleTheme` using `extendTheme()`. Export from `src/index.ts`. See `docs/theming/roadmap.md` Phase B.
-2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/theming/roadmap.md` Phase C.
+1. **Phase B — Giselle brand theme preset** — define the Giselle green + amber palette as `giselleTheme` using `extendTheme()`. Export from `src/index.ts`. See `docs/roadmap.md` Phase B.
+2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C.
 3. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
 4. **RoadmapTimeline component** — Phase A prerequisite (`channelAlpha`) is now met. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
 

@@ -108,16 +108,13 @@ export { MetricCard, MetricCardDecoration } from '@alexrebula/giselle-mui';
 
 ```tsx
 // app/page.tsx  (Server Component)
-import { MetricCardClient as MetricCard, MetricCardDecoration } from '../components/MetricCardClient';
+import {
+  MetricCardClient as MetricCard,
+  MetricCardDecoration,
+} from '../components/MetricCardClient';
 
 export default function Page() {
-  return (
-    <MetricCard
-      value="20+"
-      label="Years"
-      icon={<MetricCardDecoration color="primary" />}
-    />
-  );
+  return <MetricCard value="20+" label="Years" icon={<MetricCardDecoration color="primary" />} />;
 }
 ```
 
@@ -252,8 +249,8 @@ Typography scale helpers for consistent `rem` definitions.
 ```ts
 import { pxToRem, remToPx } from '@alexrebula/giselle-mui';
 
-pxToRem(14)     // "0.875rem"
-remToPx(0.875)  // 14
+pxToRem(14); // "0.875rem"
+remToPx(0.875); // 14
 ```
 
 ---

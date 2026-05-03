@@ -26,18 +26,20 @@ The career timeline has moments where two photos belong to the same entry — fo
 Replaced the `phase.photo && <Box component="img" ... />` block with a unified render that handles both fields:
 
 ```tsx
-{(phase.photos ?? (phase.photo ? [phase.photo] : null))?.map((p, i) => (
-  <Box
-    key={i}
-    component="img"
-    src={p.src}
-    alt={p.alt}
-    sx={{
-      mt: i === 0 ? 2 : 1,
-      // ... same sx as before
-    }}
-  />
-))}
+{
+  (phase.photos ?? (phase.photo ? [phase.photo] : null))?.map((p, i) => (
+    <Box
+      key={i}
+      component="img"
+      src={p.src}
+      alt={p.alt}
+      sx={{
+        mt: i === 0 ? 2 : 1,
+        // ... same sx as before
+      }}
+    />
+  ));
+}
 ```
 
 **Precedence:** `photos` wins when both fields are present. `photo` is normalised to a single-element array so the render path is identical. The first photo gets `mt: 2` (space after description), subsequent photos get `mt: 1` (tighter gap within the photo strip).
