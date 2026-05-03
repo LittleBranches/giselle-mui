@@ -25,17 +25,14 @@ See [`theming-nextjs.md`](./theming-nextjs.md) for the recommended setup in a ne
 
 ## Theme utilities
 
-A few small helpers are commonly needed when building MUI v7 themes — most notably
-`varAlpha` for CSS variable–based colour tints. Until Phase A ships these in `giselle-mui`,
-you can write them inline:
+**Phase A shipped — 4 May 2026.** Theme-building helpers are available as named exports
+from `@alexrebula/giselle-mui`:
 
 ```ts
-// varAlpha — channel: space-separated RGB string, e.g. "99 102 241"; alpha: 0–1
-export const varAlpha = (channel: string, alpha: number) =>
-  `rgba(${channel.replace(/ /g, ', ')}, ${alpha})`;
+import { varAlpha, createPaletteChannel, pxToRem, remToPx } from '@alexrebula/giselle-mui';
 ```
 
-Phase A of this roadmap will export these as named utilities from `giselle-mui/src/utils/`.
+See [`theming-nextjs.md`](./theming-nextjs.md) for full usage examples and integration guide.
 
 ---
 
