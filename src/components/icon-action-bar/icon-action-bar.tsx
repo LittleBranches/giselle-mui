@@ -9,6 +9,8 @@ import IconButton from '@mui/material/IconButton';
 
 import { GiselleIcon } from '../giselle-icon';
 
+import { iconActionBarRootSx } from './icon-action-bar.styles';
+
 // ----------------------------------------------------------------------
 
 /**
@@ -151,10 +153,7 @@ export function IconActionBar({
   ...other
 }: IconActionBarProps) {
   return (
-    <Box
-      sx={[{ gap: 1, width: 1, flexGrow: 1, display: 'flex' }, ...(Array.isArray(sx) ? sx : [sx])]}
-      {...other}
-    >
+    <Box sx={[iconActionBarRootSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       {actions.map((item, index) => {
         const label = item['aria-label'] ?? item.tooltip;
         const buttonProps: IconButtonProps & { component?: React.ElementType; href?: string } = {

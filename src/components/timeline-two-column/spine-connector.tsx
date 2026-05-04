@@ -4,6 +4,8 @@ import type { HighlightedPaletteKey } from './types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { yearLabelSx } from './spine-connector.styles';
+
 // ----------------------------------------------------------------------
 
 type SpineConnectorProps = BoxProps & {
@@ -48,30 +50,7 @@ export function SpineConnector({
       ]}
     >
       {yearMilestone && (
-        <Typography
-          variant="caption"
-          sx={{
-            position: 'absolute',
-            bottom: `${yearLabelMarginBottom}px`,
-
-            left: '50%',
-            transform: 'translateX(-50%)',
-            whiteSpace: 'nowrap',
-            px: 1,
-            py: 0.25,
-            lineHeight: 1.6,
-            borderRadius: 1,
-            fontSize: '0.75rem',
-            fontWeight: 800,
-            letterSpacing: 0.5,
-            bgcolor: 'background.paper',
-            color: 'text.primary',
-            border: '1px solid',
-            borderColor: 'divider',
-            boxShadow: 1,
-            zIndex: 1,
-          }}
-        >
+        <Typography variant="caption" sx={yearLabelSx(yearLabelMarginBottom)}>
           {yearMilestone}
         </Typography>
       )}

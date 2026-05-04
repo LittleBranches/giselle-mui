@@ -6,6 +6,7 @@ import type { HighlightedPaletteKey } from './types';
 import Box from '@mui/material/Box';
 
 import { checkPop, pulseRing } from './animations';
+import { doneCheckmarkSx, timelineDotInnerSx } from './timeline-dot.styles';
 
 // ----------------------------------------------------------------------
 
@@ -81,12 +82,7 @@ function DotInner({
         strokeWidth={2.8}
         strokeLinecap="round"
         strokeLinejoin="round"
-        sx={{
-          width: iconSize,
-          height: iconSize,
-          flexShrink: 0,
-          animation: `${checkPop} 0.36s cubic-bezier(0.34, 1.56, 0.64, 1)`,
-        }}
+        sx={doneCheckmarkSx(iconSize)}
       >
         <polyline points="20 6 9 17 4 12" />
       </Box>
@@ -229,45 +225,7 @@ export function TimelineDot({
       }
     >
       {/* Inner clip Box: clips icon to circle shape; separate from outer so ::after ring is visible. */}
-      <Box
-        sx={(theme) => ({
-          width: '100%',
-          height: '100%',
-          borderRadius: '50%',
-          overflow: 'hidden',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          // All done dots: solid success-green fill with white icon (effectiveColor is already 'success').
-          bgcolor:
-            !done && dotBg
-              ? dotBg
-              : (theme.vars!.palette[effectiveColor]?.main ?? theme.vars!.palette.primary.main),
-          color: theme.vars!.palette.common.white,
-          // Milestone: white separator border + colored drop shadow.
-          // boxSizing ensures padding + border are included in the 100%/100% dimensions
-          // so the circle never exceeds the outer 34px container regardless of box model reset.
-          ...(isMilestone && {
-            boxSizing: 'border-box',
-            padding: '2px',
-            border: '2px solid',
-            borderColor: 'background.paper',
-            boxShadow: `0 2px 8px rgba(${
-              theme.vars!.palette[effectiveColor]?.mainChannel ??
-              (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
-            } / 0.5)`,
-          }),
-          ...(onClick &&
-            isMilestone && {
-              '&:hover': {
-                boxShadow: `0 6px 20px rgba(${
-                  theme.vars!.palette[effectiveColor]?.mainChannel ??
-                  (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
-                } / 0.6)`,
-              },
-            }),
-        })}
-      >
+      <Box sx={timelineDotInnerSx(done, dotBg, effectiveColor, isMilestone, !!onClick)}>
         <DotInner done={done} icon={icon} animationKey={animationKey} iconSize={iconSize} />
       </Box>
     </Box>

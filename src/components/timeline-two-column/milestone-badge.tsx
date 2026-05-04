@@ -12,6 +12,17 @@ import Typography from '@mui/material/Typography';
 
 import { DEFAULT_EXPANDABLE_ICON } from './icons';
 import { GiselleIcon } from '../giselle-icon/giselle-icon';
+import {
+  milestoneNewBadgeRowSx,
+  milestoneNewDotSx,
+  milestoneNewLabelSx,
+  milestoneDateSx,
+  milestoneTitleRowSx,
+  milestoneEyeButtonSx,
+  milestoneDetailPillSx,
+  milestoneDetailListSx,
+  milestoneDetailRowSx,
+} from './milestone-badge.styles';
 
 // ----------------------------------------------------------------------
 
@@ -206,55 +217,21 @@ export function MilestoneBadge({
       ]}
     >
       {m.new && (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.5,
-            mb: 0.5,
-            justifyContent: rightAlign ? 'flex-end' : undefined,
-          }}
-        >
-          <Box
-            sx={{
-              width: 7,
-              height: 7,
-              borderRadius: '50%',
-              bgcolor: 'success.main',
-              flexShrink: 0,
-            }}
-          />
-          <Typography
-            variant="caption"
-            sx={{ fontSize: '0.65rem', fontWeight: 700, color: 'success.main', lineHeight: 1 }}
-          >
+        <Box sx={milestoneNewBadgeRowSx(rightAlign)}>
+          <Box sx={milestoneNewDotSx} />
+          <Typography variant="caption" sx={milestoneNewLabelSx}>
             New
           </Typography>
         </Box>
       )}
 
       {m.date && (
-        <Typography
-          variant="caption"
-          sx={{
-            color: 'text.secondary',
-            fontSize: MILESTONE_DATE_FONT_SIZE,
-            display: 'block',
-            mb: 0.5,
-          }}
-        >
+        <Typography variant="caption" sx={milestoneDateSx(MILESTONE_DATE_FONT_SIZE)}>
           {m.date}
         </Typography>
       )}
 
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 0.75,
-          justifyContent: rightAlign ? 'flex-end' : 'flex-start',
-        }}
-      >
+      <Box sx={milestoneTitleRowSx(rightAlign)}>
         {/* Eye button: left side for right-aligned (left-column) cards */}
         {onMarkViewed && rightAlign && (
           <Tooltip
@@ -271,27 +248,10 @@ export function MilestoneBadge({
               }}
               aria-label={isViewed ? 'Mark as not viewed' : 'Mark as viewed'}
               aria-pressed={isViewed}
-              sx={{
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minWidth: MILESTONE_EYE_BUTTON_MIN_SIZE,
-                minHeight: MILESTONE_EYE_BUTTON_MIN_SIZE,
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                p: 0,
-                color: isViewed ? 'success.main' : 'text.secondary',
-                transition: 'color 0.15s',
-                '&:hover': { color: isViewed ? 'success.dark' : 'text.primary' },
-                '&:focus-visible': {
-                  outline: '2px solid',
-                  outlineColor: isViewed ? 'success.main' : 'primary.main',
-                  outlineOffset: 2,
-                  borderRadius: 0.5,
-                },
-              }}
+              sx={milestoneEyeButtonSx({
+                isViewed: !!isViewed,
+                minSize: MILESTONE_EYE_BUTTON_MIN_SIZE,
+              })}
             >
               <GiselleIcon
                 icon={isViewed ? 'solar:eye-bold' : 'solar:eye-outline'}
@@ -322,27 +282,10 @@ export function MilestoneBadge({
               }}
               aria-label={isViewed ? 'Mark as not viewed' : 'Mark as viewed'}
               aria-pressed={isViewed}
-              sx={{
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minWidth: MILESTONE_EYE_BUTTON_MIN_SIZE,
-                minHeight: MILESTONE_EYE_BUTTON_MIN_SIZE,
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                p: 0,
-                color: isViewed ? 'success.main' : 'text.secondary',
-                transition: 'color 0.15s',
-                '&:hover': { color: isViewed ? 'success.dark' : 'text.primary' },
-                '&:focus-visible': {
-                  outline: '2px solid',
-                  outlineColor: isViewed ? 'success.main' : 'primary.main',
-                  outlineOffset: 2,
-                  borderRadius: 0.5,
-                },
-              }}
+              sx={milestoneEyeButtonSx({
+                isViewed: !!isViewed,
+                minSize: MILESTONE_EYE_BUTTON_MIN_SIZE,
+              })}
             >
               <GiselleIcon
                 icon={isViewed ? 'solar:eye-bold' : 'solar:eye-outline'}
@@ -362,18 +305,7 @@ export function MilestoneBadge({
 
       {hasDetails && (
         <Box
-          sx={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 0.5,
-            mt: 0.5,
-            mb: 0.25,
-            px: 0.625,
-            py: 0.2,
-            borderRadius: 0.75,
-            bgcolor: 'action.hover',
-            color: 'text.secondary',
-          }}
+          sx={milestoneDetailPillSx}
           aria-label={`${m.details?.length ?? 0} expandable detail${(m.details?.length ?? 0) === 1 ? '' : 's'}`}
         >
           <Box
@@ -398,23 +330,9 @@ export function MilestoneBadge({
 
       {hasDetails && (
         <Collapse in={isExpanded} timeout={50}>
-          <Box
-            id={detailsId}
-            sx={{
-              mt: 1.5,
-              pt: 1.5,
-              borderTop: '1px solid',
-              borderColor: 'divider',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 0.75,
-            }}
-          >
+          <Box id={detailsId} sx={milestoneDetailListSx}>
             {m.details?.map((detail, i) => (
-              <Box
-                key={i}
-                sx={{ display: 'flex', gap: 1, alignItems: 'flex-start', textAlign: 'left' }}
-              >
+              <Box key={i} sx={milestoneDetailRowSx}>
                 <Typography
                   aria-hidden="true"
                   component="span"

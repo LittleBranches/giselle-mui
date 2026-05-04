@@ -5,6 +5,8 @@ import { Icon } from '@iconify/react';
 
 import Box from '@mui/material/Box';
 
+import { giselleIconRootSx } from './giselle-icon.styles';
+
 // ----------------------------------------------------------------------
 //
 // WHY THIS COMPONENT EXISTS
@@ -117,13 +119,7 @@ export function GiselleIcon({
   const h = height ?? width;
 
   return (
-    <Box
-      component="span"
-      sx={[
-        { lineHeight: 0, display: 'inline-flex', flexShrink: 0, width, height: h },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
-    >
+    <Box component="span" sx={[giselleIconRootSx(width, h), ...(Array.isArray(sx) ? sx : [sx])]}>
       <Icon
         icon={icon}
         width="100%"

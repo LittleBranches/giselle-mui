@@ -11,6 +11,13 @@ import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 import type { TimelinePhase } from './types';
 import { dateToMonthIndex, monthIndexToDate, resolveOverlaps } from './utils';
+import {
+  ganttTrackSx,
+  popoverPaperSx,
+  sliderRowHeaderSx,
+  actionsRowSx,
+  ganttBarSx,
+} from './phase-warning-popover.styles';
 
 // ----------------------------------------------------------------------
 
@@ -162,10 +169,7 @@ function MiniGanttRuler({
   const rangeList = Array.from(overrides.entries());
 
   return (
-    <Box
-      aria-hidden
-      sx={{ position: 'relative', height: 20, borderRadius: 1, bgcolor: 'action.hover' }}
-    >
+    <Box aria-hidden sx={ganttTrackSx}>
       {conflictingPhases.map((phase) => {
         const override = overrides.get(phase.key);
         if (!override) return null;
@@ -181,28 +185,7 @@ function MiniGanttRuler({
         );
 
         return (
-          <Box
-            key={phase.key}
-            sx={(theme) => ({
-              position: 'absolute',
-              top: 4,
-              height: 12,
-              left: `${leftPct}%`,
-              width: `${widthPct}%`,
-              borderRadius: 0.5,
-              opacity: isOverlapping ? 0.7 : 1,
-              bgcolor: isOverlapping ? 'transparent' : theme.vars!.palette[sliderColor].main,
-              ...(isOverlapping && {
-                background: `repeating-linear-gradient(
-                  45deg,
-                  ${theme.vars!.palette[sliderColor].main} 0px,
-                  ${theme.vars!.palette[sliderColor].main} 4px,
-                  transparent 4px,
-                  transparent 8px
-                )`,
-              }),
-            })}
-          />
+          <Box key={phase.key} sx={ganttBarSx(leftPct, widthPct, isOverlapping, sliderColor)} />
         );
       })}
     </Box>
@@ -349,17 +332,7 @@ export function PhaseWarningPopover({
       sx={{ zIndex: (theme) => theme.zIndex.tooltip + 1 }}
     >
       <ClickAwayListener onClickAway={onClose}>
-        <Paper
-          elevation={8}
-          sx={{
-            width: 340,
-            p: 2,
-            borderRadius: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 1.5,
-          }}
-        >
+        <Paper elevation={8} sx={popoverPaperSx}>
           {/* Header */}
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography
@@ -401,14 +374,7 @@ export function PhaseWarningPopover({
               const sliderColor = resolveSliderColor(phase.color);
               return (
                 <Box key={phase.key}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      mb: 0.25,
-                    }}
-                  >
+                  <Box sx={sliderRowHeaderSx}>
                     <Typography variant="caption" fontWeight={600}>
                       {phase.shortTitle ?? phase.title}
                     </Typography>
@@ -438,15 +404,7 @@ export function PhaseWarningPopover({
           <Divider />
 
           {/* Actions */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: 1,
-            }}
-          >
+          <Box sx={actionsRowSx}>
             <Button
               size="small"
               variant="outlined"

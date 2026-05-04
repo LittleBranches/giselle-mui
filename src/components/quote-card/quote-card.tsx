@@ -5,6 +5,8 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import { quoteMarkSx, quoteTextSx } from './quote-card.styles';
+
 // ----------------------------------------------------------------------
 
 type QuoteColor = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
@@ -86,33 +88,13 @@ export function QuoteCard({
     >
       <Box sx={{ display: 'flex', gap: 2 }}>
         {/* Left column — decorative opening quote mark */}
-        <Typography
-          aria-hidden
-          sx={{
-            lineHeight: 1,
-            fontSize: '4rem',
-            color: `${color}.main`,
-            opacity: 0.4,
-            fontFamily: 'Georgia, serif',
-            userSelect: 'none',
-            flexShrink: 0,
-            mt: -0.5,
-          }}
-        >
+        <Typography aria-hidden sx={quoteMarkSx(color)}>
           {'\u201C'}
         </Typography>
 
         {/* Right column — quote text + attribution */}
         <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Typography
-            variant="body1"
-            sx={{
-              fontStyle: 'italic',
-              fontWeight: 'fontWeightLight',
-              color: 'text.secondary',
-              lineHeight: 1.85,
-            }}
-          >
+          <Typography variant="body1" sx={quoteTextSx}>
             {quote}
           </Typography>
 

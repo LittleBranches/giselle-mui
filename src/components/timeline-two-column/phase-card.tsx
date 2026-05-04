@@ -20,10 +20,29 @@ import Collapse from '@mui/material/Collapse';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-import { pulseDot } from './animations';
 import { GiselleIcon } from '../giselle-icon/giselle-icon';
 import { DEFAULT_EXPANDABLE_ICON } from './icons';
-import { photoImgSx } from './phase-card.styles';
+import {
+  photoImgSx,
+  labeledIconStripLabelSx,
+  detailBulletsContainerSx,
+  detailBulletsRowSx,
+  tooltipAlertListSx,
+  cornerBadgeCircleSx,
+  statusBadgeWrapperSx,
+  newStatusDotSx,
+  newStatusLabelSx,
+  activeDotSx,
+  activeStatusLabelSx,
+  scenarioBadgeSx,
+  detailCountPillSx,
+  logoStripSx,
+  clientLogoSx,
+  platformStripSx,
+  projectLogoSx,
+  eyeButtonSx,
+  phaseCardIconBoxSx,
+} from './phase-card.styles';
 
 // ----------------------------------------------------------------------
 
@@ -116,10 +135,7 @@ function LabeledIconStrip({ label, children }: LabeledIconStripProps) {
   return (
     <Box sx={{ mt: 2.5 }}>
       {label && (
-        <Typography
-          variant="overline"
-          sx={{ display: 'block', mb: 1, fontSize: '0.65rem', color: 'text.disabled' }}
-        >
+        <Typography variant="overline" sx={labeledIconStripLabelSx}>
           {label}
         </Typography>
       )}
@@ -144,23 +160,9 @@ type CardDetailBulletsProps = {
 function CardDetailBullets({ id, details, in: expanded }: CardDetailBulletsProps) {
   return (
     <Collapse in={expanded} timeout={50}>
-      <Box
-        id={id}
-        sx={{
-          mt: 1.5,
-          pt: 1.5,
-          borderTop: '1px solid',
-          borderColor: 'divider',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 0.75,
-        }}
-      >
+      <Box id={id} sx={detailBulletsContainerSx}>
         {details.map((detail, i) => (
-          <Box
-            key={i}
-            sx={{ display: 'flex', gap: 1, alignItems: 'flex-start', textAlign: 'left' }}
-          >
+          <Box key={i} sx={detailBulletsRowSx}>
             <Typography
               aria-hidden="true"
               component="span"
@@ -205,7 +207,7 @@ function CardCornerAlertBadge({
   const hasError = alerts.some((a) => a.severity === 'error');
   const { left, right, transform, tooltipPlacement } = resolveCornerBadgeAlign(columnSide);
   const tooltipContent = (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.25, py: 0.5, px: 0.25 }}>
+    <Box sx={tooltipAlertListSx}>
       {alerts.map((a, i) => (
         <Box key={i} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
           <GiselleIcon
@@ -241,30 +243,13 @@ function CardCornerAlertBadge({
             }
           : undefined
       }
-      sx={{
-        position: 'absolute',
-        top: 0,
-        ...(left !== undefined ? { left } : { right }),
-        zIndex: 10,
+      sx={cornerBadgeCircleSx({
+        positionOverride: left !== undefined ? { left } : { right },
         transform,
-        width: CORNER_ALERT_BADGE_SIZE,
-        height: CORNER_ALERT_BADGE_SIZE,
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        bgcolor: hasError ? 'error.main' : 'warning.dark',
-        color: 'common.white',
-        boxShadow: (theme) =>
-          `0 2px 6px rgba(${(theme.vars!.palette.grey as unknown as Record<string, string>)['900Channel']} / 0.3)`,
-        cursor: onClick ? 'pointer' : 'help',
-        pointerEvents: 'auto',
-        '&:focus-visible': {
-          outline: '2px solid',
-          outlineColor: hasError ? 'error.main' : 'warning.dark',
-          outlineOffset: 2,
-        },
-      }}
+        hasError,
+        hasClickHandler: !!onClick,
+        badgeSize: CORNER_ALERT_BADGE_SIZE,
+      })}
     >
       <GiselleIcon icon="solar:danger-triangle-bold" width={CORNER_ALERT_ICON_SIZE} aria-hidden />
     </Box>
@@ -298,27 +283,9 @@ type ActiveBadgeProps = { color: string; activeLabel?: string };
 
 function NewBadge() {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 1 }}>
-      <Box
-        sx={{
-          width: ACTIVE_DOT_SIZE,
-          height: ACTIVE_DOT_SIZE,
-          borderRadius: '50%',
-          flexShrink: 0,
-          bgcolor: 'success.main',
-          animation: `${pulseDot} 1.4s ease-in-out infinite`,
-        }}
-      />
-      <Typography
-        variant="overline"
-        sx={{
-          fontSize: STATUS_BADGE_FONT_SIZE,
-          fontWeight: 700,
-          letterSpacing: 0.8,
-          lineHeight: 1.6,
-          color: 'success.main',
-        }}
-      >
+    <Box sx={statusBadgeWrapperSx}>
+      <Box sx={newStatusDotSx(ACTIVE_DOT_SIZE)} />
+      <Typography variant="overline" sx={newStatusLabelSx}>
         New
       </Typography>
     </Box>
@@ -327,27 +294,9 @@ function NewBadge() {
 
 function ActiveBadge({ color, activeLabel }: ActiveBadgeProps) {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 1 }}>
-      <Box
-        sx={{
-          width: ACTIVE_DOT_SIZE,
-          height: ACTIVE_DOT_SIZE,
-          borderRadius: '50%',
-          flexShrink: 0,
-          bgcolor: `${color}.main`,
-          animation: `${pulseDot} 1.4s ease-in-out infinite`,
-        }}
-      />
-      <Typography
-        variant="overline"
-        sx={{
-          fontSize: STATUS_BADGE_FONT_SIZE,
-          fontWeight: 700,
-          letterSpacing: 0.8,
-          lineHeight: 1.6,
-          color: `${color}.main`,
-        }}
-      >
+    <Box sx={statusBadgeWrapperSx}>
+      <Box sx={activeDotSx(color, ACTIVE_DOT_SIZE)} />
+      <Typography variant="overline" sx={activeStatusLabelSx(color)}>
         {activeLabel ?? 'Now'}
       </Typography>
     </Box>
@@ -358,21 +307,7 @@ type ScenarioBadgeProps = { color: string; scenarioLabel: string };
 
 function ScenarioBadge({ color, scenarioLabel }: ScenarioBadgeProps) {
   return (
-    <Typography
-      variant="overline"
-      sx={{
-        display: 'inline-block',
-        mb: 1,
-        px: 1,
-        py: 0.25,
-        borderRadius: 0.75,
-        fontSize: STATUS_BADGE_FONT_SIZE,
-        fontWeight: 700,
-        letterSpacing: 0.8,
-        color: `${color}.dark`,
-        bgcolor: `rgba(var(--mui-palette-${color}-mainChannel) / 0.12)`,
-      }}
-    >
+    <Typography variant="overline" sx={scenarioBadgeSx(color)}>
       {scenarioLabel}
     </Typography>
   );
@@ -475,27 +410,7 @@ function CardDecoration({ color, isOverduePending, icon }: CardDecorationProps) 
           }),
         ]}
       />
-      <Box
-        aria-hidden="true"
-        sx={(theme) => ({
-          top: 16,
-          right: 16,
-          width: 36,
-          height: 36,
-          position: 'absolute',
-          zIndex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          // Force the icon SVG to 32 × 32 via CSS instead of cloneElement,
-          // so the icon element can remain an RSC-created React element.
-          '& svg': { width: 32, height: 32 },
-          color: isOverduePending
-            ? theme.vars!.palette.error.main
-            : (theme.vars!.palette[color]?.main ?? theme.vars!.palette.primary.main),
-          opacity: isOverduePending ? 0.55 : 0.35,
-        })}
-      >
+      <Box aria-hidden="true" sx={phaseCardIconBoxSx(color, isOverduePending)}>
         {icon}
       </Box>
     </>
@@ -914,17 +829,7 @@ export function PhaseCard({
 
             {hasDetails && (
               <Box
-                sx={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 0.5,
-                  mb: 1,
-                  px: 0.75,
-                  py: 0.25,
-                  borderRadius: 1,
-                  bgcolor: 'action.hover',
-                  color: 'text.secondary',
-                }}
+                sx={detailCountPillSx}
                 aria-label={`${phase.details?.length ?? 0} expandable detail${(phase.details?.length ?? 0) === 1 ? '' : 's'}`}
               >
                 <Box
@@ -961,24 +866,10 @@ export function PhaseCard({
             {/* Client logos */}
             {phase.clients && (
               <LabeledIconStrip label={phase.clientsLabel}>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2.5 }}>
+                <Box sx={logoStripSx}>
                   {phase.clients.map(({ name, logo }) => (
                     <Tooltip key={name} title={name} arrow>
-                      <Box
-                        component="img"
-                        src={logo}
-                        alt={name}
-                        sx={{
-                          height: 40,
-                          width: 'auto',
-                          maxWidth: 140,
-                          objectFit: 'contain',
-                          opacity: 0.7,
-                          filter: 'grayscale(1)',
-                          transition: 'opacity 0.2s, filter 0.2s',
-                          '&:hover': { opacity: 1, filter: 'none' },
-                        }}
-                      />
+                      <Box component="img" src={logo} alt={name} sx={clientLogoSx} />
                     </Tooltip>
                   ))}
                 </Box>
@@ -988,32 +879,16 @@ export function PhaseCard({
             {/* Tech stack platforms */}
             {phase.platforms && phase.platforms.length > 0 && (
               <LabeledIconStrip label={phase.platformsLabel ?? 'Tech Stack'}>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1 }}>
-                  {buildPlatformStripItems(phase.platforms)}
-                </Box>
+                <Box sx={platformStripSx}>{buildPlatformStripItems(phase.platforms)}</Box>
               </LabeledIconStrip>
             )}
 
             {/* Project logos */}
             {phase.projects && (
               <LabeledIconStrip label={phase.projectsLabel}>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 2.5 }}>
+                <Box sx={logoStripSx}>
                   {phase.projects.map(({ name, logo }) => (
-                    <Box
-                      key={name}
-                      component="img"
-                      src={logo}
-                      alt={name}
-                      sx={{
-                        height: 28,
-                        width: 'auto',
-                        maxWidth: 100,
-                        objectFit: 'contain',
-                        opacity: 0.85,
-                        transition: 'opacity 0.2s',
-                        '&:hover': { opacity: 1 },
-                      }}
-                    />
+                    <Box key={name} component="img" src={logo} alt={name} sx={projectLogoSx} />
                   ))}
                 </Box>
               </LabeledIconStrip>
@@ -1050,31 +925,7 @@ export function PhaseCard({
             }}
             aria-label={isViewed ? 'Mark as not viewed' : 'Mark as viewed'}
             aria-pressed={isViewed}
-            sx={{
-              position: 'absolute',
-              bottom: 0,
-              ...(columnSide === 'left' ? { left: 0 } : { right: 0 }),
-              transform: 'translate(0, calc(100% + 8px))',
-              zIndex: 10,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minWidth: EYE_BUTTON_MIN_SIZE,
-              minHeight: EYE_BUTTON_MIN_SIZE,
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              p: 0,
-              color: isViewed ? 'success.main' : 'text.secondary',
-              transition: 'color 0.15s',
-              '&:hover': { color: isViewed ? 'success.dark' : 'text.primary' },
-              '&:focus-visible': {
-                outline: '2px solid',
-                outlineColor: isViewed ? 'success.main' : 'primary.main',
-                outlineOffset: 2,
-                borderRadius: 0.5,
-              },
-            }}
+            sx={eyeButtonSx({ columnSide, isViewed, minSize: EYE_BUTTON_MIN_SIZE })}
           >
             <GiselleIcon
               icon={isViewed ? 'solar:eye-bold' : 'solar:eye-outline'}
