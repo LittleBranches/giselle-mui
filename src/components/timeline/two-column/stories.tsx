@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { GiselleIcon } from '../../giselle-icon/giselle-icon';
-import { TimelineTwoColumn } from './timeline-two-column';
+import { TimelineTwoColumn } from './two-column';
 import type { TimelinePhase } from './types';
 import {
   storyColumnIndicatorSx,
