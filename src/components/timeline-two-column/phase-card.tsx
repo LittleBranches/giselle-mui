@@ -85,6 +85,24 @@ export function resolveCornerBadgeAlign(columnSide: 'left' | 'right'): {
 // ----------------------------------------------------------------------
 
 /**
+ * Resolves the list of photo entries to render for a phase card.
+ *
+ * - `photos` wins when both fields are present.
+ * - `photo` (singular) is normalised to a single-element array.
+ * - Neither present → `null` (no images rendered).
+ *
+ * @internal Exported for unit tests — not part of the public API.
+ */
+export function resolvePhotoSources(phase: {
+  photo?: { src: string; alt: string };
+  photos?: Array<{ src: string; alt: string }>;
+}): Array<{ src: string; alt: string }> | null {
+  return phase.photos ?? (phase.photo ? [phase.photo] : null);
+}
+
+// ----------------------------------------------------------------------
+
+/**
  * A labelled group: an optional overline label above any icon/logo strip.
  * Handles the repeated pattern across platforms, clients, and projects.
  */
@@ -659,35 +677,6 @@ export function derivePlatformEntry(p: TimelinePlatformItem): {
 }
 
 /**
- * Resolves the photo source list for a phase card.
- *
- * `photos` takes precedence over `photo` when both are provided.
- * Returns `null` when neither field is present (no images rendered).
- *
- * @internal — not part of the public component API; exported for testing only.
- */
-export function resolvePhotoSources(phase: {
-  photos?: { src: string; alt: string }[];
-  photo?: { src: string; alt: string };
-}): { src: string; alt: string }[] | null {
-  return phase.photos ?? (phase.photo ? [phase.photo] : null);
-}
-
-/**
- * Maps a resolved photo list into `<Box component="img">` elements for inline rendering.
- *
- * Each photo is rendered as a block image (maxWidth 200px). The first photo receives
- * extra top margin to separate it from the description text.
- *
- * @internal — not part of the public component API; exported for testing only.
- */
-export function buildPhotoNodes(photos: { src: string; alt: string }[]): ReactNode[] {
-  return photos.map((p, i) => (
-    <Box key={`photo-${i}`} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
-  ));
-}
-
-/**
  * Maps a phase's platform items into icon/chip nodes for inline rendering.
  *
  * @internal — not part of the public component API; exported for testing only.
@@ -959,15 +948,15 @@ export function PhaseCard({
             )}
 
             {expanded && (
-              <>
-                <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
-                  {phase.description}
-                </Typography>
-                {resolvePhotoSources(phase)?.map((p, i) => (
-                  <Box key={i} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
-                ))}
-              </>
+              <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
+                {phase.description}
+              </Typography>
             )}
+
+            {expanded &&
+              resolvePhotoSources(phase)?.map((p, i) => (
+                <Box key={i} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
+              ))}
 
             {/* Client logos */}
             {phase.clients && (

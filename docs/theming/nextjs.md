@@ -108,10 +108,7 @@ export { MetricCard, MetricCardDecoration } from '@alexrebula/giselle-mui';
 
 ```tsx
 // app/page.tsx  (Server Component)
-import {
-  MetricCard,
-  MetricCardDecoration,
-} from '../components/MetricCardClient';
+import { MetricCard, MetricCardDecoration } from '../components/MetricCardClient';
 
 export default function Page() {
   return <MetricCard value="20+" label="Years" icon={<MetricCardDecoration color="primary" />} />;
