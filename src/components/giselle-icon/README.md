@@ -146,7 +146,7 @@ import { MetricCard, MetricCardDecoration, GiselleIcon } from '@alexrebula/gisel
   sublabel="of experience"
   icon={<GiselleIcon icon="solar:clock-circle-bold-duotone" />}
   decoration={<MetricCardDecoration />}
-/>
+/>;
 ```
 
 ---
@@ -166,11 +166,11 @@ Browse the full catalogue (200,000+ icons) at **https://icon-sets.iconify.design
 
 All icon sets used in this library are open source:
 
-| Collection prefix | License | Typical use |
-|---|---|---|
-| `solar:` | Apache 2.0 | UI icons — bold, duotone, outline styles |
-| `logos:` | CC0 1.0 (most) | Brand / technology logos |
-| `simple-icons:` | Apache 2.0 | Brand icons, monochrome |
+| Collection prefix | License        | Typical use                              |
+| ----------------- | -------------- | ---------------------------------------- |
+| `solar:`          | Apache 2.0     | UI icons — bold, duotone, outline styles |
+| `logos:`          | CC0 1.0 (most) | Brand / technology logos                 |
+| `simple-icons:`   | Apache 2.0     | Brand icons, monochrome                  |
 
 ---
 
@@ -192,12 +192,12 @@ configuration required.
 
 **Trade-offs:**
 
-| | |
-|---|---|
-| ✅ Zero setup | ❌ Visible flicker — the icon is blank until the network round-trip completes (100–500 ms) |
-| ✅ Access to all 200,000+ icons | ❌ Network dependency — any CDN outage silently breaks icons |
-| ✅ Works in any framework | ❌ Not bundled — icon data is absent from your JS output |
-| | ❌ Not suitable for production |
+|                                 |                                                                                            |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
+| ✅ Zero setup                   | ❌ Visible flicker — the icon is blank until the network round-trip completes (100–500 ms) |
+| ✅ Access to all 200,000+ icons | ❌ Network dependency — any CDN outage silently breaks icons                               |
+| ✅ Works in any framework       | ❌ Not bundled — icon data is absent from your JS output                                   |
+|                                 | ❌ Not suitable for production                                                             |
 
 **Use online mode for:** prototyping, quick demos, or Storybook development where you
 want to try different icons without a build step.
@@ -211,12 +211,12 @@ renders. Icons are bundled directly in your JS output — no network requests, n
 
 **Trade-offs:**
 
-| | |
-|---|---|
-| ✅ No flicker — icons are in the JS bundle | ❌ One-time setup (~30 min) |
-| ✅ No network dependency | ❌ You curate which icons are bundled |
-| ✅ Fully bundled — icons in your JS output | |
-| ✅ Works in any framework | |
+|                                            |                                       |
+| ------------------------------------------ | ------------------------------------- |
+| ✅ No flicker — icons are in the JS bundle | ❌ One-time setup (~30 min)           |
+| ✅ No network dependency                   | ❌ You curate which icons are bundled |
+| ✅ Fully bundled — icons in your JS output |                                       |
+| ✅ Works in any framework                  |                                       |
 
 The setup has three files, regardless of framework:
 
@@ -249,7 +249,6 @@ src/
 import { createIconRegistrar } from '@alexrebula/giselle-mui';
 
 export const registerIcons = createIconRegistrar({
-
   // ─── Solar icons (24×24 viewBox — no explicit dims needed) ───────────────
   'solar:rocket-bold-duotone': {
     body: '<path fill="currentColor" d="M12 2c0 0-7 4.463-7 10.664..." /><path fill="currentColor" d="..." opacity=".5"/>',
@@ -423,7 +422,7 @@ import { registerIcons } from '../components/icon-sets';
 registerIcons(); // ← module-level
 
 export function IconRegistrar() {
-  return null;  // This component has no UI — it exists only for the side-effect above.
+  return null; // This component has no UI — it exists only for the side-effect above.
 }
 ```
 
@@ -479,7 +478,7 @@ import Typography from '@mui/material/Typography';
 import { GiselleIcon } from '@alexrebula/giselle-mui';
 
 interface Props {
-  icon: string;  // e.g. "solar:rocket-bold-duotone"
+  icon: string; // e.g. "solar:rocket-bold-duotone"
   title: string;
 }
 
@@ -608,15 +607,15 @@ systems — typically 256px or larger.
 **Without explicit `width`/`height`, a logos: icon will render clipped or zoomed in.**
 No error is shown — it is a silent visual artifact.
 
-| Icon | Correct viewBox | Required in icon data |
-|---|---|---|
-| `logos:typescript-icon` | 256×256 | `width: 256, height: 256` |
-| `logos:material-ui` | 256×222 | `width: 256, height: 222` |
-| `logos:angular-icon` | 250×266 | `width: 250, height: 266` |
-| `logos:framer` | 256×384 | `width: 256, height: 384` |
-| `logos:figma` | 256×384 | `width: 256, height: 384` |
-| `logos:adobe` | 512×134 | `width: 512, height: 134` |
-| `logos:nextjs-icon` | 180×180 | `width: 180, height: 180` |
+| Icon                    | Correct viewBox | Required in icon data     |
+| ----------------------- | --------------- | ------------------------- |
+| `logos:typescript-icon` | 256×256         | `width: 256, height: 256` |
+| `logos:material-ui`     | 256×222         | `width: 256, height: 222` |
+| `logos:angular-icon`    | 250×266         | `width: 250, height: 266` |
+| `logos:framer`          | 256×384         | `width: 256, height: 384` |
+| `logos:figma`           | 256×384         | `width: 256, height: 384` |
+| `logos:adobe`           | 512×134         | `width: 512, height: 134` |
+| `logos:nextjs-icon`     | 180×180         | `width: 180, height: 180` |
 
 **How to find the correct dimensions:** open
 `node_modules/@iconify-json/logos/icons.json`, find your icon by name, and copy
@@ -709,16 +708,16 @@ Copy the `body` value into your `icon-sets.ts` entry.
 
 ## Props
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `icon` | `string` | — | Iconify identifier: `"prefix:name"` |
-| `width` | `number \| string` | `20` | Icon width in px (or any CSS length) |
-| `height` | `number \| string` | `width` | Icon height. Defaults to `width` (square) |
-| `sx` | `SxProps<Theme>` | — | MUI sx — applied to the outer `Box component="span"` |
-| `className` | `string` | — | CSS class forwarded to the inner `<svg>` |
-| `style` | `CSSProperties` | — | Inline style forwarded to the inner `<svg>` |
-| `flip` | `"horizontal" \| "vertical" \| "horizontal,vertical"` | — | Mirror the icon |
-| `rotate` | `0 \| 1 \| 2 \| 3 \| string` | — | Rotate (quarter turns or CSS angle) |
+| Prop        | Type                                                  | Default | Description                                          |
+| ----------- | ----------------------------------------------------- | ------- | ---------------------------------------------------- |
+| `icon`      | `string`                                              | —       | Iconify identifier: `"prefix:name"`                  |
+| `width`     | `number \| string`                                    | `20`    | Icon width in px (or any CSS length)                 |
+| `height`    | `number \| string`                                    | `width` | Icon height. Defaults to `width` (square)            |
+| `sx`        | `SxProps<Theme>`                                      | —       | MUI sx — applied to the outer `Box component="span"` |
+| `className` | `string`                                              | —       | CSS class forwarded to the inner `<svg>`             |
+| `style`     | `CSSProperties`                                       | —       | Inline style forwarded to the inner `<svg>`          |
+| `flip`      | `"horizontal" \| "vertical" \| "horizontal,vertical"` | —       | Mirror the icon                                      |
+| `rotate`    | `0 \| 1 \| 2 \| 3 \| string`                          | —       | Rotate (quarter turns or CSS angle)                  |
 
 ---
 
