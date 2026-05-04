@@ -88,6 +88,41 @@ src/components/<name>/
   <name>.test.ts — Vitest unit tests
 ```
 
+### TimelineTwoColumn internal file layout
+
+The `timeline/two-column/` folder follows the same `<name>/<name>.tsx` convention
+but splits the root file into three co-located modules:
+
+```
+src/components/timeline/two-column/
+  two-column.tsx   — pure JSX composition only (no types, no logic functions)
+  types.ts         — all exported + internal TypeScript interfaces
+  utils.ts         — all pure logic functions (no JSX return); fully unit-testable
+  styles.ts        — all sx constants (static) and sx factories (dynamic)
+  index.ts         — barrel
+  stories.tsx      — Storybook stories
+  stories.styles.ts — sx constants used only in stories
+  *.test.ts        — co-located unit test files
+  phase-card/      — PhaseCard sub-component (exported from package barrel)
+  milestone-badge/ — MilestoneBadge sub-component (exported from package barrel)
+  spine-connector/ — SpineConnector sub-component (internal)
+  timeline-dot/    — TimelineDot sub-component (internal)
+  phase-warning-popover/ — PhaseWarningPopover sub-component (internal)
+```
+
+**Rule:** `two-column.tsx` must remain pure JSX composition.
+- TypeScript types → `types.ts`
+- Pure logic/helper functions (nothing that returns JSX) → `utils.ts`
+- Any `sx={}` with more than ~3 properties → `styles.ts`
+
+The `card/` folder groups card-family components under a shared parent:
+
+```
+src/components/card/
+  metric/   — MetricCard + MetricCardDecoration
+  quote/    — QuoteCard
+```
+
 ## Test conventions
 
 - File extension must be `.test.ts` (not `.tsx`) — vitest config uses `include: ['src/**/*.test.ts']`
@@ -149,11 +184,11 @@ At the start of every new Copilot session in this package, read these files:
 | Component                             | File                                  | Status              |
 | ------------------------------------- | ------------------------------------- | ------------------- |
 | `GiselleIcon`                         | `src/components/giselle-icon/`        | ✅ Shipped + tested |
-| `MetricCard` + `MetricCardDecoration` | `src/components/metric-card/`         | ✅ Shipped + tested |
-| `QuoteCard`                           | `src/components/quote-card/`          | ✅ Shipped + tested |
+| `MetricCard` + `MetricCardDecoration` | `src/components/card/metric/`         | ✅ Shipped + tested |
+| `QuoteCard`                           | `src/components/card/quote/`          | ✅ Shipped + tested |
 | `SelectableCard`                      | `src/components/selectable-card/`     | ✅ Shipped + tested |
 | `createIconRegistrar`                 | `src/utils/create-icon-registrar.ts`  | ✅ Shipped + tested |
-| `TimelineTwoColumn`                   | `src/components/timeline-two-column/` | ✅ Shipped + tested |
+| `TimelineTwoColumn`                   | `src/components/timeline/two-column/` | ✅ Shipped + tested |
 | `IconActionBar`                       | `src/components/icon-action-bar/`     | ✅ Shipped + tested |
 | `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts` | ✅ Shipped + tested (Phase A — 4 May 2026) |
 
