@@ -96,7 +96,7 @@ export const floatingDatePillSx: SxProps<Theme> = {
   bottom: 'calc(100% + 4px)',
   left: '50%',
   transform: 'translateX(-50%)',
-  fontSize: '0.65rem',
+  fontSize: '0.875rem',
   fontWeight: 800,
   color: 'common.white',
   bgcolor: 'grey.700',
