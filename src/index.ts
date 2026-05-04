@@ -7,8 +7,15 @@ export type { GiselleIconData, GiselleIconMap } from './utils/create-icon-regist
 
 export { channelAlpha, hexToChannel, pxToRem, remToPx } from './utils/theme-utils';
 
-export { GiselleIcon } from './components/giselle-icon';
-export type { GiselleIconProps } from './components/giselle-icon';
+export {
+  giselleTheme,
+  GISELLE_PRIMARY_MAIN,
+  GISELLE_PRIMARY_DARK_MAIN,
+  GISELLE_SECONDARY_MAIN,
+} from './utils/theme-preset';
+
+export { GiselleIcon } from './components/icon/giselle';
+export type { GiselleIconProps } from './components/icon/giselle';
 
 export { MetricCard, MetricCardDecoration } from './components/card/metric';
 export type {
@@ -17,8 +24,8 @@ export type {
   MetricCardColor,
 } from './components/card/metric';
 
-export { SelectableCard } from './components/selectable-card';
-export type { SelectableCardProps } from './components/selectable-card';
+export { SelectableCard } from './components/card/selectable';
+export type { SelectableCardProps } from './components/card/selectable';
 
 export { QuoteCard } from './components/card/quote';
 export type { QuoteCardProps } from './components/card/quote';
@@ -33,5 +40,5 @@ export type {
   HighlightedPaletteKey,
 } from './components/timeline/two-column';
 
-export { IconActionBar, DEFAULT_ICON_ACTIONS } from './components/icon-action-bar';
-export type { IconActionBarProps, IconActionItem } from './components/icon-action-bar';
+export { IconActionBar, DEFAULT_ICON_ACTIONS } from './components/action-bar/icon';
+export type { IconActionBarProps, IconActionItem } from './components/action-bar/icon';

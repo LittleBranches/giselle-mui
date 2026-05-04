@@ -7,9 +7,9 @@ import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 
-import { GiselleIcon } from '../giselle-icon';
+import { GiselleIcon } from '../../icon/giselle';
 
-import { iconActionBarRootSx } from './icon-action-bar.styles';
+import { iconActionBarRootSx } from './styles';
 
 // ----------------------------------------------------------------------
 
