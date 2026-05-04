@@ -52,3 +52,6 @@ export type {
 
 export { SectionTitle, SectionCaption } from './components/layout/section-title';
 export type { SectionTitleProps } from './components/layout/section-title';
+
+export { FloatingSubNav } from './components/nav/floating-sub-nav';
+export type { FloatingSubNavProps, FloatingSubNavItem } from './components/nav/floating-sub-nav';
