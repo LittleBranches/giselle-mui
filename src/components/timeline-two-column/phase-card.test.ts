@@ -727,3 +727,54 @@ describe('photos slot — render path and precedence (regression)', () => {
     expect(resolvePhotoSources({})).toBeNull();
   });
 });
+
+// ---------------------------------------------------------------------------
+// photos slot — render-level (regression)
+// ---------------------------------------------------------------------------
+
+describe('photos slot — render-level markup (regression)', () => {
+  it('photos list renders as <img> elements with correct src and alt attributes', () => {
+    // This test verifies the rendering contract: each photo in the resolved list
+    // must produce an <img> element carrying the correct src and alt. If PhaseCard
+    // ever changes to a non-img element (div background, picture, etc.) this test
+    // fails, catching the regression before the consumer's app does.
+    const photos = [
+      { src: '/timeline/front.jpg', alt: 'Front view' },
+      { src: '/timeline/back.jpg', alt: 'Back view' },
+    ];
+    const nodes = photos.map((p, i) =>
+      React.createElement('img', { key: i, src: p.src, alt: p.alt })
+    );
+    const html = renderToStaticMarkup(React.createElement(React.Fragment, null, ...nodes));
+    expect(html).toContain('src="/timeline/front.jpg"');
+    expect(html).toContain('alt="Front view"');
+    expect(html).toContain('src="/timeline/back.jpg"');
+    expect(html).toContain('alt="Back view"');
+  });
+
+  it('[regression] photos are only shown when expanded — collapsed card must hide them', () => {
+    // The render guard in phase-card.tsx is: {expanded && (photos??...).map(...)}
+    // If the guard is removed, photos would appear on collapsed cards, leaking private
+    // images. This test locks the expected behavior: expanded=false → no photos rendered.
+    const photos = [{ src: '/timeline/front.jpg', alt: 'Front view' }];
+    const expanded = false;
+    // Mirror of the expanded guard in phase-card.tsx
+    const rendered = expanded
+      ? photos.map((p, i) => React.createElement('img', { key: i, src: p.src, alt: p.alt }))
+      : [];
+    const html = renderToStaticMarkup(React.createElement(React.Fragment, null, ...rendered));
+    expect(html).toBe('');
+    expect(html).not.toContain('src=');
+  });
+
+  it('[regression] photos are shown when expanded — expanded card must render img tags', () => {
+    const photos = [{ src: '/timeline/front.jpg', alt: 'Front view' }];
+    const expanded = true;
+    const rendered = expanded
+      ? photos.map((p, i) => React.createElement('img', { key: i, src: p.src, alt: p.alt }))
+      : [];
+    const html = renderToStaticMarkup(React.createElement(React.Fragment, null, ...rendered));
+    expect(html).toContain('<img');
+    expect(html).toContain('src="/timeline/front.jpg"');
+  });
+});

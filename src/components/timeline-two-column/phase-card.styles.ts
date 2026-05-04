@@ -9,8 +9,10 @@ import type { SxProps, Theme } from '@mui/material/styles';
  *
  * Static constants are created once at module load — zero per-render allocation.
  * Dynamic factories (`(arg) => SxProps<Theme>`) create a new object on every call.
- * ⚠️ Performance note: if a dynamic factory is called inside a `.map()` that runs
- * on every render, wrap the call site in `useMemo` if the phase array is stable.
+ * If a component calls a dynamic factory for every item in a list, wrap the entire
+ * `.map()` result — not each factory call — in `useMemo` to avoid recreating the
+ * array on every render. Example: `useMemo(() => photos.map((_, i) => photoImgSx(i === 0)), [photos])`.
+ * Never call hooks inside a `.map()` callback — that violates the Rules of Hooks.
  */
 
 /**
@@ -22,6 +24,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
  *
  * ⚠️ Performance note: this factory creates a new object on every call.
  * It is called inside `.map()` — keep it cheap (no heavy derivations).
+ * If needed, memoize the entire mapped array at the call site with `useMemo`.
  *
  * @param isFirst - True for the first photo in the array (`i === 0`).
  */

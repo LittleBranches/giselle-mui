@@ -231,8 +231,8 @@ depends on `TimelineTwoColumn` being in a clean, well-structured state first.
 | Extract all multi-property `sx` objects to `*.styles.ts` files | Reduces component file sizes; makes sx independently testable; prevents drift when multiple variants share the same visual rule |
 | Fix cognitive complexity in `phase-card.tsx` (currently 17 → must be ≤ 15) | Sonar gate will block the quality check on any file that shares logic with this one |
 | JSDoc pass on all exported functions and prop interfaces | `RoadmapTimeline` will export types; consistent JSDoc level across the component family is required before that |
-| Wire `onPhasesChange` controlled-mode prop to `TimelineTwoColumn` root | Designed and tested; not yet wired. Leaving it un-wired creates a half-finished API surface |
-| Wire `PhaseWarningPopover` into `PhaseCard` | Replace the current plain string tooltip. Also un-wired despite being built and tested |
+| ✅ Wire `onPhasesChange` controlled-mode prop to `TimelineTwoColumn` root | Done — wired in `feature/phase-warning-popover`. `TimelineTwoColumn` passes `allPhases` down to `PhaseCard`. |
+| ✅ Wire `PhaseWarningPopover` into `PhaseCard` | Done — `PhaseCard` renders `PhaseWarningPopover` in controlled mode when `onPhasesChange` is provided. |
 | Complete the CareerTimeline UX polish list (alexrebula Phase 1.2) | The final real-world usage pass that will surface any remaining rough edges before the primitive split |
 
 ### Why the order matters
@@ -300,13 +300,14 @@ The corner badge, tooltip, detection, and the full repair UI are functional and 
 
 ### Remaining work
 
-- **`onPhasesChange` controlled-mode prop** on `TimelineTwoColumn` — `PhaseWarningPopover` calls this to push updated date ranges to the consumer. The prop shape is designed but not yet wired to the component's root.
-- **Wire `PhaseWarningPopover` into `PhaseCard`** — replace the current plain string tooltip with the popover trigger.
+- ✅ **`onPhasesChange` controlled-mode prop** — wired to `TimelineTwoColumn` root in `feature/phase-warning-popover`. `PhaseCard` receives it and passes `allPhases` through.
+- ✅ **Wire `PhaseWarningPopover` into `PhaseCard`** — done. `PhaseCard` renders `PhaseWarningPopover` in controlled mode when `onPhasesChange` is present.
+- **Styles extraction (R1–R4)** — extract all multi-property inline `sx` blocks to `*.styles.ts` companions. Reduces cognitive complexity and makes style logic independently testable.
 
 ---
 
 ## Related
 
 - [roadmap.md](../roadmap.md) — Phase A (`channelAlpha` utility) shipped 4 May 2026; Phases B/C pending
-- [alexrebula docs/roadmap.md](../../rm/presentation/alexrebula/docs/roadmap.md) — milestone tracking
+- [alexrebula docs/roadmap.md](https://github.com/AlexRebula/rm/blob/main/presentation/alexrebula/docs/roadmap.md) — milestone tracking
 - `alexrebula/src/sections/career-timeline/` — reference implementation in production (private repo, do not copy code)
