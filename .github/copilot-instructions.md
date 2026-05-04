@@ -209,19 +209,20 @@ At the start of every new Copilot session in this package, read these files:
 
 | Component                                            | File                                  | Status                                     |
 | ---------------------------------------------------- | ------------------------------------- | ------------------------------------------ |
-| `GiselleIcon`                                        | `src/components/giselle-icon/`        | ✅ Shipped + tested                        |
+| `GiselleIcon`                                        | `src/components/icon/giselle/`        | ✅ Shipped + tested                        |
 | `MetricCard` + `MetricCardDecoration`                | `src/components/card/metric/`         | ✅ Shipped + tested                        |
 | `QuoteCard`                                          | `src/components/card/quote/`          | ✅ Shipped + tested                        |
-| `SelectableCard`                                     | `src/components/selectable-card/`     | ✅ Shipped + tested                        |
+| `SelectableCard`                                     | `src/components/card/selectable/`     | ✅ Shipped + tested                        |
 | `createIconRegistrar`                                | `src/utils/create-icon-registrar.ts`  | ✅ Shipped + tested                        |
 | `TimelineTwoColumn`                                  | `src/components/timeline/two-column/` | ✅ Shipped + tested                        |
-| `IconActionBar`                                      | `src/components/icon-action-bar/`     | ✅ Shipped + tested                        |
+| `IconActionBar`                                      | `src/components/action-bar/icon/`     | ✅ Shipped + tested                        |
 | `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts`            | ✅ Shipped + tested (Phase A — 4 May 2026) |
+| `giselleTheme`, palette constants                    | `src/utils/theme-preset.ts`           | ✅ Shipped + tested (Phase B — 5 May 2026) |
 
 ### Next planned work (priority order)
 
-1. **Phase B — Giselle brand theme preset** — define the Giselle green + amber palette as `giselleTheme` using `extendTheme()`. Export from `src/index.ts`. See `docs/roadmap.md` Phase B.
-2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C.
+1. **Phase B — finalize** — add `giselleTheme` usage to `docs/theming/nextjs.md`. One docs update to close Phase B. Branch: `feature/giselle-theme-preset`.
+2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C. Blocked until Phase B PR merges.
 3. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
 4. **RoadmapTimeline component** — Phase A prerequisite (`channelAlpha`) is now met. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
 

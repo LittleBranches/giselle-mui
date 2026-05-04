@@ -51,26 +51,25 @@ as named exports from `giselle-mui`, so consuming projects have them out of the 
 | Add tests for all theme utilities (22 tests in `theme-utils.test.ts`) | ✅     |
 | Update `theming/nextjs.md` to show usage from giselle-mui             | ✅     |
 
-### Phase B — Giselle brand theme preset (Medium priority)
+### Phase B — Giselle brand theme preset 🔄 In progress — 5 May 2026
 
 **Goal:** Define the Giselle default palette and typography scale as a named export
 (`giselleTheme`) — a ready-to-use `extendTheme()` result that consuming projects can
 import directly, extend, or ignore in favour of their own palette.
 
-The default palette is the Giselle brand identity:
+The default palette decisions (documented in `src/utils/theme-preset.ts` JSDoc):
 
-- **Primary:** Giselle green — a saturated, accessible green (exact hex TBD at build time)
-- **Secondary:** Giselle amber — a warm yellow/amber accent
-
-This is intentionally opinionated. A consumer who wants a different palette passes overrides
-(see Phase C). A consumer who wants the Giselle look gets it out of the box with zero config.
+- **Primary light:** `#2E7D32` Deep grove green — WCAG 4.76:1 contrast against white
+- **Primary dark:** `#76C442` Lime — readable on dark backgrounds
+- **Secondary:** `#F5A623` Mango gold — unchanged across modes
+- **Info / Success / Warning / Error:** standard MUI v7 family values, both modes
 
 | Task                                                                                                   | Status |
 | ------------------------------------------------------------------------------------------------------ | ------ |
-| Decide final hex values for `primary` and `secondary` Giselle palette colours                          | ⬜     |
-| Define `giselleTheme` using `extendTheme()` with the Giselle palette                                   | ⬜     |
-| Ensure all six palette keys are covered: `primary`, `secondary`, `info`, `success`, `warning`, `error` | ⬜     |
-| Export `giselleTheme` from `giselle-mui/src/index.ts`                                                  | ⬜     |
+| Decide final hex values for `primary` and `secondary` Giselle palette colours                          | ✅     |
+| Define `giselleTheme` using `extendTheme()` with the Giselle palette                                   | ✅     |
+| Ensure all six palette keys are covered: `primary`, `secondary`, `info`, `success`, `warning`, `error` | ✅     |
+| Export `giselleTheme` from `giselle-mui/src/index.ts`                                                  | ✅     |
 | Document the palette decisions in `theming/nextjs.md`                                                  | ⬜     |
 
 ### Phase C — GiselleThemeProvider component (HIGH priority)
