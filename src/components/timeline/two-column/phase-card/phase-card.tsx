@@ -20,7 +20,7 @@ import Collapse from '@mui/material/Collapse';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-import { GiselleIcon } from '../../giselle-icon/giselle-icon';
+import { GiselleIcon } from '../../../giselle-icon/giselle-icon';
 import { DEFAULT_EXPANDABLE_ICON } from '../icons';
 import {
   photoImgSx,

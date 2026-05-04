@@ -3,9 +3,15 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { GiselleIcon } from '../giselle-icon/giselle-icon';
-import { TimelineTwoColumn } from './timeline-two-column';
+import { GiselleIcon } from '../../giselle-icon/giselle-icon';
+import { TimelineTwoColumn } from './two-column';
 import type { TimelinePhase } from './types';
+import {
+  storyColumnIndicatorSx,
+  storyOverlineSx,
+  storyResponsiveBoxSx,
+  storyFooterButtonSx,
+} from './stories.styles';
 
 // ----------------------------------------------------------------------
 
@@ -355,29 +361,13 @@ export const ColumnPlacementInvariant: Story = {
   render: () => (
     <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
       <Box sx={{ display: 'flex', gap: 4, mb: 3 }}>
-        <Box
-          sx={{
-            flex: 1,
-            p: 1.5,
-            border: '2px dashed',
-            borderColor: 'info.main',
-            borderRadius: 1,
-          }}
-        >
+        <Box sx={storyColumnIndicatorSx('info.main')}>
           <Typography variant="caption" color="info.main" fontWeight={700}>
             LEFT column — phase cards for side=&#x27;right&#x27; phases; milestones from
             side=&#x27;left&#x27; phases
           </Typography>
         </Box>
-        <Box
-          sx={{
-            flex: 1,
-            p: 1.5,
-            border: '2px dashed',
-            borderColor: 'success.main',
-            borderRadius: 1,
-          }}
-        >
+        <Box sx={storyColumnIndicatorSx('success.main')}>
           <Typography variant="caption" color="success.main" fontWeight={700}>
             RIGHT column — phase cards for side=&#x27;left&#x27; phases; milestones from
             side=&#x27;right&#x27; phases
@@ -691,10 +681,7 @@ export const DotTooltipAddedValue: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
       <Box>
-        <Typography
-          variant="overline"
-          sx={{ display: 'block', mb: 1, px: 3, color: 'text.secondary' }}
-        >
+        <Typography variant="overline" sx={storyOverlineSx}>
           Read-only — dot tooltip = description preview (not visible on collapsed card)
         </Typography>
         <Box sx={{ maxWidth: 960, mx: 'auto', px: 3 }}>
@@ -702,10 +689,7 @@ export const DotTooltipAddedValue: Story = {
         </Box>
       </Box>
       <Box>
-        <Typography
-          variant="overline"
-          sx={{ display: 'block', mb: 1, px: 3, color: 'text.secondary' }}
-        >
+        <Typography variant="overline" sx={storyOverlineSx}>
           Checklist mode — dot tooltip = task status (description preview not useful here)
         </Typography>
         <Box sx={{ maxWidth: 960, mx: 'auto', px: 3 }}>
@@ -827,7 +811,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
             {label}
           </Typography>
-          <Box sx={{ width, overflow: 'auto', border: '1px dashed', borderColor: 'divider' }}>
+          <Box sx={storyResponsiveBoxSx(width)}>
             <TimelineTwoColumn phases={CAREER_PHASES} />
           </Box>
         </Box>
@@ -902,22 +886,7 @@ export const FooterSlot: Story = {
             <Box
               component="button"
               type="button"
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 0.75,
-                px: 1.25,
-                py: 0.5,
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: 1,
-                bgcolor: 'transparent',
-                cursor: 'pointer',
-                color: 'text.secondary',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                '&:hover': { color: 'primary.main', borderColor: 'primary.main' },
-              }}
+              sx={storyFooterButtonSx}
               onClick={() =>
                 console.warn('Playing modem sound — button click did NOT toggle the card.')
               }

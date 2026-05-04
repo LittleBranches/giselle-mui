@@ -75,8 +75,6 @@ export const msDotWrapperSx = (blurred: boolean): SxProps<Theme> => ({
   position: 'relative',
   display: 'inline-flex',
   transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease',
-  // Reveal the floating date pill on hover when not blurred/dimmed.
-  ...(!blurred && { '&:hover > [aria-hidden]': { display: 'block' } }),
   ...(blurred && {
     filter: 'blur(1.5px)',
     opacity: 0.38,
@@ -90,8 +88,7 @@ export const msDotWrapperSx = (blurred: boolean): SxProps<Theme> => ({
 /**
  * Date pill that floats above a phase or milestone dot.
  *
- * Hidden by default (`display: 'none'`) — revealed on hover via the
- * `&:hover > [aria-hidden]` selector in the parent wrapper (`msDotWrapperSx`).
+ * Always `display: 'none'` — made visible via JS/CSS at the call site when needed.
  * Used identically in the phase dot and the milestone dot.
  */
 export const floatingDatePillSx: SxProps<Theme> = {
@@ -195,17 +192,19 @@ export const phaseLiSx = (opts: { zIndex: 1 | 2; computedMinHeight?: number }): 
   ...(opts.computedMinHeight !== undefined && { minHeight: opts.computedMinHeight }),
 });
 
-// -- Milestone card wrapper ---------------------------------------------------
+// ── Milestone card wrapper ────────────────────────────────────────────────────
 
 /**
- * Absolutely-positioned wrapper Box around a milestone card.
+ * Absolutely-positioned Box that wraps a `MilestoneBadge`.
  *
- * Combines the shared base (z-index, transition, transform, hover) with the
- * column-specific offset so the card sits flush against the spine.
+ * - Floats the card to the left or right of the spine, centred vertically on its dot.
+ * - `translateY(-50%)` aligns the card midpoint to the dot centre (dot height = 30px).
+ * - When `suppressElevation` is true (another card is open), blurs and dims.
+ * - `side='left'` offsets from the right edge (inward from spine); `'right'` from the left.
  *
- * @param isExpanded - When true, raises the card to z-index 1000.
- * @param suppressElevation - When true, blurs and dims the card.
- * @param side - Which column the milestone card is in.
+ * @param isExpanded - True when this specific card is the currently open one.
+ * @param suppressElevation - True when any other card is open.
+ * @param side - Which column this card lives in — controls left/right inset.
  */
 export const msCardWrapperSx =
   (isExpanded: boolean, suppressElevation: boolean, side: 'left' | 'right'): SxProps<Theme> =>
@@ -213,16 +212,64 @@ export const msCardWrapperSx =
     position: 'absolute',
     zIndex: isExpanded ? 1000 : 1,
     transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease',
-    transform: 'translateY(-50%)',
-    top: '15px',
-    ...(side === 'left'
-      ? { left: 0, right: theme.spacing(2) }
-      : { left: theme.spacing(2), right: 0 }),
+    // Raise hovered card above adjacent phase cards so it is never overlapped.
     '&:hover': { zIndex: 999 },
+    // translateY(-50%) centres the card vertically on its dot.
+    transform: 'translateY(-50%)',
     ...(suppressElevation && {
       filter: 'blur(1.5px)',
       opacity: 0.38,
       transform: 'scale(0.97) translateY(-50%)',
-      pointerEvents: 'none' as const,
+      pointerEvents: 'none',
     }),
+    top: '15px',
+    left: side === 'right' ? theme.spacing(2) : 0,
+    right: side === 'left' ? theme.spacing(2) : 0,
   });
+
+// ── Centre column ─────────────────────────────────────────────────────────────
+
+/**
+ * Centre column Box — used for both the phase dot column and the milestone dot column.
+ * Flex column with centred items; does not constrain width.
+ */
+export const centerColumnSx: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};
+
+// ── Timeline MUI root ─────────────────────────────────────────────────────────
+
+/**
+ * MUI `<Timeline>` root sx — resets default padding/margin and removes the
+ * pseudo-element that MUI adds before every `TimelineItem`.
+ */
+export const timelineRootSx: SxProps<Theme> = {
+  p: 0,
+  m: 0,
+  '& .MuiTimelineItem-root:before': { flex: 0, padding: 0 },
+};
+
+// ── Marker row inner ──────────────────────────────────────────────────────────
+
+/** Inner flex row for a `variant='marker'` phase — horizontal, centred. */
+export const markerRowInnerSx: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+};
+
+/** Caption `Typography` for the left/right floating label in a marker row. */
+export const markerCaptionSx: SxProps<Theme> = {
+  color: 'text.secondary',
+  fontWeight: 600,
+  whiteSpace: 'nowrap',
+};
+
+/** Inline date `Box` span appended to a marker label. */
+export const markerDateSpanSx: SxProps<Theme> = {
+  ml: 0.75,
+  fontWeight: 400,
+  opacity: 0.7,
+};

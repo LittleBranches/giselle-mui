@@ -1,4 +1,9 @@
-import type { TimelinePhase, HighlightedPaletteKey, TimelineTwoColumnProps } from './types';
+import type {
+  TimelineTwoColumnProps,
+  Milestone,
+  MilestoneRowCtx,
+  TimelineColumnProps,
+} from './types';
 
 import {
   useMemo,
@@ -26,12 +31,19 @@ import { TimelineDot } from './timeline-dot';
 import { MilestoneBadge } from './milestone-badge';
 import { SpineConnector } from './spine-connector';
 import {
-  getLastYear,
-  parseLastDate,
   detectPhaseOverlaps,
   sortMilestonesAsc,
   sortMilestonesDesc,
   sortPhasesByDate,
+  resolvePhaseState,
+  resolvePhaseDotHandlers,
+  buildPhaseCardTsxProps,
+  resolvePhaseTooltip,
+  resolveMilestoneTooltip,
+  buildPhaseDotTsxProps,
+  resolveMilestoneState,
+  resolveMilestoneDotHandlers,
+  computeSlotHeights,
 } from './utils';
 import {
   timelineColumnSx,
@@ -46,7 +58,12 @@ import {
   phaseRowSx,
   phaseLiSx,
   msCardWrapperSx,
-} from './timeline-two-column.styles';
+  centerColumnSx,
+  timelineRootSx,
+  markerRowInnerSx,
+  markerCaptionSx,
+  markerDateSpanSx,
+} from './styles';
 
 // ----------------------------------------------------------------------
 
@@ -67,24 +84,6 @@ import {
  * Do NOT inline these Boxes back into the render. If you need to change column
  * behaviour, change it here once.
  */
-type TimelineColumnProps = {
-  /** Which physical column this is — determines padding direction and text alignment. */
-  columnSide: 'left' | 'right';
-  /**
-   * Whether this column contains content for the current phase.
-   * When false the column is hidden on mobile (`xs`) to avoid empty padding.
-   * On desktop (`md+`) both columns always show.
-   */
-  hasContent: boolean;
-  /**
-   * Extra bottom padding (px) added below the card content.
-   * Drives the consistent vertical gap between consecutive phase cards:
-   * gap = bottomPadding + column top padding.
-   */
-  bottomPadding: number;
-  children: ReactNode;
-};
-
 function TimelineColumn({ columnSide, hasContent, children, bottomPadding }: TimelineColumnProps) {
   return (
     <Box data-col={columnSide} sx={timelineColumnSx(columnSide, hasContent, bottomPadding)}>
@@ -96,315 +95,6 @@ function TimelineColumn({ columnSide, hasContent, children, bottomPadding }: Tim
 // Stable empty Set — returned when `viewedKeys` prop is undefined so callers
 // always get the same reference and avoid creating a new Set on every render.
 const EMPTY_VIEWED_KEYS = new Set<string>();
-
-// ── Milestone type alias ───────────────────────────────────────────────────
-
-type Milestone = NonNullable<TimelinePhase['milestones']>[number];
-
-// ── Per-phase derived state helpers ───────────────────────────────────────
-
-type PhaseStateProps = {
-  isDone: boolean;
-  isOverdue: boolean;
-  dotColor: HighlightedPaletteKey;
-  yearLabelValue: string | null;
-  phaseMilestones: NonNullable<TimelinePhase['milestones']>;
-  isLastPhase: boolean;
-};
-
-type PhaseDotHandlers = {
-  dotClickAction: (() => void) | undefined;
-  dotKeyDownHandler: ((e: React.KeyboardEvent) => void) | undefined;
-  dotAriaLabel: string | undefined;
-};
-
-/** Returns true when a phase is past-due in checklist mode. */
-function resolvePhaseOverdue(
-  phase: TimelinePhase,
-  checklist: boolean,
-  isDone: boolean,
-  today: Date
-): boolean {
-  if (!checklist || isDone) return false;
-  const parsedDate = parseLastDate(phase.date);
-  // Active phases can still be overdue (e.g. roadmap phase still in progress but past its end date).
-  const isAutoOverdue = parsedDate !== null && parsedDate < today;
-  return (phase.overdue ?? false) || isAutoOverdue;
-}
-
-/** Resolves display-state derived values for a single phase row. */
-function resolvePhaseState(
-  phase: TimelinePhase,
-  index: number,
-  sorted: TimelinePhase[],
-  lastKey: number | undefined,
-  checklist: boolean,
-  localPhaseDone: Record<string, boolean>,
-  today: Date
-): PhaseStateProps {
-  const isDone = checklist ? (localPhaseDone[String(phase.key)] ?? false) : (phase.done ?? false);
-  const isOverdue = resolvePhaseOverdue(phase, checklist, isDone, today);
-  const colorFromData =
-    phase.color && phase.color !== 'inherit' && phase.color !== 'grey'
-      ? (phase.color as HighlightedPaletteKey)
-      : null;
-  const baseDotColor: HighlightedPaletteKey =
-    colorFromData ?? (phase.side === 'left' ? 'secondary' : 'primary');
-  const dotColor: HighlightedPaletteKey = isOverdue ? 'error' : baseDotColor;
-  const nextPhase = sorted[index + 1];
-  const thisYear = getLastYear(phase.date);
-  const nextYear = nextPhase ? getLastYear(nextPhase.date) : null;
-  const yearLabelValue =
-    nextYear !== null && thisYear !== null && nextYear < thisYear ? String(nextYear) : null;
-  return {
-    isDone,
-    isOverdue,
-    dotColor,
-    yearLabelValue,
-    phaseMilestones: phase.milestones ?? [],
-    isLastPhase: phase.key === lastKey,
-  };
-}
-
-/** Resolves click/keyboard handlers and ARIA label for a phase dot. */
-function resolvePhaseDotHandlers(
-  phase: TimelinePhase,
-  isDone: boolean,
-  checklist: boolean,
-  handleTogglePhase: (key: number) => void,
-  onPhaseSelect: ((key: number) => void) | undefined
-): PhaseDotHandlers {
-  const dotActionLabel = isDone ? 'Unmark' : 'Mark';
-  let dotAriaLabel: string | undefined;
-  if (checklist) {
-    dotAriaLabel = `${dotActionLabel} "${phase.title}" as done`;
-  } else if (onPhaseSelect) {
-    dotAriaLabel = `Select "${phase.title}"`;
-  }
-  let dotClickAction: (() => void) | undefined;
-  if (checklist) {
-    dotClickAction = () => handleTogglePhase(phase.key);
-  } else if (onPhaseSelect) {
-    dotClickAction = () => onPhaseSelect(phase.key);
-  }
-  const dotKeyDownHandler = dotClickAction
-    ? (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          dotClickAction();
-        }
-      }
-    : undefined;
-  return { dotClickAction, dotKeyDownHandler, dotAriaLabel };
-}
-
-/** Resolves the JSX prop bag for the phase-row PhaseCard. */
-function buildPhaseCardTsxProps(
-  checklist: boolean,
-  isDone: boolean,
-  isOverdue: boolean,
-  dateConflict: boolean,
-  dateConflictLabel: string | undefined,
-  anyExpanded: boolean,
-  isThisPhaseExpanded: boolean,
-  expandableIcon: ReactNode
-) {
-  return {
-    done: isDone,
-    overdue: checklist ? isOverdue : undefined,
-    dateConflict: dateConflict || undefined,
-    dateConflictLabel,
-    suppressElevation: anyExpanded && !isThisPhaseExpanded,
-    expandableIcon,
-  };
-}
-
-/** Returns the tooltip label for a timeline dot based on its status and date. */
-function dotStatusLabel(
-  color: HighlightedPaletteKey,
-  done: boolean,
-  date: string | undefined
-): string {
-  let status: string;
-  if (done) {
-    status = 'Done';
-  } else if (color === 'error') {
-    status = 'Blocking';
-  } else if (color === 'warning') {
-    status = 'In progress';
-  } else if (color === 'success') {
-    status = 'Planned';
-  } else {
-    status = 'Upcoming';
-  }
-  return date ? `${status} · ${date}` : status;
-}
-
-/**
- * Returns the first sentence of a description, capped at `maxLen` characters.
- *
- * Used to populate dot tooltips in read-only mode with contextual information
- * that is NOT already visible in any card state (title + date are already on the card).
- */
-/** @internal — exported for unit tests only. Not part of the public API. */
-export function truncateDescription(s: string, maxLen = 72): string {
-  // Split only when a sentence-ending punctuation is followed by whitespace or end-of-string.
-  // This prevents splitting on decimal numbers (e.g. "TS 4.0") or abbreviations ("e.g.")
-  // where the period is NOT followed by whitespace.
-  const parts = s.split(/[.!?](?=\s|$)/);
-  const firstSentence = (parts[0] ?? '').trim();
-  const text = firstSentence.length > 0 ? firstSentence : s;
-  return text.length <= maxLen ? text : `${text.slice(0, maxLen).trimEnd()}…`;
-}
-
-/**
- * Resolves the tooltip label for a phase dot.
- *
- * - Checklist mode: shows status label + date (useful for task/roadmap tracking).
- * - Read-only mode: shows the **description preview** — information not visible in
- *   any collapsed card state, giving the dot tooltip genuine added value over
- *   just repeating the title + date already shown on the card.
- * - `phase.dotTooltip` always wins if provided.
- */
-/** @internal — exported for unit tests only. Not part of the public API. */
-export function resolvePhaseTooltip(
-  checklist: boolean,
-  color: HighlightedPaletteKey,
-  done: boolean,
-  phase: TimelinePhase
-): string {
-  if (phase.dotTooltip != null) return phase.dotTooltip;
-  if (checklist) return dotStatusLabel(color, done, phase.date);
-  if (phase.description) return truncateDescription(phase.description);
-  const label = phase.shortTitle ?? phase.title;
-  return phase.date ? `${label} · ${phase.date}` : label;
-}
-
-/**
- * Resolves the tooltip label for a milestone dot.
- *
- * - Checklist mode: shows status label + date.
- * - Read-only mode: shows the **description preview** — not visible without opening
- *   the milestone card, so hovering the dot gives the user a genuine preview.
- * - `ms.dotTooltip` always wins if provided.
- */
-/** @internal — exported for unit tests only. Not part of the public API. */
-export function resolveMilestoneTooltip(
-  checklist: boolean,
-  color: HighlightedPaletteKey,
-  done: boolean,
-  ms: Milestone
-): string {
-  if (ms.dotTooltip != null) return ms.dotTooltip;
-  if (checklist) return dotStatusLabel(color, done, ms.date);
-  if (ms.description) return truncateDescription(ms.description);
-  const label = ms.shortTitle ?? ms.title;
-  return ms.date ? `${label} · ${ms.date}` : label;
-}
-
-/** Resolves the JSX prop bag for the phase-row TimelineDot. */
-function buildPhaseDotTsxProps(
-  phase: TimelinePhase,
-  checklist: boolean,
-  isDone: boolean,
-  dotAriaLabel: string | undefined,
-  phaseToggleCounts: Record<string, number>,
-  selectedPhaseKey: number | undefined
-) {
-  let role: 'checkbox' | 'button' | undefined;
-  if (checklist) {
-    role = 'checkbox';
-  } else if (dotAriaLabel) {
-    role = 'button';
-  }
-  return {
-    active: (phase.active ?? false) || (!checklist && phase.key === selectedPhaseKey),
-    animationKey: phaseToggleCounts[String(phase.key)] ?? 0,
-    done: isDone,
-    role,
-    'aria-checked': checklist ? isDone : undefined,
-    'aria-label': dotAriaLabel,
-    tabIndex: checklist || dotAriaLabel ? 0 : undefined,
-  };
-}
-
-// ── Per-milestone derived state helpers ───────────────────────────────────
-
-type MilestoneDotHandlers = {
-  msDotClickAction: (() => void) | undefined;
-  msDotKeyDown: ((e: React.KeyboardEvent) => void) | undefined;
-  msDotAriaLabel: string | undefined;
-};
-
-type MilestoneRowCtx = {
-  phaseKey: number;
-  phaseSide: 'left' | 'right';
-  checklist: boolean;
-  localMilestoneDone: Record<string, boolean>;
-  expandedMiIdx: number | null;
-  anyExpanded: boolean;
-  dotColor: HighlightedPaletteKey;
-  expandableIcon: ReactNode;
-  viewedKeys: Set<string>;
-  onMarkViewed: ((key: string) => void) | undefined;
-  handleToggleMilestone: (phaseKey: number, mi: number) => void;
-  handleExpandMilestone: (phaseKey: number, milestoneIndex: number) => void;
-  /** Called with the mounted card element so the parent can measure its height. */
-  onMeasure: (mi: number, el: HTMLDivElement | null) => void;
-};
-
-/** Resolves done state and effective color for a milestone in checklist mode. */
-function resolveMilestoneState(
-  ms: Milestone,
-  mi: number,
-  phaseKey: number,
-  dotColor: HighlightedPaletteKey,
-  checklist: boolean,
-  localMilestoneDone: Record<string, boolean>
-): { msDone: boolean; msColor: HighlightedPaletteKey } {
-  const msDoneKey = `${phaseKey}-${mi}`;
-  const msDone = checklist
-    ? (localMilestoneDone[msDoneKey] ?? ms.done ?? false)
-    : (ms.done ?? false);
-  const msIsOverdue = checklist && (ms.overdue ?? false) && !msDone;
-  const msColorFromData =
-    ms.color && ms.color !== 'inherit' && ms.color !== 'grey'
-      ? (ms.color as HighlightedPaletteKey)
-      : dotColor;
-  // Done milestones always use 'success' — same rule as phase dots (see resolveEffectiveColor).
-  let msColor: HighlightedPaletteKey;
-  if (msDone) {
-    msColor = 'success';
-  } else if (msIsOverdue) {
-    msColor = 'error';
-  } else {
-    msColor = msColorFromData;
-  }
-  return { msDone, msColor };
-}
-
-/** Resolves click/keyboard handlers and ARIA label for a milestone dot. */
-function resolveMilestoneDotHandlers(
-  ms: Milestone,
-  mi: number,
-  phaseKey: number,
-  msDone: boolean,
-  checklist: boolean,
-  handleToggleMilestone: (phaseKey: number, mi: number) => void
-): MilestoneDotHandlers {
-  const msDotActionLabel = msDone ? 'Unmark' : 'Mark';
-  const msDotAriaLabel = checklist ? `${msDotActionLabel} "${ms.title}" as done` : undefined;
-  const msDotClickAction = checklist ? () => handleToggleMilestone(phaseKey, mi) : undefined;
-  const msDotKeyDown = msDotClickAction
-    ? (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          msDotClickAction();
-        }
-      }
-    : undefined;
-  return { msDotClickAction, msDotKeyDown, msDotAriaLabel };
-}
 
 /** Builds the full JSX node for a single milestone row. */
 function buildMilestoneRow(
@@ -474,10 +164,7 @@ function buildMilestoneRow(
       </Box>
 
       {/* Centre: milestone dot — blurs with siblings when another card is open */}
-      <Box
-        data-col="center"
-        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-      >
+      <Box data-col="center" sx={centerColumnSx}>
         {/* Dot + floating date pill: relative wrapper so pill doesn't affect row height/centering */}
         <Box sx={msDotWrapperSx(suppressElevation)}>
           {ms.date && (
@@ -537,41 +224,6 @@ function buildMilestoneRow(
 }
 
 // ----------------------------------------------------------------------
-
-/**
- * Computes the `msSlotHeights` record from the measured card-height map.
- *
- * For each phase that has milestones, finds the tallest measured card and returns
- * `maxCardHeight + 16` as the slot height. The 16px gap provides breathing room
- * between vertically stacked milestone badges.
- *
- * DESIGN INVARIANT — this function is a **pure function of its two inputs**.
- * It has no concept of expand/collapse/hover state. That is intentional: slot
- * heights must never change during user interaction (see architectural comment
- * on `msHeightMapRef` in `TimelineTwoColumn`). Any introduction of expansion or
- * hover state into this function's signature would break that invariant.
- *
- * @internal — exported for unit tests only. Not part of the public API.
- */
-export function computeSlotHeights(
-  phases: TimelinePhase[],
-  heightMap: Record<string, number>
-): Record<string, number> {
-  const result: Record<string, number> = {};
-  phases.forEach((phase) => {
-    const n = phase.milestones?.length ?? 0;
-    if (n === 0) return;
-    let maxH = 0;
-    for (let i = 0; i < n; i++) {
-      const h = heightMap[`${String(phase.key)}-${i}`] ?? 0;
-      if (h > maxH) maxH = h;
-    }
-    if (maxH > 0) {
-      result[String(phase.key)] = maxH + 16;
-    }
-  });
-  return result;
-}
 
 /**
  * Two-column alternating timeline.
@@ -791,13 +443,7 @@ export function TimelineTwoColumn({
 
   return (
     <Box sx={[{ position: 'relative' }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
-      <Timeline
-        sx={{
-          p: 0,
-          m: 0,
-          '& .MuiTimelineItem-root:before': { flex: 0, padding: 0 },
-        }}
-      >
+      <Timeline sx={timelineRootSx}>
         {sorted.map((phase, i) => {
           const { isDone, isOverdue, dotColor, yearLabelValue, phaseMilestones, isLastPhase } =
             resolvePhaseState(phase, i, sorted, lastKey, checklist, localPhaseDone, today);
@@ -814,17 +460,14 @@ export function TimelineTwoColumn({
             const markerTooltip = resolvePhaseTooltip(checklist, dotColor, isDone, phase);
             return (
               <Box key={phase.key} component="li" data-testid="tl-item" sx={markerPhaseLiSx}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Box sx={markerRowInnerSx}>
                   {/* Left label — shown when side === 'left' */}
                   <Box sx={markerLeftLabelSx}>
                     {phase.side === 'left' && (
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'text.secondary', fontWeight: 600, whiteSpace: 'nowrap' }}
-                      >
+                      <Typography variant="caption" sx={markerCaptionSx}>
                         {phase.shortTitle ?? phase.title}
                         {phase.date && (
-                          <Box component="span" sx={{ ml: 0.75, fontWeight: 400, opacity: 0.7 }}>
+                          <Box component="span" sx={markerDateSpanSx}>
                             · {phase.date}
                           </Box>
                         )}
@@ -850,13 +493,10 @@ export function TimelineTwoColumn({
                   {/* Right label — shown when side !== 'left' */}
                   <Box sx={markerRightLabelSx}>
                     {phase.side !== 'left' && (
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'text.secondary', fontWeight: 600, whiteSpace: 'nowrap' }}
-                      >
+                      <Typography variant="caption" sx={markerCaptionSx}>
                         {phase.shortTitle ?? phase.title}
                         {phase.date && (
-                          <Box component="span" sx={{ ml: 0.75, fontWeight: 400, opacity: 0.7 }}>
+                          <Box component="span" sx={markerDateSpanSx}>
                             · {phase.date}
                           </Box>
                         )}
@@ -978,22 +618,9 @@ export function TimelineTwoColumn({
               </TimelineColumn>
 
               {/* Centre: phase dot + spine */}
-              <Box
-                data-col="center"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
-              >
+              <Box data-col="center" sx={centerColumnSx}>
                 {/* Dot wrapper: relative so the date pill can float above without affecting layout */}
-                <Box
-                  sx={{
-                    position: 'relative',
-                    display: 'inline-flex',
-                    '&:hover > [aria-hidden]': { display: 'block' },
-                  }}
-                >
+                <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                   {!phase.hideDate && phase.date && (
                     <Typography variant="caption" aria-hidden sx={floatingDatePillSx}>
                       {phase.date}

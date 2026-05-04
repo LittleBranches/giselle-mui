@@ -32,6 +32,7 @@
 import React, { act } from 'react';
 import ReactDOM from 'react-dom/client';
 import { it, vi, expect, describe, afterEach } from 'vitest';
+import type * as UtilsModule from './utils';
 
 (globalThis as unknown as Record<string, unknown>)['IS_REACT_ACT_ENVIRONMENT'] = true;
 
@@ -76,22 +77,26 @@ vi.mock('./milestone-badge', async () => {
   };
 });
 
-vi.mock('./utils', () => ({
-  sortPhasesByDate: (phases: unknown[]) => phases,
-  sortMilestonesAsc: (milestones: unknown[]) => milestones,
-  sortMilestonesDesc: (milestones: unknown[]) => milestones,
-  detectPhaseOverlaps: () => new Map(),
-  parseFirstDate: () => null,
-  getLastYear: () => null,
-  parseLastDate: () => null,
-}));
+vi.mock('./utils', async (importOriginal) => {
+  const actual = await importOriginal<typeof UtilsModule>();
+  return {
+    ...actual,
+    sortPhasesByDate: (phases: unknown[]) => phases,
+    sortMilestonesAsc: (milestones: unknown[]) => milestones,
+    sortMilestonesDesc: (milestones: unknown[]) => milestones,
+    detectPhaseOverlaps: () => new Map(),
+    parseFirstDate: () => null,
+    getLastYear: () => null,
+    parseLastDate: () => null,
+  };
+});
 
 // ── Test subject + types ──────────────────────────────────────────────────
 
 import type { ReactElement } from 'react';
 import type { TimelinePhase } from './types';
 
-import { TimelineTwoColumn } from './timeline-two-column';
+import { TimelineTwoColumn } from './two-column';
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 

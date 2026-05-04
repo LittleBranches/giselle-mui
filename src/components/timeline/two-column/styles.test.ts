@@ -14,7 +14,7 @@ import {
   markerRightLabelSx,
   phaseRowSx,
   phaseLiSx,
-} from './timeline-two-column.styles';
+} from './styles';
 
 // ---------------------------------------------------------------------------
 // timelineColumnSx
