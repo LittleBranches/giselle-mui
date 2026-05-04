@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import { doneCheckmarkSx } from './timeline-dot.styles';
+import { doneCheckmarkSx } from './styles';
 
 // ----------------------------------------------------------------------
 

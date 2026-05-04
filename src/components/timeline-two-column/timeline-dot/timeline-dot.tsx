@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react';
 import type { Theme, SxProps } from '@mui/material/styles';
 import type { BoxProps } from '@mui/material/Box';
-import type { HighlightedPaletteKey } from './types';
+import type { HighlightedPaletteKey } from '../types';
 
 import Box from '@mui/material/Box';
 
-import { checkPop, pulseRing } from './animations';
-import { doneCheckmarkSx, timelineDotInnerSx } from './timeline-dot.styles';
+import { checkPop, pulseRing } from '../animations';
+import { doneCheckmarkSx, timelineDotInnerSx } from './styles';
 
 // ----------------------------------------------------------------------
 

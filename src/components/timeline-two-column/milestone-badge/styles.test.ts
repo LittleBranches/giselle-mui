@@ -12,7 +12,7 @@ import {
   milestoneDetailPillSx,
   milestoneDetailListSx,
   milestoneDetailRowSx,
-} from './milestone-badge.styles';
+} from './styles';
 
 // ---------------------------------------------------------------------------
 // milestoneNewBadgeRowSx

@@ -1,5 +1,5 @@
 import type { PaperProps } from '@mui/material/Paper';
-import type { TimelinePhase, HighlightedPaletteKey } from './types';
+import type { TimelinePhase, HighlightedPaletteKey } from '../types';
 
 import { useCallback, useState, type ReactNode, type KeyboardEvent } from 'react';
 import type React from 'react';
@@ -10,8 +10,8 @@ import Collapse from '@mui/material/Collapse';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-import { DEFAULT_EXPANDABLE_ICON } from './icons';
-import { GiselleIcon } from '../giselle-icon/giselle-icon';
+import { DEFAULT_EXPANDABLE_ICON } from '../icons';
+import { GiselleIcon } from '../../giselle-icon/giselle-icon';
 import {
   milestoneNewBadgeRowSx,
   milestoneNewDotSx,
@@ -22,7 +22,7 @@ import {
   milestoneDetailPillSx,
   milestoneDetailListSx,
   milestoneDetailRowSx,
-} from './milestone-badge.styles';
+} from './styles';
 
 // ----------------------------------------------------------------------
 

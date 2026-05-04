@@ -9,15 +9,15 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 
-import type { TimelinePhase } from './types';
-import { dateToMonthIndex, monthIndexToDate, resolveOverlaps } from './utils';
+import type { TimelinePhase } from '../types';
+import { dateToMonthIndex, monthIndexToDate, resolveOverlaps } from '../utils';
 import {
   ganttTrackSx,
   popoverPaperSx,
   sliderRowHeaderSx,
   actionsRowSx,
   ganttBarSx,
-} from './phase-warning-popover.styles';
+} from './styles';
 
 // ----------------------------------------------------------------------
 

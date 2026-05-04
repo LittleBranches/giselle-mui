@@ -8,7 +8,7 @@ import {
   applyOverrides,
   mergeIntoAll,
 } from './phase-warning-popover';
-import type { TimelinePhase } from './types';
+import type { TimelinePhase } from '../types';
 
 // Minimal phase factory — only the fields the helpers care about.
 function phase(key: number, date: string, overrides: Partial<TimelinePhase> = {}): TimelinePhase {
