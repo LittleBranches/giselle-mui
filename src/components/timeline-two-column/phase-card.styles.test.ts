@@ -75,9 +75,9 @@ describe('labeledIconStripLabelSx — section overline label', () => {
     expect(sx['mb']).toBe(1);
   });
 
-  it('[regression] font size is 0.65rem — smaller than badge labels (0.75rem)', () => {
+  it('[regression] font size meets badge-label minimum of 0.75rem', () => {
     const sx = labeledIconStripLabelSx as Record<string, unknown>;
-    expect(sx['fontSize']).toBe('0.65rem');
+    expect(sx['fontSize']).toBe('0.75rem');
   });
 });
 

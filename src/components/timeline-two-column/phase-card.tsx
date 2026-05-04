@@ -41,6 +41,7 @@ import {
   platformStripSx,
   projectLogoSx,
   eyeButtonSx,
+  phaseCardIconBoxSx,
 } from './phase-card.styles';
 
 // ----------------------------------------------------------------------
@@ -409,27 +410,7 @@ function CardDecoration({ color, isOverduePending, icon }: CardDecorationProps) 
           }),
         ]}
       />
-      <Box
-        aria-hidden="true"
-        sx={(theme) => ({
-          top: 16,
-          right: 16,
-          width: 36,
-          height: 36,
-          position: 'absolute',
-          zIndex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          // Force the icon SVG to 32 × 32 via CSS instead of cloneElement,
-          // so the icon element can remain an RSC-created React element.
-          '& svg': { width: 32, height: 32 },
-          color: isOverduePending
-            ? theme.vars!.palette.error.main
-            : (theme.vars!.palette[color]?.main ?? theme.vars!.palette.primary.main),
-          opacity: isOverduePending ? 0.55 : 0.35,
-        })}
-      >
+      <Box aria-hidden="true" sx={phaseCardIconBoxSx(color, isOverduePending)}>
         {icon}
       </Box>
     </>

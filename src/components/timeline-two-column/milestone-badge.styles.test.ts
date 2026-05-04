@@ -49,10 +49,10 @@ describe('milestoneNewDotSx — "New" status dot', () => {
     expect(sx['flexShrink']).toBe(0);
   });
 
-  it('[regression] dot width and height are both 7px', () => {
+  it('[regression] dot meets 12px minimum readability size', () => {
     const sx = milestoneNewDotSx as Record<string, unknown>;
-    expect(sx['width']).toBe(7);
-    expect(sx['height']).toBe(7);
+    expect(Number(sx['width'])).toBeGreaterThanOrEqual(12);
+    expect(Number(sx['height'])).toBeGreaterThanOrEqual(12);
   });
 });
 
@@ -68,9 +68,9 @@ describe('milestoneNewLabelSx — "New" label text', () => {
     expect(sx['lineHeight']).toBe(1);
   });
 
-  it('[regression] font size is 0.65rem', () => {
+  it('[regression] font size meets badge-label minimum of 0.75rem', () => {
     const sx = milestoneNewLabelSx as Record<string, unknown>;
-    expect(sx['fontSize']).toBe('0.65rem');
+    expect(sx['fontSize']).toBe('0.75rem');
   });
 });
 

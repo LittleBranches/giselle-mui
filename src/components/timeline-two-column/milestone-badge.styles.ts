@@ -26,10 +26,10 @@ export const milestoneNewBadgeRowSx = (rightAlign: boolean): SxProps<Theme> => (
   justifyContent: rightAlign ? 'flex-end' : undefined,
 });
 
-/** Small pulsing dot in the "New" indicator — always 7px, success-green. */
+/** Status dot in the "New" indicator — 12px minimum (readability rule), success-green. */
 export const milestoneNewDotSx: SxProps<Theme> = {
-  width: 7,
-  height: 7,
+  width: 12,
+  height: 12,
   borderRadius: '50%',
   bgcolor: 'success.main',
   flexShrink: 0,
@@ -37,7 +37,7 @@ export const milestoneNewDotSx: SxProps<Theme> = {
 
 /** Typography for the "New" label beside the dot — always success-green. */
 export const milestoneNewLabelSx: SxProps<Theme> = {
-  fontSize: '0.65rem',
+  fontSize: '0.75rem',
   fontWeight: 700,
   color: 'success.main',
   lineHeight: 1,

@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
-import { decorationOverlaySx } from './metric-card.styles';
+import { decorationOverlaySx, metricCardPaperSx, metricCardIconBoxSx } from './metric-card.styles';
 
 // ----------------------------------------------------------------------
 
@@ -78,10 +78,7 @@ export function MetricCard({
   return (
     <Paper
       elevation={elevation}
-      sx={[
-        { py: 3, pl: 3, pr: 2.5, position: 'relative', overflow: 'hidden' },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
+      sx={[metricCardPaperSx, ...(Array.isArray(sx) ? sx : [sx])]}
       {...other}
     >
       {decoration && (
@@ -110,21 +107,7 @@ export function MetricCard({
       </Box>
 
       {icon && (
-        <Box
-          aria-hidden="true"
-          sx={(theme) => ({
-            top: 24,
-            right: 20,
-            width: 36,
-            height: 36,
-            position: 'absolute',
-            zIndex: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: theme.vars!.palette[color].main,
-          })}
-        >
+        <Box aria-hidden="true" sx={metricCardIconBoxSx(color)}>
           {icon}
         </Box>
       )}

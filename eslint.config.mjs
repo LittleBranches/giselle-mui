@@ -73,6 +73,18 @@ export default eslintTs.config(
           message:
             'Inline `sx` object has more than 3 properties. Extract to a *.styles.ts file (see copilot-instructions.md).',
         },
+        {
+          selector:
+            'JSXAttribute[name.name="sx"] > JSXExpressionContainer > ArrayExpression > ObjectExpression[properties.length>3]',
+          message:
+            'Inline `sx` array item has more than 3 properties. Extract to a *.styles.ts file (see copilot-instructions.md).',
+        },
+        {
+          selector:
+            'JSXAttribute[name.name="sx"] > JSXExpressionContainer > ArrowFunctionExpression > ObjectExpression[properties.length>3]',
+          message:
+            'Inline `sx` theme callback has more than 3 properties. Extract to a *.styles.ts file (see copilot-instructions.md).',
+        },
       ],
     },
     settings: {

@@ -19,7 +19,7 @@ import { pulseDot } from './animations';
 export const labeledIconStripLabelSx: SxProps<Theme> = {
   display: 'block',
   mb: 1,
-  fontSize: '0.65rem',
+  fontSize: '0.75rem',
   color: 'text.disabled',
 };
 
@@ -285,3 +285,33 @@ export const photoImgSx = (isFirst: boolean): SxProps<Theme> => ({
   borderColor: 'divider',
   display: 'block',
 });
+
+// ── Corner decorative icon ────────────────────────────────────────────────────
+
+/**
+ * Absolutely-positioned decorative icon Box in the top-right corner of a phase card.
+ *
+ * @param color - MUI palette key for the icon tint.
+ * @param isOverduePending - When true, tints to error and reduces opacity.
+ */
+export const phaseCardIconBoxSx =
+  (color: string, isOverduePending: boolean): SxProps<Theme> =>
+  (theme) => ({
+    top: 16,
+    right: 16,
+    width: 36,
+    height: 36,
+    position: 'absolute',
+    zIndex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // Force the icon SVG to 32 × 32 via CSS instead of cloneElement,
+    // so the icon element can remain an RSC-created React element.
+    '& svg': { width: 32, height: 32 },
+    color: isOverduePending
+      ? theme.vars!.palette.error.main
+      : ((theme.vars!.palette as unknown as Record<string, { main: string }>)[color]?.main ??
+        theme.vars!.palette.primary.main),
+    opacity: isOverduePending ? 0.55 : 0.35,
+  });

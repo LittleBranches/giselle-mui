@@ -75,6 +75,8 @@ export const msDotWrapperSx = (blurred: boolean): SxProps<Theme> => ({
   position: 'relative',
   display: 'inline-flex',
   transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease',
+  // Reveal the floating date pill on hover when not blurred/dimmed.
+  ...(!blurred && { '&:hover > [aria-hidden]': { display: 'block' } }),
   ...(blurred && {
     filter: 'blur(1.5px)',
     opacity: 0.38,
@@ -88,7 +90,8 @@ export const msDotWrapperSx = (blurred: boolean): SxProps<Theme> => ({
 /**
  * Date pill that floats above a phase or milestone dot.
  *
- * Always `display: 'none'` — made visible via JS/CSS at the call site when needed.
+ * Hidden by default (`display: 'none'`) — revealed on hover via the
+ * `&:hover > [aria-hidden]` selector in the parent wrapper (`msDotWrapperSx`).
  * Used identically in the phase dot and the milestone dot.
  */
 export const floatingDatePillSx: SxProps<Theme> = {
@@ -96,7 +99,7 @@ export const floatingDatePillSx: SxProps<Theme> = {
   bottom: 'calc(100% + 4px)',
   left: '50%',
   transform: 'translateX(-50%)',
-  fontSize: '0.65rem',
+  fontSize: '0.875rem',
   fontWeight: 800,
   color: 'common.white',
   bgcolor: 'grey.700',
@@ -191,3 +194,35 @@ export const phaseLiSx = (opts: { zIndex: 1 | 2; computedMinHeight?: number }): 
   '&:has([data-ms-card]:hover)': { zIndex: 3 },
   ...(opts.computedMinHeight !== undefined && { minHeight: opts.computedMinHeight }),
 });
+
+// -- Milestone card wrapper ---------------------------------------------------
+
+/**
+ * Absolutely-positioned wrapper Box around a milestone card.
+ *
+ * Combines the shared base (z-index, transition, transform, hover) with the
+ * column-specific offset so the card sits flush against the spine.
+ *
+ * @param isExpanded - When true, raises the card to z-index 1000.
+ * @param suppressElevation - When true, blurs and dims the card.
+ * @param side - Which column the milestone card is in.
+ */
+export const msCardWrapperSx =
+  (isExpanded: boolean, suppressElevation: boolean, side: 'left' | 'right'): SxProps<Theme> =>
+  (theme) => ({
+    position: 'absolute',
+    zIndex: isExpanded ? 1000 : 1,
+    transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease',
+    transform: 'translateY(-50%)',
+    top: '15px',
+    ...(side === 'left'
+      ? { left: 0, right: theme.spacing(2) }
+      : { left: theme.spacing(2), right: 0 }),
+    '&:hover': { zIndex: 999 },
+    ...(suppressElevation && {
+      filter: 'blur(1.5px)',
+      opacity: 0.38,
+      transform: 'scale(0.97) translateY(-50%)',
+      pointerEvents: 'none' as const,
+    }),
+  });

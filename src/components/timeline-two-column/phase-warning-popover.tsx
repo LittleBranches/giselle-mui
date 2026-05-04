@@ -16,6 +16,7 @@ import {
   popoverPaperSx,
   sliderRowHeaderSx,
   actionsRowSx,
+  ganttBarSx,
 } from './phase-warning-popover.styles';
 
 // ----------------------------------------------------------------------
@@ -184,28 +185,7 @@ function MiniGanttRuler({
         );
 
         return (
-          <Box
-            key={phase.key}
-            sx={(theme) => ({
-              position: 'absolute',
-              top: 4,
-              height: 12,
-              left: `${leftPct}%`,
-              width: `${widthPct}%`,
-              borderRadius: 0.5,
-              opacity: isOverlapping ? 0.7 : 1,
-              bgcolor: isOverlapping ? 'transparent' : theme.vars!.palette[sliderColor].main,
-              ...(isOverlapping && {
-                background: `repeating-linear-gradient(
-                  45deg,
-                  ${theme.vars!.palette[sliderColor].main} 0px,
-                  ${theme.vars!.palette[sliderColor].main} 4px,
-                  transparent 4px,
-                  transparent 8px
-                )`,
-              }),
-            })}
-          />
+          <Box key={phase.key} sx={ganttBarSx(leftPct, widthPct, isOverlapping, sliderColor)} />
         );
       })}
     </Box>

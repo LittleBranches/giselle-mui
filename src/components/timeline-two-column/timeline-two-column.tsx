@@ -45,6 +45,7 @@ import {
   markerRightLabelSx,
   phaseRowSx,
   phaseLiSx,
+  msCardWrapperSx,
 } from './timeline-two-column.styles';
 
 // ----------------------------------------------------------------------
@@ -443,22 +444,6 @@ function buildMilestoneRow(
       }
     : {};
 
-  const wrapperBase = {
-    position: 'absolute' as const,
-    zIndex: isThisMsExpanded ? 1000 : 1,
-    transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease',
-    // translateY(-50%) centers the card vertically on its dot (dot height = 30px, center = 15px)
-    transform: 'translateY(-50%)',
-    // Raise hovered card above adjacent phase cards so it is never overlapped
-    '&:hover': { zIndex: 999 },
-    ...(suppressElevation && {
-      filter: 'blur(1.5px)',
-      opacity: 0.38,
-      transform: 'scale(0.97) translateY(-50%)',
-      pointerEvents: 'none' as const,
-    }),
-  };
-
   return (
     <Box key={`ms-row-${mi}`} sx={msRowSx(topPercent)}>
       {/* Left column — milestone card for side='left' phases */}
@@ -468,12 +453,7 @@ function buildMilestoneRow(
             data-ms-card="true"
             ref={(el: HTMLDivElement | null) => ctx.onMeasure(mi, el)}
             onClick={stopProp}
-            sx={(theme) => ({
-              ...wrapperBase,
-              top: '15px',
-              left: 0,
-              right: theme.spacing(2),
-            })}
+            sx={msCardWrapperSx(isThisMsExpanded, suppressElevation, 'left')}
           >
             <MilestoneBadge
               milestone={ms}
@@ -534,12 +514,7 @@ function buildMilestoneRow(
             data-ms-card="true"
             ref={(el: HTMLDivElement | null) => ctx.onMeasure(mi, el)}
             onClick={stopProp}
-            sx={(theme) => ({
-              ...wrapperBase,
-              top: '15px',
-              left: theme.spacing(2),
-              right: 0,
-            })}
+            sx={msCardWrapperSx(isThisMsExpanded, suppressElevation, 'right')}
           >
             <MilestoneBadge
               milestone={ms}
@@ -1012,7 +987,13 @@ export function TimelineTwoColumn({
                 }}
               >
                 {/* Dot wrapper: relative so the date pill can float above without affecting layout */}
-                <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                <Box
+                  sx={{
+                    position: 'relative',
+                    display: 'inline-flex',
+                    '&:hover > [aria-hidden]': { display: 'block' },
+                  }}
+                >
                   {!phase.hideDate && phase.date && (
                     <Typography variant="caption" aria-hidden sx={floatingDatePillSx}>
                       {phase.date}

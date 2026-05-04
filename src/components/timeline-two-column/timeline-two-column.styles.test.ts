@@ -131,7 +131,7 @@ describe('msDotWrapperSx — milestone dot blur wrapper', () => {
 // ---------------------------------------------------------------------------
 
 describe('floatingDatePillSx — floating date pill above a dot', () => {
-  it('[regression] is display:none by default (shown via hover JS)', () => {
+  it('[regression] is display:none by default (shown on hover via parent wrapper)', () => {
     const sx = floatingDatePillSx as Record<string, unknown>;
     expect(sx['display']).toBe('none');
   });
@@ -144,9 +144,9 @@ describe('floatingDatePillSx — floating date pill above a dot', () => {
     expect(sx['transform']).toBe('translateX(-50%)');
   });
 
-  it('[regression] font size is 0.65rem — preserves small pill size', () => {
+  it('[regression] font size meets item-date minimum of 0.875rem', () => {
     const sx = floatingDatePillSx as Record<string, unknown>;
-    expect(sx['fontSize']).toBe('0.65rem');
+    expect(sx['fontSize']).toBe('0.875rem');
   });
 
   it('has z-index 2 so it renders above dot', () => {
