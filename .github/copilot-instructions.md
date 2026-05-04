@@ -89,8 +89,8 @@ src/components/<name>/
   <name>.tsx          — pure JSX composition only (no types, no utility functions)
   <name>.styles.ts    — all sx constants (static) and sx factories (dynamic)
   <name>.styles.test.ts — mock-theme assertions for every exported sx function
-  <name>.stories.tsx  — Storybook stories (see story decision rule below)
-  <name>.test.ts      — Vitest unit tests
+  <name>.stories.tsx  — Storybook stories — MUST include the component name (Storybook glob: `*.stories.@(ts|tsx)`)
+  <name>.test.ts      — Vitest unit tests — MUST end in `.test.ts` (vitest glob: `src/**/*.test.ts`)
   index.ts            — barrel: re-exports component and types
   README.md           — why it exists, why it belongs here, design decisions, library safety
 ```
@@ -112,11 +112,13 @@ src/components/
   card/
     metric/   — MetricCard + MetricCardDecoration
     quote/    — QuoteCard
+    selectable/ — SelectableCard
+  action-bar/
+    icon/     — IconActionBar
+  icon/
+    giselle/  — GiselleIcon
   timeline/
     two-column/ — TimelineTwoColumn (see layout below)
-  giselle-icon/
-  icon-action-bar/
-  selectable-card/
 ```
 
 ### TimelineTwoColumn internal file layout
@@ -126,14 +128,14 @@ It demonstrates the full types/utils/styles split:
 
 ```
 src/components/timeline/two-column/
-  two-column.tsx    — pure JSX composition only (no types, no logic functions)
-  types.ts          — all exported + internal TypeScript interfaces
-  utils.ts          — all pure logic functions (no JSX return); fully unit-testable
-  styles.ts         — all sx constants (static) and sx factories (dynamic)
-  index.ts          — barrel
-  stories.tsx       — Storybook stories
-  stories.styles.ts — sx constants used only in stories
-  *.test.ts         — co-located unit test files
+  two-column.tsx                       — pure JSX composition only (no types, no logic functions)
+  types.ts                             — all exported + internal TypeScript interfaces
+  utils.ts                             — all pure logic functions (no JSX return); fully unit-testable
+  styles.ts                            — all sx constants (static) and sx factories (dynamic)
+  index.ts                             — barrel
+  timeline-two-column.stories.tsx      — Storybook stories (must match *.stories.tsx glob)
+  stories.styles.ts                    — sx constants used only in stories
+  *.test.ts                            — co-located unit test files
   phase-card/       — PhaseCard sub-component (exported from package barrel)
   milestone-badge/  — MilestoneBadge sub-component (exported from package barrel)
   spine-connector/  — SpineConnector sub-component (internal)
@@ -149,7 +151,7 @@ src/components/timeline/two-column/
 
 ## Test conventions
 
-- File extension must be `.test.ts` (not `.tsx`) — vitest config uses `include: ['src/**/*.test.ts']`
+- File extension must be `.test.ts` (not `.tsx`) — vitest config uses `include: ['src/**/*.test.ts']`. A file named `test.ts` (no component-name prefix) does NOT match `*.test.ts` and will be silently skipped.
 - Add `// @vitest-environment jsdom` at top of every test file
 - Use `React.createElement` (not JSX) — avoids JSX transform requirement in `.ts` files
 - Use `renderToStaticMarkup` for structure/ARIA tests
@@ -318,6 +320,7 @@ Checks (in order): Prettier → ESLint → `tsc --noEmit` → Vitest → tsup bu
 
 - Config: `.storybook/main.ts` (react-vite builder) + `.storybook/preview.tsx` (wraps stories in `CssVarsProvider`)
 - Stories live co-located with their component: `src/components/<name>/<name>.stories.tsx`
+- **The filename MUST match `*.stories.tsx`** — Storybook's glob is `src/**/*.stories.@(ts|tsx)`. A file named `stories.tsx` (no component-name prefix) is invisible to Storybook and will never appear in the UI.
 - Every story file must pass `tsc --noEmit`, ESLint, and Prettier — they are in `src/` and covered by all checks
 - Named component helpers (e.g. `function ToggleDemo()`) must be used whenever a story render function uses React hooks — anonymous arrow functions inside `render:` violate the `react-hooks/rules-of-hooks` ESLint rule
 
