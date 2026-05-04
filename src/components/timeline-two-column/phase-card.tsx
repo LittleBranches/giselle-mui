@@ -85,6 +85,24 @@ export function resolveCornerBadgeAlign(columnSide: 'left' | 'right'): {
 // ----------------------------------------------------------------------
 
 /**
+ * Resolves the list of photo entries to render for a phase card.
+ *
+ * - `photos` wins when both fields are present.
+ * - `photo` (singular) is normalised to a single-element array.
+ * - Neither present → `null` (no images rendered).
+ *
+ * @internal Exported for unit tests — not part of the public API.
+ */
+export function resolvePhotoSources(phase: {
+  photo?: { src: string; alt: string };
+  photos?: Array<{ src: string; alt: string }>;
+}): Array<{ src: string; alt: string }> | null {
+  return phase.photos ?? (phase.photo ? [phase.photo] : null);
+}
+
+// ----------------------------------------------------------------------
+
+/**
  * A labelled group: an optional overline label above any icon/logo strip.
  * Handles the repeated pattern across platforms, clients, and projects.
  */
@@ -936,7 +954,7 @@ export function PhaseCard({
             )}
 
             {expanded &&
-              (phase.photos ?? (phase.photo ? [phase.photo] : null))?.map((p, i) => (
+              resolvePhotoSources(phase)?.map((p, i) => (
                 <Box key={i} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
               ))}
 

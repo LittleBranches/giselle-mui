@@ -37,6 +37,7 @@ import {
   buildPlatformStripItems,
   derivePlatformEntry,
   resolveCornerBadgeAlign,
+  resolvePhotoSources,
 } from './phase-card';
 
 // ---------------------------------------------------------------------------
@@ -676,20 +677,6 @@ describe('footer slot — stopPropagation invariant', () => {
 // photos slot — render path and precedence (regression)
 // ---------------------------------------------------------------------------
 
-/**
- * Mirror of the inline expression in phase-card.tsx:
- *   (phase.photos ?? (phase.photo ? [phase.photo] : null))
- *
- * This resolves the list of photos to render — `photos` wins when both fields
- * are present; `photo` is normalised to a single-element array; neither → null.
- */
-function resolvePhotoSources(phase: {
-  photo?: { src: string; alt: string };
-  photos?: Array<{ src: string; alt: string }>;
-}): Array<{ src: string; alt: string }> | null {
-  return phase.photos ?? (phase.photo ? [phase.photo] : null);
-}
-
 describe('photos slot — render path and precedence (regression)', () => {
   it('photos array produces one entry per photo', () => {
     const result = resolvePhotoSources({
@@ -776,5 +763,6 @@ describe('photos slot — render-level markup (regression)', () => {
     const html = renderToStaticMarkup(React.createElement(React.Fragment, null, ...rendered));
     expect(html).toContain('<img');
     expect(html).toContain('src="/timeline/front.jpg"');
+    expect(html).toContain('alt="Front view"');
   });
 });
