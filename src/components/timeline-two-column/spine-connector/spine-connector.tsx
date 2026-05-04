@@ -1,10 +1,10 @@
 import type { BoxProps } from '@mui/material/Box';
-import type { HighlightedPaletteKey } from './types';
+import type { HighlightedPaletteKey } from '../types';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { yearLabelSx } from './spine-connector.styles';
+import { yearLabelSx } from './styles';
 
 // ----------------------------------------------------------------------
 

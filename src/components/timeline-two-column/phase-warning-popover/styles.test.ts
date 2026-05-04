@@ -5,7 +5,7 @@ import {
   popoverPaperSx,
   sliderRowHeaderSx,
   actionsRowSx,
-} from './phase-warning-popover.styles';
+} from './styles';
 
 // ----------------------------------------------------------------------
 

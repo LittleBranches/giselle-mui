@@ -1,6 +1,6 @@
 import type { Theme } from '@mui/material/styles';
 import type { BoxProps } from '@mui/material/Box';
-import type { TimelinePhase, HighlightedPaletteKey, TimelinePlatformItem } from './types';
+import type { TimelinePhase, HighlightedPaletteKey, TimelinePlatformItem } from '../types';
 
 import {
   useState,
@@ -12,7 +12,7 @@ import {
   type SetStateAction,
   type Ref,
 } from 'react';
-import { PhaseWarningPopover } from './phase-warning-popover';
+import { PhaseWarningPopover } from '../phase-warning-popover';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -20,8 +20,8 @@ import Collapse from '@mui/material/Collapse';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-import { GiselleIcon } from '../giselle-icon/giselle-icon';
-import { DEFAULT_EXPANDABLE_ICON } from './icons';
+import { GiselleIcon } from '../../giselle-icon/giselle-icon';
+import { DEFAULT_EXPANDABLE_ICON } from '../icons';
 import {
   photoImgSx,
   labeledIconStripLabelSx,
@@ -42,7 +42,7 @@ import {
   projectLogoSx,
   eyeButtonSx,
   phaseCardIconBoxSx,
-} from './phase-card.styles';
+} from './styles';
 
 // ----------------------------------------------------------------------
 

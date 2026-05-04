@@ -1,6 +1,6 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-import { checkPop } from './animations';
+import { checkPop } from '../animations';
 
 // ----------------------------------------------------------------------
 

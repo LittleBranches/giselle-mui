@@ -1,6 +1,6 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-import { pulseDot } from './animations';
+import { pulseDot } from '../animations';
 
 /**
  * Styles for the `PhaseCard` component.
