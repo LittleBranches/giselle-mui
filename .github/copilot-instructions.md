@@ -80,48 +80,72 @@ Never use bare indented code lines — they do not render as code blocks in Mark
 
 ## File structure per component
 
+Every component lives in its own named subfolder. No `.tsx` or `.ts` component files
+are permitted directly under `src/components/` — enforced by `scripts/check-structure.js`
+in the quality gate.
+
 ```
 src/components/<name>/
-  <name>.tsx     — component + exported Props interface
-  index.ts       — barrel: re-exports component and types
-  README.md      — why it exists, why it belongs here, design decisions, library safety
-  <name>.test.ts — Vitest unit tests
+  <name>.tsx          — pure JSX composition only (no types, no utility functions)
+  <name>.styles.ts    — all sx constants (static) and sx factories (dynamic)
+  <name>.styles.test.ts — mock-theme assertions for every exported sx function
+  <name>.stories.tsx  — Storybook stories (see story decision rule below)
+  <name>.test.ts      — Vitest unit tests
+  index.ts            — barrel: re-exports component and types
+  README.md           — why it exists, why it belongs here, design decisions, library safety
+```
+
+**Separation rule — non-negotiable for every component:**
+
+- TypeScript types and interfaces → separate `types.ts` file (not inside `.tsx`)
+- Pure logic / helper functions (no JSX) → separate `utils.ts` file (not inside `.tsx`)
+- Any `sx={}` with more than ~3 properties → `<name>.styles.ts` (enforced by ESLint)
+- The `.tsx` file is the **composition layer only**: it imports from the above, renders JSX, wires props.
+
+**Domain/feature grouping:**
+Related components are grouped under a shared parent folder. The quality gate enforces that
+no `.tsx` file lives at `src/components/<file>.tsx` — every component is at least one
+subfolder deep.
+
+```
+src/components/
+  card/
+    metric/   — MetricCard + MetricCardDecoration
+    quote/    — QuoteCard
+  timeline/
+    two-column/ — TimelineTwoColumn (see layout below)
+  giselle-icon/
+  icon-action-bar/
+  selectable-card/
 ```
 
 ### TimelineTwoColumn internal file layout
 
-The `timeline/two-column/` folder follows the same `<name>/<name>.tsx` convention
-but splits the root file into three co-located modules:
+The `timeline/two-column/` folder is the **reference implementation** for complex components.
+It demonstrates the full types/utils/styles split:
 
 ```
 src/components/timeline/two-column/
-  two-column.tsx   — pure JSX composition only (no types, no logic functions)
-  types.ts         — all exported + internal TypeScript interfaces
-  utils.ts         — all pure logic functions (no JSX return); fully unit-testable
-  styles.ts        — all sx constants (static) and sx factories (dynamic)
-  index.ts         — barrel
-  stories.tsx      — Storybook stories
+  two-column.tsx    — pure JSX composition only (no types, no logic functions)
+  types.ts          — all exported + internal TypeScript interfaces
+  utils.ts          — all pure logic functions (no JSX return); fully unit-testable
+  styles.ts         — all sx constants (static) and sx factories (dynamic)
+  index.ts          — barrel
+  stories.tsx       — Storybook stories
   stories.styles.ts — sx constants used only in stories
-  *.test.ts        — co-located unit test files
-  phase-card/      — PhaseCard sub-component (exported from package barrel)
-  milestone-badge/ — MilestoneBadge sub-component (exported from package barrel)
-  spine-connector/ — SpineConnector sub-component (internal)
-  timeline-dot/    — TimelineDot sub-component (internal)
+  *.test.ts         — co-located unit test files
+  phase-card/       — PhaseCard sub-component (exported from package barrel)
+  milestone-badge/  — MilestoneBadge sub-component (exported from package barrel)
+  spine-connector/  — SpineConnector sub-component (internal)
+  timeline-dot/     — TimelineDot sub-component (internal)
   phase-warning-popover/ — PhaseWarningPopover sub-component (internal)
 ```
 
 **Rule:** `two-column.tsx` must remain pure JSX composition.
+
 - TypeScript types → `types.ts`
 - Pure logic/helper functions (nothing that returns JSX) → `utils.ts`
 - Any `sx={}` with more than ~3 properties → `styles.ts`
-
-The `card/` folder groups card-family components under a shared parent:
-
-```
-src/components/card/
-  metric/   — MetricCard + MetricCardDecoration
-  quote/    — QuoteCard
-```
 
 ## Test conventions
 
@@ -175,22 +199,22 @@ At the start of every new Copilot session in this package, read these files:
 
 | File                                                                      | Purpose                                                                                                        |
 | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [`docs/roadmap.md`](../docs/roadmap.md)                   | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
+| [`docs/roadmap.md`](../docs/roadmap.md)                                   | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
 | [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md) | Full plan for `RoadmapTimeline` — next component to build                                                      |
 | [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                     | How to wire this library into a Next.js app                                                                    |
 
 ### Current components (shipped)
 
-| Component                             | File                                  | Status              |
-| ------------------------------------- | ------------------------------------- | ------------------- |
-| `GiselleIcon`                         | `src/components/giselle-icon/`        | ✅ Shipped + tested |
-| `MetricCard` + `MetricCardDecoration` | `src/components/card/metric/`         | ✅ Shipped + tested |
-| `QuoteCard`                           | `src/components/card/quote/`          | ✅ Shipped + tested |
-| `SelectableCard`                      | `src/components/selectable-card/`     | ✅ Shipped + tested |
-| `createIconRegistrar`                 | `src/utils/create-icon-registrar.ts`  | ✅ Shipped + tested |
-| `TimelineTwoColumn`                   | `src/components/timeline/two-column/` | ✅ Shipped + tested |
-| `IconActionBar`                       | `src/components/icon-action-bar/`     | ✅ Shipped + tested |
-| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts` | ✅ Shipped + tested (Phase A — 4 May 2026) |
+| Component                                            | File                                  | Status                                     |
+| ---------------------------------------------------- | ------------------------------------- | ------------------------------------------ |
+| `GiselleIcon`                                        | `src/components/giselle-icon/`        | ✅ Shipped + tested                        |
+| `MetricCard` + `MetricCardDecoration`                | `src/components/card/metric/`         | ✅ Shipped + tested                        |
+| `QuoteCard`                                          | `src/components/card/quote/`          | ✅ Shipped + tested                        |
+| `SelectableCard`                                     | `src/components/selectable-card/`     | ✅ Shipped + tested                        |
+| `createIconRegistrar`                                | `src/utils/create-icon-registrar.ts`  | ✅ Shipped + tested                        |
+| `TimelineTwoColumn`                                  | `src/components/timeline/two-column/` | ✅ Shipped + tested                        |
+| `IconActionBar`                                      | `src/components/icon-action-bar/`     | ✅ Shipped + tested                        |
+| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts`            | ✅ Shipped + tested (Phase A — 4 May 2026) |
 
 ### Next planned work (priority order)
 
@@ -227,6 +251,7 @@ that go through webpack's resolver — it cannot fix code that was pre-bundled b
    (external reference), not inlined source code.
 
 Current required entries (keep in sync with `package.json`):
+
 - `react`, `react-dom`, `react/jsx-runtime`, `react/jsx-dev-runtime`
 - `@mui/material`
 - `@mui/lab`
@@ -351,15 +376,15 @@ npx eslint --fix <path/to/file>
 
 **What each check catches:**
 
-| Violation | Prettier | ESLint | SonarQube |
-|---|---|---|---|
-| Formatting (quotes, trailing commas, indent) | ✅ auto-fix | ⚠️ some rules | — |
-| Duplicate imports | — | ✅ auto-fix | ✅ |
-| Global builtins (`parseFloat` → `Number.parseFloat`) | — | ✅ auto-fix | ✅ |
-| Unused variables / imports | — | ✅ | ✅ |
-| Cognitive complexity > 15 | — | ❌ not configured | ✅ |
-| DOM prop leaks (`shouldForwardProp`) | — | ❌ | ✅ |
-| `getAttribute` vs `.dataset` | — | ❌ | ✅ |
+| Violation                                            | Prettier    | ESLint            | SonarQube |
+| ---------------------------------------------------- | ----------- | ----------------- | --------- |
+| Formatting (quotes, trailing commas, indent)         | ✅ auto-fix | ⚠️ some rules     | —         |
+| Duplicate imports                                    | —           | ✅ auto-fix       | ✅        |
+| Global builtins (`parseFloat` → `Number.parseFloat`) | —           | ✅ auto-fix       | ✅        |
+| Unused variables / imports                           | —           | ✅                | ✅        |
+| Cognitive complexity > 15                            | —           | ❌ not configured | ✅        |
+| DOM prop leaks (`shouldForwardProp`)                 | —           | ❌                | ✅        |
+| `getAttribute` vs `.dataset`                         | —           | ❌                | ✅        |
 
 Do not run tests, mark a task complete, or move to the next file until all three pass on the file just edited. If any check reports errors, fix them immediately before continuing.
 
@@ -493,15 +518,15 @@ Use `element.dataset['camelKey']` rather than `element.getAttribute('data-kebab-
 
 Icons and text in this library are read by real users. The following minimums are **non-negotiable** and enforced by regression tests:
 
-| Element | Minimum | Notes |
-|---|---|---|
-| Inline icon (status badge, spine, pill) | `width={16}` | Never `width={12}` or `width={14}` |
-| Interactive icon (button, clickable control) | `width={20}` | Clickable icons must be larger than decorative ones |
-| Corner alert badge circle | `26px` | The circle container; icon inside must be `width={16}` |
-| Standalone decorative icon (card corner) | CSS `width: 32, height: 32` | Applied via `'& svg': { width: 32, height: 32 }` |
-| Pulsing dot / status indicator | `12px` | Never `width: 10, height: 10` |
-| Badge / pill label text | `0.75rem` | Never `0.65rem` or `0.7rem` |
-| Item date / supplementary label | `0.875rem` | Match `body2`; never override below default |
+| Element                                      | Minimum                     | Notes                                                  |
+| -------------------------------------------- | --------------------------- | ------------------------------------------------------ |
+| Inline icon (status badge, spine, pill)      | `width={16}`                | Never `width={12}` or `width={14}`                     |
+| Interactive icon (button, clickable control) | `width={20}`                | Clickable icons must be larger than decorative ones    |
+| Corner alert badge circle                    | `26px`                      | The circle container; icon inside must be `width={16}` |
+| Standalone decorative icon (card corner)     | CSS `width: 32, height: 32` | Applied via `'& svg': { width: 32, height: 32 }`       |
+| Pulsing dot / status indicator               | `12px`                      | Never `width: 10, height: 10`                          |
+| Badge / pill label text                      | `0.75rem`                   | Never `0.65rem` or `0.7rem`                            |
+| Item date / supplementary label              | `0.875rem`                  | Match `body2`; never override below default            |
 
 **Enforcement pattern — mandatory for every component that has size values:**
 
@@ -549,12 +574,13 @@ npm run test:coverage   # generates text summary + lcov report
 
 **Implementation — how the prop works:**
 
-| State | `columnSide="left"` | `columnSide="right"` |
-|---|---|---|
+| State     | `columnSide="left"`                                                            | `columnSide="right"`       |
+| --------- | ------------------------------------------------------------------------------ | -------------------------- |
 | Collapsed | `textAlign: 'right'` on Paper root; flex rows use `justifyContent: 'flex-end'` | No override (default left) |
-| Expanded | Left alignment (both columns identical) | Left alignment |
+| Expanded  | Left alignment (both columns identical)                                        | Left alignment             |
 
 **Where it is set:** in `timeline-two-column.tsx`, both `MilestoneBadge` call sites:
+
 - Left-column block (`ctx.phaseSide === 'left'`): `<MilestoneBadge columnSide="left" ...>`
 - Right-column block (`ctx.phaseSide === 'right'`): no `columnSide` (default `'right'`)
 
@@ -572,11 +598,11 @@ Every dot on the timeline — phase dots and milestone dots alike — must be **
 
 2. **No grayscale on the dot container.** The center column Box in `timeline-two-column.tsx` must NOT apply `filter: 'grayscale(1)'` or `opacity` to the dot. Grayscale/opacity belongs on the card Paper only — not on the dot's wrapper Box.
 
-| Element | Done state | Expected |
-|---|---|---|
-| Phase dot | `done=true` | Green circle with checkmark; never grayed |
-| Milestone dot | `done=true` | Green filled circle with checkmark; never grayed |
-| Phase dot | `done=false` | Uses data `color` as-is |
+| Element       | Done state   | Expected                                                   |
+| ------------- | ------------ | ---------------------------------------------------------- |
+| Phase dot     | `done=true`  | Green circle with checkmark; never grayed                  |
+| Milestone dot | `done=true`  | Green filled circle with checkmark; never grayed           |
+| Phase dot     | `done=false` | Uses data `color` as-is                                    |
 | Milestone dot | `done=false` | Uses resolved `msColor` (overdue → error, else data color) |
 
 **Regression test location:** `timeline-dot.test.ts` — `resolveEffectiveColor — done-dot color enforcement (regression)`.
@@ -595,6 +621,7 @@ Every dot on the timeline — phase dots and milestone dots alike — must be **
 **Why:** the badge must always float on the edge that faces outward (away from the spine). A badge anchored on the spine-facing edge overlaps the spine connector and milestone dots.
 
 **Where it is set:** in `timeline-two-column.tsx`, the `PhaseCard` call site:
+
 ```tsx
 <PhaseCard phase={phase} columnSide={phase.side === 'left' ? 'right' : 'left'} {...buildPhaseCardTsxProps(...)} />
 ```
@@ -613,10 +640,10 @@ All `isViewed` / `onMarkViewed` eye buttons in this component family must meet W
 
 **Rule — non-negotiable:**
 
-| Element | Icon size | Why |
-|---|---|---|
-| Phase card eye badge | `width={20}` (`PHASE_EYE_ICON_SIZE`) | Interactive icons must be >= 20px — larger than decorative |
-| Milestone title-row eye | `width={20}` (`MILESTONE_EYE_ICON_SIZE`) | Same rule |
+| Element                 | Icon size                                | Why                                                        |
+| ----------------------- | ---------------------------------------- | ---------------------------------------------------------- |
+| Phase card eye badge    | `width={20}` (`PHASE_EYE_ICON_SIZE`)     | Interactive icons must be >= 20px — larger than decorative |
+| Milestone title-row eye | `width={20}` (`MILESTONE_EYE_ICON_SIZE`) | Same rule                                                  |
 
 - **Never use `opacity` alone to communicate state.** Opacity reduces visual contrast below WCAG 1.4.11 (3:1 ratio for UI components). Use icon variant change (`bold` vs `outline`) AND a foreground/background colour change together.
 - **Never set `cursor: 'default'` on a toggleable button.** The user must always be able to click to toggle. A viewed item must be un-markable.
@@ -624,6 +651,7 @@ All `isViewed` / `onMarkViewed` eye buttons in this component family must meet W
 - **Export size constants.** Every eye icon/button size must be a named export (`PHASE_EYE_ICON_SIZE`, `MILESTONE_EYE_ICON_SIZE`, `EYE_BUTTON_MIN_SIZE`, `MILESTONE_EYE_BUTTON_MIN_SIZE`). Write a regression test asserting each icon size is `>= 20` and each button min-size is `>= 24`.
 
 **Where the eye buttons live:**
+
 - Phase card: floats outside `<Paper>` at the bottom outer edge (`position: absolute, bottom: 0`), column-side aware. Constants: `PHASE_EYE_ICON_SIZE = 20`, `EYE_BUTTON_MIN_SIZE = 28`.
 - Milestone: inline in the title row (`<Box display="flex" alignItems="center">`), before the title when `columnSide='left'` (right-aligned column), after the title when `columnSide='right'` (left-aligned column). Constant: `MILESTONE_EYE_ICON_SIZE = 20`.
 
