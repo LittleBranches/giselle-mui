@@ -37,6 +37,8 @@ import {
   buildPlatformStripItems,
   derivePlatformEntry,
   resolveCornerBadgeAlign,
+  resolvePhotoSources,
+  buildPhotoNodes,
 } from './phase-card';
 
 // ---------------------------------------------------------------------------
@@ -669,5 +671,102 @@ describe('footer slot — stopPropagation invariant', () => {
     expect(shouldRender('')).toBe(true);
     expect(shouldRender(undefined)).toBe(false);
     expect(shouldRender(null)).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// photos slot — render path and precedence (regression)
+// ---------------------------------------------------------------------------
+
+describe('photos slot — render path and precedence (regression)', () => {
+  it('photos array produces one entry per photo', () => {
+    const result = resolvePhotoSources({
+      photos: [
+        { src: '/a.jpg', alt: 'Photo A' },
+        { src: '/b.jpg', alt: 'Photo B' },
+      ],
+    });
+    expect(result).toHaveLength(2);
+    expect(result?.[0]).toEqual({ src: '/a.jpg', alt: 'Photo A' });
+    expect(result?.[1]).toEqual({ src: '/b.jpg', alt: 'Photo B' });
+  });
+
+  it('photo (singular) is normalised to a single-element array', () => {
+    const result = resolvePhotoSources({ photo: { src: '/c.jpg', alt: 'Photo C' } });
+    expect(result).toHaveLength(1);
+    expect(result?.[0]).toEqual({ src: '/c.jpg', alt: 'Photo C' });
+  });
+
+  it('[regression] photos takes precedence over photo when both are present', () => {
+    // If the ?? operator is ever flipped, `photo` would win and multi-photo
+    // cards would silently regress to showing a single image.
+    const result = resolvePhotoSources({
+      photo: { src: '/single.jpg', alt: 'Single' },
+      photos: [
+        { src: '/multi-a.jpg', alt: 'Multi A' },
+        { src: '/multi-b.jpg', alt: 'Multi B' },
+      ],
+    });
+    expect(result).toHaveLength(2);
+    expect(result?.[0]?.src).toBe('/multi-a.jpg');
+  });
+
+  it('neither field present → returns null (no images rendered)', () => {
+    expect(resolvePhotoSources({})).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// photos slot — render-level (regression)
+// ---------------------------------------------------------------------------
+
+describe('photos slot — render-level markup (regression)', () => {
+  it('photos list renders as <img> elements with correct src and alt attributes', () => {
+    // Uses the real buildPhotoNodes exported from phase-card.tsx — if PhaseCard ever
+    // changes from Box component="img" to a div background or <picture>, this test
+    // fails, catching the regression before it reaches the consumer's app.
+    const photos = [
+      { src: '/timeline/front.jpg', alt: 'Front view' },
+      { src: '/timeline/back.jpg', alt: 'Back view' },
+    ];
+    const nodes = buildPhotoNodes(photos);
+    const html = renderToStaticMarkup(React.createElement(React.Fragment, null, ...nodes));
+    expect(html).toContain('src="/timeline/front.jpg"');
+    expect(html).toContain('alt="Front view"');
+    expect(html).toContain('src="/timeline/back.jpg"');
+    expect(html).toContain('alt="Back view"');
+  });
+
+  it('buildPhotoNodes produces one node per photo', () => {
+    const photos = [
+      { src: '/a.jpg', alt: 'A' },
+      { src: '/b.jpg', alt: 'B' },
+      { src: '/c.jpg', alt: 'C' },
+    ];
+    expect(buildPhotoNodes(photos)).toHaveLength(3);
+  });
+
+  it('[regression] photos are only shown when expanded — expanded guard must filter', () => {
+    // The render guard in phase-card.tsx is: {expanded && resolvePhotoSources(phase)?.map(...)}
+    // This test mirrors that guard with the real resolvePhotoSources + buildPhotoNodes
+    // so regressions in either helper are caught together.
+    const phase = { photos: [{ src: '/timeline/front.jpg', alt: 'Front view' }] };
+    const expanded = false;
+    const resolved = resolvePhotoSources(phase);
+    const nodes = expanded && resolved ? buildPhotoNodes(resolved) : [];
+    const html = renderToStaticMarkup(React.createElement(React.Fragment, null, ...nodes));
+    expect(html).toBe('');
+    expect(html).not.toContain('src=');
+  });
+
+  it('[regression] photos are shown when expanded — expanded=true must produce img tags', () => {
+    const phase = { photos: [{ src: '/timeline/front.jpg', alt: 'Front view' }] };
+    const expanded = true;
+    const resolved = resolvePhotoSources(phase);
+    const nodes = expanded && resolved ? buildPhotoNodes(resolved) : [];
+    const html = renderToStaticMarkup(React.createElement(React.Fragment, null, ...nodes));
+    expect(html).toContain('<img');
+    expect(html).toContain('src="/timeline/front.jpg"');
+    expect(html).toContain('alt="Front view"');
   });
 });

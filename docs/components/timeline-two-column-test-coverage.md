@@ -22,16 +22,22 @@ expected outcome.
 
 ## Test file map
 
-| File                                           | What it covers                                                         |   Tests |
-| ---------------------------------------------- | ---------------------------------------------------------------------- | ------: |
-| `utils.test.ts`                                | Date parsing, phase sorting, overlap detection                         |      42 |
-| `phase-card.test.ts`                           | Variant, click/keyboard, expansion mode, status badges, platform strip |      34 |
-| `milestone-badge.interaction.test.ts`          | Card visibility, expand/collapse, keyboard, display-mode regressions   |      26 |
-| `milestone-badge.logic.test.ts`                | `hasDetails` interactivity gate                                        |       6 |
-| `timeline-dot.test.ts`                         | Rendering, done state, active-pulse attribute, click/keydown           |      12 |
-| `spine-connector.test.ts`                      | Year-boundary label, color variants, prop passthrough                  |       7 |
-| `timeline-two-column.column-placement.test.ts` | Milestone opposite-column structural invariant                         |       3 |
-| **Total**                                      |                                                                        | **130** |
+| File                                           | What it covers                                                                                                    |   Tests |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ------: |
+| `utils.test.ts`                                | Date parsing, phase sorting, overlap detection, month-index helpers                                               |      62 |
+| `phase-card.test.ts`                           | Variant, click/keyboard, expansion mode, status badges, platform strip, corner badge positioning, eye button WCAG, photos slot render regression |      65 |
+| `phase-warning-popover.test.ts`                | `parsePhaseRange`, `getConnectedOverlapGroup`, slider state, resolveOverlaps wiring                               |      26 |
+| `milestone-badge.interaction.test.ts`          | Card visibility, expand/collapse, keyboard, display-mode regressions                                              |      32 |
+| `timeline-two-column.tooltip.test.ts`          | Dot tooltip text, overdue label, active label, description preview                                                |      38 |
+| `milestone-badge.logic.test.ts`                | `hasDetails` interactivity gate, `displayTitle` three-level disclosure                                            |      19 |
+| `timeline-two-column.interaction.test.ts`      | `handleExpandMilestone`, `handleExpandPhaseCard`, `computeSlotHeights`, checklist `ms.done` initialization seeding regression |      20 |
+| `timeline-dot.test.ts`                         | Rendering, done state, active-pulse attribute, click/keydown                                                      |      17 |
+| `spine-connector.test.ts`                      | Year-boundary label, color variants, prop passthrough                                                             |      11 |
+| `milestone-badge.test.ts`                      | Readability minimum-size constants, eye button WCAG regression                                                    |       6 |
+| `phase-card.styles.test.ts`                    | `photoImgSx` factory — first-vs-subsequent margin, shared base styles, regression lock                            |       4 |
+| `timeline-two-column.sort.test.ts`             | `sortOrder='key'` chronological sort                                                                              |       4 |
+| `timeline-two-column.column-placement.test.ts` | Milestone opposite-column structural invariant                                                                    |       3 |
+| **Total**                                      |                                                                                                                   | **307** |
 
 ---
 
@@ -504,12 +510,13 @@ milestones sit in the opposite column from their phase card.
 
 ## Storybook cross-reference
 
-| Story                             | Key behaviors to verify                                                                                                                                     |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `TimelineTwoColumn/ReadOnly`      | Left/right alternation, active phase pulsing, done checkmarks, milestone placement, platform icon chips, card expand/collapse on click, keyboard navigation |
-| `TimelineTwoColumn/ChecklistMode` | Click phase/milestone dots to toggle done; undone past-due items highlight automatically                                                                    |
-| `TimelineTwoColumn/Responsive`    | Layout at xs/sm/md/lg breakpoints — no overflow at narrow widths                                                                                            |
-| `TimelineDot/AllColors`           | All 6 palette keys × done/active/default states — color rendering, checkmark, pulse attribute                                                               |
+| Story                               | Key behaviors to verify                                                                                                                                     |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TimelineTwoColumn/ReadOnly`        | Left/right alternation, active phase pulsing, done checkmarks, milestone placement, platform icon chips, card expand/collapse on click, keyboard navigation |
+| `TimelineTwoColumn/ChecklistMode`   | Click phase/milestone dots to toggle done; undone past-due items highlight automatically                                                                    |
+| `TimelineTwoColumn/Responsive`      | Layout at xs/sm/md/lg breakpoints — no overflow at narrow widths                                                                                            |
+| `TimelineDot/AllColors`             | All 6 palette keys × done/active/default states — color rendering, checkmark, pulse attribute                                                               |
+| `TimelineTwoColumn/PhotosArraySlot` | Multiple photos stack vertically inside a card; `photo` (singular) normalises to a single-element array; `photos` wins when both fields are present         |
 
 ---
 

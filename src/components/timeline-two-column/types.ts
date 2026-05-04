@@ -172,10 +172,18 @@ export type TimelinePhase = {
    */
   hideDecoration?: boolean;
   /**
-   * Optional personal photo rendered as a small rounded thumbnail below the description.
+   * Optional personal photo displayed as a block image at `maxWidth: 200px` below the description.
    * Use for historic snapshots, childhood photos, or other memorable moments on the timeline.
+   * For a single photo. Use `photos` when you have more than one.
    */
   photo?: { src: string; alt: string };
+  /**
+   * Multiple personal photos rendered as stacked thumbnails below the description.
+   * Each photo is displayed as a rounded block image at `maxWidth: 200px`.
+   * Use when you have two or more photos for the same moment. Takes precedence over `photo`
+   * when both are provided.
+   */
+  photos?: Array<{ src: string; alt: string }>;
   /**
    * Text alignment for card content. Defaults to `'left'` regardless of which column the card
    * sits in. Set to `'right'` from the data layer when right-aligned content is intentional.

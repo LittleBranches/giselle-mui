@@ -9,7 +9,7 @@
 // ----------------------------------------------------------------------
 
 /**
- * Produces an `rgba(channel / alpha)` string from a CSS-variable channel value.
+ * Produces an `rgba(channel / alpha)` string from a MUI v7 CSS-variable channel value.
  *
  * MUI v7 CSS Variables mode exposes palette colours as space-separated RGB
  * channels (e.g. `theme.vars.palette.primary.mainChannel → "99 102 241"`).
@@ -31,11 +31,11 @@
  * @example
  * ```tsx
  * sx={(theme) => ({
- *   backgroundColor: varAlpha(theme.vars.palette.primary.mainChannel, 0.08),
+ *   backgroundColor: channelAlpha(theme.vars.palette.primary.mainChannel, 0.08),
  * })}
  * ```
  */
-export function varAlpha(channel: string, alpha: number): string {
+export function channelAlpha(channel: string, alpha: number): string {
   return `rgba(${channel} / ${alpha})`;
 }
 
@@ -46,8 +46,8 @@ export function varAlpha(channel: string, alpha: number): string {
  * compatible with MUI v7 CSS Variables palette channels.
  *
  * Use this when you need to define a custom colour in a theme that uses
- * `varAlpha` for tinting. The output can be stored as a custom channel and
- * passed to `varAlpha`.
+ * `channelAlpha` for tinting. The output can be stored as a custom channel and
+ * passed to `channelAlpha`.
  *
  * @param hex - A 6-digit hex colour string with or without the `#` prefix,
  *   e.g. `"#6366f1"` or `"6366f1"`.
@@ -56,20 +56,20 @@ export function varAlpha(channel: string, alpha: number): string {
  *
  * @example
  * ```ts
- * const channel = createPaletteChannel('#6366f1'); // "99 102 241"
- * varAlpha(channel, 0.08);                         // "rgba(99, 102, 241, 0.08)"
+ * const channel = hexToChannel('#6366f1'); // "99 102 241"
+ * channelAlpha(channel, 0.08);             // "rgba(99 102 241 / 0.08)"
  * ```
  */
-export function createPaletteChannel(hex: string): string {
+export function hexToChannel(hex: string): string {
   const clean = hex.startsWith('#') ? hex.slice(1) : hex;
   if (clean.length !== 6) {
-    throw new Error(`createPaletteChannel: expected a 6-digit hex value, got "${hex}"`);
+    throw new Error(`hexToChannel: expected a 6-digit hex value, got "${hex}"`);
   }
   const r = Number.parseInt(clean.slice(0, 2), 16);
   const g = Number.parseInt(clean.slice(2, 4), 16);
   const b = Number.parseInt(clean.slice(4, 6), 16);
   if (Number.isNaN(r) || Number.isNaN(g) || Number.isNaN(b)) {
-    throw new Error(`createPaletteChannel: invalid hex value "${hex}"`);
+    throw new Error(`hexToChannel: invalid hex value "${hex}"`);
   }
   return `${r} ${g} ${b}`;
 }

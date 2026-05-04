@@ -330,6 +330,6 @@ This is a one-import swap. The context shape is identical.
 
 ## Related docs
 
-- [`docs/theming/roadmap.md`](../theming/roadmap.md) — Phase D milestone table
+- [`docs/roadmap.md`](../roadmap.md) — Phase D milestone table
 - [`docs/theming/nextjs.md`](../theming/nextjs.md) — consumer wiring guide
 - `alexrebula/docs/roadmap.md` — Phase 1.5 extraction milestone

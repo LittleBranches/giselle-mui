@@ -20,6 +20,24 @@ in this library exists because it solves a recurring problem that is either:
 - Vitest + jsdom for unit tests
 - Storybook for visual development and autodoc
 
+## Brand identity — the Giselle mango tree
+
+The Giselle ecosystem is named after the Filipino partner of the author. The Philippine national fruit is the Carabao mango — both the logo mark and the ecosystem metaphor.
+
+- **The tree** = shared foundation: design conventions, TypeScript patterns, test discipline
+- **Each branch** = a package (`giselle-mui`, `giselle-sections-sdk`, `giselle-ui`, `giselle-docs`)
+- **Each mango** = a release at its own ripeness stage
+
+Ripeness scale: 🟢 green = alpha · 🟡 yellow-green = beta · 🟠 golden = stable · 🟤 amber = LTS
+
+`giselle-mui` is the **yellow-green mango** — widest branch, most components, API stabilising.
+
+**Palette:** Mango gold `#F5A623` · Deep grove `#2E7D32` · Lime `#76C442` · Ripe flesh `#FFF3CD` · Dark grove `#1A2B1A` · Warm tan `#F5EDDC`
+
+**G lettermark:** The bowl of a capital G mirrors the elongated S-curve of a Carabao mango silhouette — readable as letter or fruit without labelling.
+
+**WC-6:** The planned wide hero illustration — watercolour mango tree with per-package label badges. See `alexrebula/docs/brand/logo-concept.md` Track A.
+
 ## Component rules (non-negotiable)
 
 0. **Zero personal data.** Stories, tests, JSDoc examples, and README code snippets must
@@ -98,7 +116,7 @@ that saves every consumer from rediscovering it? If not, it should not be in thi
   milestones, and all expandable sub-information in full parity with the markdown source.
 
 - **Roadmap hierarchy bubble-up rule** — also defined in the `alexrebula` copilot instructions.
-  When a phase or milestone in `giselle-mui/docs/theming/roadmap.md` is completed or its date
+  When a phase or milestone in `giselle-mui/docs/roadmap.md` is completed or its date
   changes, the corresponding summary entry in `alexrebula/docs/roadmap.md` (Phase 1.5) and its
   `data.tsx` mirror must be updated in the same commit. The child roadmap is the source of
   truth for its own content; the ancestor holds a summary + link only, never a duplicate task list.
@@ -113,7 +131,7 @@ library as its own thing. When updating or writing docs:
   or a copyright boundary.
 - Do not frame utilities or patterns as "what Minimals does" — describe what the
   utility does, independently.
-- The one-liner `varAlpha` helper is a standard MUI v7 pattern; it does not need
+- The one-liner `channelAlpha` helper is a standard MUI v7 pattern; it does not need
   to be attributed to any theme kit every time it appears.
 
 ## Session bootstrap: where Copilot should look first
@@ -122,7 +140,7 @@ At the start of every new Copilot session in this package, read these files:
 
 | File                                                                      | Purpose                                                                                                        |
 | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [`docs/theming/roadmap.md`](../docs/theming/roadmap.md)                   | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
+| [`docs/roadmap.md`](../docs/roadmap.md)                   | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
 | [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md) | Full plan for `RoadmapTimeline` — next component to build                                                      |
 | [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                     | How to wire this library into a Next.js app                                                                    |
 
@@ -137,14 +155,14 @@ At the start of every new Copilot session in this package, read these files:
 | `createIconRegistrar`                 | `src/utils/create-icon-registrar.ts`  | ✅ Shipped + tested |
 | `TimelineTwoColumn`                   | `src/components/timeline-two-column/` | ✅ Shipped + tested |
 | `IconActionBar`                       | `src/components/icon-action-bar/`     | ✅ Shipped + tested |
+| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts` | ✅ Shipped + tested (Phase A — 4 May 2026) |
 
 ### Next planned work (priority order)
 
-1. **Phase A theme utilities** — `varAlpha`, `createPaletteChannel`, `pxToRem` / `remToPx` in `src/utils/`. Prerequisite for Phase B and C. See `docs/theming/roadmap.md` Phase A table.
-2. **Phase B — Giselle brand theme preset** — define the Giselle green + amber palette as `giselleTheme` using `extendTheme()`. Export from `src/index.ts`. See `docs/theming/roadmap.md` Phase B.
-3. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/theming/roadmap.md` Phase C.
-4. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
-5. **RoadmapTimeline component** — requires Phase A first. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
+1. **Phase B — Giselle brand theme preset** — define the Giselle green + amber palette as `giselleTheme` using `extendTheme()`. Export from `src/index.ts`. See `docs/roadmap.md` Phase B.
+2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C.
+3. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
+4. **RoadmapTimeline component** — Phase A prerequisite (`channelAlpha`) is now met. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
 
 ### Additional allowed peer dependencies
 
@@ -179,6 +197,25 @@ Current required entries (keep in sync with `package.json`):
 - `@mui/lab`
 - `@emotion/react`, `@emotion/styled`
 - `@iconify/react`
+
+---
+
+## Git workflow rule — non-negotiable, no exceptions
+
+**Never push directly to `main`. Every change goes through a branch and a pull request.**
+
+```sh
+# ✅ correct — always
+git checkout -b feature/my-change
+# ... make changes ...
+git push origin feature/my-change
+# then open a PR on GitHub
+
+# ❌ forbidden — never
+git push origin main
+```
+
+This applies to all changes: code, docs, config, copilot-instructions. No exceptions.
 
 ---
 
@@ -341,6 +378,74 @@ A Storybook story file is created **only when seeing the component in isolation 
 Use `argTypes: { control: false }` for `ReactNode` and `SxProps` slots. Every story that demonstrates colour variants must include all six palette keys: `primary`, `secondary`, `info`, `success`, `warning`, `error`.
 
 Every exported component must have a `Responsive` story that renders the component inside labeled containers at each MUI standard breakpoint width: xs (360px), sm (600px), md (900px), lg (1200px). Use `parameters: { layout: 'padded' }` on these stories. For grid-based components (cards in a collection), the column count should increase with width. Named component helpers are required when the story uses React hooks.
+
+### `*.styles.ts` companion files for sx extraction (enforce always)
+
+Inline `sx` objects that span more than ~3 properties must be extracted to a co-located `<component-name>.styles.ts` file. This makes components scannable and the style logic independently testable.
+
+**Pattern — non-negotiable:**
+
+```ts
+// phase-card.styles.ts
+import type { SxProps, Theme } from '@mui/material/styles';
+import { channelAlpha } from '../../utils/theme-utils';
+
+// Static sx — no runtime args needed
+export const cornerBadgeSx: SxProps<Theme> = (theme) => ({
+  boxShadow: `0 2px 6px ${channelAlpha(theme.vars!.palette.grey['900Channel'], 0.3)}`,
+});
+
+// Dynamic sx — takes component props as args, returns SxProps
+export const paperSx =
+  (done: boolean): SxProps<Theme> =>
+  (theme) => ({
+    opacity: done ? 0.6 : 1,
+    transition: theme.transitions.create('opacity'),
+  });
+```
+
+Then in the component: `sx={cornerBadgeSx}` or `sx={paperSx(done)}` — one token instead of 8 lines.
+
+**File naming:** `<component-name>.styles.ts` — plain `.ts`, not `.tsx`. These files contain no JSX.
+
+**Testing — mandatory:** Every `*.styles.ts` file must have a companion `*.styles.test.ts`. An `SxProps<Theme>` function is just `(theme: Theme) => CSSObject` — call it with a minimal mock theme and assert the returned object:
+
+```ts
+// phase-card.styles.test.ts
+// @vitest-environment jsdom
+import { describe, it, expect } from 'vitest';
+import { cornerBadgeSx, paperSx } from './phase-card.styles';
+import type { Theme } from '@mui/material/styles';
+
+const mockTheme = {
+  vars: { palette: { grey: { '900Channel': '33 43 54' } } },
+  transitions: { create: () => 'opacity 300ms' },
+} as unknown as Theme;
+
+describe('cornerBadgeSx', () => {
+  it('returns expected box-shadow using theme channel', () => {
+    const styles = (cornerBadgeSx as Function)(mockTheme);
+    expect(styles.boxShadow).toBe('0 2px 6px rgba(33 43 54 / 0.3)');
+  });
+});
+
+describe('paperSx', () => {
+  it('sets opacity 0.6 when done=true', () => {
+    expect((paperSx(true) as Function)(mockTheme).opacity).toBe(0.6);
+  });
+  it('sets opacity 1 when done=false', () => {
+    expect((paperSx(false) as Function)(mockTheme).opacity).toBe(1);
+  });
+});
+```
+
+**Regression tests for critical style rules:** Any style value that encodes a non-obvious design or accessibility decision (minimum size, required channel reference, WCAG contrast formula) must have a dedicated regression test that fails if the value is changed to something wrong. Do not leave these values guarded only by code review.
+
+**Enforcement checklist — run whenever a component file is edited:**
+
+1. Any new `sx={}` with more than ~3 properties → move to the styles file immediately
+2. Any existing inline `sx={}` touched during the edit → extract it at the same time (no mixed state)
+3. After extraction → run the styles test file to confirm the mock-theme assertions still pass
 
 ### Preferred `.dataset` over `getAttribute` in tests
 

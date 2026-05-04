@@ -9,6 +9,16 @@ Built on `@mui/material` v7 (CSS variables mode). TypeScript-first. MIT licensed
 
 ---
 
+## The mango tree
+
+The Giselle packages are a Philippine mango tree. The trunk is the shared foundation — design conventions, TypeScript patterns, test discipline — that all packages grow from. Each package is one mango on the tree, at its own stage of ripeness.
+
+`giselle-mui` is the **yellow-green mango** 🟡 — the API is stabilising, components are tested and documented, and the first stable release is close. It is the widest branch on the tree: MUI wrapper components that encode non-obvious design and accessibility decisions so every consumer gets them right without rediscovering them.
+
+Ripeness scale: 🟢 alpha → 🟡 beta → 🟠 stable → 🟤 LTS.
+
+---
+
 ## Status
 
 > **Beta — active development. Not yet published to npm.**
@@ -80,7 +90,7 @@ Full integration guides:
 | `SelectableCard`                                  | Clickable card on `ButtonBase` — correct `aria-pressed`, keyboard focus ring, and hover state without rediscovering the `Paper onClick` pitfall. |
 | `QuoteCard`                                       | Testimonial card with CSS-var tinted border and conditional attribution row.                                                                     |
 | `TimelineTwoColumn` + `PhaseCard` + `TimelineDot` | Two-column alternating timeline for career or roadmap layouts — phase cards, milestone badges, animated active dot, checklist mode.              |
-| `IconActionBar`                                   | Horizontal row of `Tooltip` + `IconButton` pairs — encodes the disabled-child `<span>` wrapper pattern so tooltips work on disabled buttons.    |
+| `IconActionBar`                                   | Horizontal row of `Tooltip` + `IconButton` pairs — encodes the disabled-child `<span>` wrapper pattern so tooltips work on disabled buttons.     |
 
 **Full API documentation, prop tables, and live examples → [Storybook](./storybook-static/index.html)** (build locally with `npm run build-storybook`, then open the generated file)
 
@@ -233,16 +243,16 @@ Full workflow, publishing steps, and the reasoning behind yalc:
 
 ## Roadmap
 
-| Phase                    | Status     | Description                                                                                                          |
-| ------------------------ | ---------- | -------------------------------------------------------------------------------------------------------------------- |
-| Core components          | ✅ Done    | `GiselleIcon`, `MetricCard`, `SelectableCard`, `QuoteCard`, `TimelineTwoColumn` — all with unit tests + READMEs      |
-| Storybook stories        | ✅ Done    | Stories shipped for all components. Deployed locally; public hosting planned.                                        |
-| Phase A theme utilities  | ⬜ Planned | `varAlpha`, `createPaletteChannel`, `pxToRem`/`remToPx` — see [`docs/theming/roadmap.md`](./docs/theming/roadmap.md) |
-| npm publish              | ⬜ Planned | Alongside portfolio launch, May/June 2026                                                                            |
-| Additional components    | ⬜ Planned | Components extracted from portfolio patterns as they meet the extraction checklist                                   |
-| Storybook public hosting | ⬜ Planned | Chromatic or self-hosted, cross-linked from Docusaurus                                                               |
+| Phase                    | Status     | Description                                                                                                     |
+| ------------------------ | ---------- | --------------------------------------------------------------------------------------------------------------- |
+| Core components          | ✅ Done    | `GiselleIcon`, `MetricCard`, `SelectableCard`, `QuoteCard`, `TimelineTwoColumn` — all with unit tests + READMEs |
+| Storybook stories        | ✅ Done    | Stories shipped for all components. Deployed locally; public hosting planned.                                   |
+| Phase A theme utilities  | ✅ Done    | `channelAlpha`, `hexToChannel`, `pxToRem`/`remToPx` — see [`docs/roadmap.md`](./docs/roadmap.md)                |
+| npm publish              | ⬜ Planned | Alongside portfolio launch, May/June 2026                                                                       |
+| Additional components    | ⬜ Planned | Components extracted from portfolio patterns as they meet the extraction checklist                              |
+| Storybook public hosting | ⬜ Planned | Chromatic or self-hosted, cross-linked from Docusaurus                                                          |
 
-Full detail: [`docs/theming/roadmap.md`](./docs/theming/roadmap.md)
+Full detail: [`docs/roadmap.md`](./docs/roadmap.md)
 
 ---
 

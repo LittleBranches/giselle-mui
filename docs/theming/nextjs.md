@@ -108,16 +108,13 @@ export { MetricCard, MetricCardDecoration } from '@alexrebula/giselle-mui';
 
 ```tsx
 // app/page.tsx  (Server Component)
-import { MetricCardClient as MetricCard, MetricCardDecoration } from '../components/MetricCardClient';
+import {
+  MetricCard,
+  MetricCardDecoration,
+} from '../components/MetricCardClient';
 
 export default function Page() {
-  return (
-    <MetricCard
-      value="20+"
-      label="Years"
-      icon={<MetricCardDecoration color="primary" />}
-    />
-  );
+  return <MetricCard value="20+" label="Years" icon={<MetricCardDecoration color="primary" />} />;
 }
 ```
 
@@ -207,7 +204,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
 `@alexrebula/giselle-mui` exports a set of small helpers for building MUI v7 themes:
 
-### `varAlpha(channel, alpha)`
+### `channelAlpha(channel, alpha)`
 
 Converts a CSS-variable palette channel to an `rgba()` CSS string using CSS Color 4
 slash syntax. MUI v7 exposes colours as space-separated RGB channels
@@ -215,21 +212,21 @@ slash syntax. MUI v7 exposes colours as space-separated RGB channels
 literal channel strings and CSS `var()` references.
 
 ```ts
-import { varAlpha } from '@alexrebula/giselle-mui';
+import { channelAlpha } from '@alexrebula/giselle-mui';
 
 sx={(theme) => ({
-  backgroundColor: varAlpha(theme.vars.palette.primary.mainChannel, 0.08),
+  backgroundColor: channelAlpha(theme.vars.palette.primary.mainChannel, 0.08),
   // → "rgba(99 102 241 / 0.08)"
 })}
 ```
 
-### `createPaletteChannel(hex)`
+### `hexToChannel(hex)`
 
 Converts a hex colour to a space-separated RGB channel string — the format MUI v7
 expects for `*Channel` palette slots in `extendTheme()`.
 
 ```ts
-import { createPaletteChannel } from '@alexrebula/giselle-mui';
+import { hexToChannel } from '@alexrebula/giselle-mui';
 
 const theme = extendTheme({
   colorSchemes: {
@@ -237,7 +234,7 @@ const theme = extendTheme({
       palette: {
         primary: {
           main: '#6366f1',
-          mainChannel: createPaletteChannel('#6366f1'), // "99 102 241"
+          mainChannel: hexToChannel('#6366f1'), // "99 102 241"
         },
       },
     },
@@ -252,8 +249,8 @@ Typography scale helpers for consistent `rem` definitions.
 ```ts
 import { pxToRem, remToPx } from '@alexrebula/giselle-mui';
 
-pxToRem(14)     // "0.875rem"
-remToPx(0.875)  // 14
+pxToRem(14); // "0.875rem"
+remToPx(0.875); // 14
 ```
 
 ---
