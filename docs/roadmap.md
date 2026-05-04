@@ -5,7 +5,7 @@ sidebar_label: 'Roadmap'
 
 # @alexrebula/giselle-mui — Roadmap
 
-> This file is the source of truth for the giselle-mui library build. It covers theme utilities (Phases A–D), components, and extraction candidates. Summary entries for completed phases bubble up to [`alexrebula/docs/roadmap.md`](https://github.com/AlexRebula/rm/blob/main/presentation/alexrebula/docs/roadmap.md) Phase 1.5.
+> This file is the source of truth for the giselle-mui library build. It covers theme utilities (Phases A–D), components, and extraction candidates. Summary entries for completed phases bubble up to `alexrebula/docs/roadmap.md` Phase 1.5 (private companion repo — not linkable from here).
 
 ---
 

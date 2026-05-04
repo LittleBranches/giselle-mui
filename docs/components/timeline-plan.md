@@ -48,12 +48,12 @@ The reference implementation in the private portfolio (`alexrebula`) has been sp
 
 Planned variants (portfolio → giselle-mui extraction candidates):
 
-| Variant                                              | giselle-mui candidate? | Status                                                               |
-| ---------------------------------------------------- | ---------------------- | -------------------------------------------------------------------- |
-| `TimelineTwoColumn` (base, vertical alternating)     | ✅ Yes                 | ✅ Shipped — `src/components/timeline-two-column/`                    |
-| `TimelineHorizontal` (click/swipe, horizontal track) | ✅ Yes                 | ⬜ Not started                                                       |
-| `TimelineCompact` (single-column, mobile/sidebar)    | ✅ Yes                 | ⬜ Not started                                                       |
-| `TimelineAnimated` (Framer Motion + parallax)        | ❌ No                  | `framer-motion` is not an allowed giselle-mui peer dep               |
+| Variant                                              | giselle-mui candidate? | Status                                                 |
+| ---------------------------------------------------- | ---------------------- | ------------------------------------------------------ |
+| `TimelineTwoColumn` (base, vertical alternating)     | ✅ Yes                 | ✅ Shipped — `src/components/timeline-two-column/`     |
+| `TimelineHorizontal` (click/swipe, horizontal track) | ✅ Yes                 | ⬜ Not started                                         |
+| `TimelineCompact` (single-column, mobile/sidebar)    | ✅ Yes                 | ⬜ Not started                                         |
+| `TimelineAnimated` (Framer Motion + parallax)        | ❌ No                  | `framer-motion` is not an allowed giselle-mui peer dep |
 
 **The `TimelinePhase` type is the stable public API.** Extend additively (optional fields only). All variants accept `phases: TimelinePhase[]`.
 
@@ -226,21 +226,21 @@ depends on `TimelineTwoColumn` being in a clean, well-structured state first.
 
 ### Required before RoadmapTimeline can begin
 
-| Task | Why it matters |
-|---|---|
-| Extract all multi-property `sx` objects to `*.styles.ts` files | Reduces component file sizes; makes sx independently testable; prevents drift when multiple variants share the same visual rule |
-| Fix cognitive complexity in `phase-card.tsx` (currently 17 → must be ≤ 15) | Sonar gate will block the quality check on any file that shares logic with this one |
-| JSDoc pass on all exported functions and prop interfaces | `RoadmapTimeline` will export types; consistent JSDoc level across the component family is required before that |
-| ✅ Wire `onPhasesChange` controlled-mode prop to `TimelineTwoColumn` root | Done — wired in `feature/phase-warning-popover`. `TimelineTwoColumn` passes `allPhases` down to `PhaseCard`. |
-| ✅ Wire `PhaseWarningPopover` into `PhaseCard` | Done — `PhaseCard` renders `PhaseWarningPopover` in controlled mode when `onPhasesChange` is provided. |
-| Complete the CareerTimeline UX polish list (alexrebula Phase 1.2) | The final real-world usage pass that will surface any remaining rough edges before the primitive split |
+| Task                                                                       | Why it matters                                                                                                                  |
+| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Extract all multi-property `sx` objects to `*.styles.ts` files             | Reduces component file sizes; makes sx independently testable; prevents drift when multiple variants share the same visual rule |
+| Fix cognitive complexity in `phase-card.tsx` (currently 17 → must be ≤ 15) | Sonar gate will block the quality check on any file that shares logic with this one                                             |
+| JSDoc pass on all exported functions and prop interfaces                   | `RoadmapTimeline` will export types; consistent JSDoc level across the component family is required before that                 |
+| ✅ Wire `onPhasesChange` controlled-mode prop to `TimelineTwoColumn` root  | Done — wired in `feature/phase-warning-popover`. `TimelineTwoColumn` passes `allPhases` down to `PhaseCard`.                    |
+| ✅ Wire `PhaseWarningPopover` into `PhaseCard`                             | Done — `PhaseCard` renders `PhaseWarningPopover` in controlled mode when `onPhasesChange` is provided.                          |
+| Complete the CareerTimeline UX polish list (alexrebula Phase 1.2)          | The final real-world usage pass that will surface any remaining rough edges before the primitive split                          |
 
 ### Why the order matters
 
 1. **Styles extraction first** — makes the components scannable and lets you see clearly what logic is shared vs. component-specific before the split.
 2. **Cognitive complexity fix second** — can't pass the quality gate on the styles test files until the parent component itself passes.
 3. **JSDoc pass third** — once the files are clean and scannable, documenting them is fast. Doing it on messy files wastes time.
-4. **Wire the two un-wired features fourth** — they are already built; wiring them is low-risk and closes the loop on the current feature branch.
+4. ~~**Wire the two un-wired features fourth**~~ — both `onPhasesChange` and `PhaseWarningPopover` integration are now shipped. This step is complete.
 5. **UX polish last** — the final consumer feedback pass. Changes here may touch the same files; doing it after the cleanup avoids re-cleaning.
 
 ---
@@ -285,6 +285,7 @@ export default {
 The following are all shipped and fully tested:
 
 **`utils.ts`:**
+
 - `detectPhaseOverlaps(phases)` — identifies phases whose date ranges intersect; wired into `TimelineTwoColumn` via `overlappingKeys`; each conflicting card shows a `⚠ Date overlap` corner badge
 - `resolveOverlaps(phases)` — pure function that shifts conflicting phases to be end-to-end sequential (preserves phase order, does not compress durations)
 - `dateToMonthIndex(dateStr)` — converts a `'Mon YYYY'` string to a 0-based integer month index
@@ -292,6 +293,7 @@ The following are all shipped and fully tested:
 - `sortMilestonesAsc` / `sortMilestonesDesc` — milestone sort helpers
 
 **`phase-warning-popover.tsx`** (internal — not exported from barrel):
+
 - `parsePhaseRange(phase)` — resolves a phase's date string to `{ startIdx, endIdx }`; returns `null` for year-only strings to avoid silently rewriting imprecise dates
 - `getConnectedOverlapGroup(phases, startKey)` — BFS from the triggering phase to collect its connected overlap cluster; unrelated overlaps elsewhere on the timeline are excluded
 - `PhaseWarningPopover` component — MUI `Popper` + `Paper` + `ClickAwayListener` with stacked colored range sliders, a mini timeline ruler, and a "Make sequential" button. Apply/Cancel buttons confirm before pushing `onPhasesChange`.
@@ -309,5 +311,5 @@ The corner badge, tooltip, detection, and the full repair UI are functional and 
 ## Related
 
 - [roadmap.md](../roadmap.md) — Phase A (`channelAlpha` utility) shipped 4 May 2026; Phases B/C pending
-- [alexrebula docs/roadmap.md](https://github.com/AlexRebula/rm/blob/main/presentation/alexrebula/docs/roadmap.md) — milestone tracking
+- `alexrebula/docs/roadmap.md` — milestone tracking (private companion repo — not linkable from here)
 - `alexrebula/src/sections/career-timeline/` — reference implementation in production (private repo, do not copy code)

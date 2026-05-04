@@ -2,9 +2,14 @@
 
 ## Summary
 
-Extends `TimelinePhase` with a `photos?: Array<{ src: string; alt: string }>` field so a single timeline card can display more than one photo. The existing `photo` (singular) field is preserved for backward compatibility.
+Extends `TimelinePhase` with a new public `photos?: Array<{ src: string; alt: string }>` field so a single timeline card can display more than one photo. The existing `photo` (singular) field is preserved for backward compatibility — no consumer changes required.
 
-Also adds the git workflow rule to `.github/copilot-instructions.md`.
+Also ships:
+
+- Phase A theme utility docs, roadmap updates, and contributor guidelines (copilot-instructions)
+- Git workflow rule (no direct pushes to `main`)
+- `*.styles.ts` extraction pattern and enforcement checklist
+- Storybook telemetry disabled for firewall-safe CI
 
 ---
 
@@ -62,12 +67,16 @@ Added the permanent git workflow rule:
 
 ## Testing
 
-Regression tests added to `phase-card.test.ts`:
+`resolvePhotoSources` and `buildPhotoNodes` are exported from `phase-card.tsx` (same pattern as `derivePlatformEntry`/`buildPlatformStripItems`) so tests exercise the real production code path — not a mirror of the inline expression.
 
-- `photos` array produces one image element per entry
-- `photo` (singular) is normalised to a single-element array so the render path is identical
-- `photos` takes precedence over `photo` when both fields are present
-- Neither field present → renders nothing
+Regression tests in `phase-card.test.ts`:
+
+- `photos` array produces one entry per photo (`resolvePhotoSources`)
+- `photo` (singular) is normalised to a single-element array (`resolvePhotoSources`)
+- `photos` takes precedence over `photo` when both are present (`resolvePhotoSources`)
+- Neither field present → returns null (`resolvePhotoSources`)
+- Render-level: `buildPhotoNodes` produces `<img>` elements with correct `src` and `alt`
+- Render-level: photos absent when `expanded=false`; present when `expanded=true`
 
 Styles extracted to `phase-card.styles.ts` (`photoImgSx` factory), tested in
 `phase-card.styles.test.ts` with a minimal mock theme.
@@ -78,7 +87,7 @@ All checks pass:
 ✅ Prettier
 ✅ ESLint
 ✅ tsc --noEmit
-✅ Vitest (267 tests)
+✅ Vitest (395 tests)
 ✅ tsup build
 ✅ Storybook build
 ```
