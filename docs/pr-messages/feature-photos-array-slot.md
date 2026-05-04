@@ -62,7 +62,15 @@ Added the permanent git workflow rule:
 
 ## Testing
 
-No new unit tests required for this change — the render logic is a simple conditional normalisation with no branching business logic. The existing `phase-card` render tests cover the photo slot indirectly via `renderToStaticMarkup`.
+Regression tests added to `phase-card.test.ts`:
+
+- `photos` array produces one image element per entry
+- `photo` (singular) is normalised to a single-element array so the render path is identical
+- `photos` takes precedence over `photo` when both fields are present
+- Neither field present → renders nothing
+
+Styles extracted to `phase-card.styles.ts` (`photoImgSx` factory), tested in
+`phase-card.styles.test.ts` with a minimal mock theme.
 
 All checks pass:
 

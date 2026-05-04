@@ -31,7 +31,7 @@ from `@alexrebula/giselle-mui`:
 import { channelAlpha, hexToChannel, pxToRem, remToPx } from '@alexrebula/giselle-mui';
 ```
 
-See [`theming-nextjs.md`](./theming-nextjs.md) for full usage examples and integration guide.
+See [`theming/nextjs.md`](./theming/nextjs.md) for full usage examples and integration guide.
 
 ---
 

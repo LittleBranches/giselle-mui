@@ -187,4 +187,4 @@ coming in a future MUI v7 minor release.
 
 ---
 
-See also: [Next.js](./theming-nextjs.md)
+See also: [Next.js](./nextjs.md)

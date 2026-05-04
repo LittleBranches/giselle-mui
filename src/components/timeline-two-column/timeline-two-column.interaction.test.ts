@@ -242,3 +242,81 @@ describe('computeSlotHeights — slot height invariant (regression: Bug 3 expand
     expect(expandedResult['1']).toBe(316); // 300 + 16 — the Bug 3 value that caused the layout shift
   });
 });
+
+// ---------------------------------------------------------------------------
+// Checklist msDone initialization — seeds from ms.done before first toggle
+// ---------------------------------------------------------------------------
+
+/**
+ * Mirrors the localMilestoneDone useState initializer in timeline-two-column.tsx:
+ *
+ *   useState<Record<string, boolean>>(() => {
+ *     const m: Record<string, boolean> = {};
+ *     phases.forEach((p) =>
+ *       p.milestones?.forEach((ms, i) => { m[`${p.key}-${i}`] = ms.done ?? false; })
+ *     );
+ *     return m;
+ *   })
+ *
+ * And the resolver:
+ *   const msDone = checklist
+ *     ? (localMilestoneDone[key] ?? ms.done ?? false)
+ *     : (ms.done ?? false);
+ */
+function seedMilestoneDoneMap(
+  phases: Array<{ key: number; milestones?: Array<{ done?: boolean }> }>
+): Record<string, boolean> {
+  const m: Record<string, boolean> = {};
+  phases.forEach((p) =>
+    p.milestones?.forEach((ms, i) => {
+      m[`${p.key}-${i}`] = ms.done ?? false;
+    })
+  );
+  return m;
+}
+
+function resolveMsDone(
+  localMap: Record<string, boolean>,
+  key: string,
+  ms: { done?: boolean },
+  checklist: boolean
+): boolean {
+  return checklist ? (localMap[key] ?? ms.done ?? false) : (ms.done ?? false);
+}
+
+describe('[regression] checklist msDone initialization from ms.done', () => {
+  it('milestone with done: true is seeded as true in the local map', () => {
+    const map = seedMilestoneDoneMap([{ key: 1, milestones: [{ done: true }, { done: false }] }]);
+    expect(map['1-0']).toBe(true);
+    expect(map['1-1']).toBe(false);
+  });
+
+  it('milestone with done: false is seeded as false in the local map', () => {
+    const map = seedMilestoneDoneMap([{ key: 2, milestones: [{ done: false }] }]);
+    expect(map['2-0']).toBe(false);
+  });
+
+  it('milestone with no done field defaults to false', () => {
+    const map = seedMilestoneDoneMap([{ key: 3, milestones: [{}] }]);
+    expect(map['3-0']).toBe(false);
+  });
+
+  it('[regression] checklist mode returns true from seeded map (not always false)', () => {
+    // Before the fix (commit 5a26a68), localMilestoneDone was initialised with
+    // `ms.done ?? false` for the seed but resolveMilestoneState used
+    // `localMilestoneDone[key] ?? false` — dropping the ms.done fallback.
+    // A milestone with done: true would show as unchecked until toggled.
+    const map = seedMilestoneDoneMap([{ key: 4, milestones: [{ done: true }] }]);
+    const result = resolveMsDone(map, '4-0', { done: true }, true);
+    expect(result).toBe(true);
+  });
+
+  it('non-checklist mode reads ms.done directly — local map is ignored', () => {
+    // In read-only mode (checklist: false), done state comes from the data only.
+    const map = seedMilestoneDoneMap([{ key: 5, milestones: [{ done: false }] }]);
+    // Even if local map says true, non-checklist mode reads ms.done
+    map['5-0'] = true; // simulate a toggled-but-not-in-checklist-mode state
+    const result = resolveMsDone(map, '5-0', { done: false }, false);
+    expect(result).toBe(false);
+  });
+});

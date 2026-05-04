@@ -23,6 +23,7 @@ import Typography from '@mui/material/Typography';
 import { pulseDot } from './animations';
 import { GiselleIcon } from '../giselle-icon/giselle-icon';
 import { DEFAULT_EXPANDABLE_ICON } from './icons';
+import { photoImgSx } from './phase-card.styles';
 
 // ----------------------------------------------------------------------
 
@@ -935,23 +936,7 @@ export function PhaseCard({
             )}
 
             {(phase.photos ?? (phase.photo ? [phase.photo] : null))?.map((p, i) => (
-              <Box
-                key={i}
-                component="img"
-                src={p.src}
-                alt={p.alt}
-                sx={{
-                  mt: i === 0 ? 2 : 1,
-                  width: '100%',
-                  maxWidth: 200,
-                  aspectRatio: '4/3',
-                  objectFit: 'cover',
-                  borderRadius: 1.5,
-                  border: '2px solid',
-                  borderColor: 'divider',
-                  display: 'block',
-                }}
-              />
+              <Box key={i} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
             ))}
 
             {/* Client logos */}

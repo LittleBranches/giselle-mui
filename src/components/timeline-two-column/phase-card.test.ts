@@ -671,3 +671,59 @@ describe('footer slot — stopPropagation invariant', () => {
     expect(shouldRender(null)).toBe(false);
   });
 });
+
+// ---------------------------------------------------------------------------
+// photos slot — render path and precedence (regression)
+// ---------------------------------------------------------------------------
+
+/**
+ * Mirror of the inline expression in phase-card.tsx:
+ *   (phase.photos ?? (phase.photo ? [phase.photo] : null))
+ *
+ * This resolves the list of photos to render — `photos` wins when both fields
+ * are present; `photo` is normalised to a single-element array; neither → null.
+ */
+function resolvePhotoSources(phase: {
+  photo?: { src: string; alt: string };
+  photos?: Array<{ src: string; alt: string }>;
+}): Array<{ src: string; alt: string }> | null {
+  return phase.photos ?? (phase.photo ? [phase.photo] : null);
+}
+
+describe('photos slot — render path and precedence (regression)', () => {
+  it('photos array produces one entry per photo', () => {
+    const result = resolvePhotoSources({
+      photos: [
+        { src: '/a.jpg', alt: 'Photo A' },
+        { src: '/b.jpg', alt: 'Photo B' },
+      ],
+    });
+    expect(result).toHaveLength(2);
+    expect(result?.[0]).toEqual({ src: '/a.jpg', alt: 'Photo A' });
+    expect(result?.[1]).toEqual({ src: '/b.jpg', alt: 'Photo B' });
+  });
+
+  it('photo (singular) is normalised to a single-element array', () => {
+    const result = resolvePhotoSources({ photo: { src: '/c.jpg', alt: 'Photo C' } });
+    expect(result).toHaveLength(1);
+    expect(result?.[0]).toEqual({ src: '/c.jpg', alt: 'Photo C' });
+  });
+
+  it('[regression] photos takes precedence over photo when both are present', () => {
+    // If the ?? operator is ever flipped, `photo` would win and multi-photo
+    // cards would silently regress to showing a single image.
+    const result = resolvePhotoSources({
+      photo: { src: '/single.jpg', alt: 'Single' },
+      photos: [
+        { src: '/multi-a.jpg', alt: 'Multi A' },
+        { src: '/multi-b.jpg', alt: 'Multi B' },
+      ],
+    });
+    expect(result).toHaveLength(2);
+    expect(result?.[0]?.src).toBe('/multi-a.jpg');
+  });
+
+  it('neither field present → returns null (no images rendered)', () => {
+    expect(resolvePhotoSources({})).toBeNull();
+  });
+});

@@ -19,7 +19,7 @@ import { extendTheme, CssVarsProvider } from '@mui/material/styles';
 ```
 
 There are zero external theme utility imports in this package.
-See [`theming-nextjs.md`](./theming-nextjs.md) for the recommended setup in a new project.
+See [`nextjs.md`](./nextjs.md) for the recommended setup in a new project.
 
 ---
 
@@ -32,7 +32,7 @@ from `@alexrebula/giselle-mui`:
 import { channelAlpha, hexToChannel, pxToRem, remToPx } from '@alexrebula/giselle-mui';
 ```
 
-See [`theming-nextjs.md`](./theming-nextjs.md) for full usage examples and integration guide.
+See [`nextjs.md`](./nextjs.md) for full usage examples and integration guide.
 
 ---
 

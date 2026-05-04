@@ -515,7 +515,7 @@ milestones sit in the opposite column from their phase card.
 | `TimelineTwoColumn/ChecklistMode` | Click phase/milestone dots to toggle done; undone past-due items highlight automatically                                                                    |
 | `TimelineTwoColumn/Responsive`    | Layout at xs/sm/md/lg breakpoints — no overflow at narrow widths                                                                                            |
 | `TimelineDot/AllColors`           | All 6 palette keys × done/active/default states — color rendering, checkmark, pulse attribute                                                               |
-| `TimelineDot/ColumnSide`          | Corner badge floats on the outer edge (away from spine) for both left and right column cards                                                                |
+| `TimelineTwoColumn/PhotosArraySlot` | Multiple photos stack vertically inside a card; `photo` (singular) normalises to a single-element array; `photos` wins when both fields are present          |
 
 ---
 

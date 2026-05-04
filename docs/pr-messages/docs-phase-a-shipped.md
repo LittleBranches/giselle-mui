@@ -50,9 +50,9 @@ the rule unambiguous for contributors and Copilot sessions alike.
 ### Timeline component status
 
 - `TimelineTwoColumn` marked ✅ shipped in the component table.
-- Clarified what is already shipped in the phase-warning-popover work (overlap detection,
-  `PhaseWarningPopover`, internal helpers, full test coverage) vs what remains to be wired
-  (controlled-mode `onPhasesChange` prop, integration into `PhaseCard`).
+- Clarified what is shipped in the phase-warning-popover work: overlap detection,
+  `PhaseWarningPopover`, controlled-mode `onPhasesChange` prop, `PhaseCard` integration,
+  internal helpers, and full test coverage — all shipped.
 - Updated test coverage table: reflected new tests for helpers, popovers, and accessibility;
   corrected total test count.
 - Removed stale "blocked until Phase A" notes from components that are now unblocked.

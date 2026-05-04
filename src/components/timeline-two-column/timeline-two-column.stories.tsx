@@ -1042,3 +1042,95 @@ export const ControlledModeOverlapRepair: Story = {
     onPhasesChange: { control: false },
   },
 };
+
+/**
+ * **Design decision: `photos` array slot — vertical stacking, not a row**
+ *
+ * The `TimelinePhase.photos` field was added when two photos needed to appear
+ * on the same timeline card (e.g. front-view + back-view taken at the same moment).
+ * The original `photo` singular field only allowed one image per card, forcing a
+ * second timeline entry solely to display the second photo — which distorts
+ * chronology.
+ *
+ * ### Why vertical stacking, not a horizontal row
+ *
+ * A horizontal row of thumbnails would require either a fixed width per thumbnail or
+ * complex responsive handling. Phase cards are already width-constrained by their column.
+ * Vertical stacking is strictly simpler and scales naturally to any number of photos.
+ *
+ * ### Precedence rule
+ *
+ * When both `photo` (singular) and `photos` (array) are set, `photos` wins.
+ * `photo` is silently normalised to a single-element array so the render path is
+ * identical — consumers using `photo` need no changes. The precedence rule is tested
+ * in `phase-card.test.ts` (photos slot — render path and precedence).
+ *
+ * ### Invariant this story protects
+ *
+ * The canvas shows two cards:
+ * - **Left card** — `photo` (singular): one image, backward-compatible slot.
+ * - **Right card** — `photos` (array): two images stacked vertically, with slightly
+ *   more top margin on the first (breathing room after the description).
+ *
+ * Expand both cards to confirm images render inside the expanded area.
+ */
+export const PhotosArraySlot: Story = {
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        story:
+          '**Left card** uses the legacy `photo` (singular) field — still works as before. ' +
+          '**Right card** uses the new `photos` (array) field — two images stack vertically. ' +
+          'Expand both cards to verify the images appear inside the expanded area. ' +
+          'Note the slightly larger top margin on the first photo (breathing room after the description text).',
+      },
+    },
+  },
+  render: () => (
+    <TimelineTwoColumn
+      phases={[
+        {
+          key: 1,
+          title: 'Field Trip',
+          shortTitle: 'Field Trip',
+          description: 'A memorable moment captured in a single photo.',
+          date: '1998',
+          color: 'info',
+          side: 'right',
+          variant: 'life-event',
+          icon: icon('solar:camera-bold'),
+          details: [
+            'Single photo slot (legacy `photo` prop)',
+            'Works unchanged after the photos array was added',
+          ],
+          photo: { src: 'https://picsum.photos/seed/photo-a/400/300', alt: 'Field trip photo' },
+        },
+        {
+          key: 2,
+          title: 'School Play',
+          shortTitle: 'School Play',
+          description: 'Front-view and backstage — two photos of the same moment.',
+          date: '1999',
+          color: 'success',
+          side: 'left',
+          variant: 'life-event',
+          icon: icon('solar:star-bold'),
+          details: [
+            'Multi-photo slot (new `photos` array prop)',
+            'photos wins over photo when both are present',
+            'Images stack vertically — first photo has mt: 2, subsequent mt: 1',
+          ],
+          photos: [
+            { src: 'https://picsum.photos/seed/photo-b/400/300', alt: 'School play — front view' },
+            { src: 'https://picsum.photos/seed/photo-c/400/300', alt: 'School play — backstage' },
+          ],
+        },
+      ]}
+    />
+  ),
+  argTypes: {
+    phases: { control: false },
+    sx: { control: false },
+  },
+};
