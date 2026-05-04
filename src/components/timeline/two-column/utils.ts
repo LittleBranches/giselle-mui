@@ -1,6 +1,17 @@
 // Pure helpers co-located with the component.
 // No JSX. No MUI imports. Fully unit-testable in isolation.
 
+import type * as React from 'react';
+import type { ReactNode } from 'react';
+import type {
+  TimelinePhase,
+  HighlightedPaletteKey,
+  Milestone,
+  PhaseStateProps,
+  PhaseDotHandlers,
+  MilestoneDotHandlers,
+} from './types';
+
 // ----------------------------------------------------------------------
 
 /** Extracts the last 4-digit year from a date string. Returns null if none found. */
@@ -340,4 +351,299 @@ export function resolveOverlaps<T extends SortablePhase>(phases: T[]): T[] {
   });
 
   return [...resolved, ...unparseable];
+}
+
+// ── Phase / milestone state-resolution helpers ────────────────────────────
+// Extracted from timeline-two-column.tsx so they can be unit-tested in
+// isolation and reused by future timeline variants (roadmap, etc.)
+
+/** @internal Returns true when a phase is past-due in checklist mode. */
+function resolvePhaseOverdue(
+  phase: TimelinePhase,
+  checklist: boolean,
+  isDone: boolean,
+  today: Date
+): boolean {
+  if (!checklist || isDone) return false;
+  const parsedDate = parseLastDate(phase.date);
+  // Active phases can still be overdue (e.g. roadmap phase still in progress but past its end date).
+  const isAutoOverdue = parsedDate !== null && parsedDate < today;
+  return (phase.overdue ?? false) || isAutoOverdue;
+}
+
+/** Resolves display-state derived values for a single phase row. */
+export function resolvePhaseState(
+  phase: TimelinePhase,
+  index: number,
+  sorted: TimelinePhase[],
+  lastKey: number | undefined,
+  checklist: boolean,
+  localPhaseDone: Record<string, boolean>,
+  today: Date
+): PhaseStateProps {
+  const isDone = checklist ? (localPhaseDone[String(phase.key)] ?? false) : (phase.done ?? false);
+  const isOverdue = resolvePhaseOverdue(phase, checklist, isDone, today);
+  const colorFromData =
+    phase.color && phase.color !== 'inherit' && phase.color !== 'grey'
+      ? (phase.color as HighlightedPaletteKey)
+      : null;
+  const baseDotColor: HighlightedPaletteKey =
+    colorFromData ?? (phase.side === 'left' ? 'secondary' : 'primary');
+  const dotColor: HighlightedPaletteKey = isOverdue ? 'error' : baseDotColor;
+  const nextPhase = sorted[index + 1];
+  const thisYear = getLastYear(phase.date);
+  const nextYear = nextPhase ? getLastYear(nextPhase.date) : null;
+  const yearLabelValue =
+    nextYear !== null && thisYear !== null && nextYear < thisYear ? String(nextYear) : null;
+  return {
+    isDone,
+    isOverdue,
+    dotColor,
+    yearLabelValue,
+    phaseMilestones: phase.milestones ?? [],
+    isLastPhase: phase.key === lastKey,
+  };
+}
+
+/** Resolves click/keyboard handlers and ARIA label for a phase dot. */
+export function resolvePhaseDotHandlers(
+  phase: TimelinePhase,
+  isDone: boolean,
+  checklist: boolean,
+  handleTogglePhase: (key: number) => void,
+  onPhaseSelect: ((key: number) => void) | undefined
+): PhaseDotHandlers {
+  const dotActionLabel = isDone ? 'Unmark' : 'Mark';
+  let dotAriaLabel: string | undefined;
+  if (checklist) {
+    dotAriaLabel = `${dotActionLabel} "${phase.title}" as done`;
+  } else if (onPhaseSelect) {
+    dotAriaLabel = `Select "${phase.title}"`;
+  }
+  let dotClickAction: (() => void) | undefined;
+  if (checklist) {
+    dotClickAction = () => handleTogglePhase(phase.key);
+  } else if (onPhaseSelect) {
+    dotClickAction = () => onPhaseSelect(phase.key);
+  }
+  const dotKeyDownHandler = dotClickAction
+    ? (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          dotClickAction();
+        }
+      }
+    : undefined;
+  return { dotClickAction, dotKeyDownHandler, dotAriaLabel };
+}
+
+/** Resolves the JSX prop bag for the phase-row PhaseCard. */
+export function buildPhaseCardTsxProps(
+  checklist: boolean,
+  isDone: boolean,
+  isOverdue: boolean,
+  dateConflict: boolean,
+  dateConflictLabel: string | undefined,
+  anyExpanded: boolean,
+  isThisPhaseExpanded: boolean,
+  expandableIcon: ReactNode
+) {
+  return {
+    done: isDone,
+    overdue: checklist ? isOverdue : undefined,
+    dateConflict: dateConflict || undefined,
+    dateConflictLabel,
+    suppressElevation: anyExpanded && !isThisPhaseExpanded,
+    expandableIcon,
+  };
+}
+
+/** @internal Returns the tooltip status label based on dot colour and done state. */
+function dotStatusLabel(
+  color: HighlightedPaletteKey,
+  done: boolean,
+  date: string | undefined
+): string {
+  let status: string;
+  if (done) {
+    status = 'Done';
+  } else if (color === 'error') {
+    status = 'Blocking';
+  } else if (color === 'warning') {
+    status = 'In progress';
+  } else if (color === 'success') {
+    status = 'Planned';
+  } else {
+    status = 'Upcoming';
+  }
+  return date ? `${status} · ${date}` : status;
+}
+
+/**
+ * Returns the first sentence of a description, capped at `maxLen` characters.
+ *
+ * Used to populate dot tooltips in read-only mode with contextual information
+ * that is NOT already visible in any card state (title + date are on the card).
+ *
+ * @internal — exported for unit tests only. Not part of the public API.
+ */
+export function truncateDescription(s: string, maxLen = 72): string {
+  const parts = s.split(/[.!?](?=\s|$)/);
+  const firstSentence = (parts[0] ?? '').trim();
+  const text = firstSentence.length > 0 ? firstSentence : s;
+  return text.length <= maxLen ? text : `${text.slice(0, maxLen).trimEnd()}…`;
+}
+
+/**
+ * Resolves the tooltip label for a phase dot.
+ *
+ * - Checklist mode: shows status label + date.
+ * - Read-only mode: shows the **description preview** — not visible in any collapsed card.
+ * - `phase.dotTooltip` always wins if provided.
+ *
+ * @internal — exported for unit tests only. Not part of the public API.
+ */
+export function resolvePhaseTooltip(
+  checklist: boolean,
+  color: HighlightedPaletteKey,
+  done: boolean,
+  phase: TimelinePhase
+): string {
+  if (phase.dotTooltip != null) return phase.dotTooltip;
+  if (checklist) return dotStatusLabel(color, done, phase.date);
+  if (phase.description) return truncateDescription(phase.description);
+  const label = phase.shortTitle ?? phase.title;
+  return phase.date ? `${label} · ${phase.date}` : label;
+}
+
+/**
+ * Resolves the tooltip label for a milestone dot.
+ *
+ * - Checklist mode: shows status label + date.
+ * - Read-only mode: shows the **description preview** — not visible without expanding the card.
+ * - `ms.dotTooltip` always wins if provided.
+ *
+ * @internal — exported for unit tests only. Not part of the public API.
+ */
+export function resolveMilestoneTooltip(
+  checklist: boolean,
+  color: HighlightedPaletteKey,
+  done: boolean,
+  ms: Milestone
+): string {
+  if (ms.dotTooltip != null) return ms.dotTooltip;
+  if (checklist) return dotStatusLabel(color, done, ms.date);
+  if (ms.description) return truncateDescription(ms.description);
+  const label = ms.shortTitle ?? ms.title;
+  return ms.date ? `${label} · ${ms.date}` : label;
+}
+
+/** Resolves the JSX prop bag for the phase-row TimelineDot. */
+export function buildPhaseDotTsxProps(
+  phase: TimelinePhase,
+  checklist: boolean,
+  isDone: boolean,
+  dotAriaLabel: string | undefined,
+  phaseToggleCounts: Record<string, number>,
+  selectedPhaseKey: number | undefined
+) {
+  let role: 'checkbox' | 'button' | undefined;
+  if (checklist) {
+    role = 'checkbox';
+  } else if (dotAriaLabel) {
+    role = 'button';
+  }
+  return {
+    active: (phase.active ?? false) || (!checklist && phase.key === selectedPhaseKey),
+    animationKey: phaseToggleCounts[String(phase.key)] ?? 0,
+    done: isDone,
+    role,
+    'aria-checked': checklist ? isDone : undefined,
+    'aria-label': dotAriaLabel,
+    tabIndex: checklist || dotAriaLabel ? 0 : undefined,
+  };
+}
+
+/** Resolves done state and effective colour for a milestone in checklist mode. */
+export function resolveMilestoneState(
+  ms: Milestone,
+  mi: number,
+  phaseKey: number,
+  dotColor: HighlightedPaletteKey,
+  checklist: boolean,
+  localMilestoneDone: Record<string, boolean>
+): { msDone: boolean; msColor: HighlightedPaletteKey } {
+  const msDoneKey = `${phaseKey}-${mi}`;
+  const msDone = checklist
+    ? (localMilestoneDone[msDoneKey] ?? ms.done ?? false)
+    : (ms.done ?? false);
+  const msIsOverdue = checklist && (ms.overdue ?? false) && !msDone;
+  const msColorFromData =
+    ms.color && ms.color !== 'inherit' && ms.color !== 'grey'
+      ? (ms.color as HighlightedPaletteKey)
+      : dotColor;
+  let msColor: HighlightedPaletteKey;
+  if (msDone) {
+    msColor = 'success';
+  } else if (msIsOverdue) {
+    msColor = 'error';
+  } else {
+    msColor = msColorFromData;
+  }
+  return { msDone, msColor };
+}
+
+/** Resolves click/keyboard handlers and ARIA label for a milestone dot. */
+export function resolveMilestoneDotHandlers(
+  ms: Milestone,
+  mi: number,
+  phaseKey: number,
+  msDone: boolean,
+  checklist: boolean,
+  handleToggleMilestone: (phaseKey: number, mi: number) => void
+): MilestoneDotHandlers {
+  const msDotActionLabel = msDone ? 'Unmark' : 'Mark';
+  const msDotAriaLabel = checklist ? `${msDotActionLabel} "${ms.title}" as done` : undefined;
+  const msDotClickAction = checklist ? () => handleToggleMilestone(phaseKey, mi) : undefined;
+  const msDotKeyDown = msDotClickAction
+    ? (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          msDotClickAction();
+        }
+      }
+    : undefined;
+  return { msDotClickAction, msDotKeyDown, msDotAriaLabel };
+}
+
+/**
+ * Computes the `msSlotHeights` record from the measured card-height map.
+ *
+ * For each phase that has milestones, finds the tallest measured card and returns
+ * `maxCardHeight + 16` as the slot height. The 16px gap provides breathing room
+ * between vertically stacked milestone badges.
+ *
+ * DESIGN INVARIANT — pure function of its two inputs. No expand/collapse/hover state.
+ * See the architectural comment on `msHeightMapRef` in `TimelineTwoColumn`.
+ *
+ * @internal — exported for unit tests only. Not part of the public API.
+ */
+export function computeSlotHeights(
+  phases: TimelinePhase[],
+  heightMap: Record<string, number>
+): Record<string, number> {
+  const result: Record<string, number> = {};
+  phases.forEach((phase) => {
+    const n = phase.milestones?.length ?? 0;
+    if (n === 0) return;
+    let maxH = 0;
+    for (let i = 0; i < n; i++) {
+      const h = heightMap[`${String(phase.key)}-${i}`] ?? 0;
+      if (h > maxH) maxH = h;
+    }
+    if (maxH > 0) {
+      result[String(phase.key)] = maxH + 16;
+    }
+  });
+  return result;
 }
