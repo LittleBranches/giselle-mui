@@ -659,6 +659,35 @@ export function derivePlatformEntry(p: TimelinePlatformItem): {
 }
 
 /**
+ * Resolves the photo source list for a phase card.
+ *
+ * `photos` takes precedence over `photo` when both are provided.
+ * Returns `null` when neither field is present (no images rendered).
+ *
+ * @internal — not part of the public component API; exported for testing only.
+ */
+export function resolvePhotoSources(phase: {
+  photos?: { src: string; alt: string }[];
+  photo?: { src: string; alt: string };
+}): { src: string; alt: string }[] | null {
+  return phase.photos ?? (phase.photo ? [phase.photo] : null);
+}
+
+/**
+ * Maps a resolved photo list into `<Box component="img">` elements for inline rendering.
+ *
+ * Each photo is rendered as a block image (maxWidth 200px). The first photo receives
+ * extra top margin to separate it from the description text.
+ *
+ * @internal — not part of the public component API; exported for testing only.
+ */
+export function buildPhotoNodes(photos: { src: string; alt: string }[]): ReactNode[] {
+  return photos.map((p, i) => (
+    <Box key={`photo-${i}`} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
+  ));
+}
+
+/**
  * Maps a phase's platform items into icon/chip nodes for inline rendering.
  *
  * @internal — not part of the public component API; exported for testing only.
@@ -934,7 +963,7 @@ export function PhaseCard({
                 <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
                   {phase.description}
                 </Typography>
-                {(phase.photos ?? (phase.photo ? [phase.photo] : null))?.map((p, i) => (
+                {resolvePhotoSources(phase)?.map((p, i) => (
                   <Box key={i} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
                 ))}
               </>

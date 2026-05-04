@@ -172,7 +172,7 @@ export type TimelinePhase = {
    */
   hideDecoration?: boolean;
   /**
-   * Optional personal photo rendered as a small rounded thumbnail below the description.
+   * Optional personal photo displayed as a block image at `maxWidth: 200px` below the description.
    * Use for historic snapshots, childhood photos, or other memorable moments on the timeline.
    * For a single photo. Use `photos` when you have more than one.
    */

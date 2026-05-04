@@ -109,7 +109,7 @@ export { MetricCard, MetricCardDecoration } from '@alexrebula/giselle-mui';
 ```tsx
 // app/page.tsx  (Server Component)
 import {
-  MetricCardClient as MetricCard,
+  MetricCard,
   MetricCardDecoration,
 } from '../components/MetricCardClient';
 
