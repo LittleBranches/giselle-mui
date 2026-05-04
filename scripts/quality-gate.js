@@ -13,6 +13,7 @@
  *   - .github/workflows/ci.yml  (CI)
  *
  * Checks performed (in order):
+ *   0. Structure — no flat .tsx/.ts files directly under src/components/
  *   1. Prettier — format check / auto-fix
  *   2. ESLint   — covers: react-hooks, unused-imports, TypeScript rules
  *   3. TypeScript — tsc --noEmit
@@ -69,6 +70,13 @@ if (INCLUDE_STORYBOOK) console.log(' Storybook build: enabled');
 console.log('══════════════════════════════════════════════════════════');
 
 const failures = [];
+
+// 0. Structure check (component folder convention — no flat .tsx under src/components/)
+if (!run('Structure check', 'node scripts/check-structure.js', { fatal: false })) {
+  failures.push(
+    'Structure — flat component file(s) found under src/components/; move each into its own named subfolder'
+  );
+}
 
 // 1. Prettier (format)
 if (FIX_MODE) {
