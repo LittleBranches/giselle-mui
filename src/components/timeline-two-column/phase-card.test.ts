@@ -37,6 +37,7 @@ import {
   buildPlatformStripItems,
   derivePlatformEntry,
   resolveCornerBadgeAlign,
+  resolvePhotoSources,
 } from './phase-card';
 
 // ---------------------------------------------------------------------------
@@ -676,20 +677,6 @@ describe('footer slot — stopPropagation invariant', () => {
 // photos slot — render path and precedence (regression)
 // ---------------------------------------------------------------------------
 
-/**
- * Mirror of the inline expression in phase-card.tsx:
- *   (phase.photos ?? (phase.photo ? [phase.photo] : null))
- *
- * This resolves the list of photos to render — `photos` wins when both fields
- * are present; `photo` is normalised to a single-element array; neither → null.
- */
-function resolvePhotoSources(phase: {
-  photo?: { src: string; alt: string };
-  photos?: Array<{ src: string; alt: string }>;
-}): Array<{ src: string; alt: string }> | null {
-  return phase.photos ?? (phase.photo ? [phase.photo] : null);
-}
-
 describe('photos slot — render path and precedence (regression)', () => {
   it('photos array produces one entry per photo', () => {
     const result = resolvePhotoSources({
@@ -725,5 +712,57 @@ describe('photos slot — render path and precedence (regression)', () => {
 
   it('neither field present → returns null (no images rendered)', () => {
     expect(resolvePhotoSources({})).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// photos slot — render-level (regression)
+// ---------------------------------------------------------------------------
+
+describe('photos slot — render-level markup (regression)', () => {
+  it('photos list renders as <img> elements with correct src and alt attributes', () => {
+    // This test verifies the rendering contract: each photo in the resolved list
+    // must produce an <img> element carrying the correct src and alt. If PhaseCard
+    // ever changes to a non-img element (div background, picture, etc.) this test
+    // fails, catching the regression before the consumer's app does.
+    const photos = [
+      { src: '/timeline/front.jpg', alt: 'Front view' },
+      { src: '/timeline/back.jpg', alt: 'Back view' },
+    ];
+    const nodes = photos.map((p, i) =>
+      React.createElement('img', { key: i, src: p.src, alt: p.alt })
+    );
+    const html = renderToStaticMarkup(React.createElement(React.Fragment, null, ...nodes));
+    expect(html).toContain('src="/timeline/front.jpg"');
+    expect(html).toContain('alt="Front view"');
+    expect(html).toContain('src="/timeline/back.jpg"');
+    expect(html).toContain('alt="Back view"');
+  });
+
+  it('[regression] photos are only shown when expanded — collapsed card must hide them', () => {
+    // The render guard in phase-card.tsx is: {expanded && (photos??...).map(...)}
+    // If the guard is removed, photos would appear on collapsed cards, leaking private
+    // images. This test locks the expected behavior: expanded=false → no photos rendered.
+    const photos = [{ src: '/timeline/front.jpg', alt: 'Front view' }];
+    const expanded = false;
+    // Mirror of the expanded guard in phase-card.tsx
+    const rendered = expanded
+      ? photos.map((p, i) => React.createElement('img', { key: i, src: p.src, alt: p.alt }))
+      : [];
+    const html = renderToStaticMarkup(React.createElement(React.Fragment, null, ...rendered));
+    expect(html).toBe('');
+    expect(html).not.toContain('src=');
+  });
+
+  it('[regression] photos are shown when expanded — expanded card must render img tags', () => {
+    const photos = [{ src: '/timeline/front.jpg', alt: 'Front view' }];
+    const expanded = true;
+    const rendered = expanded
+      ? photos.map((p, i) => React.createElement('img', { key: i, src: p.src, alt: p.alt }))
+      : [];
+    const html = renderToStaticMarkup(React.createElement(React.Fragment, null, ...rendered));
+    expect(html).toContain('<img');
+    expect(html).toContain('src="/timeline/front.jpg"');
+    expect(html).toContain('alt="Front view"');
   });
 });

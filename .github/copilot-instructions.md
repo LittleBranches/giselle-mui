@@ -20,6 +20,24 @@ in this library exists because it solves a recurring problem that is either:
 - Vitest + jsdom for unit tests
 - Storybook for visual development and autodoc
 
+## Brand identity — the Giselle mango tree
+
+The Giselle ecosystem is named after the Filipino partner of the author. The Philippine national fruit is the Carabao mango — both the logo mark and the ecosystem metaphor.
+
+- **The tree** = shared foundation: design conventions, TypeScript patterns, test discipline
+- **Each branch** = a package (`giselle-mui`, `giselle-sections-sdk`, `giselle-ui`, `giselle-docs`)
+- **Each mango** = a release at its own ripeness stage
+
+Ripeness scale: 🟢 green = alpha · 🟡 yellow-green = beta · 🟠 golden = stable · 🟤 amber = LTS
+
+`giselle-mui` is the **yellow-green mango** — widest branch, most components, API stabilising.
+
+**Palette:** Mango gold `#F5A623` · Deep grove `#2E7D32` · Lime `#76C442` · Ripe flesh `#FFF3CD` · Dark grove `#1A2B1A` · Warm tan `#F5EDDC`
+
+**G lettermark:** The bowl of a capital G mirrors the elongated S-curve of a Carabao mango silhouette — readable as letter or fruit without labelling.
+
+**WC-6:** The planned wide hero illustration — watercolour mango tree with per-package label badges. See `alexrebula/docs/brand/logo-concept.md` Track A.
+
 ## Component rules (non-negotiable)
 
 0. **Zero personal data.** Stories, tests, JSDoc examples, and README code snippets must

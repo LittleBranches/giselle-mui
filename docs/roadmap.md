@@ -5,7 +5,7 @@ sidebar_label: 'Roadmap'
 
 # @alexrebula/giselle-mui — Roadmap
 
-> This file is the source of truth for the giselle-mui library build. It covers theme utilities (Phases A–D), components, and extraction candidates. Summary entries for completed phases bubble up to [`alexrebula/docs/roadmap.md`](../../rm/presentation/alexrebula/docs/roadmap.md) Phase 1.5.
+> This file is the source of truth for the giselle-mui library build. It covers theme utilities (Phases A–D), components, and extraction candidates. Summary entries for completed phases bubble up to `alexrebula/docs/roadmap.md` Phase 1.5 (private companion repo — not linkable from here).
 
 ---
 
@@ -49,7 +49,7 @@ as named exports from `giselle-mui`, so consuming projects have them out of the 
 | Add `pxToRem(px)` and `remToPx(rem)` to `giselle-mui/src/utils/`      | ✅     |
 | Export all theme utilities from `giselle-mui/src/index.ts`            | ✅     |
 | Add tests for all theme utilities (22 tests in `theme-utils.test.ts`) | ✅     |
-| Update `theming-nextjs.md` to show usage from giselle-mui             | ✅     |
+| Update `theming/nextjs.md` to show usage from giselle-mui             | ✅     |
 
 ### Phase B — Giselle brand theme preset (Medium priority)
 
@@ -71,7 +71,7 @@ This is intentionally opinionated. A consumer who wants a different palette pass
 | Define `giselleTheme` using `extendTheme()` with the Giselle palette                                   | ⬜     |
 | Ensure all six palette keys are covered: `primary`, `secondary`, `info`, `success`, `warning`, `error` | ⬜     |
 | Export `giselleTheme` from `giselle-mui/src/index.ts`                                                  | ⬜     |
-| Document the palette decisions in `theming-nextjs.md`                                                  | ⬜     |
+| Document the palette decisions in `theming/nextjs.md`                                                  | ⬜     |
 
 ### Phase C — GiselleThemeProvider component (HIGH priority)
 
@@ -127,7 +127,7 @@ function GiselleThemeProvider({ children, themeOverrides, theme }: Props) {
 | Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | ⬜     |
 | Add Storybook story: default palette, with overrides, fully custom                     | ⬜     |
 | Add Vitest test: renders correctly, passes `data-mui-color-scheme` to DOM              | ⬜     |
-| Update `theming-nextjs.md` with the new zero-config usage pattern                      | ⬜     |
+| Update `theming/nextjs.md` with the new zero-config usage pattern                      | ⬜     |
 
 **Storybook note:** Storybook in `giselle-mui` must be able to test two things:
 
@@ -148,7 +148,7 @@ no imports from `alexrebula` or any client project.
 
 ## Corresponding alexrebula milestone
 
-See [alexrebula `docs/roadmap.md`](../../rm/presentation/alexrebula/docs/roadmap.md)
+See [alexrebula `docs/roadmap.md`](https://github.com/AlexRebula/rm/blob/main/presentation/alexrebula/docs/roadmap.md)
 for the milestone tracking the removal of `minimal-shared/utils` imports from
 `alexrebula/src/theme/`.
 
@@ -182,7 +182,7 @@ Full design: [`docs/components/settings-provider-plan.md`](../components/setting
 | Phase 2: `detectGiselleSettings()` server helper (separate `/server` entrypoint)                         | ⬜     |
 | Phase 3: `SettingsThemeBridge` — internal bridge wiring settings state into `GiselleThemeProvider`       | ⬜     |
 | Phase 3: `GiselleThemeAndSettingsProvider` convenience wrapper                                           | ⬜     |
-| Phase 3: Migration guide in README and `theming-nextjs.md`                                               | ⬜     |
+| Phase 3: Migration guide in README and `theming/nextjs.md`                                               | ⬜     |
 
 ---
 
@@ -234,6 +234,7 @@ preview panels, and any future per-item UI.
 **Design principle — shell only, content via slot:**
 
 `DetailsDrawer` is a pure layout container. It owns:
+
 - The slide-in/out animation (CSS transition, not Framer Motion — no extra dep)
 - The backdrop overlay (semi-transparent, click-to-close)
 - The close button in the header
@@ -242,6 +243,7 @@ preview panels, and any future per-item UI.
 - The footer action slot (`ReactNode` — for Save / Cancel buttons in edit mode)
 
 It does NOT own:
+
 - Any knowledge of timelines, items, or data shapes
 - Any internal fetch or state beyond `open`/`onClose`
 
@@ -276,14 +278,14 @@ export interface DetailsDrawerProps {
 }
 ```
 
-| Task                                                                              | Status |
-| --------------------------------------------------------------------------------- | ------ |
-| Implement `DetailsDrawer` — slide animation, backdrop, close button, slots        | ⬜     |
-| Responsive width: `{ xs: '100%', md: 480 }` default, overridable via `width` prop | ⬜     |
-| Export from `src/index.ts` + barrel `src/components/details-drawer/index.ts`     | ⬜     |
-| Storybook story: empty, with title, with footer, with full `TimelineItemDetails` inside | ⬜ |
-| Vitest test: renders open/closed, close button calls `onClose`, backdrop click calls `onClose` | ⬜ |
-| README: why this exists, design decisions, copyright note                         | ⬜     |
+| Task                                                                                           | Status |
+| ---------------------------------------------------------------------------------------------- | ------ |
+| Implement `DetailsDrawer` — slide animation, backdrop, close button, slots                     | ⬜     |
+| Responsive width: `{ xs: '100%', md: 480 }` default, overridable via `width` prop              | ⬜     |
+| Export from `src/index.ts` + barrel `src/components/details-drawer/index.ts`                   | ⬜     |
+| Storybook story: empty, with title, with footer, with full `TimelineItemDetails` inside        | ⬜     |
+| Vitest test: renders open/closed, close button calls `onClose`, backdrop click calls `onClose` | ⬜     |
+| README: why this exists, design decisions, copyright note                                      | ⬜     |
 
 ---
 
@@ -344,7 +346,7 @@ export interface TimelineItemDetailData {
   shortTitle?: string;
   date?: string;
   description?: string;
-  details?: string[];         // bullet list items
+  details?: string[]; // bullet list items
   photos?: Array<{ src: string; alt: string }>;
   color?: HighlightedPaletteKey;
   done?: boolean;
@@ -370,14 +372,14 @@ inside a `DetailsDrawer`.
 | -------------------------------------------------------------------------------------- | ------ |
 | Define `TimelineItemDetailData` interface in `types.ts`                                | ⬜     |
 | Implement `TimelineItemDetails` — read-only layout, all field slots                    | ⬜     |
-| Status chip: maps `color` + `done`/`overdue` to label + palette color                 | ⬜     |
+| Status chip: maps `color` + `done`/`overdue` to label + palette color                  | ⬜     |
 | Photo slot: responsive row of thumbnails with lightbox-ready click handler             | ⬜     |
 | Sub-items slot: styled list from `details[]` array                                     | ⬜     |
 | Links slot: anchor list with `GiselleIcon` icon per item                               | ⬜     |
 | Extra fields slot: `label: value` rows for consumer-defined metadata                   | ⬜     |
-| Export from `src/index.ts` + barrel `src/components/timeline-item-details/index.ts`   | ⬜     |
+| Export from `src/index.ts` + barrel `src/components/timeline-item-details/index.ts`    | ⬜     |
 | Storybook story: phase item, milestone item, overdue item, minimal item (no optionals) | ⬜     |
-| Vitest test: renders all slots, status chip label for each `color`/`done` combination | ⬜     |
+| Vitest test: renders all slots, status chip label for each `color`/`done` combination  | ⬜     |
 | README: why it exists, why it belongs here, design decisions                           | ⬜     |
 | Phase G v2: edit mode — controlled inputs, `onSave`, `onCancel` callbacks              | ⬜     |
-| Phase G v2: wire `TimelineTwoColumn.onItemClick` to open drawer with item data        | ⬜     |
+| Phase G v2: wire `TimelineTwoColumn.onItemClick` to open drawer with item data         | ⬜     |

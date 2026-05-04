@@ -7,12 +7,10 @@ import { pulseDot } from './animations';
  *
  * Static constants are created once at module load — zero per-render allocation.
  * Dynamic factories (`(arg) => SxProps<Theme>`) create a new object on every call.
- * ⚠️ Performance note: if a dynamic factory is called inside a `.map()` that runs
- * on every render, wrap the call site in `useMemo` if the phase array is stable.
- *
- * Size values that are referenced by exported constants in `phase-card.tsx`
- * (e.g. `ACTIVE_DOT_SIZE`, `EYE_BUTTON_MIN_SIZE`) are passed as parameters to the
- * relevant factory so the component and styles file stay in sync automatically.
+ * ⚠️ Performance note: if a dynamic factory is used inside a `.map()` on every
+ * render, do not call hooks per item — that violates the Rules of Hooks.
+ * Keep the factory cheap, or memoize the entire derived array at the component's
+ * top level with `useMemo` if profiling shows a real need.
  */
 
 // ── LabeledIconStrip ──────────────────────────────────────────────────────────
@@ -272,6 +270,7 @@ export const eyeButtonSx = (opts: {
  *
  * ⚠️ Performance note: this factory creates a new object on every call.
  * It is called inside `.map()` — keep it cheap (no heavy derivations).
+ * If needed, memoize the entire mapped array at the call site with `useMemo`.
  *
  * @param isFirst - True for the first photo in the array (`i === 0`).
  */
