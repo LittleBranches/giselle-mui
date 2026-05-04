@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import type { ReactNode } from 'react';
 import type { BoxProps } from '@mui/material/Box';
 import type { TimelineDotProps } from '@mui/lab/TimelineDot';
@@ -322,4 +323,67 @@ export type TimelineTwoColumnProps = Omit<BoxProps, 'children'> & {
    * ```
    */
   onPhasesChange?: (updated: TimelinePhase[]) => void;
+};
+
+// ── Internal types (shared between timeline-two-column.tsx and utils.ts) ──────
+
+/** Convenience alias for a single milestone item. */
+export type Milestone = NonNullable<TimelinePhase['milestones']>[number];
+
+/** Display-state values derived for a single phase row in the render loop. */
+export type PhaseStateProps = {
+  isDone: boolean;
+  isOverdue: boolean;
+  dotColor: HighlightedPaletteKey;
+  yearLabelValue: string | null;
+  phaseMilestones: NonNullable<TimelinePhase['milestones']>;
+  isLastPhase: boolean;
+};
+
+export type PhaseDotHandlers = {
+  dotClickAction: (() => void) | undefined;
+  dotKeyDownHandler: ((e: React.KeyboardEvent) => void) | undefined;
+  dotAriaLabel: string | undefined;
+};
+
+export type MilestoneDotHandlers = {
+  msDotClickAction: (() => void) | undefined;
+  msDotKeyDown: ((e: React.KeyboardEvent) => void) | undefined;
+  msDotAriaLabel: string | undefined;
+};
+
+export type MilestoneRowCtx = {
+  phaseKey: number;
+  phaseSide: 'left' | 'right';
+  checklist: boolean;
+  localMilestoneDone: Record<string, boolean>;
+  expandedMiIdx: number | null;
+  anyExpanded: boolean;
+  dotColor: HighlightedPaletteKey;
+  expandableIcon: ReactNode;
+  viewedKeys: Set<string>;
+  onMarkViewed: ((key: string) => void) | undefined;
+  handleToggleMilestone: (phaseKey: number, mi: number) => void;
+  handleExpandMilestone: (phaseKey: number, milestoneIndex: number) => void;
+  /** Called with the mounted card element so the parent can measure its height. */
+  onMeasure: (mi: number, el: HTMLDivElement | null) => void;
+};
+
+/** Props for the `TimelineColumn` internal layout component. @internal */
+export type TimelineColumnProps = {
+  /** Which physical column this is — determines padding direction and text alignment. */
+  columnSide: 'left' | 'right';
+  /**
+   * Whether this column contains content for the current phase.
+   * When false the column is hidden on mobile (`xs`) to avoid empty padding.
+   * On desktop (`md+`) both columns always show.
+   */
+  hasContent: boolean;
+  /**
+   * Extra bottom padding (px) added below the card content.
+   * Drives the consistent vertical gap between consecutive phase cards:
+   * gap = bottomPadding + column top padding.
+   */
+  bottomPadding: number;
+  children: ReactNode;
 };
