@@ -118,7 +118,7 @@ vi.mock('./milestone-badge', async () => {
 import type { ReactElement } from 'react';
 import type { TimelinePhase } from './types';
 
-import { TimelineTwoColumn } from './timeline-two-column';
+import { TimelineTwoColumn } from './two-column';
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
