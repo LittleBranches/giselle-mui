@@ -6,6 +6,8 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 
+import { decorationOverlaySx } from './metric-card.styles';
+
 // ----------------------------------------------------------------------
 
 export type MetricCardColor = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
@@ -83,10 +85,7 @@ export function MetricCard({
       {...other}
     >
       {decoration && (
-        <Box
-          aria-hidden="true"
-          sx={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}
-        >
+        <Box aria-hidden="true" sx={decorationOverlaySx}>
           {decoration}
         </Box>
       )}

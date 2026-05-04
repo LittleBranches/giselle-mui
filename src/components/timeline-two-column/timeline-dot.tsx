@@ -6,6 +6,7 @@ import type { HighlightedPaletteKey } from './types';
 import Box from '@mui/material/Box';
 
 import { checkPop, pulseRing } from './animations';
+import { doneCheckmarkSx } from './timeline-dot.styles';
 
 // ----------------------------------------------------------------------
 
@@ -81,12 +82,7 @@ function DotInner({
         strokeWidth={2.8}
         strokeLinecap="round"
         strokeLinejoin="round"
-        sx={{
-          width: iconSize,
-          height: iconSize,
-          flexShrink: 0,
-          animation: `${checkPop} 0.36s cubic-bezier(0.34, 1.56, 0.64, 1)`,
-        }}
+        sx={doneCheckmarkSx(iconSize)}
       >
         <polyline points="20 6 9 17 4 12" />
       </Box>

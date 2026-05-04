@@ -33,6 +33,19 @@ import {
   sortMilestonesDesc,
   sortPhasesByDate,
 } from './utils';
+import {
+  timelineColumnSx,
+  msRowSx,
+  msColumnBoxSx,
+  msDotWrapperSx,
+  floatingDatePillSx,
+  markerPhaseLiSx,
+  markerLeftLabelSx,
+  markerCenterSx,
+  markerRightLabelSx,
+  phaseRowSx,
+  phaseLiSx,
+} from './timeline-two-column.styles';
 
 // ----------------------------------------------------------------------
 
@@ -73,20 +86,7 @@ type TimelineColumnProps = {
 
 function TimelineColumn({ columnSide, hasContent, children, bottomPadding }: TimelineColumnProps) {
   return (
-    <Box
-      data-col={columnSide}
-      sx={{
-        flex: 1,
-        textAlign: columnSide === 'left' ? 'right' : 'left',
-        pr: columnSide === 'left' ? 2 : 0,
-        pl: columnSide === 'right' ? 2 : 0,
-        pt: 0.75,
-        paddingBottom: `${bottomPadding}px`,
-        // On mobile: hide empty columns to avoid phantom padding.
-        // On desktop: both columns always show.
-        display: { xs: hasContent ? 'block' : 'none', md: 'block' },
-      }}
-    >
+    <Box data-col={columnSide} sx={timelineColumnSx(columnSide, hasContent, bottomPadding)}>
       {children}
     </Box>
   );
@@ -460,30 +460,9 @@ function buildMilestoneRow(
   };
 
   return (
-    <Box
-      key={`ms-row-${mi}`}
-      sx={{
-        // Absolutely positioned on the li so the dot sits ON the spine
-        // at an equal-interval % of the li height, not stacked below the phase card.
-        position: 'absolute',
-        top: `${topPercent}%`,
-        left: 0,
-        right: 0,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-      }}
-    >
+    <Box key={`ms-row-${mi}`} sx={msRowSx(topPercent)}>
       {/* Left column — milestone card for side='left' phases */}
-      <Box
-        data-col="left"
-        sx={{
-          flex: 1,
-          position: 'relative',
-          overflow: 'visible',
-          display: { xs: ctx.phaseSide === 'left' ? 'block' : 'none', md: 'block' },
-        }}
-      >
+      <Box data-col="left" sx={msColumnBoxSx(ctx.phaseSide === 'left')}>
         {ctx.phaseSide === 'left' && (
           <Box
             data-ms-card="true"
@@ -520,41 +499,9 @@ function buildMilestoneRow(
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
       >
         {/* Dot + floating date pill: relative wrapper so pill doesn't affect row height/centering */}
-        <Box
-          sx={{
-            position: 'relative',
-            display: 'inline-flex',
-            transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease',
-            ...(suppressElevation && {
-              filter: 'blur(1.5px)',
-              opacity: 0.38,
-              transform: 'scale(0.97)',
-              pointerEvents: 'none',
-            }),
-          }}
-        >
+        <Box sx={msDotWrapperSx(suppressElevation)}>
           {ms.date && (
-            <Typography
-              variant="caption"
-              aria-hidden
-              sx={{
-                position: 'absolute',
-                bottom: 'calc(100% + 4px)',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                fontSize: '0.65rem',
-                fontWeight: 800,
-                color: 'common.white',
-                bgcolor: 'grey.700',
-                px: 0.75,
-                py: 0.125,
-                borderRadius: 0.75,
-                whiteSpace: 'nowrap',
-                pointerEvents: 'none',
-                zIndex: 2,
-                display: 'none',
-              }}
-            >
+            <Typography variant="caption" aria-hidden sx={floatingDatePillSx}>
               {ms.date}
             </Typography>
           )}
@@ -581,15 +528,7 @@ function buildMilestoneRow(
       </Box>
 
       {/* Right column — milestone card for side='right' phases */}
-      <Box
-        data-col="right"
-        sx={{
-          flex: 1,
-          position: 'relative',
-          overflow: 'visible',
-          display: { xs: ctx.phaseSide === 'right' ? 'block' : 'none', md: 'block' },
-        }}
-      >
+      <Box data-col="right" sx={msColumnBoxSx(ctx.phaseSide === 'right')}>
         {ctx.phaseSide === 'right' && (
           <Box
             data-ms-card="true"
@@ -899,30 +838,10 @@ export function TimelineTwoColumn({
             // Previously this fell back to bare `phase.title`, dropping date and shortTitle.
             const markerTooltip = resolvePhaseTooltip(checklist, dotColor, isDone, phase);
             return (
-              <Box
-                key={phase.key}
-                component="li"
-                data-testid="tl-item"
-                sx={{
-                  position: 'relative',
-                  overflow: 'visible',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  zIndex: 1,
-                  minHeight: 40,
-                }}
-              >
+              <Box key={phase.key} component="li" data-testid="tl-item" sx={markerPhaseLiSx}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   {/* Left label — shown when side === 'left' */}
-                  <Box
-                    sx={{
-                      flex: 1,
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      alignItems: 'center',
-                      pr: 1.5,
-                    }}
-                  >
+                  <Box sx={markerLeftLabelSx}>
                     {phase.side === 'left' && (
                       <Typography
                         variant="caption"
@@ -938,15 +857,7 @@ export function TimelineTwoColumn({
                     )}
                   </Box>
                   {/* Spine dot */}
-                  <Box
-                    data-col="center"
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      position: 'relative',
-                    }}
-                  >
+                  <Box data-col="center" sx={markerCenterSx}>
                     <Tooltip title={markerTooltip} placement="top" arrow>
                       <span>
                         <TimelineDot
@@ -962,15 +873,7 @@ export function TimelineTwoColumn({
                     )}
                   </Box>
                   {/* Right label — shown when side !== 'left' */}
-                  <Box
-                    sx={{
-                      flex: 1,
-                      display: 'flex',
-                      justifyContent: 'flex-start',
-                      alignItems: 'center',
-                      pl: 1.5,
-                    }}
-                  >
+                  <Box sx={markerRightLabelSx}>
                     {phase.side !== 'left' && (
                       <Typography
                         variant="caption"
@@ -1074,29 +977,22 @@ export function TimelineTwoColumn({
 
           const rows: ReactNode[] = [];
 
+          // Pre-compute phase <li> minHeight before JSX so phaseLiSx receives a plain value.
+          // See inline comments in phaseLiSx (timeline-two-column.styles.ts) for the derivation.
+          const phaseMinHeight =
+            phaseMilestones.length > 0
+              ? (phaseMilestones.length + 1) *
+                (yearLabelValue !== null
+                  ? Math.max(
+                      msSlotHeights[String(phase.key)] ?? milestoneSlotHeight,
+                      yearLabelMarginBottom + 80
+                    )
+                  : Math.max(milestoneSlotHeight, msSlotHeights[String(phase.key)] ?? 0))
+              : undefined;
+
           // ── Phase row ──────────────────────────────────────────────────────
           rows.push(
-            <Box
-              key="phase-row"
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'stretch',
-                // Blur this phase row when another card is expanded, but NOT
-                // when this row's own phase card is the one that's expanded.
-                transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease',
-                ...(anyExpanded &&
-                  expandedPhaseKey !== phase.key && {
-                    filter: 'blur(1.5px)',
-                    opacity: 0.38,
-                    transform: 'scale(0.97)',
-                    pointerEvents: 'none',
-                  }),
-                // Always fill the li height so SpineConnector grows to match —
-                // this keeps the spine continuous when phaseMinHeight adds extra space.
-                flex: 1,
-              }}
-            >
+            <Box key="phase-row" sx={phaseRowSx(anyExpanded && expandedPhaseKey !== phase.key)}>
               {/* Left column — shows cards for phases with side === 'right' */}
               <TimelineColumn
                 columnSide="left"
@@ -1118,27 +1014,7 @@ export function TimelineTwoColumn({
                 {/* Dot wrapper: relative so the date pill can float above without affecting layout */}
                 <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                   {!phase.hideDate && phase.date && (
-                    <Typography
-                      variant="caption"
-                      aria-hidden
-                      sx={{
-                        position: 'absolute',
-                        bottom: 'calc(100% + 4px)',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        fontSize: '0.65rem',
-                        fontWeight: 800,
-                        color: 'common.white',
-                        bgcolor: 'grey.700',
-                        px: 0.75,
-                        py: 0.125,
-                        borderRadius: 0.75,
-                        whiteSpace: 'nowrap',
-                        pointerEvents: 'none',
-                        zIndex: 2,
-                        display: 'none',
-                      }}
-                    >
+                    <Typography variant="caption" aria-hidden sx={floatingDatePillSx}>
                       {phase.date}
                     </Typography>
                   )}
@@ -1199,50 +1075,10 @@ export function TimelineTwoColumn({
               key={phase.key}
               component="li"
               data-testid="tl-item"
-              sx={{
-                position: 'relative',
-                overflow: 'visible',
-                // Flex column so the phase row (flex: 1) can stretch to fill
-                // the li — which makes SpineConnector grow with it.
-                display: 'flex',
-                flexDirection: 'column',
-                // Raise z-index when a milestone card is expanded so it floats
-                // above the next phase's row rather than being clipped behind it.
+              sx={phaseLiSx({
                 zIndex: expandedMiIdx === null ? 1 : 2,
-                // CSS :has() raises this <li> when any milestone card within it is hovered,
-                // preventing the next <li>'s phase card from painting over the hovered card.
-                // Supported: Chrome 121+, Firefox 121+, Safari 17+ (within browser support matrix).
-                '&:has([data-ms-card]:hover)': { zIndex: 3 },
-                // minHeight only applies when milestones are present — gives the spine
-                // enough height for all milestone dots to be evenly spaced.
-                // Phase card vertical gap is controlled by phaseCardGap (column paddingBottom)
-                // which gives a consistent gap regardless of individual card height.
-                //
-                // When a year-boundary label is present on the spine, the bottom slot
-                // must be tall enough so the chip clears the last milestone dot.
-                //
-                // Derivation (dots at equal intervals; last dot at n/(n+1) of li height):
-                //   chip_top = (n+1)×slot − yearLabelMarginBottom − chipHeight(26)
-                //   dot_bottom = n×slot + dotSize(30)
-                //   Required: chip_top > dot_bottom + clearance(24)
-                //   → slot > yearLabelMarginBottom + chipHeight(26) + dotSize(30) + clearance(24)
-                //   → slot > yearLabelMarginBottom + 80
-                //
-                // yearLabelMarginBottom also governs the visual gap between the year chip
-                // and the date pill that floats above the next phase's dot. With the default
-                // of 50, the chip bottom is 50px above the li boundary, the date pill top is
-                // ~23px above it → ~27px of breathing room between them.
-                ...(phaseMilestones.length > 0 && {
-                  minHeight:
-                    (phaseMilestones.length + 1) *
-                    (yearLabelValue !== null
-                      ? Math.max(
-                          msSlotHeights[String(phase.key)] ?? milestoneSlotHeight,
-                          yearLabelMarginBottom + 80
-                        )
-                      : Math.max(milestoneSlotHeight, msSlotHeights[String(phase.key)] ?? 0)),
-                }),
-              }}
+                computedMinHeight: phaseMinHeight,
+              })}
             >
               {rows}
             </Box>

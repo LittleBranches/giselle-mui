@@ -58,6 +58,34 @@ export default eslintTs.config(
       // SonarQube S3358 — no nested ternaries
       'no-nested-ternary': 'error',
       // MUI Store quality bar — ban React.FC / React.FunctionComponent
+      // sx extraction rule — inline sx objects with >3 properties must go to *.styles.ts
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            'TSTypeReference[typeName.name="FC"], TSTypeReference > TSQualifiedName[left.name="React"][right.name="FC"], TSTypeReference[typeName.name="FunctionComponent"], TSTypeReference > TSQualifiedName[left.name="React"][right.name="FunctionComponent"]',
+          message:
+            'Avoid React.FC / React.FunctionComponent; type props directly on the function or parameters (MUI Store quality bar).',
+        },
+        {
+          selector:
+            'JSXAttribute[name.name="sx"] > JSXExpressionContainer > ObjectExpression[properties.length>3]',
+          message:
+            'Inline `sx` object has more than 3 properties. Extract to a *.styles.ts file (see copilot-instructions.md).',
+        },
+      ],
+    },
+    settings: {
+      react: { version: 'detect' },
+    },
+  },
+
+  // ── Stories override — exempt inline-sx rule ──────────────────────────────
+  // Stories are documentation/demo code; large inline sx is acceptable there.
+  // The React.FC ban still applies (enforced via the separate override below).
+  {
+    files: ['src/**/*.stories.tsx'],
+    rules: {
       'no-restricted-syntax': [
         'error',
         {
@@ -67,9 +95,6 @@ export default eslintTs.config(
             'Avoid React.FC / React.FunctionComponent; type props directly on the function or parameters (MUI Store quality bar).',
         },
       ],
-    },
-    settings: {
-      react: { version: 'detect' },
     },
   }
 );
