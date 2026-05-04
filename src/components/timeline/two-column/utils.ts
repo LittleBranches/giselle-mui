@@ -2,7 +2,6 @@
 // No JSX. No MUI imports. Fully unit-testable in isolation.
 
 import type * as React from 'react';
-import type { ReactNode } from 'react';
 import type {
   TimelinePhase,
   HighlightedPaletteKey,
@@ -446,7 +445,7 @@ export function buildPhaseCardTsxProps(
   dateConflictLabel: string | undefined,
   anyExpanded: boolean,
   isThisPhaseExpanded: boolean,
-  expandableIcon: ReactNode
+  expandableIcon: React.ReactNode
 ) {
   return {
     done: isDone,
