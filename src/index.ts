@@ -42,3 +42,13 @@ export type {
 
 export { IconActionBar, DEFAULT_ICON_ACTIONS } from './components/action-bar/icon';
 export type { IconActionBarProps, IconActionItem } from './components/action-bar/icon';
+
+export { TwoColumnShowcaseRow } from './components/layout/two-column-showcase-row';
+export type {
+  TwoColumnShowcaseRowProps,
+  TwoColumnShowcaseRowText,
+  ShowcaseRowOrientation,
+} from './components/layout/two-column-showcase-row';
+
+export { SectionTitle, SectionCaption } from './components/layout/section-title';
+export type { SectionTitleProps } from './components/layout/section-title';
