@@ -361,17 +361,13 @@ export const ColumnPlacementInvariant: Story = {
   render: () => (
     <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
       <Box sx={{ display: 'flex', gap: 4, mb: 3 }}>
-        <Box
-          sx={storyColumnIndicatorSx('info.main')}
-        >
+        <Box sx={storyColumnIndicatorSx('info.main')}>
           <Typography variant="caption" color="info.main" fontWeight={700}>
             LEFT column — phase cards for side=&#x27;right&#x27; phases; milestones from
             side=&#x27;left&#x27; phases
           </Typography>
         </Box>
-        <Box
-          sx={storyColumnIndicatorSx('success.main')}
-        >
+        <Box sx={storyColumnIndicatorSx('success.main')}>
           <Typography variant="caption" color="success.main" fontWeight={700}>
             RIGHT column — phase cards for side=&#x27;left&#x27; phases; milestones from
             side=&#x27;right&#x27; phases
@@ -685,10 +681,7 @@ export const DotTooltipAddedValue: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
       <Box>
-        <Typography
-          variant="overline"
-          sx={storyOverlineSx}
-        >
+        <Typography variant="overline" sx={storyOverlineSx}>
           Read-only — dot tooltip = description preview (not visible on collapsed card)
         </Typography>
         <Box sx={{ maxWidth: 960, mx: 'auto', px: 3 }}>
@@ -696,10 +689,7 @@ export const DotTooltipAddedValue: Story = {
         </Box>
       </Box>
       <Box>
-        <Typography
-          variant="overline"
-          sx={storyOverlineSx}
-        >
+        <Typography variant="overline" sx={storyOverlineSx}>
           Checklist mode — dot tooltip = task status (description preview not useful here)
         </Typography>
         <Box sx={{ maxWidth: 960, mx: 'auto', px: 3 }}>
