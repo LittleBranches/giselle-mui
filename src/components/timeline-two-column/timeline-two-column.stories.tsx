@@ -1104,7 +1104,10 @@ export const PhotosArraySlot: Story = {
             'Single photo slot (legacy `photo` prop)',
             'Works unchanged after the photos array was added',
           ],
-          photo: { src: 'https://picsum.photos/seed/photo-a/400/300', alt: 'Field trip photo' },
+          photo: {
+            src: 'data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22400%22 height%3D%22300%22%3E%3Crect width%3D%22400%22 height%3D%22300%22 fill%3D%22%234e90d4%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-size%3D%2224%22 fill%3D%22%23fff%22%3EPhoto A%3C%2Ftext%3E%3C%2Fsvg%3E',
+            alt: 'Field trip photo',
+          },
         },
         {
           key: 2,
@@ -1122,8 +1125,14 @@ export const PhotosArraySlot: Story = {
             'Images stack vertically — first photo has mt: 2, subsequent mt: 1',
           ],
           photos: [
-            { src: 'https://picsum.photos/seed/photo-b/400/300', alt: 'School play — front view' },
-            { src: 'https://picsum.photos/seed/photo-c/400/300', alt: 'School play — backstage' },
+            {
+              src: 'data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22400%22 height%3D%22300%22%3E%3Crect width%3D%22400%22 height%3D%22300%22 fill%3D%22%234caf50%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-size%3D%2224%22 fill%3D%22%23fff%22%3EPhoto B%3C%2Ftext%3E%3C%2Fsvg%3E',
+              alt: 'School play — front view',
+            },
+            {
+              src: 'data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22400%22 height%3D%22300%22%3E%3Crect width%3D%22400%22 height%3D%22300%22 fill%3D%22%23f5a623%22%2F%3E%3Ctext x%3D%2250%25%22 y%3D%2250%25%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-size%3D%2224%22 fill%3D%22%23fff%22%3EPhoto C%3C%2Ftext%3E%3C%2Fsvg%3E',
+              alt: 'School play — backstage',
+            },
           ],
         },
       ]}

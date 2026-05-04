@@ -34,9 +34,10 @@ expected outcome.
 | `timeline-dot.test.ts`                         | Rendering, done state, active-pulse attribute, click/keydown                                                      |      17 |
 | `spine-connector.test.ts`                      | Year-boundary label, color variants, prop passthrough                                                             |      11 |
 | `milestone-badge.test.ts`                      | Readability minimum-size constants, eye button WCAG regression                                                    |       6 |
+| `phase-card.styles.test.ts`                    | `photoImgSx` factory — first-vs-subsequent margin, shared base styles, regression lock                            |       4 |
 | `timeline-two-column.sort.test.ts`             | `sortOrder='key'` chronological sort                                                                              |       4 |
 | `timeline-two-column.column-placement.test.ts` | Milestone opposite-column structural invariant                                                                    |       3 |
-| **Total**                                      |                                                                                                                   | **290** |
+| **Total**                                      |                                                                                                                   | **294** |
 
 ---
 
@@ -509,13 +510,13 @@ milestones sit in the opposite column from their phase card.
 
 ## Storybook cross-reference
 
-| Story                             | Key behaviors to verify                                                                                                                                     |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `TimelineTwoColumn/ReadOnly`      | Left/right alternation, active phase pulsing, done checkmarks, milestone placement, platform icon chips, card expand/collapse on click, keyboard navigation |
-| `TimelineTwoColumn/ChecklistMode` | Click phase/milestone dots to toggle done; undone past-due items highlight automatically                                                                    |
-| `TimelineTwoColumn/Responsive`    | Layout at xs/sm/md/lg breakpoints — no overflow at narrow widths                                                                                            |
-| `TimelineDot/AllColors`           | All 6 palette keys × done/active/default states — color rendering, checkmark, pulse attribute                                                               |
-| `TimelineTwoColumn/PhotosArraySlot` | Multiple photos stack vertically inside a card; `photo` (singular) normalises to a single-element array; `photos` wins when both fields are present          |
+| Story                               | Key behaviors to verify                                                                                                                                     |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `TimelineTwoColumn/ReadOnly`        | Left/right alternation, active phase pulsing, done checkmarks, milestone placement, platform icon chips, card expand/collapse on click, keyboard navigation |
+| `TimelineTwoColumn/ChecklistMode`   | Click phase/milestone dots to toggle done; undone past-due items highlight automatically                                                                    |
+| `TimelineTwoColumn/Responsive`      | Layout at xs/sm/md/lg breakpoints — no overflow at narrow widths                                                                                            |
+| `TimelineDot/AllColors`             | All 6 palette keys × done/active/default states — color rendering, checkmark, pulse attribute                                                               |
+| `TimelineTwoColumn/PhotosArraySlot` | Multiple photos stack vertically inside a card; `photo` (singular) normalises to a single-element array; `photos` wins when both fields are present         |
 
 ---
 
