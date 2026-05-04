@@ -930,14 +930,15 @@ export function PhaseCard({
             )}
 
             {expanded && (
-              <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
-                {phase.description}
-              </Typography>
+              <>
+                <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
+                  {phase.description}
+                </Typography>
+                {(phase.photos ?? (phase.photo ? [phase.photo] : null))?.map((p, i) => (
+                  <Box key={i} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
+                ))}
+              </>
             )}
-
-            {(phase.photos ?? (phase.photo ? [phase.photo] : null))?.map((p, i) => (
-              <Box key={i} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
-            ))}
 
             {/* Client logos */}
             {phase.clients && (
