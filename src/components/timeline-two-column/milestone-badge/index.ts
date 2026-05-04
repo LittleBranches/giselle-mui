@@ -1,1 +1,1 @@
-export * from './milestone-badge';
+export {};
