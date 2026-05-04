@@ -58,6 +58,11 @@ import {
   phaseRowSx,
   phaseLiSx,
   msCardWrapperSx,
+  centerColumnSx,
+  timelineRootSx,
+  markerRowInnerSx,
+  markerCaptionSx,
+  markerDateSpanSx,
 } from './styles';
 
 // ----------------------------------------------------------------------
@@ -159,10 +164,7 @@ function buildMilestoneRow(
       </Box>
 
       {/* Centre: milestone dot — blurs with siblings when another card is open */}
-      <Box
-        data-col="center"
-        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-      >
+      <Box data-col="center" sx={centerColumnSx}>
         {/* Dot + floating date pill: relative wrapper so pill doesn't affect row height/centering */}
         <Box sx={msDotWrapperSx(suppressElevation)}>
           {ms.date && (
@@ -441,13 +443,7 @@ export function TimelineTwoColumn({
 
   return (
     <Box sx={[{ position: 'relative' }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
-      <Timeline
-        sx={{
-          p: 0,
-          m: 0,
-          '& .MuiTimelineItem-root:before': { flex: 0, padding: 0 },
-        }}
-      >
+      <Timeline sx={timelineRootSx}>
         {sorted.map((phase, i) => {
           const { isDone, isOverdue, dotColor, yearLabelValue, phaseMilestones, isLastPhase } =
             resolvePhaseState(phase, i, sorted, lastKey, checklist, localPhaseDone, today);
@@ -464,17 +460,14 @@ export function TimelineTwoColumn({
             const markerTooltip = resolvePhaseTooltip(checklist, dotColor, isDone, phase);
             return (
               <Box key={phase.key} component="li" data-testid="tl-item" sx={markerPhaseLiSx}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Box sx={markerRowInnerSx}>
                   {/* Left label — shown when side === 'left' */}
                   <Box sx={markerLeftLabelSx}>
                     {phase.side === 'left' && (
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'text.secondary', fontWeight: 600, whiteSpace: 'nowrap' }}
-                      >
+                      <Typography variant="caption" sx={markerCaptionSx}>
                         {phase.shortTitle ?? phase.title}
                         {phase.date && (
-                          <Box component="span" sx={{ ml: 0.75, fontWeight: 400, opacity: 0.7 }}>
+                          <Box component="span" sx={markerDateSpanSx}>
                             · {phase.date}
                           </Box>
                         )}
@@ -500,13 +493,10 @@ export function TimelineTwoColumn({
                   {/* Right label — shown when side !== 'left' */}
                   <Box sx={markerRightLabelSx}>
                     {phase.side !== 'left' && (
-                      <Typography
-                        variant="caption"
-                        sx={{ color: 'text.secondary', fontWeight: 600, whiteSpace: 'nowrap' }}
-                      >
+                      <Typography variant="caption" sx={markerCaptionSx}>
                         {phase.shortTitle ?? phase.title}
                         {phase.date && (
-                          <Box component="span" sx={{ ml: 0.75, fontWeight: 400, opacity: 0.7 }}>
+                          <Box component="span" sx={markerDateSpanSx}>
                             · {phase.date}
                           </Box>
                         )}
@@ -628,22 +618,9 @@ export function TimelineTwoColumn({
               </TimelineColumn>
 
               {/* Centre: phase dot + spine */}
-              <Box
-                data-col="center"
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                }}
-              >
+              <Box data-col="center" sx={centerColumnSx}>
                 {/* Dot wrapper: relative so the date pill can float above without affecting layout */}
-                <Box
-                  sx={{
-                    position: 'relative',
-                    display: 'inline-flex',
-                    '&:hover > [aria-hidden]': { display: 'block' },
-                  }}
-                >
+                <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                   {!phase.hideDate && phase.date && (
                     <Typography variant="caption" aria-hidden sx={floatingDatePillSx}>
                       {phase.date}
