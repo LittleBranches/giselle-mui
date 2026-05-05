@@ -63,8 +63,8 @@ export const labelsBoxSx: SxProps<Theme> = {
  */
 export const decorationSx: SxProps<Theme> = {
   position: 'absolute',
-  bottom: -20,
-  right: -20,
+  top: -20,
+  left: -20,
   pointerEvents: 'none',
   lineHeight: 0,
 };
