@@ -107,8 +107,12 @@ export const legendValueSx: SxProps<Theme> = {
 // Dynamic sx factories
 
 /**
- * Minimum dot size — matches repo minimum readable size rule for status indicators.
- * Regression-tested in `radial-progress-card.styles.test.ts`.
+ * Minimum dot size — matches the repo minimum readable size rule for status
+ * indicators (`>= 12px`).
+ *
+ * Keep the source value here for styles usage, and re-export it from
+ * `radial-progress-card.tsx` so consumers and `radial-progress-card.test.ts`
+ * can follow the standard readability-minimum enforcement pattern.
  */
 export const LEGEND_DOT_SIZE = 12;
 
