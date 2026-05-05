@@ -246,6 +246,7 @@ data files. Define once in giselle-mui, import everywhere.
 ### Additional allowed peer dependencies
 
 - `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). Acceptable under the zero-proprietary-dependencies rule.
+- `framer-motion` — used in `FloatingSubNav`. **Always use `motion.div`, never `m.div`.** The `m.*` API requires `LazyMotion` in the consumer's tree — this is an invisible requirement that breaks any app not using lazy motion (including Storybook). `motion.*` works without a provider and is correct for library components.
 
 ### tsup `external` rule — non-negotiable
 
@@ -308,12 +309,17 @@ steps **in order** before switching to the portfolio:
 # 1. Build the distributable (tsup) — produces dist/index.js and dist/index.d.ts
 npm run build
 
-# 2. Push to the portfolio via yalc — no restart or cache clear needed
+# 2. Push to the portfolio via yalc — updates node_modules/@alexrebula/giselle-mui
 yalc push
+
+# 3. In the portfolio — clear the Turbopack module-graph cache, then restart
+#    (in alexrebula/) rm -rf .next && npm run dev
+#    Turbopack caches the full module graph inside .next/dev/. Skipping this step
+#    means the old pre-fix bundle stays loaded — components that were null stay null.
 ```
 
 `yalc push` updates `node_modules/@alexrebula/giselle-mui` in the portfolio automatically.
-Turbopack picks up the new files on the next import.
+**Always clear `.next` in the portfolio after a `yalc push`.**
 
 ---
 

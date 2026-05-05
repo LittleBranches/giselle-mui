@@ -1,7 +1,7 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
 import { channelAlpha } from '../../../utils/theme-utils';
-import type { StatCardColor } from './stat-card';
+import type { StatCardColor } from './types';
 
 // ----------------------------------------------------------------------
 

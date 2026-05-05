@@ -1,5 +1,3 @@
-'use client';
-
 /**
  * `FloatingSubNav` — a compact floating pill of icon-only navigation buttons.
  *
@@ -34,10 +32,8 @@
  * ```
  */
 
-import type { ReactNode } from 'react';
-
 import { useCallback } from 'react';
-import { m, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -45,34 +41,10 @@ import Tooltip from '@mui/material/Tooltip';
 import ButtonBase from '@mui/material/ButtonBase';
 
 import { pillSx, stickyWrapperSx, fixedWrapperSx, subNavButtonSx } from './floating-sub-nav.styles';
+import type { FloatingSubNavItem, FloatingSubNavProps } from './types';
 
-// ---------------------------------------------------------------------------
-
-export type FloatingSubNavItem = {
-  id: string;
-  label: string;
-  /** Icon to display inside the button. Pass a `<GiselleIcon />` or any `ReactNode`. */
-  icon: ReactNode;
-};
-
-export type FloatingSubNavProps = {
-  /** Ordered list of items to display as icon buttons. */
-  items: FloatingSubNavItem[];
-  /**
-   * The id of the currently active item.
-   * When `null` the nav is hidden (slides out via `AnimatePresence` exit).
-   */
-  activeId: string | null;
-  /** Called whenever the user presses a button. Always switches — never toggles. */
-  onSelect: (id: string) => void;
-  /**
-   * When `true` the nav uses `position: sticky` within its parent container
-   * instead of `position: fixed` relative to the viewport.
-   *
-   * @default false
-   */
-  sticky?: boolean;
-};
+// Re-export for consumers that import types from the component directly.
+export type { FloatingSubNavItem, FloatingSubNavProps } from './types';
 
 // ---------------------------------------------------------------------------
 // Shared pill — same visuals for both fixed and sticky variants
@@ -88,7 +60,7 @@ function NavPill({
   onPress: (id: string) => void;
 }) {
   return (
-    <m.div
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
@@ -112,7 +84,7 @@ function NavPill({
           ))}
         </Stack>
       </Stack>
-    </m.div>
+    </motion.div>
   );
 }
 

@@ -20,8 +20,11 @@ import {
 // Re-export for consumers that import types from the component directly.
 export type { StatCardColor, StatCardItem, StatCardProps } from './types';
 
-// Module-level cache so the dynamic import runs only once per page load
-let cachedApexChart: ApexChartComponent | null = null;
+// Module-level cache so the dynamic import runs only once per page load.
+// IMPORTANT: stored in an object wrapper, never as a bare function.
+// React's useState(fn) calls fn as a lazy initialiser, and setState(fn) calls fn
+// as an updater — both would crash if the component reference were stored raw.
+let cachedApexChart: { Chart: ApexChartComponent } | null = null;
 
 // ----------------------------------------------------------------------
 
@@ -59,19 +62,23 @@ export function StatCard({
   ...other
 }: StatCardProps) {
   const theme = useTheme();
-  const [ApexChart, setApexChart] = useState<ApexChartComponent | null>(cachedApexChart);
+  // chartHolder wraps the component so React never sees a bare function in state
+  // (useState(fn) → lazy init call; setState(fn) → updater call — both crash).
+  const [chartHolder, setChartHolder] = useState<{ Chart: ApexChartComponent } | null>(
+    cachedApexChart
+  );
 
   // Lazily load react-apexcharts only when the sparkline prop is provided.
   // The module-level cache ensures the import runs at most once per session.
   const loadChart = useCallback(() => {
     if (cachedApexChart) {
-      setApexChart(cachedApexChart);
+      setChartHolder(cachedApexChart);
       return;
     }
     import('react-apexcharts')
       .then((mod) => {
-        cachedApexChart = mod.default as ApexChartComponent;
-        setApexChart(cachedApexChart);
+        cachedApexChart = { Chart: mod.default as ApexChartComponent };
+        setChartHolder(cachedApexChart);
       })
       .catch(() => {
         // react-apexcharts not installed — sparkline silently absent
@@ -82,6 +89,7 @@ export function StatCard({
     if (sparkline) loadChart();
   }, [sparkline, loadChart]);
 
+  const ApexChart = chartHolder?.Chart ?? null;
   const isUp = (trend ?? 0) >= 0;
   // Optional chain: theme.palette may be absent in SSR/test environments without a provider.
   // This value is only consumed inside the client-only ApexChart branch.
