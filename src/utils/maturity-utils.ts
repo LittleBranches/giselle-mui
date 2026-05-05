@@ -3,17 +3,21 @@ import type { StatCardColor } from '../components/card/stat/types';
 // ----------------------------------------------------------------------
 
 /**
- * Maps a maturity/readiness percentage to a MUI palette key following the
- * Giselle mango ripeness scale:
+ * Maps a maturity/readiness percentage to a MUI palette key.
  *
- * | Range      | Palette key  | Ripeness metaphor           |
- * |------------|--------------|-----------------------------|
- * | 0–19 %     | `'error'`    | 🟢 unripe — not ready       |
- * | 20–39 %    | `'warning'`  | 🟡 green-yellow — early     |
- * | 40–59 %    | `'info'`     | 🟠 turning — in progress    |
- * | 60–79 %    | `'primary'`  | 🟠 golden — nearly ripe     |
- * | 80–89 %    | `'success'`  | ✅ ripe — stable            |
- * | 90–100 %   | `'success'`  | 🟤 amber — LTS / shipped    |
+ * Colours follow **MUI semantic conventions** — not the mango visual palette.
+ * The mango metaphor (green = unripe, golden = ripe) is brand language used
+ * in release stage labels (`resolveMaturityLabel`) and docs. The colour
+ * mapping here defers to MUI standards so components read correctly to any
+ * MUI-fluent developer regardless of the brand story.
+ *
+ * | Range    | Palette key  | Semantic meaning      |
+ * |----------|--------------|-----------------------|
+ * | 0–19 %   | `'error'`    | Blocked / not started |
+ * | 20–39 %  | `'warning'`  | Early / at risk       |
+ * | 40–59 %  | `'info'`     | In progress           |
+ * | 60–79 %  | `'primary'`  | On track              |
+ * | 80–100 % | `'success'`  | Stable / shipped      |
  *
  * The function clamps the input to `[0, 100]` before mapping.
  *
@@ -24,13 +28,6 @@ import type { StatCardColor } from '../components/card/stat/types';
  *   value="35%"
  *   color={resolveMaturityColor(35)}
  * />
- * ```
- *
- * **Playground slider:**
- * ```tsx
- * const [pct, setPct] = useState(50);
- * <Slider value={pct} onChange={(_, v) => setPct(v as number)} />
- * <StatCard color={resolveMaturityColor(pct)} ... />
  * ```
  */
 export function resolveMaturityColor(percent: number): StatCardColor {

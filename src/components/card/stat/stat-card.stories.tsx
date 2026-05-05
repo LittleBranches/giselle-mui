@@ -1,9 +1,14 @@
+import { useState } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
 
+import { resolveMaturityColor, resolveMaturityLabel } from '../../../utils/maturity-utils';
 import { GiselleIcon } from '../../icon/giselle';
 import type { StatCardColor } from './types';
 import { StatCard, STAT_CARD_SPARKLINE_OPTIONS } from './stat-card';
@@ -181,4 +186,82 @@ export const Responsive: Story = {
     </Box>
   ),
   parameters: { layout: 'padded' },
+};
+
+// ----------------------------------------------------------------------
+
+/**
+ * Named helper — uses `useState` so it must be a named function (not inline arrow).
+ * Drives `StatCard` colour and label live from the slider value.
+ */
+function MaturityDemo() {
+  const [percent, setPercent] = useState(35);
+  const color = resolveMaturityColor(percent);
+  const label = resolveMaturityLabel(percent);
+
+  return (
+    <Box sx={{ maxWidth: 360 }}>
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="body2" color="text.secondary" gutterBottom>
+          Readiness: <strong>{percent}%</strong> — {label}
+        </Typography>
+        <Slider
+          value={percent}
+          onChange={(_, v) => setPercent(v as number)}
+          min={0}
+          max={100}
+          step={1}
+          marks={[
+            { value: 0, label: '0%' },
+            { value: 20, label: '20%' },
+            { value: 40, label: '40%' },
+            { value: 60, label: '60%' },
+            { value: 80, label: '80%' },
+            { value: 100, label: '100%' },
+          ]}
+        />
+      </Box>
+      <StatCard
+        label="Store Readiness"
+        value={`${percent}%`}
+        color={color}
+        icon={<GiselleIcon icon="solar:shop-bold-duotone" width={28} />}
+      />
+    </Box>
+  );
+}
+
+/**
+ * **Mango ripeness scale — live colour picker.**
+ *
+ * Drag the slider through the full range and observe the card gradient
+ * cycling through all five MUI semantic colour bands:
+ *
+ * | Range    | Palette key  | Semantic meaning   |
+ * |----------|--------------|--------------------|
+ * | 0–19 %   | `error`      | Blocked / not started |
+ * | 20–39 %  | `warning`    | Early / at risk    |
+ * | 40–59 %  | `info`       | In progress        |
+ * | 60–79 %  | `primary`    | On track           |
+ * | 80–100 % | `success`    | Stable / shipped   |
+ *
+ * Note: colours follow MUI semantic conventions, not the mango visual palette
+ * (where green = unripe). The mango metaphor applies to release stage labels
+ * (`resolveMaturityLabel`) and brand docs — not to the colour system.
+ *
+ * The colour boundaries are enforced by regression tests in `maturity-utils.test.ts`.
+ * This story makes those same boundaries visually verifiable without reading the source.
+ */
+export const MaturityColorScale: StoryObj<typeof StatCard> = {
+  render: () => <MaturityDemo />,
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        story:
+          'Drag the slider to see `resolveMaturityColor` map a readiness percentage to the correct MUI palette key. ' +
+          'Boundary values (20, 40, 60, 80) should produce an immediate colour change — verifying the mango ripeness scale.',
+      },
+    },
+  },
 };

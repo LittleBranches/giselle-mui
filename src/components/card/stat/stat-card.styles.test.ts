@@ -9,6 +9,7 @@ import {
   iconBoxSx,
   contentRowSx,
   labelsBoxSx,
+  decorationSx,
   STAT_CARD_SPARKLINE_OPTIONS,
 } from './stat-card.styles';
 
@@ -27,26 +28,28 @@ const mockTheme = {
 
 // ----------------------------------------------------------------------
 
+type ThemeFn = (theme: Theme) => Record<string, unknown>;
+
 describe('statCardRootSx', () => {
   it('returns a backgroundImage using channelAlpha on lightChannel', () => {
-    const styles = (statCardRootSx('primary') as Function)(mockTheme);
+    const styles = (statCardRootSx('primary') as unknown as ThemeFn)(mockTheme);
     expect(styles.backgroundImage).toContain('144 202 249');
     expect(styles.backgroundImage).toContain('linear-gradient(135deg');
   });
 
   it('sets color to palette-key.dark', () => {
-    const styles = (statCardRootSx('success') as Function)(mockTheme);
+    const styles = (statCardRootSx('success') as unknown as ThemeFn)(mockTheme);
     expect(styles.color).toBe('success.dark');
   });
 
   it('sets position relative and overflow hidden for the decoration layer', () => {
-    const styles = (statCardRootSx('primary') as Function)(mockTheme);
+    const styles = (statCardRootSx('primary') as unknown as ThemeFn)(mockTheme);
     expect(styles.position).toBe('relative');
     expect(styles.overflow).toBe('hidden');
   });
 
   it('[regression] gradient uses lightChannel at low opacity — no Minimals lighterChannel', () => {
-    const styles = (statCardRootSx('warning') as Function)(mockTheme);
+    const styles = (statCardRootSx('warning') as unknown as ThemeFn)(mockTheme);
     // Both gradient stops must reference the lightChannel value, not a hardcoded hex
     expect(styles.backgroundImage).toContain('255 167 38');
   });
@@ -97,5 +100,23 @@ describe('STAT_CARD_SPARKLINE_OPTIONS', () => {
   it('sets stroke width to 2 with smooth curve', () => {
     expect(STAT_CARD_SPARKLINE_OPTIONS.stroke?.width).toBe(2);
     expect(STAT_CARD_SPARKLINE_OPTIONS.stroke?.curve).toBe('smooth');
+  });
+});
+
+describe('decorationSx', () => {
+  it('is absolutely positioned', () => {
+    expect((decorationSx as Record<string, unknown>).position).toBe('absolute');
+  });
+
+  it('[regression] anchored to bottom-right corner — never top-left', () => {
+    const sx = decorationSx as Record<string, unknown>;
+    expect(typeof sx.bottom).toBe('number');
+    expect(typeof sx.right).toBe('number');
+    expect(sx).not.toHaveProperty('top');
+    expect(sx).not.toHaveProperty('left');
+  });
+
+  it('[regression] pointer events disabled — decoration must not intercept clicks', () => {
+    expect((decorationSx as Record<string, unknown>).pointerEvents).toBe('none');
   });
 });

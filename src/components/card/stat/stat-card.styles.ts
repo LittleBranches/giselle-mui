@@ -56,6 +56,19 @@ export const labelsBoxSx: SxProps<Theme> = {
   minWidth: 112,
 };
 
+/**
+ * Absolutely-positioned decoration layer — bottom-right corner, clipped by the
+ * card's `overflow: hidden`. Must be rendered as the first child so it sits
+ * behind all content. `pointerEvents: none` prevents interaction.
+ */
+export const decorationSx: SxProps<Theme> = {
+  position: 'absolute',
+  bottom: -20,
+  right: -20,
+  pointerEvents: 'none',
+  lineHeight: 0,
+};
+
 // ----------------------------------------------------------------------
 
 /**
