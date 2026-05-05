@@ -384,3 +384,53 @@ inside a `DetailsDrawer`.
 | README: why it exists, why it belongs here, design decisions | Components | ⬜ |
 | Phase G v2: edit mode — controlled inputs, `onSave`, `onCancel` callbacks | Components | ⬜ |
 | Phase G v2: wire `TimelineTwoColumn.onItemClick` to open drawer with item data | Components | ⬜ |
+
+---
+
+## Phase H — Portfolio Layout & Application Shell Extraction
+
+**Goal:** Extract every reusable layout and shell pattern from the `alexrebula` portfolio
+into `giselle-mui` as independently usable, MIT-licensed components. This covers page-level
+section layout composites, navigation components, authentication section shells, and the
+application shell itself. All components are written from scratch — no code is copied from
+the private `alexrebula` repo.
+
+**Scope:**
+
+- **Section layout composites** — page templates that combine multiple primitives into a
+  named reusable layout. For example, `TrackerSectionLayout` (full-width heading + stat-card
+  grid + sidebar with radial chart + checklist timeline), `HeroSectionLayout`, etc.
+- **Navigation components** — top app bar, sidebar navigation drawer, floating sub-nav, and
+  any breadcrumb or tab-bar pattern used across sections.
+- **Auth / login section** — login card shell, optional social-login row, forgot-password link
+  layout. No backend — structural only.
+- **Application shell** — `AppLayout` wrapper that composes `AppHeader` + `AppSidebar` +
+  main content area. Accepts slot props for header actions, sidebar items, and footer.
+- **Additional chart widgets** — any chart card beyond `RadialProgressCard` that proves
+  reusable across more than one section (e.g., area-sparkline card, donut summary card).
+
+**Copyright rule — non-negotiable:**
+Every component in Phase H is written independently from scratch. No JSX, logic, or styling
+is copied or adapted from `alexrebula/src/`. The public MIT boundary must not be crossed.
+
+**Blocked on:** Phases C + D (GiselleThemeProvider + GiselleSettingsProvider) — application
+shell components depend on a theme context and settings context being available without
+consumer boilerplate.
+
+| Task | Label | Status |
+| -------------------------------------------------------------------------------------------------- | ---------- | ------ |
+| Define `TrackerSectionLayout` component — heading + stat grid + sidebar/timeline split | Components | ⬜ |
+| Extract `SidebarTimelineLayout` — generic 1/3 sticky sidebar + 2/3 scrolling main | Layout | ⬜ |
+| Navigation: `AppTopBar` — responsive header with title, nav links, icon-action slots | Navigation | ⬜ |
+| Navigation: `AppSidebarDrawer` — collapsible nav drawer with icon + label items | Navigation | ⬜ |
+| Navigation: `FloatingSubNav` — anchored in-page section navigator (already in library, audit) | Navigation | ⬜ |
+| `AppLayout` — application shell: composes `AppTopBar` + `AppSidebarDrawer` + main slot | Layout | ⬜ |
+| Auth: `LoginCard` — email + password fields + submit button (structural, no backend) | Auth | ⬜ |
+| Auth: `AuthPageLayout` — full-screen split or centred shell that wraps `LoginCard` | Auth | ⬜ |
+| Chart: `DonutSummaryCard` — Card wrapping a donut chart with centred total label + legend | Chart | ⬜ |
+| Chart: `AreaSparklineCard` — Card with a full-bleed area chart and overlaid stat | Chart | ⬜ |
+| Export all Phase H symbols from `src/index.ts` | Core | ⬜ |
+| Storybook stories for every Phase H component | Components | ⬜ |
+| Vitest tests for every Phase H component + utility | Components | ⬜ |
+| README for every Phase H component folder | Components | ⬜ |
+| Docusaurus page in `giselle-docs` wiring Phase H component docs | Docs | ⬜ |
