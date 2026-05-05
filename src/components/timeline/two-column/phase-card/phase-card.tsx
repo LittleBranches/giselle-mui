@@ -473,7 +473,7 @@ function buildPaperSx(p: PaperSxParams) {
         }),
       },
     }),
-    ...(p.phaseSide === 'right' &&
+    ...(p.phaseSide === 'left' &&
       !p.isHighlighted && {
         bgcolor: 'background.paper',
         borderTop: '3px solid',
@@ -711,6 +711,14 @@ export function PhaseCard({
   const isOverdue = overdue ?? phase.overdue ?? false;
   const [internalExpanded, setInternalExpanded] = useState(false);
 
+  // Three-level title disclosure:
+  //   REST  (collapsed, no hover) → shortTitle (glanceable)
+  //   HOVER (collapsed, hovered)  → full title + description (preview before clicking)
+  //   EXPANDED (after click)      → full title + description + platforms + clients + details
+  const [isHovered, setIsHovered] = useState(false);
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+
   const hasDetails = Boolean(phase.details?.length);
   const isScenario = phase.variant === 'scenario';
   const isHighlighted = isHighlightedVariant(phase.variant);
@@ -723,8 +731,9 @@ export function PhaseCard({
     setInternalExpanded
   );
 
-  // Two-level title disclosure: collapsed shows shortTitle (glanceable), expanded shows full title.
-  const displayTitle = expanded ? phase.title : (phase.shortTitle ?? phase.title);
+  // Three-level title disclosure: collapsed shows shortTitle (glanceable),
+  // hovered or expanded shows full title.
+  const displayTitle = expanded || isHovered ? phase.title : (phase.shortTitle ?? phase.title);
 
   const handleClick = buildCardClickHandler(hasDetails, toggle);
   const handleKeyDown = buildCardKeyDownHandler(hasDetails, toggle);
@@ -770,6 +779,8 @@ export function PhaseCard({
         aria-controls={hasDetails ? detailsId : undefined}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         sx={[
           buildPaperSx({
             hasDetails,
@@ -852,7 +863,7 @@ export function PhaseCard({
               </Box>
             )}
 
-            {expanded && (
+            {(isHovered || expanded) && phase.description && (
               <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
                 {phase.description}
               </Typography>
@@ -863,8 +874,8 @@ export function PhaseCard({
                 <Box key={i} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
               ))}
 
-            {/* Client logos */}
-            {phase.clients && (
+            {/* Client logos — shown only in expanded state (level 3) */}
+            {expanded && phase.clients && (
               <LabeledIconStrip label={phase.clientsLabel}>
                 <Box sx={logoStripSx}>
                   {phase.clients.map(({ name, logo }) => (
@@ -876,15 +887,15 @@ export function PhaseCard({
               </LabeledIconStrip>
             )}
 
-            {/* Tech stack platforms */}
-            {phase.platforms && phase.platforms.length > 0 && (
+            {/* Tech stack platforms — shown only in expanded state (level 3) */}
+            {expanded && phase.platforms && phase.platforms.length > 0 && (
               <LabeledIconStrip label={phase.platformsLabel ?? 'Tech Stack'}>
                 <Box sx={platformStripSx}>{buildPlatformStripItems(phase.platforms)}</Box>
               </LabeledIconStrip>
             )}
 
-            {/* Project logos */}
-            {phase.projects && (
+            {/* Project logos — shown only in expanded state (level 3) */}
+            {expanded && phase.projects && (
               <LabeledIconStrip label={phase.projectsLabel}>
                 <Box sx={logoStripSx}>
                   {phase.projects.map(({ name, logo }) => (
@@ -894,8 +905,8 @@ export function PhaseCard({
               </LabeledIconStrip>
             )}
 
-            {/* Optional footer slot — interactive elements below icon strips */}
-            {phase.footer != null && (
+            {/* Optional footer slot — shown only in expanded state (level 3) */}
+            {expanded && phase.footer != null && (
               <Box sx={{ mt: 1 }} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
                 {phase.footer}
               </Box>

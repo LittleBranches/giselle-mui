@@ -143,6 +143,15 @@ export type TimelinePhase = {
      * Set this explicitly to override the computed value with a custom metric or note.
      */
     dotTooltip?: string;
+    /**
+     * Which column this milestone renders in.
+     *
+     * Inherits the parent `phase.side` when omitted — the milestone appears in the
+     * same column as its phase card. Set explicitly to place the milestone in the
+     * **opposite** column (e.g. a tech-context event on a professional phase that
+     * should appear in the "Education & Open Source" column).
+     */
+    side?: 'left' | 'right';
   }>;
   /**
    * Client logos shown as a horizontal strip directly in the card (always visible).

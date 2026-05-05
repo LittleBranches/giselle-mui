@@ -120,6 +120,11 @@ function buildMilestoneRow(
     ctx.handleToggleMilestone
   );
 
+  // Milestone inherits the parent phase side when no explicit side is set.
+  // Explicit ms.side overrides — used for context milestones that factually belong
+  // in the opposite column from their parent phase (e.g. tech/world-event entries
+  // on a professional phase that belong in the Education & Open Source column).
+  const effectiveMsSide = ms.side ?? ctx.phaseSide;
   const isThisMsExpanded = ctx.expandedMiIdx === mi;
   const topPercent = ((mi + 1) / (totalMilestones + 1)) * 100;
   const stopProp = isThisMsExpanded ? (e: React.MouseEvent) => e.stopPropagation() : undefined;
@@ -136,9 +141,9 @@ function buildMilestoneRow(
 
   return (
     <Box key={`ms-row-${mi}`} sx={msRowSx(topPercent)}>
-      {/* Left column — milestone card for side='left' phases */}
-      <Box data-col="left" sx={msColumnBoxSx(ctx.phaseSide === 'left')}>
-        {ctx.phaseSide === 'left' && (
+      {/* Left column — milestone card for milestones with effective side='left' */}
+      <Box data-col="left" sx={msColumnBoxSx(effectiveMsSide === 'left')}>
+        {effectiveMsSide === 'left' && (
           <Box
             data-ms-card="true"
             ref={(el: HTMLDivElement | null) => ctx.onMeasure(mi, el)}
@@ -194,9 +199,9 @@ function buildMilestoneRow(
         {/* No spine here — the phase row's SpineConnector runs behind all milestone dots */}
       </Box>
 
-      {/* Right column — milestone card for side='right' phases */}
-      <Box data-col="right" sx={msColumnBoxSx(ctx.phaseSide === 'right')}>
-        {ctx.phaseSide === 'right' && (
+      {/* Right column — milestone card for milestones with effective side='right' */}
+      <Box data-col="right" sx={msColumnBoxSx(effectiveMsSide === 'right')}>
+        {effectiveMsSide === 'right' && (
           <Box
             data-ms-card="true"
             ref={(el: HTMLDivElement | null) => ctx.onMeasure(mi, el)}
@@ -540,7 +545,7 @@ export function TimelineTwoColumn({
             <Box onClick={phaseCardStopProp}>
               <PhaseCard
                 phase={phase}
-                columnSide={phase.side === 'left' ? 'right' : 'left'}
+                columnSide={phase.side}
                 {...buildPhaseCardTsxProps(
                   checklist,
                   isDone,
@@ -608,13 +613,13 @@ export function TimelineTwoColumn({
           // ── Phase row ──────────────────────────────────────────────────────
           rows.push(
             <Box key="phase-row" sx={phaseRowSx(anyExpanded && expandedPhaseKey !== phase.key)}>
-              {/* Left column — shows cards for phases with side === 'right' */}
+              {/* Left column — shows cards for phases with side === 'left' */}
               <TimelineColumn
                 columnSide="left"
-                hasContent={phase.side === 'right'}
+                hasContent={phase.side === 'left'}
                 bottomPadding={phaseCardGap}
               >
-                {phase.side === 'right' && phaseCardNode}
+                {phase.side === 'left' && phaseCardNode}
               </TimelineColumn>
 
               {/* Centre: phase dot + spine */}
@@ -660,13 +665,13 @@ export function TimelineTwoColumn({
                 )}
               </Box>
 
-              {/* Right column — shows cards for phases with side === 'left' */}
+              {/* Right column — shows cards for phases with side === 'right' */}
               <TimelineColumn
                 columnSide="right"
-                hasContent={phase.side === 'left'}
+                hasContent={phase.side === 'right'}
                 bottomPadding={phaseCardGap}
               >
-                {phase.side === 'left' && phaseCardNode}
+                {phase.side === 'right' && phaseCardNode}
               </TimelineColumn>
             </Box>
           );
