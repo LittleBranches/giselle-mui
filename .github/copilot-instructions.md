@@ -279,6 +279,7 @@ data files. Define once in giselle-mui, import everywhere.
 
 - `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). Acceptable under the zero-proprietary-dependencies rule.
 - `framer-motion` — used in `FloatingSubNav`. **Always use `motion.div`, never `m.div`.** The `m.*` API requires `LazyMotion` in the consumer's tree — this is an invisible requirement that breaks any app not using lazy motion (including Storybook). `motion.*` works without a provider and is correct for library components.
+- `apexcharts` + `react-apexcharts` — used in `RadialProgressCard` (optional peer deps — declared with `peerDependenciesMeta.optional: true`). Lazy-loaded via `React.lazy + Suspense` so consumers without ApexCharts installed do not pay the bundle cost.
 
 ### tsup `external` rule — non-negotiable
 

@@ -12,7 +12,7 @@ type TextSlotProps = {
   sx?: SxProps<Theme>;
 };
 
-export type SectionTitleProps = BoxProps & {
+export type SectionTitleProps = Omit<BoxProps, 'title'> & {
   /**
    * Optional gradient accent word appended to `title`.
    * Rendered with reduced opacity and a horizontal gradient that fades from
@@ -86,7 +86,7 @@ export function SectionTitle({
       {caption && <SectionCaption title={caption} sx={slotProps?.caption?.sx} />}
 
       <Typography component="h2" variant="h2" sx={slotProps?.title?.sx}>
-        {`${title} `}
+        {title}{' '}
         {txtGradient && (
           <Box component="span" sx={txtGradientSpanSx}>
             {txtGradient}

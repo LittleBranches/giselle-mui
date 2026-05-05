@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 
 import { GiselleIcon } from '../../icon/giselle';
 
-import { iconActionBarRootSx } from './styles';
+import { iconActionBarRootSx } from './icon-action-bar.styles';
 
 // ----------------------------------------------------------------------
 

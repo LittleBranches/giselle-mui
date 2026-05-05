@@ -120,7 +120,7 @@ function GiselleThemeProvider({ children, themeOverrides, theme }: Props) {
 
 | Task                                                                                   | Label   | Status |
 | -------------------------------------------------------------------------------------- | ------- | ------ |
-| Complete Phase B (Giselle theme preset) — this is a direct prerequisite                | Theming | ⬜     |
+| Complete Phase B (Giselle theme preset) — this prerequisite is already met              | Theming | ✅     |
 | Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ⬜     |
 | Implement `GiselleThemeProvider` wrapping `CssVarsProvider` with merge logic           | Theming | ⬜     |
 | Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | Theming | ⬜     |

@@ -79,7 +79,7 @@ export function RadialProgressCard({
   );
 
   return (
-    <Card sx={[...(Array.isArray(sx) ? sx : [sx])]} {...other}>
+    <Card sx={[{}, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       {(title !== undefined || subheader !== undefined) && (
         <CardHeader title={title} subheader={subheader} />
       )}
