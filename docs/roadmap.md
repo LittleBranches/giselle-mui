@@ -37,21 +37,21 @@ See [`theming/nextjs.md`](./theming/nextjs.md) for full usage examples and integ
 
 ## Roadmap for giselle-mui
 
-### Phase A — Ship standalone theme token utilities ✅ Done — 4 May 2026
+### Phase A — Ship standalone theme token utilities — Theming ✅ Done — 4 May 2026
 
 **Goal:** Ship the small theme-building primitives needed by any MUI v7 project
 as named exports from `giselle-mui`, so consuming projects have them out of the box.
 
-| Task                                                                  | Status |
-| --------------------------------------------------------------------- | ------ |
-| Add `channelAlpha(channel, alpha)` to `giselle-mui/src/utils/`        | ✅     |
-| Add `hexToChannel(hex)` to `giselle-mui/src/utils/`                   | ✅     |
-| Add `pxToRem(px)` and `remToPx(rem)` to `giselle-mui/src/utils/`      | ✅     |
-| Export all theme utilities from `giselle-mui/src/index.ts`            | ✅     |
-| Add tests for all theme utilities (22 tests in `theme-utils.test.ts`) | ✅     |
-| Update `theming/nextjs.md` to show usage from giselle-mui             | ✅     |
+| Task | Label | Status |
+| --------------------------------------------------------------------- | ------- | ------ |
+| Add `channelAlpha(channel, alpha)` to `giselle-mui/src/utils/` | Theming | ✅ |
+| Add `hexToChannel(hex)` to `giselle-mui/src/utils/` | Theming | ✅ |
+| Add `pxToRem(px)` and `remToPx(rem)` to `giselle-mui/src/utils/` | Theming | ✅ |
+| Export all theme utilities from `giselle-mui/src/index.ts` | Theming | ✅ |
+| Add tests for all theme utilities (22 tests in `theme-utils.test.ts`) | Theming | ✅ |
+| Update `theming/nextjs.md` to show usage from giselle-mui | Theming | ✅ |
 
-### Phase B — Giselle brand theme preset 🔄 In progress — 5 May 2026
+### Phase B — Giselle brand theme preset — Theming 🔄 In progress — 5 May 2026
 
 **Goal:** Define the Giselle default palette and typography scale as a named export
 (`giselleTheme`) — a ready-to-use `extendTheme()` result that consuming projects can
@@ -64,15 +64,15 @@ The default palette decisions (documented in `src/utils/theme-preset.ts` JSDoc):
 - **Secondary:** `#F5A623` Mango gold — unchanged across modes
 - **Info / Success / Warning / Error:** standard MUI v7 family values, both modes
 
-| Task                                                                                                   | Status |
-| ------------------------------------------------------------------------------------------------------ | ------ |
-| Decide final hex values for `primary` and `secondary` Giselle palette colours                          | ✅     |
-| Define `giselleTheme` using `extendTheme()` with the Giselle palette                                   | ✅     |
-| Ensure all six palette keys are covered: `primary`, `secondary`, `info`, `success`, `warning`, `error` | ✅     |
-| Export `giselleTheme` from `giselle-mui/src/index.ts`                                                  | ✅     |
-| Document the palette decisions in `theming/nextjs.md`                                                  | ⬜     |
+| Task | Label | Status |
+| ------------------------------------------------------------------------------------------------------ | ------- | ------ |
+| Decide final hex values for `primary` and `secondary` Giselle palette colours | Theming | ✅ |
+| Define `giselleTheme` using `extendTheme()` with the Giselle palette | Theming | ✅ |
+| Ensure all six palette keys are covered: `primary`, `secondary`, `info`, `success`, `warning`, `error` | Theming | ✅ |
+| Export `giselleTheme` from `giselle-mui/src/index.ts` | Theming | ✅ |
+| Document the palette decisions in `theming/nextjs.md` | Theming | ⬜ |
 
-### Phase C — GiselleThemeProvider component (HIGH priority)
+### Phase C — GiselleThemeProvider component — Theming (HIGH priority)
 
 **Goal:** Expose a `<GiselleThemeProvider>` wrapper from `giselle-mui` that:
 
@@ -118,15 +118,15 @@ function GiselleThemeProvider({ children, themeOverrides, theme }: Props) {
 }
 ```
 
-| Task                                                                                   | Status |
-| -------------------------------------------------------------------------------------- | ------ |
-| Complete Phase B (Giselle theme preset) — this is a direct prerequisite                | ⬜     |
-| Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | ⬜     |
-| Implement `GiselleThemeProvider` wrapping `CssVarsProvider` with merge logic           | ⬜     |
-| Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | ⬜     |
-| Add Storybook story: default palette, with overrides, fully custom                     | ⬜     |
-| Add Vitest test: renders correctly, passes `data-mui-color-scheme` to DOM              | ⬜     |
-| Update `theming/nextjs.md` with the new zero-config usage pattern                      | ⬜     |
+| Task | Label | Status |
+| -------------------------------------------------------------------------------------- | ------- | ------ |
+| Complete Phase B (Giselle theme preset) — this is a direct prerequisite | Theming | ⬜ |
+| Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ⬜ |
+| Implement `GiselleThemeProvider` wrapping `CssVarsProvider` with merge logic | Theming | ⬜ |
+| Export `GiselleThemeProvider` from `giselle-mui/src/index.ts` | Theming | ⬜ |
+| Add Storybook story: default palette, with overrides, fully custom | Theming | ⬜ |
+| Add Vitest test: renders correctly, passes `data-mui-color-scheme` to DOM | Theming | ⬜ |
+| Update `theming/nextjs.md` with the new zero-config usage pattern | Theming | ⬜ |
 
 **Storybook note:** Storybook in `giselle-mui` must be able to test two things:
 
@@ -153,7 +153,7 @@ for the milestone tracking the removal of `minimal-shared/utils` imports from
 
 ---
 
-### Phase D — GiselleSettingsProvider (Medium priority)
+### Phase D — GiselleSettingsProvider — Theming (Medium priority)
 
 **Goal:** Export a framework-agnostic, MIT-safe `GiselleSettingsProvider<TState>` that
 persists user UI preferences (color mode, direction, font size, color presets) with zero
@@ -164,28 +164,28 @@ in a one-import swap.
 
 Full design: [`docs/components/settings-provider-plan.md`](../components/settings-provider-plan.md)
 
-| Task                                                                                                     | Status |
-| -------------------------------------------------------------------------------------------------------- | ------ |
-| Phase α: Port `useLocalStorage<T>` to `src/utils/use-local-storage.ts`                                   | ⬜     |
-| Phase α: Write `isDeepEqual(a, b)` — covers primitives, arrays, plain objects (no es-toolkit)            | ⬜     |
-| Phase α: Write `getCookieValue` / `setCookieValue` — SSR-safe (`typeof document !== 'undefined'`)        | ⬜     |
-| Phase α: Tests for all three utilities                                                                   | ⬜     |
-| Phase 1: Define `BaseSettingsState`, `GiselleSettingsContextValue<T>`, `GiselleSettingsProviderProps<T>` | ⬜     |
-| Phase 1: Implement `GiselleSettingsProvider<T>` — localStorage by default, `initialState?` for SSR       | ⬜     |
-| Phase 1: Version check on mount — reset to defaults if stored version mismatches                         | ⬜     |
-| Phase 1: Export `useGiselleSettings<T>()` hook                                                           | ⬜     |
-| Phase 1: Storybook story — default, `setField`, `canReset`/`onReset`, drawer toggle                      | ⬜     |
-| Phase 1: Vitest tests — render, `setField`, `canReset`, `onReset`, version mismatch reset                | ⬜     |
-| Phase 2: `storage: 'cookie'` option (client-side `document.cookie`)                                      | ⬜     |
-| Phase 2: `storage: StorageAdapter<T>` custom adapter                                                     | ⬜     |
-| Phase 2: `detectGiselleSettings()` server helper (separate `/server` entrypoint)                         | ⬜     |
-| Phase 3: `SettingsThemeBridge` — internal bridge wiring settings state into `GiselleThemeProvider`       | ⬜     |
-| Phase 3: `GiselleThemeAndSettingsProvider` convenience wrapper                                           | ⬜     |
-| Phase 3: Migration guide in README and `theming/nextjs.md`                                               | ⬜     |
+| Task | Label | Status |
+| -------------------------------------------------------------------------------------------------------- | ------- | ------ |
+| Phase α: Port `useLocalStorage<T>` to `src/utils/use-local-storage.ts` | Theming | ⬜ |
+| Phase α: Write `isDeepEqual(a, b)` — covers primitives, arrays, plain objects (no es-toolkit) | Theming | ⬜ |
+| Phase α: Write `getCookieValue` / `setCookieValue` — SSR-safe (`typeof document !== 'undefined'`) | Theming | ⬜ |
+| Phase α: Tests for all three utilities | Theming | ⬜ |
+| Phase 1: Define `BaseSettingsState`, `GiselleSettingsContextValue<T>`, `GiselleSettingsProviderProps<T>` | Theming | ⬜ |
+| Phase 1: Implement `GiselleSettingsProvider<T>` — localStorage by default, `initialState?` for SSR | Theming | ⬜ |
+| Phase 1: Version check on mount — reset to defaults if stored version mismatches | Theming | ⬜ |
+| Phase 1: Export `useGiselleSettings<T>()` hook | Theming | ⬜ |
+| Phase 1: Storybook story — default, `setField`, `canReset`/`onReset`, drawer toggle | Theming | ⬜ |
+| Phase 1: Vitest tests — render, `setField`, `canReset`, `onReset`, version mismatch reset | Theming | ⬜ |
+| Phase 2: `storage: 'cookie'` option (client-side `document.cookie`) | Theming | ⬜ |
+| Phase 2: `storage: StorageAdapter<T>` custom adapter | Theming | ⬜ |
+| Phase 2: `detectGiselleSettings()` server helper (separate `/server` entrypoint) | Theming | ⬜ |
+| Phase 3: `SettingsThemeBridge` — internal bridge wiring settings state into `GiselleThemeProvider` | Theming | ⬜ |
+| Phase 3: `GiselleThemeAndSettingsProvider` convenience wrapper | Theming | ⬜ |
+| Phase 3: Migration guide in README and `theming/nextjs.md` | Theming | ⬜ |
 
 ---
 
-### Phase E — Standalone project UI primitives (Medium priority)
+### Phase E — Standalone project UI primitives — Components (Medium priority)
 
 **Goal:** Export the layout and section primitives that every portfolio or product site needs,
 so a blank Next.js project can assemble full pages with zero Minimals dependency and zero
@@ -198,20 +198,20 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 
 **Extraction candidates** (need only light cleanup — not a full rewrite):
 
-| Task                                                                                              | Status |
-| ------------------------------------------------------------------------------------------------- | ------ |
-| Extract `TwoColumnShowcaseRow` — clean, zero Minimals, ready now                                  | ⬜     |
-| Extract `OptionWithBlurb` — tiny wrapper, clean, zero Minimals                                    | ⬜     |
-| Extract `SectionPendingLoader` — replace internal `Iconify` with `GiselleIcon`                    | ⬜     |
-| Extract `FloatingControlBar` — replace `channelAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | ⬜     |
+| Task | Label | Status |
+| ------------------------------------------------------------------------------------------------- | ------- | ------ |
+| Extract `TwoColumnShowcaseRow` — clean, zero Minimals, ready now | Components | ⬜ |
+| Extract `OptionWithBlurb` — tiny wrapper, clean, zero Minimals | Components | ⬜ |
+| Extract `SectionPendingLoader` — replace internal `Iconify` with `GiselleIcon` | Components | ⬜ |
+| Extract `FloatingControlBar` — replace `channelAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | Components | ⬜ |
 
 **Write from scratch** (no copy from alexrebula — independent implementations):
 
-| Task                                                                                              | Status |
-| ------------------------------------------------------------------------------------------------- | ------ |
-| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot     | ⬜     |
-| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha` | ⬜     |
-| `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand        | ⬜     |
+| Task | Label | Status |
+| ------------------------------------------------------------------------------------------------- | ------- | ------ |
+| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot | Components | ⬜ |
+| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha` | Components | ⬜ |
+| `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand | Components | ⬜ |
 
 **When this phase is done:**
 
@@ -223,7 +223,7 @@ Full gap analysis: [`docs/components/standalone-gap-analysis.md`](../components/
 
 ---
 
-### Phase F — DetailsDrawer (Medium priority)
+### Phase F — DetailsDrawer — Components (Medium priority)
 
 **Goal:** Export a reusable `<DetailsDrawer>` component — a slide-in panel from the right edge
 of the viewport, styled to MUI theme tokens, with zero Minimals dependency. This is the
@@ -277,18 +277,18 @@ export interface DetailsDrawerProps {
 }
 ```
 
-| Task                                                                                           | Status |
-| ---------------------------------------------------------------------------------------------- | ------ |
-| Implement `DetailsDrawer` — slide animation, backdrop, close button, slots                     | ⬜     |
-| Responsive width: `{ xs: '100%', md: 480 }` default, overridable via `width` prop              | ⬜     |
-| Export from `src/index.ts` + barrel `src/components/details-drawer/index.ts`                   | ⬜     |
-| Storybook story: empty, with title, with footer, with full `TimelineItemDetails` inside        | ⬜     |
-| Vitest test: renders open/closed, close button calls `onClose`, backdrop click calls `onClose` | ⬜     |
-| README: why this exists, design decisions, copyright note                                      | ⬜     |
+| Task | Label | Status |
+| ---------------------------------------------------------------------------------------------- | ------- | ------ |
+| Implement `DetailsDrawer` — slide animation, backdrop, close button, slots | Components | ⬜ |
+| Responsive width: `{ xs: '100%', md: 480 }` default, overridable via `width` prop | Components | ⬜ |
+| Export from `src/index.ts` + barrel `src/components/details-drawer/index.ts` | Components | ⬜ |
+| Storybook story: empty, with title, with footer, with full `TimelineItemDetails` inside | Components | ⬜ |
+| Vitest test: renders open/closed, close button calls `onClose`, backdrop click calls `onClose` | Components | ⬜ |
+| README: why this exists, design decisions, copyright note | Components | ⬜ |
 
 ---
 
-### Phase G — TimelineItemDetails (Medium priority)
+### Phase G — TimelineItemDetails — Components (Medium priority)
 
 **Goal:** Export a `<TimelineItemDetails>` component — the universal read/edit panel for
 any timeline item (phase, milestone, life event, scenario). Rendered inside `DetailsDrawer`,
@@ -367,18 +367,18 @@ decoupled — the consumer owns the open/close state.
 **Prerequisite:** Phase F (`DetailsDrawer`) — `TimelineItemDetails` is always rendered
 inside a `DetailsDrawer`.
 
-| Task                                                                                   | Status |
-| -------------------------------------------------------------------------------------- | ------ |
-| Define `TimelineItemDetailData` interface in `types.ts`                                | ⬜     |
-| Implement `TimelineItemDetails` — read-only layout, all field slots                    | ⬜     |
-| Status chip: maps `color` + `done`/`overdue` to label + palette color                  | ⬜     |
-| Photo slot: responsive row of thumbnails with lightbox-ready click handler             | ⬜     |
-| Sub-items slot: styled list from `details[]` array                                     | ⬜     |
-| Links slot: anchor list with `GiselleIcon` icon per item                               | ⬜     |
-| Extra fields slot: `label: value` rows for consumer-defined metadata                   | ⬜     |
-| Export from `src/index.ts` + barrel `src/components/timeline-item-details/index.ts`    | ⬜     |
-| Storybook story: phase item, milestone item, overdue item, minimal item (no optionals) | ⬜     |
-| Vitest test: renders all slots, status chip label for each `color`/`done` combination  | ⬜     |
-| README: why it exists, why it belongs here, design decisions                           | ⬜     |
-| Phase G v2: edit mode — controlled inputs, `onSave`, `onCancel` callbacks              | ⬜     |
-| Phase G v2: wire `TimelineTwoColumn.onItemClick` to open drawer with item data         | ⬜     |
+| Task | Label | Status |
+| -------------------------------------------------------------------------------------- | ------- | ------ |
+| Define `TimelineItemDetailData` interface in `types.ts` | Components | ⬜ |
+| Implement `TimelineItemDetails` — read-only layout, all field slots | Components | ⬜ |
+| Status chip: maps `color` + `done`/`overdue` to label + palette color | Components | ⬜ |
+| Photo slot: responsive row of thumbnails with lightbox-ready click handler | Components | ⬜ |
+| Sub-items slot: styled list from `details[]` array | Components | ⬜ |
+| Links slot: anchor list with `GiselleIcon` icon per item | Components | ⬜ |
+| Extra fields slot: `label: value` rows for consumer-defined metadata | Components | ⬜ |
+| Export from `src/index.ts` + barrel `src/components/timeline-item-details/index.ts` | Components | ⬜ |
+| Storybook story: phase item, milestone item, overdue item, minimal item (no optionals) | Components | ⬜ |
+| Vitest test: renders all slots, status chip label for each `color`/`done` combination | Components | ⬜ |
+| README: why it exists, why it belongs here, design decisions | Components | ⬜ |
+| Phase G v2: edit mode — controlled inputs, `onSave`, `onCancel` callbacks | Components | ⬜ |
+| Phase G v2: wire `TimelineTwoColumn.onItemClick` to open drawer with item data | Components | ⬜ |
