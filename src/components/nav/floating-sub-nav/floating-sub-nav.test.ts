@@ -5,11 +5,11 @@ import { renderToStaticMarkup } from 'react-dom/server';
 
 import { FloatingSubNav } from './floating-sub-nav';
 
-// framer-motion uses browser APIs — mock AnimatePresence and m to plain wrappers
+// framer-motion uses browser APIs — mock AnimatePresence and motion to plain wrappers
 vi.mock('framer-motion', () => ({
   AnimatePresence: ({ children }: { children: React.ReactNode }) =>
     React.createElement(React.Fragment, null, children),
-  m: new Proxy(
+  motion: new Proxy(
     {},
     {
       get:

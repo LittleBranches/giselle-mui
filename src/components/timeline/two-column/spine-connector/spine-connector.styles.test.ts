@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import { yearLabelSx } from './styles';
+import { yearLabelSx } from './spine-connector.styles';
 
 // ----------------------------------------------------------------------
 

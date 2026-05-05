@@ -3,10 +3,8 @@
  * Unit tests for StatCard.
  *
  * All MUI components are mocked to avoid theme-provider requirements.
- * `useTheme` is mocked to return a minimal palette so sparklineColor
- * resolves without a CssVarsProvider.
- * `react-apexcharts` is mocked to confirm it does NOT appear in SSR output
- * (the component only loads it after mount via dynamic import).
+ * The `chart` slot accepts any `ReactNode` — no chart-library dependency
+ * inside this component.
  */
 
 import React from 'react';
@@ -59,19 +57,6 @@ vi.mock('@mui/material/Typography', () => ({
   }) => React.createElement(component as string, props, children ?? null),
 }));
 
-vi.mock('@mui/material/styles', () => ({
-  useTheme: () => ({
-    palette: {
-      primary: { dark: '#1565c0' },
-      secondary: { dark: '#6d1b7b' },
-      info: { dark: '#014361' },
-      success: { dark: '#1b5e20' },
-      warning: { dark: '#e65100' },
-      error: { dark: '#b71c1c' },
-    },
-  }),
-}));
-
 vi.mock('../../icon/giselle', () => ({
   GiselleIcon: ({ icon, width }: { icon: string; width?: number }) =>
     React.createElement('span', { 'data-icon': icon, 'data-width': width }),
@@ -79,10 +64,6 @@ vi.mock('../../icon/giselle', () => ({
 
 import { StatCard } from './stat-card';
 
-// ----------------------------------------------------------------------
-// Tests use renderToStaticMarkup (SSR-safe) because the sparkline loads
-// lazily via useEffect — it is never present in the static markup.
-// Interaction tests use ReactDOM.createRoot + act where needed.
 // ----------------------------------------------------------------------
 
 describe('StatCard — rendering', () => {
@@ -144,16 +125,19 @@ describe('StatCard — trend indicator', () => {
   });
 });
 
-describe('StatCard — sparkline (SSR guard)', () => {
-  it('[regression] sparkline chart is absent in SSR output — chart loads only after mount', () => {
-    // react-apexcharts is not available in the test environment.
-    // Even if it were, useEffect does not run in renderToStaticMarkup.
+describe('StatCard — chart slot', () => {
+  it('renders the chart slot when provided', () => {
+    const chart = React.createElement('div', { 'data-testid': 'chart-slot' });
     const html = renderToStaticMarkup(
-      React.createElement(StatCard, { label: 'Test', value: '1', sparkline: [1, 2, 3, 4] })
+      React.createElement(StatCard, { label: 'Test', value: '1', chart })
     );
-    // No apexcharts markup should appear in server-rendered HTML
-    expect(html).not.toContain('apexcharts');
-    expect(html).not.toContain('apexchartstest');
+    expect(html).toContain('data-testid="chart-slot"');
+  });
+
+  it('renders without error when chart prop is absent', () => {
+    expect(() =>
+      renderToStaticMarkup(React.createElement(StatCard, { label: 'Test', value: '1' }))
+    ).not.toThrow();
   });
 });
 

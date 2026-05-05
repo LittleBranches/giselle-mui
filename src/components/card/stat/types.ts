@@ -57,14 +57,25 @@ export interface StatCardProps extends Omit<CardProps, 'title' | 'color'> {
    */
   color?: StatCardColor;
   /**
-   * Raw data points for the sparkline chart rendered in the bottom-right of the card.
+   * Chart slot — accepts any `ReactNode`. Renders bottom-right inside the card.
    *
-   * Requires `apexcharts` and `react-apexcharts` peer dependencies.
-   * The chart loads lazily on the client — safe for SSR.
+   * No chart-library dependency inside this component. Pass a pre-configured
+   * chart element from the consumer. Use `STAT_CARD_SPARKLINE_OPTIONS` from
+   * `stat-card.styles.ts` as the base options for the canonical 84×56 slot.
    *
-   * @example sparkline={[10, 14, 12, 20, 18, 24, 22]}
+   * ```tsx
+   * chart={
+   *   <ReactApexChart
+   *     type="line"
+   *     series={[{ data: sparkline }]}
+   *     options={{ ...STAT_CARD_SPARKLINE_OPTIONS, colors: [theme.palette.primary.dark] }}
+   *     width={84}
+   *     height={56}
+   *   />
+   * }
+   * ```
    */
-  sparkline?: number[];
+  chart?: ReactNode;
   /** MUI `sx` override on the root `Card`. */
   sx?: SxProps<Theme>;
 }

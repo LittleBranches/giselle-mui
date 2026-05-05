@@ -6,7 +6,7 @@ import type { HighlightedPaletteKey } from '../types';
 import Box from '@mui/material/Box';
 
 import { checkPop, pulseRing } from '../animations';
-import { doneCheckmarkSx, timelineDotInnerSx } from './styles';
+import { doneCheckmarkSx, timelineDotInnerSx } from './timeline-dot.styles';
 
 // ----------------------------------------------------------------------
 

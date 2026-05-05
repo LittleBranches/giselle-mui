@@ -42,7 +42,7 @@ import {
   projectLogoSx,
   eyeButtonSx,
   phaseCardIconBoxSx,
-} from './styles';
+} from './phase-card.styles';
 
 // ----------------------------------------------------------------------
 

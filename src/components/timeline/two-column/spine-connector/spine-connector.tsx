@@ -4,7 +4,7 @@ import type { HighlightedPaletteKey } from '../types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { yearLabelSx } from './styles';
+import { yearLabelSx } from './spine-connector.styles';
 
 // ----------------------------------------------------------------------
 

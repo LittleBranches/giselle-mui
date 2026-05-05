@@ -1,4 +1,5 @@
 import type { SxProps, Theme } from '@mui/material/styles';
+import type { ApexOptions } from 'apexcharts';
 
 import { channelAlpha } from '../../../utils/theme-utils';
 import type { StatCardColor } from './types';
@@ -53,4 +54,25 @@ export const contentRowSx: SxProps<Theme> = {
 export const labelsBoxSx: SxProps<Theme> = {
   flexGrow: 1,
   minWidth: 112,
+};
+
+// ----------------------------------------------------------------------
+
+/**
+ * Base ApexCharts options for the `StatCard` sparkline slot (84×56 px).
+ *
+ * Spread this and add `colors` to match the card's palette:
+ *
+ * ```ts
+ * options={{ ...STAT_CARD_SPARKLINE_OPTIONS, colors: [theme.palette[color].dark] }}
+ * ```
+ */
+export const STAT_CARD_SPARKLINE_OPTIONS: ApexOptions = {
+  chart: {
+    sparkline: { enabled: true },
+    animations: { enabled: false },
+  },
+  stroke: { width: 2, curve: 'smooth' },
+  tooltip: { enabled: false },
+  markers: { strokeWidth: 0 },
 };

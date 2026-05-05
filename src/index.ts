@@ -30,7 +30,7 @@ export type { SelectableCardProps } from './components/card/selectable';
 export { QuoteCard } from './components/card/quote';
 export type { QuoteCardProps } from './components/card/quote';
 
-export { StatCard } from './components/card/stat';
+export { StatCard, STAT_CARD_SPARKLINE_OPTIONS } from './components/card/stat';
 export type { StatCardProps, StatCardColor, StatCardItem } from './components/card/stat';
 
 export { PhaseCard, TimelineDot, TimelineTwoColumn } from './components/timeline/two-column';
@@ -61,3 +61,9 @@ export type { SectionTitleProps } from './components/layout/section-title';
 
 export { FloatingSubNav } from './components/nav/floating-sub-nav';
 export type { FloatingSubNavProps, FloatingSubNavItem } from './components/nav/floating-sub-nav';
+
+export { SectionContainer } from './components/layout/section-container';
+export type { SectionContainerProps } from './components/layout/section-container';
+
+export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity-utils';
+export { assignMilestoneSidesByDone } from './utils/timeline-utils';

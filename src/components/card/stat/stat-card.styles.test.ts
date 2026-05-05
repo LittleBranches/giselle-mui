@@ -9,6 +9,7 @@ import {
   iconBoxSx,
   contentRowSx,
   labelsBoxSx,
+  STAT_CARD_SPARKLINE_OPTIONS,
 } from './stat-card.styles';
 
 // ----------------------------------------------------------------------
@@ -73,5 +74,28 @@ describe('contentRowSx', () => {
 describe('labelsBoxSx', () => {
   it('[regression] labels block has a minimum width to prevent layout collapse', () => {
     expect((labelsBoxSx as Record<string, unknown>).minWidth).toBe(112);
+  });
+});
+
+describe('STAT_CARD_SPARKLINE_OPTIONS', () => {
+  it('enables sparkline mode', () => {
+    expect(STAT_CARD_SPARKLINE_OPTIONS.chart?.sparkline?.enabled).toBe(true);
+  });
+
+  it('disables animations for a static snapshot appearance', () => {
+    expect(STAT_CARD_SPARKLINE_OPTIONS.chart?.animations?.enabled).toBe(false);
+  });
+
+  it('disables tooltip — sparkline is decorative, not interactive', () => {
+    expect(STAT_CARD_SPARKLINE_OPTIONS.tooltip?.enabled).toBe(false);
+  });
+
+  it('does NOT include a colors key — consumer provides the palette dark token', () => {
+    expect(STAT_CARD_SPARKLINE_OPTIONS).not.toHaveProperty('colors');
+  });
+
+  it('sets stroke width to 2 with smooth curve', () => {
+    expect(STAT_CARD_SPARKLINE_OPTIONS.stroke?.width).toBe(2);
+    expect(STAT_CARD_SPARKLINE_OPTIONS.stroke?.curve).toBe('smooth');
   });
 });

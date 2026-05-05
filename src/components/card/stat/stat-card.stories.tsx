@@ -1,9 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
+import ReactApexChart from 'react-apexcharts';
 
 import { GiselleIcon } from '../../icon/giselle';
-import { StatCard } from './stat-card';
+import type { StatCardColor } from './types';
+import { StatCard, STAT_CARD_SPARKLINE_OPTIONS } from './stat-card';
 
 // ----------------------------------------------------------------------
 
@@ -13,8 +16,8 @@ const meta: Meta<typeof StatCard> = {
   parameters: { layout: 'padded' },
   argTypes: {
     icon: { control: false },
+    chart: { control: false },
     sx: { control: false },
-    sparkline: { control: false },
   },
 };
 
@@ -25,6 +28,24 @@ type Story = StoryObj<typeof StatCard>;
 
 const SAMPLE_SPARKLINE = [22, 18, 30, 25, 40, 35, 48];
 const SAMPLE_SPARKLINE_DOWN = [48, 40, 35, 30, 22, 18, 14];
+
+/**
+ * Named helper so hooks are valid inside a render function.
+ * Uses `useTheme` to pick the palette key's dark token as the line colour.
+ */
+function SparklineChart({ data, colorKey }: { data: number[]; colorKey: StatCardColor }) {
+  const theme = useTheme();
+  const dark = theme.palette[colorKey].dark;
+  return (
+    <ReactApexChart
+      type="line"
+      series={[{ data }]}
+      options={{ ...STAT_CARD_SPARKLINE_OPTIONS, colors: [dark] }}
+      width={84}
+      height={56}
+    />
+  );
+}
 
 // ----------------------------------------------------------------------
 
@@ -72,8 +93,9 @@ export const WithTrendDown: Story = {
 };
 
 /**
- * With sparkline — the chart loads lazily via dynamic import after mount.
- * Requires `react-apexcharts` and `apexcharts` to be installed.
+ * With sparkline — passes a pre-configured `<ReactApexChart>` into the `chart` slot.
+ * `STAT_CARD_SPARKLINE_OPTIONS` encodes the canonical 84×56 options; the consumer
+ * adds `colors` from the palette key.
  */
 export const WithSparkline: Story = {
   args: {
@@ -83,7 +105,7 @@ export const WithSparkline: Story = {
     trendLabel: 'last week',
     color: 'primary',
     icon: <GiselleIcon icon="solar:cart-large-4-bold-duotone" width={28} />,
-    sparkline: SAMPLE_SPARKLINE,
+    chart: <SparklineChart data={SAMPLE_SPARKLINE} colorKey="primary" />,
   },
 };
 
@@ -98,7 +120,7 @@ export const WithSparklineDown: Story = {
     trendLabel: 'last week',
     color: 'warning',
     icon: <GiselleIcon icon="solar:arrow-down-bold-duotone" width={28} />,
-    sparkline: SAMPLE_SPARKLINE_DOWN,
+    chart: <SparklineChart data={SAMPLE_SPARKLINE_DOWN} colorKey="warning" />,
   },
 };
 
@@ -118,7 +140,7 @@ export const AllColors: Story = {
           trendLabel="last week"
           color={color}
           icon={<GiselleIcon icon="solar:star-bold-duotone" width={28} />}
-          sparkline={SAMPLE_SPARKLINE}
+          chart={<SparklineChart data={SAMPLE_SPARKLINE} colorKey={color} />}
         />
       ))}
     </Box>
@@ -151,7 +173,7 @@ export const Responsive: Story = {
               trendLabel="last week"
               color="info"
               icon={<GiselleIcon icon="solar:box-bold-duotone" width={28} />}
-              sparkline={SAMPLE_SPARKLINE}
+              chart={<SparklineChart data={SAMPLE_SPARKLINE} colorKey="info" />}
             />
           </Box>
         </Box>

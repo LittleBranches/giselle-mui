@@ -22,7 +22,7 @@ import {
   milestoneDetailPillSx,
   milestoneDetailListSx,
   milestoneDetailRowSx,
-} from './styles';
+} from './milestone-badge.styles';
 
 // ----------------------------------------------------------------------
 

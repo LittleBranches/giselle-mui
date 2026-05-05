@@ -63,7 +63,7 @@ import {
   markerRowInnerSx,
   markerCaptionSx,
   markerDateSpanSx,
-} from './styles';
+} from './two-column.styles';
 
 // ----------------------------------------------------------------------
 

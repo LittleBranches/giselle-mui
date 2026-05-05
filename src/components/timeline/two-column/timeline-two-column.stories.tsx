@@ -11,7 +11,7 @@ import {
   storyOverlineSx,
   storyResponsiveBoxSx,
   storyFooterButtonSx,
-} from './stories.styles';
+} from './two-column.stories.styles';
 
 // ----------------------------------------------------------------------
 
