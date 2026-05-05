@@ -155,14 +155,50 @@ Current exports from the utils sub-path:
 
 ---
 
+## 8 — Copilot review fixes (post-review batches)
+
+Fixes applied after initial review comments on this PR.
+
+### `RadialProgressCard` — dot size, palette fallbacks, useMemo deps
+
+- **`LEGEND_DOT_SIZE = 12`** — legend dot was `10 × 10`. Raised to 12 to meet the minimum readable size rule for status indicators (`>= 12px`). Exported as a named constant; regression test added.
+- **Hardcoded hex fallbacks removed** — `legendDotSx` was using `?? '#888'` / `?? '#222'` / `?? '#e0e0e0'` when `theme.vars` was absent. Replaced with `theme.palette.text.secondary`, `theme.palette.text.primary`, and `(theme.vars?.palette.grey[200] ?? theme.palette.grey[200])`. Tests updated to assert palette tokens instead of raw hex.
+- **`resolvedColors` useMemo deps** — `theme` was missing from the dependency array (stale closure). Added `theme` to deps; removed the now-unnecessary `eslint-disable` comment.
+- **`resolvedColors[i] ?? '#1976d2'` fallback** — hardcoded hex replaced with `theme.palette.primary.main`.
+
+### `FloatingSubNav` — inline sx extraction
+
+- `stickyInnerSx` extracted from an inline `sx={{ transform: 'translateY(-100%)', pointerEvents: 'auto', pb: { xs: '23px', md: '31px' } }}` (4 properties — over the ~3-property limit) to a named constant in `floating-sub-nav.styles.ts`. Two new tests in `floating-sub-nav.styles.test.ts`.
+
+### `docs/theming/nextjs.md` — import path correction
+
+- Two `giselleTheme` import examples corrected from `'@alexrebula/giselle-mui'` to `'@alexrebula/giselle-mui/utils'`. The root import carries a `'use client'` banner; the utils sub-path is server-safe.
+
+### `TwoColumnShowcaseRow` — Grid v2 clarifying comment
+
+- Added a comment explaining that `@mui/material/Grid` exports Grid v2 in MUI v7 (Grid v1 was removed) and that the `size={}` prop is the correct v2 API.
+
+### `.github/copilot-instructions.md` — peer deps rule
+
+- Component rule #1 updated to explicitly list the extended peer dep set (`@mui/lab`, `framer-motion`, `apexcharts`, `react-apexcharts`) and cross-reference the **Additional allowed peer dependencies** section, so the rule is no longer inconsistent with `package.json`.
+
+### `README.md` — brought up to date
+
+- Components table: added `StatCard`, `FloatingSubNav`, `SectionTitle`, `TwoColumnShowcaseRow`.
+- Roadmap table: added Phase B row (`giselleTheme` preset, ✅ Done 5 May 2026).
+- License independence note: corrected to list all open-source peers (`@mui/lab`, `framer-motion`, optional `apexcharts`/`react-apexcharts`).
+- Peer deps install block: added `@mui/lab`, `framer-motion`, and the optional ApexCharts pair.
+
+---
+
 ## Test summary
 
 | Scope                          | Tests                | Status         |
 | ------------------------------ | -------------------- | -------------- |
-| All test files                 | **620**              | ✅ All passing |
-| New — `RadialProgressCard`     | 19 (styles + render) | ✅             |
+| All test files                 | **629**              | ✅ All passing |
+| New — `RadialProgressCard`     | 20 (styles + render) | ✅             |
 | New — `StatCard`               | 26 (styles + render) | ✅             |
-| New — `FloatingSubNav`         | 13 (render + styles) | ✅             |
+| New — `FloatingSubNav`         | 15 (render + styles) | ✅             |
 | New — `maturity-utils`         | 17                   | ✅             |
 | New — `timeline-utils`         | 7                    | ✅             |
 | Existing — `TimelineTwoColumn` | unchanged            | ✅             |
@@ -174,11 +210,17 @@ Current exports from the utils sub-path:
 - [x] Phase B `giselleTheme` exported and tested (16 tests)
 - [x] `SectionTitle` extracted + tested (8 tests)
 - [x] `TwoColumnShowcaseRow` extracted + tested (5 tests)
-- [x] `FloatingSubNav` extracted + tested (13 tests)
+- [x] `FloatingSubNav` extracted + tested (15 tests)
 - [x] `StatCard` shipped + tested (26 tests)
-- [x] `RadialProgressCard` shipped + tested (19 tests)
+- [x] `RadialProgressCard` shipped + tested (20 tests)
 - [x] Server-safe utils sub-path (`@alexrebula/giselle-mui/utils`) builds cleanly
 - [x] `decorationSx` regression fixed (bottom-right position)
 - [x] Storybook titles follow canonical group map
 - [x] Phase H roadmap entry added
-- [x] `npm run check:verify` passes (Prettier → ESLint → tsc → 620 tests → tsup build)
+- [x] `LEGEND_DOT_SIZE = 12` — minimum readable size enforced + regression test
+- [x] Hardcoded hex fallbacks replaced with palette tokens
+- [x] `resolvedColors` useMemo deps include `theme`
+- [x] `stickyInnerSx` extracted + tested
+- [x] `docs/theming/nextjs.md` import corrected to `/utils`
+- [x] `README.md` updated (components, roadmap, peer deps)
+- [x] `npm run check:verify` passes (Prettier → ESLint → tsc → 629 tests → tsup build → Storybook build)
