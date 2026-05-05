@@ -2,7 +2,13 @@
 import { describe, it, expect } from 'vitest';
 import type { Theme } from '@mui/material/styles';
 
-import { pillSx, stickyWrapperSx, fixedWrapperSx, subNavButtonSx } from './floating-sub-nav.styles';
+import {
+  pillSx,
+  stickyWrapperSx,
+  stickyInnerSx,
+  fixedWrapperSx,
+  subNavButtonSx,
+} from './floating-sub-nav.styles';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +54,18 @@ describe('stickyWrapperSx', () => {
   it('sets height 0', () => {
     const styles = (stickyWrapperSx as unknown as StyleFn)(mockTheme);
     expect(styles.height).toBe(0);
+  });
+});
+
+describe('stickyInnerSx', () => {
+  it('floats the pill upward via translateY(-100%)', () => {
+    const styles = stickyInnerSx as Record<string, unknown>;
+    expect(styles.transform).toBe('translateY(-100%)');
+  });
+
+  it('restores pointer events on the inner box', () => {
+    const styles = stickyInnerSx as Record<string, unknown>;
+    expect(styles.pointerEvents).toBe('auto');
   });
 });
 

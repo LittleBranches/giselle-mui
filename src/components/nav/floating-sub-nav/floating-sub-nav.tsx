@@ -40,7 +40,13 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import ButtonBase from '@mui/material/ButtonBase';
 
-import { pillSx, stickyWrapperSx, fixedWrapperSx, subNavButtonSx } from './floating-sub-nav.styles';
+import {
+  pillSx,
+  stickyWrapperSx,
+  stickyInnerSx,
+  fixedWrapperSx,
+  subNavButtonSx,
+} from './floating-sub-nav.styles';
 import type { FloatingSubNavItem, FloatingSubNavProps } from './types';
 
 // Re-export for consumers that import types from the component directly.
@@ -101,13 +107,7 @@ export function FloatingSubNav({ items, activeId, onSelect, sticky = false }: Fl
   if (sticky) {
     return (
       <Box sx={stickyWrapperSx}>
-        <Box
-          sx={{
-            transform: 'translateY(-100%)',
-            pointerEvents: 'auto',
-            pb: { xs: '23px', md: '31px' },
-          }}
-        >
+        <Box sx={stickyInnerSx}>
           <AnimatePresence>
             {activeId !== null && (
               <NavPill items={items} activeId={activeId} onPress={handlePress} />

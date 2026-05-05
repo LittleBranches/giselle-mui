@@ -260,7 +260,7 @@ brand palette for both light and dark colour schemes. Pass it directly to
 
 ```tsx
 import { CssVarsProvider } from '@mui/material/styles';
-import { giselleTheme } from '@alexrebula/giselle-mui';
+import { giselleTheme } from '@alexrebula/giselle-mui/utils';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -297,7 +297,7 @@ Spread the preset and override only what you need:
 
 ```ts
 import { extendTheme } from '@mui/material/styles';
-import { giselleTheme } from '@alexrebula/giselle-mui';
+import { giselleTheme } from '@alexrebula/giselle-mui/utils';
 
 const myTheme = extendTheme({
   ...giselleTheme,

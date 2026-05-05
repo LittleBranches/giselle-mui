@@ -63,10 +63,8 @@ export function RadialProgressCard({
   const theme = useTheme();
 
   const resolvedColors = useMemo(
-    () => series.map((item) => theme.palette[item.color].main ?? '#1976d2'),
-    // theme reference is stable within a CssVarsProvider; series is the real dep
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [series]
+    () => series.map((item) => theme.palette[item.color].main),
+    [series, theme]
   );
 
   const chartSeries = useMemo(() => series.map((s) => s.value), [series]);
@@ -102,7 +100,7 @@ export function RadialProgressCard({
         <Box sx={legendRowSx}>
           {series.map((item, i) => (
             <Box key={item.label} sx={legendItemSx}>
-              <Box sx={legendDotSx(resolvedColors[i] ?? '#1976d2')} />
+              <Box sx={legendDotSx(resolvedColors[i] ?? theme.palette.primary.main)} />
               <Typography variant="subtitle2">{item.label}</Typography>
               <Typography variant="caption" sx={legendValueSx}>
                 {item.value}%

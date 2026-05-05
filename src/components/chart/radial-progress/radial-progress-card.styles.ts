@@ -24,9 +24,9 @@ export function buildRadialProgressOptions(
   total: number,
   totalLabel: string
 ): ApexOptions {
-  const textSecondary = theme.vars?.palette.text.secondary ?? '#888';
-  const textPrimary = theme.vars?.palette.text.primary ?? '#222';
-  const trackBg = theme.vars?.palette.grey[200] ?? '#e0e0e0';
+  const textSecondary = theme.vars?.palette.text.secondary ?? theme.palette.text.secondary;
+  const textPrimary = theme.vars?.palette.text.primary ?? theme.palette.text.primary;
+  const trackBg = (theme.vars?.palette.grey[200] ?? theme.palette.grey[200]) as string;
 
   return {
     chart: {
@@ -107,12 +107,22 @@ export const legendValueSx: SxProps<Theme> = {
 // Dynamic sx factories
 
 /**
+ * Minimum dot size — matches the repo minimum readable size rule for status
+ * indicators (`>= 12px`).
+ *
+ * Keep the source value here for styles usage, and re-export it from
+ * `radial-progress-card.tsx` so consumers and `radial-progress-card.test.ts`
+ * can follow the standard readability-minimum enforcement pattern.
+ */
+export const LEGEND_DOT_SIZE = 12;
+
+/**
  * Sx for the coloured dot next to each legend label.
  * Applies a solid circle in the segment's resolved palette colour.
  */
 export const legendDotSx = (color: string): SxProps<Theme> => ({
-  width: 10,
-  height: 10,
+  width: LEGEND_DOT_SIZE,
+  height: LEGEND_DOT_SIZE,
   borderRadius: '50%',
   bgcolor: color,
   flexShrink: 0,
