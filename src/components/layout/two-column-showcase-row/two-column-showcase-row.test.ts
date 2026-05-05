@@ -62,4 +62,16 @@ describe('TwoColumnShowcaseRow', () => {
       )
     ).not.toThrow();
   });
+
+  it('forwards ...other props (data-*, aria-*) to the root element', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(TwoColumnShowcaseRow, {
+        controls,
+        'data-testid': 'showcase-root',
+        'aria-label': 'showcase row',
+      } as Parameters<typeof TwoColumnShowcaseRow>[0])
+    );
+    expect(html).toContain('data-testid="showcase-root"');
+    expect(html).toContain('aria-label="showcase row"');
+  });
 });

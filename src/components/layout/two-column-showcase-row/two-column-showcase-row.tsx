@@ -1,3 +1,4 @@
+import type { GridProps } from '@mui/material/Grid';
 import type { StackProps } from '@mui/material/Stack';
 import type { Theme, SxProps } from '@mui/material/styles';
 
@@ -21,7 +22,10 @@ export type TwoColumnShowcaseRowText = {
   description?: string;
 };
 
-export type TwoColumnShowcaseRowProps = {
+export type TwoColumnShowcaseRowProps = Omit<
+  GridProps,
+  'direction' | 'container' | 'columnSpacing' | 'rowSpacing' | 'sx' | 'children'
+> & {
   /**
    * Optional text block rendered in the first column.
    * When omitted the layout is single-column (controls only).
@@ -87,6 +91,7 @@ export function TwoColumnShowcaseRow({
   textSx,
   controlsSx,
   sx,
+  ...other
 }: TwoColumnShowcaseRowProps) {
   const isVertical = orientation === 'column' || orientation === 'column-reverse';
 
@@ -98,7 +103,8 @@ export function TwoColumnShowcaseRow({
       columnSpacing={isVertical ? 0 : { xs: 0, md: 6 }}
       rowSpacing={{ xs: 4, md: isVertical ? 4 : 0 }}
       direction={{ xs: 'column', md: orientation }}
-      sx={[...(Array.isArray(sx) ? sx : [sx])]}
+      sx={[{}, ...(Array.isArray(sx) ? sx : [sx])]}
+      {...other}
     >
       {text && (
         <Grid size={itemSize}>
