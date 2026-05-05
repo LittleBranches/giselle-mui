@@ -7,7 +7,7 @@ import { GiselleIcon } from './giselle-icon';
 
 const meta: Meta<typeof GiselleIcon> = {
   component: GiselleIcon,
-  title: 'Components/GiselleIcon',
+  title: 'Data Display/Icon',
 };
 
 export default meta;

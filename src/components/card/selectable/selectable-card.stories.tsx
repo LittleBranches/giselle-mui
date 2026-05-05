@@ -9,7 +9,7 @@ import { SelectableCard } from './selectable-card';
 
 const meta: Meta<typeof SelectableCard> = {
   component: SelectableCard,
-  title: 'Components/SelectableCard',
+  title: 'Cards/Selectable',
 };
 
 export default meta;

@@ -11,7 +11,7 @@ import type { HighlightedPaletteKey } from '../types';
 
 const meta: Meta<typeof TimelineDot> = {
   component: TimelineDot,
-  title: 'Components/TimelineDot',
+  title: 'Giselle MUI/Timeline/Dot',
 };
 
 export default meta;

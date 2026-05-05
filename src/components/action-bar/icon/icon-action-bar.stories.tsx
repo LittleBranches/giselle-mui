@@ -9,7 +9,7 @@ import { IconActionBar } from './icon-action-bar';
 
 const meta: Meta<typeof IconActionBar> = {
   component: IconActionBar,
-  title: 'Components/IconActionBar',
+  title: 'Data Display/Action Bar',
 };
 
 export default meta;

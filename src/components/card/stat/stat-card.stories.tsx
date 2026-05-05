@@ -8,7 +8,7 @@ import { StatCard } from './stat-card';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof StatCard> = {
-  title: 'Cards/StatCard',
+  title: 'Cards/Stat',
   component: StatCard,
   parameters: { layout: 'padded' },
   argTypes: {

@@ -170,6 +170,38 @@ src/components/timeline/two-column/
 When asked to add a component, always verify: does this encode a non-obvious decision
 that saves every consumer from rediscovering it? If not, it should not be in this library.
 
+### Layout components belong here (not in alexrebula)
+
+Any section layout pattern that is **used by more than one section page** — or that is
+clearly general enough to be — belongs in `giselle-mui` as a named layout component, not
+inline in `alexrebula/src/sections/`. Examples of patterns that belong here:
+
+- Sidebar + main content grid (`<SidebarContentLayout>`)
+- Gauge / radial-bar visualisation card (`<RadialGaugeCard>`)
+- Two-column page layout with sticky sidebar
+- KPI stats column alongside a timeline
+
+**Decision rule — ask before writing any new JSX in `alexrebula/src/sections/`:**
+> Would a second section page (or a different project) want this exact layout structure?
+> If yes → create a named component in `giselle-mui/src/components/layout/` first, then import it.
+
+This was violated when `StoreReadinessSectionInner` and `ReadinessGauge` were written directly
+in `alexrebula/src/sections/store-readiness/view.tsx`. Both belong in giselle-mui:
+- `ReadinessGauge` → `src/components/chart/radial-gauge/` (wraps ApexCharts radialBar)
+- The sidebar+timeline layout → `src/components/layout/sidebar-timeline/`
+
+**Backlog items (not yet extracted — add to roadmap when taking these on):**
+- `ReadinessGauge` → giselle-mui `chart/radial-gauge/`
+- `SidebarTimelineLayout` → giselle-mui `layout/sidebar-timeline/`
+
+### Chart/ApexCharts options follow the data-layer convention
+
+When a component uses ApexCharts:
+- Chart `options` objects must **not** be defined inline in JSX.
+- Static options → module-level `const` in a `*.styles.ts` file.
+- Options that depend on theme tokens → a factory function in `*.styles.ts` that accepts `theme`.
+- The component receives the result and passes it to `<ReactApexChart options={...} />` — never defines it inline.
+
 - `TimelineTwoColumn` visual pages for roadmap docs — see the **Roadmap visual sync rule**
   in the `alexrebula` copilot instructions. `TimelineTwoColumn` is the designated component
   for rendering any `docs/**/roadmap.md` file visually. When a roadmap doc is updated, the
@@ -451,6 +483,34 @@ Every exported component function and every exported prop interface must have JS
 A component gets its own subfolder (`src/components/<name>/`) **only when it is exported from `src/index.ts`** (independently usable by consumers).
 
 Internal sub-components — helpers, local wrappers, private building blocks that only make sense inside their parent — stay flat in the parent's folder. Creating a subfolder for an internal component implies it is independently usable; that false signal causes confusion during refactors.
+
+### Storybook title grouping convention (enforce always — no exceptions)
+
+Every story file must use the correct group path. The `'Components'` group is **abolished** — it is a catch-all that gives no information. The canonical group map is:
+
+| Group | Contents |
+|---|---|
+| `Cards/Stat` | `StatCard` |
+| `Cards/Metric` | `MetricCard` + `MetricCardDecoration` |
+| `Cards/Quote` | `QuoteCard` |
+| `Cards/Selectable` | `SelectableCard` |
+| `Data Display/Icon` | `GiselleIcon` |
+| `Data Display/Action Bar` | `IconActionBar` |
+| `Giselle MUI/Timeline/Two Column` | `TimelineTwoColumn` |
+| `Giselle MUI/Timeline/Dot` | `TimelineDot` |
+| `Navigation/Floating Sub Nav` | `FloatingSubNav` |
+| `Layout/Section Title` | `SectionTitle` |
+| `Layout/Two Column Showcase Row` | `TwoColumnShowcaseRow` |
+
+**Rules:**
+- New card-type components → `Cards/<Name>` (just the noun, no "Card" suffix in the story title)
+- New display/presentational components → `Data Display/<Name>`
+- New complex compositions tied to the Timeline → `Giselle MUI/Timeline/<Name>`
+- New navigation components → `Navigation/<Name>`
+- New page-layout helpers → `Layout/<Name>`
+- Never use `'Components'` as a group — it is not informative
+
+---
 
 ### Storybook story decision rule
 

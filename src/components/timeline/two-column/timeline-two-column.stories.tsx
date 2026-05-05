@@ -17,7 +17,7 @@ import {
 
 const meta: Meta<typeof TimelineTwoColumn> = {
   component: TimelineTwoColumn,
-  title: 'Components/TimelineTwoColumn',
+  title: 'Giselle MUI/Timeline/Two Column',
   parameters: {
     docs: {
       description: {
