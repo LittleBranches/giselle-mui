@@ -67,3 +67,9 @@ export type { SectionContainerProps } from './components/layout/section-containe
 
 export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity-utils';
 export { assignMilestoneSidesByDone } from './utils/timeline-utils';
+
+export { RadialProgressCard } from './components/chart/radial-progress';
+export type {
+  RadialProgressCardProps,
+  RadialProgressItem,
+} from './components/chart/radial-progress';
