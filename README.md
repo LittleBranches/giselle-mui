@@ -5,7 +5,7 @@ accessibility decisions — so consumers don't have to rediscover them.
 
 Built on `@mui/material` v7 (CSS variables mode). TypeScript-first. MIT licensed.
 
-> **License independence:** This library is **MIT licensed**. Its only dependencies are `@mui/material` and `@iconify/react`, which are both open-source packages published under the Apache 2.0 license — not any commercial theme or kit. No code has been copied or derived from any proprietary theme. Every component is an original work. See [LICENSE](./LICENSE).
+> **License independence:** This library is **MIT licensed**. All peer dependencies are open-source: `@mui/material`, `@mui/lab`, `@iconify/react` (Apache 2.0), `framer-motion` (MIT), and optionally `apexcharts` / `react-apexcharts` (MIT). No code has been copied or derived from any proprietary theme. Every component is an original work. See [LICENSE](./LICENSE).
 
 ---
 
@@ -87,10 +87,14 @@ Full integration guides:
 | `GiselleIcon`                                     | `@iconify/react` wrapper with full MUI `sx` support — fixes the `Box component={ThirdParty}` TypeScript pitfall and the CDN flicker problem.     |
 | `createIconRegistrar`                             | Bundles icon SVG bodies offline — no CDN, no flicker, any framework.                                                                             |
 | `MetricCard` + `MetricCardDecoration`             | Structured stat card (value / label / icon / decoration slots) with CSS-var colour tinting. Zero icon-library dependency.                        |
+| `StatCard`                                        | Single-metric summary card (value / label / icon / trend) — data-layer driven via `StatCardItem`; palette-key colour prop.                       |
 | `SelectableCard`                                  | Clickable card on `ButtonBase` — correct `aria-pressed`, keyboard focus ring, and hover state without rediscovering the `Paper onClick` pitfall. |
 | `QuoteCard`                                       | Testimonial card with CSS-var tinted border and conditional attribution row.                                                                     |
 | `TimelineTwoColumn` + `PhaseCard` + `TimelineDot` | Two-column alternating timeline for career or roadmap layouts — phase cards, milestone badges, animated active dot, checklist mode.              |
 | `IconActionBar`                                   | Horizontal row of `Tooltip` + `IconButton` pairs — encodes the disabled-child `<span>` wrapper pattern so tooltips work on disabled buttons.     |
+| `FloatingSubNav`                                  | Sticky / fixed floating pill navigation bar with `framer-motion` enter/exit animation — position-mode aware, scroll-offset configurable.         |
+| `SectionTitle`                                    | Section heading with optional subtitle and colour accent — consistent vertical rhythm across section layouts.                                    |
+| `TwoColumnShowcaseRow`                            | Responsive two-column row (text + visual) for showcase/feature layouts — MUI v7 Grid v2 with configurable column widths.                        |
 
 **Full API documentation, prop tables, and live examples → [Storybook](./storybook-static/index.html)** (build locally with `npm run build-storybook`, then open the generated file)
 
@@ -111,13 +115,25 @@ npm install @alexrebula/giselle-mui
 Peer dependencies (install separately if not already in your project):
 
 ```bash
-npm install @mui/material @emotion/react @emotion/styled react react-dom
+npm install @mui/material @mui/lab @emotion/react @emotion/styled react react-dom
+```
+
+Required if you use `FloatingSubNav`:
+
+```bash
+npm install framer-motion
 ```
 
 Optional — only required if you use `GiselleIcon`:
 
 ```bash
 npm install @iconify/react
+```
+
+Optional — only required if you use `RadialProgressCard`:
+
+```bash
+npm install apexcharts react-apexcharts
 ```
 
 > **Icon registration required.** `GiselleIcon` renders from the `@iconify/react` store.
@@ -243,14 +259,15 @@ Full workflow, publishing steps, and the reasoning behind yalc:
 
 ## Roadmap
 
-| Phase                    | Status     | Description                                                                                                     |
-| ------------------------ | ---------- | --------------------------------------------------------------------------------------------------------------- |
-| Core components          | ✅ Done    | `GiselleIcon`, `MetricCard`, `SelectableCard`, `QuoteCard`, `TimelineTwoColumn` — all with unit tests + READMEs |
-| Storybook stories        | ✅ Done    | Stories shipped for all components. Deployed locally; public hosting planned.                                   |
-| Phase A theme utilities  | ✅ Done    | `channelAlpha`, `hexToChannel`, `pxToRem`/`remToPx` — see [`docs/roadmap.md`](./docs/roadmap.md)                |
-| npm publish              | ⬜ Planned | Alongside portfolio launch, May/June 2026                                                                       |
-| Additional components    | ⬜ Planned | Components extracted from portfolio patterns as they meet the extraction checklist                              |
-| Storybook public hosting | ⬜ Planned | Chromatic or self-hosted, cross-linked from Docusaurus                                                          |
+| Phase                    | Status     | Description                                                                                                                            |
+| ------------------------ | ---------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Core components          | ✅ Done    | `GiselleIcon`, `MetricCard`, `SelectableCard`, `QuoteCard`, `TimelineTwoColumn` — all with unit tests + READMEs                        |
+| Storybook stories        | ✅ Done    | Stories shipped for all components. Deployed locally; public hosting planned.                                                          |
+| Phase A theme utilities  | ✅ Done    | `channelAlpha`, `hexToChannel`, `pxToRem`/`remToPx` — see [`docs/roadmap.md`](./docs/roadmap.md)                                       |
+| Phase B brand theme      | ✅ Done    | `giselleTheme` preset + palette constants — import from `@alexrebula/giselle-mui/utils` — see [`docs/roadmap.md`](./docs/roadmap.md)   |
+| npm publish              | ⬜ Planned | Alongside portfolio launch, May/June 2026                                                                                              |
+| Additional components    | ⬜ Planned | Components extracted from portfolio patterns as they meet the extraction checklist                                                     |
+| Storybook public hosting | ⬜ Planned | Chromatic or self-hosted, cross-linked from Docusaurus                                                                                 |
 
 Full detail: [`docs/roadmap.md`](./docs/roadmap.md)
 
