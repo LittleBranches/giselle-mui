@@ -396,3 +396,49 @@ export type TimelineColumnProps = {
   bottomPadding: number;
   children: ReactNode;
 };
+
+// ----------------------------------------------------------------------
+// Section-level companion types — used by alexrebula data factories and view components.
+// Defining them here avoids type definitions in data files (see copilot-instructions.md).
+// ----------------------------------------------------------------------
+
+/**
+ * Sidebar content for a timeline section page.
+ *
+ * Contains the heading, description paragraphs, and optional status chip shown
+ * alongside `TimelineTwoColumn` in a two-column section layout.
+ */
+export interface TimelineSidebar {
+  overline: string;
+  heading: string;
+  body: string[];
+  statusChip?: string;
+}
+
+/**
+ * Column header labels for the two columns of a `TimelineTwoColumn` layout.
+ *
+ * Both `leftSubtitle` and `rightSubtitle` are optional short-description lines
+ * rendered below the column label.
+ */
+export interface TimelineColumnLabels {
+  left: string;
+  leftSubtitle?: string;
+  right: string;
+  rightSubtitle?: string;
+}
+
+/**
+ * Aggregated props for a complete timeline section — sidebar, column labels, and phases.
+ *
+ * Pass the result of a data factory directly to a timeline section view component:
+ * ```tsx
+ * const data: TimelineSectionData = createCareerTimelineSectionData();
+ * <CareerTimelineSection {...data} />
+ * ```
+ */
+export interface TimelineSectionData {
+  sidebar: TimelineSidebar;
+  columnLabels: TimelineColumnLabels;
+  phases: TimelinePhase[];
+}

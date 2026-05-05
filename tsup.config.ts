@@ -18,5 +18,7 @@ export default defineConfig({
     '@emotion/styled',
     '@iconify/react',
     'framer-motion',
+    'apexcharts',
+    'react-apexcharts',
   ],
 });

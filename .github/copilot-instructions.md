@@ -97,7 +97,7 @@ src/components/<name>/
 
 **Separation rule — non-negotiable for every component:**
 
-- TypeScript types and interfaces → separate `types.ts` file (not inside `.tsx`)
+- **TypeScript `type` aliases AND `interface` declarations → `types.ts`** (never inside `.tsx`). This applies to every exported and internal type without exception — `Props`, `Item`, `Config`, helper union types, internal-only types. If it is a type, it does not live in a `.tsx` file.
 - Pure logic / helper functions (no JSX) → separate `utils.ts` file (not inside `.tsx`)
 - Any `sx={}` with more than ~3 properties → `<name>.styles.ts` (enforced by ESLint)
 - The `.tsx` file is the **composition layer only**: it imports from the above, renders JSX, wires props.
@@ -218,6 +218,23 @@ At the start of every new Copilot session in this package, read these files:
 | `IconActionBar`                                      | `src/components/action-bar/icon/`     | ✅ Shipped + tested                        |
 | `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts`            | ✅ Shipped + tested (Phase A — 4 May 2026) |
 | `giselleTheme`, palette constants                    | `src/utils/theme-preset.ts`           | ✅ Shipped + tested (Phase B — 5 May 2026) |
+| `StatCard`                                           | `src/components/card/stat/`           | ✅ Shipped + tested (5 May 2026)           |
+
+### Section-level companion types (canonical location)
+
+These types must be defined here and imported from `@alexrebula/giselle-mui` by all consumers.
+**Never re-define them in alexrebula data files or anywhere else.**
+
+| Type                   | Location                                      | Purpose                                                                            |
+| ---------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `TimelineSidebar`      | `src/components/timeline/two-column/types.ts` | Sidebar heading/body/chip for a timeline section page                              |
+| `TimelineColumnLabels` | `src/components/timeline/two-column/types.ts` | Column header labels (`left`, `right`, optional subtitles)                         |
+| `TimelineSectionData`  | `src/components/timeline/two-column/types.ts` | Aggregated `{ sidebar, columnLabels, phases }` — pass directly to a section view   |
+| `StatCardItem`         | `src/components/card/stat/types.ts`           | Data-layer shape for one `StatCard` entry (uses `iconId: string`, not `ReactNode`) |
+
+**Why this matters:** Types defined in data files are invisible to consumers of this library.
+They also diverge over time — the same shape ends up with three different names across three
+data files. Define once in giselle-mui, import everywhere.
 
 ### Next planned work (priority order)
 

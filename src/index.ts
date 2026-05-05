@@ -30,6 +30,9 @@ export type { SelectableCardProps } from './components/card/selectable';
 export { QuoteCard } from './components/card/quote';
 export type { QuoteCardProps } from './components/card/quote';
 
+export { StatCard } from './components/card/stat';
+export type { StatCardProps, StatCardColor, StatCardItem } from './components/card/stat';
+
 export { PhaseCard, TimelineDot, TimelineTwoColumn } from './components/timeline/two-column';
 export type {
   PhaseCardProps,
@@ -38,6 +41,9 @@ export type {
   TimelinePhase,
   TimelinePlatformItem,
   HighlightedPaletteKey,
+  TimelineSidebar,
+  TimelineColumnLabels,
+  TimelineSectionData,
 } from './components/timeline/two-column';
 
 export { IconActionBar, DEFAULT_ICON_ACTIONS } from './components/action-bar/icon';
