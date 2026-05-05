@@ -1,6 +1,11 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import { ganttTrackSx, popoverPaperSx, sliderRowHeaderSx, actionsRowSx } from './phase-warning-popover.styles';
+import {
+  ganttTrackSx,
+  popoverPaperSx,
+  sliderRowHeaderSx,
+  actionsRowSx,
+} from './phase-warning-popover.styles';
 
 // ----------------------------------------------------------------------
 
