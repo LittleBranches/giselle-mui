@@ -162,6 +162,11 @@ function buildMilestoneRow(
               onMarkViewed={
                 ctx.onMarkViewed ? () => ctx.onMarkViewed!(`ms-${ctx.phaseKey}-${mi}`) : undefined
               }
+              taskDoneStates={ms.children?.map(
+                (task, ti) =>
+                  ctx.localTaskDoneMap[`${ctx.phaseKey}-m${mi}-t${ti}`] ?? task.done ?? false
+              )}
+              onToggleTask={(taskIdx, _done) => ctx.handleToggleTask(ctx.phaseKey, mi, taskIdx)}
               onRequestExpand={() => ctx.handleExpandMilestone(ctx.phaseKey, mi)}
             />
           </Box>
@@ -219,6 +224,11 @@ function buildMilestoneRow(
               onMarkViewed={
                 ctx.onMarkViewed ? () => ctx.onMarkViewed!(`ms-${ctx.phaseKey}-${mi}`) : undefined
               }
+              taskDoneStates={ms.children?.map(
+                (task, ti) =>
+                  ctx.localTaskDoneMap[`${ctx.phaseKey}-m${mi}-t${ti}`] ?? task.done ?? false
+              )}
+              onToggleTask={(taskIdx, _done) => ctx.handleToggleTask(ctx.phaseKey, mi, taskIdx)}
               onRequestExpand={() => ctx.handleExpandMilestone(ctx.phaseKey, mi)}
             />
           </Box>
@@ -251,6 +261,7 @@ export function TimelineTwoColumn({
   checklist = false,
   onTogglePhaseDone,
   onToggleMilestoneDone,
+  onToggleTaskDone,
   selectedPhaseKey,
   onPhaseSelect,
   expandableIcon,
@@ -279,6 +290,24 @@ export function TimelineTwoColumn({
     return m;
   });
 
+  // Task-level done state — always active (not gated on checklist mode).
+  // Key format: `${phaseKey}-m${milestoneIdx}-t${taskIdx}` for milestone tasks,
+  //             `${phaseKey}-t${taskIdx}` for phase-level tasks.
+  const [localTaskDoneMap, setLocalTaskDoneMap] = useState<Record<string, boolean>>(() => {
+    const t: Record<string, boolean> = {};
+    phases.forEach((p) => {
+      p.children?.forEach((task, ti) => {
+        t[`${p.key}-t${ti}`] = task.done ?? false;
+      });
+      p.milestones?.forEach((ms, mi) => {
+        ms.children?.forEach((task, ti) => {
+          t[`${p.key}-m${mi}-t${ti}`] = task.done ?? false;
+        });
+      });
+    });
+    return t;
+  });
+
   // Sync done state when the phases prop identity changes (new dataset, async load, reset).
   useEffect(() => {
     setLocalPhaseDone(Object.fromEntries(phases.map((p) => [String(p.key), p.done ?? false])));
@@ -289,6 +318,18 @@ export function TimelineTwoColumn({
       })
     );
     setLocalMilestoneDone(m);
+    const t: Record<string, boolean> = {};
+    phases.forEach((p) => {
+      p.children?.forEach((task, ti) => {
+        t[`${p.key}-t${ti}`] = task.done ?? false;
+      });
+      p.milestones?.forEach((ms, mi) => {
+        ms.children?.forEach((task, ti) => {
+          t[`${p.key}-m${mi}-t${ti}`] = task.done ?? false;
+        });
+      });
+    });
+    setLocalTaskDoneMap(t);
   }, [phases]);
 
   // Toggle-animation counters — incremented on every click so the icon wrapper
@@ -363,6 +404,65 @@ export function TimelineTwoColumn({
       }
     },
     [localMilestoneDone, phases, localPhaseDone, onToggleMilestoneDone, onTogglePhaseDone]
+  );
+
+  const handleToggleTask = useCallback(
+    (phaseKey: number, milestoneIdx: number | null, taskIdx: number) => {
+      const k =
+        milestoneIdx !== null
+          ? `${phaseKey}-m${milestoneIdx}-t${taskIdx}`
+          : `${phaseKey}-t${taskIdx}`;
+      const next = !(localTaskDoneMap[k] ?? false);
+      const updated = { ...localTaskDoneMap, [k]: next };
+      setLocalTaskDoneMap(updated);
+      onToggleTaskDone?.(phaseKey, milestoneIdx, taskIdx, next);
+
+      // Bidirectional sync: when all tasks for a milestone are done → auto-mark milestone done.
+      // Only fires in checklist mode (milestone dots need to be checkable for this to make sense).
+      if (milestoneIdx !== null && checklist) {
+        const phase = phases.find((p) => p.key === phaseKey);
+        const ms = phase?.milestones?.[milestoneIdx];
+        if (ms?.children?.length) {
+          const allTasksDone = ms.children.every(
+            (_, ti) => updated[`${phaseKey}-m${milestoneIdx}-t${ti}`] ?? false
+          );
+          const currentMsDone = localMilestoneDone[`${phaseKey}-${milestoneIdx}`] ?? false;
+          if (allTasksDone !== currentMsDone) {
+            const msUpdated = {
+              ...localMilestoneDone,
+              [`${phaseKey}-${milestoneIdx}`]: allTasksDone,
+            };
+            setLocalMilestoneDone(msUpdated);
+            onToggleMilestoneDone?.(phaseKey, milestoneIdx, allTasksDone);
+            // Cascade to phase if all milestones are now done.
+            if (phase?.milestones?.length) {
+              const allMsDone = phase.milestones.every(
+                (_, i) => msUpdated[`${phaseKey}-${i}`] ?? false
+              );
+              const currentPhaseDone = localPhaseDone[String(phaseKey)] ?? false;
+              if (allMsDone !== currentPhaseDone) {
+                setPhaseToggleCounts((prev) => ({
+                  ...prev,
+                  [String(phaseKey)]: (prev[String(phaseKey)] ?? 0) + 1,
+                }));
+                setLocalPhaseDone((prev) => ({ ...prev, [String(phaseKey)]: allMsDone }));
+                onTogglePhaseDone?.(phaseKey, allMsDone);
+              }
+            }
+          }
+        }
+      }
+    },
+    [
+      localTaskDoneMap,
+      localMilestoneDone,
+      localPhaseDone,
+      phases,
+      checklist,
+      onToggleTaskDone,
+      onToggleMilestoneDone,
+      onTogglePhaseDone,
+    ]
   );
 
   // Midnight today — used for auto-overdue detection.
@@ -566,6 +666,10 @@ export function TimelineTwoColumn({
                 allPhases={onPhasesChange ? phases : undefined}
                 isExpanded={isThisPhaseExpanded}
                 onRequestExpand={() => handleExpandPhaseCard(phase.key)}
+                taskDoneStates={phase.children?.map(
+                  (task, ti) => localTaskDoneMap[`${phase.key}-t${ti}`] ?? task.done ?? false
+                )}
+                onToggleTask={(taskIdx, _done) => handleToggleTask(phase.key, null, taskIdx)}
               />
             </Box>
           );
@@ -575,6 +679,7 @@ export function TimelineTwoColumn({
             phaseSide: phase.side,
             checklist,
             localMilestoneDone,
+            localTaskDoneMap,
             expandedMiIdx,
             anyExpanded,
             dotColor,
@@ -582,6 +687,7 @@ export function TimelineTwoColumn({
             viewedKeys: effectiveViewedKeys,
             onMarkViewed,
             handleToggleMilestone,
+            handleToggleTask,
             handleExpandMilestone,
             onMeasure: (mi: number, el: HTMLDivElement | null) => {
               // Record the card's collapsed height synchronously during the React

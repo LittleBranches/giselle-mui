@@ -21,7 +21,12 @@ import {
   milestoneEyeButtonSx,
   milestoneDetailPillSx,
   milestoneDetailListSx,
-  milestoneDetailRowSx,
+  taskRowSx,
+  taskToggleButtonSx,
+  taskIconStaticSx,
+  taskToggleColorSx,
+  taskIconColorSx,
+  taskTitleSx,
 } from './milestone-badge.styles';
 
 // ----------------------------------------------------------------------
@@ -47,6 +52,9 @@ export const MILESTONE_EYE_ICON_SIZE = 20;
  * Meets WCAG 2.2 AA 2.5.8 — minimum 24 × 24 CSS pixels for pointer targets.
  */
 export const MILESTONE_EYE_BUTTON_MIN_SIZE = 28;
+
+/** Icon size (px) for task done-toggle icons in the expanded detail list. Meets minimum inline icon rule (16px). */
+export const MILESTONE_TASK_ICON_SIZE = 16;
 
 // ----------------------------------------------------------------------
 
@@ -87,6 +95,17 @@ export type MilestoneBadgeProps = Omit<PaperProps, 'children'> & {
    * @default 'right'
    */
   columnSide?: 'left' | 'right';
+  /**
+   * Done state for each task (sub-item) in this milestone, indexed by position.
+   * Provided by `TimelineTwoColumn` when task-level done state is active.
+   * Falls back to `task.done` from the data when absent.
+   */
+  taskDoneStates?: boolean[];
+  /**
+   * Called when the user clicks a task toggle icon.
+   * When provided, task rows are interactive; when absent they are decorative.
+   */
+  onToggleTask?: (taskIndex: number, done: boolean) => void;
 };
 
 /**
@@ -105,6 +124,8 @@ export function MilestoneBadge({
   isViewed = false,
   onMarkViewed,
   columnSide = 'right',
+  taskDoneStates,
+  onToggleTask,
   sx,
   ...other
 }: MilestoneBadgeProps) {
@@ -348,21 +369,37 @@ export function MilestoneBadge({
       {hasDetails && (
         <Collapse in={isExpanded} timeout={50}>
           <Box id={detailsId} sx={milestoneDetailListSx}>
-            {taskChildren.map((task, i) => (
-              <Box key={i} sx={milestoneDetailRowSx}>
-                <Typography
-                  aria-hidden="true"
-                  component="span"
-                  variant="body2"
-                  sx={{ color: 'text.disabled', flexShrink: 0, lineHeight: 1.6 }}
-                >
-                  ›
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
-                  {task.title}
-                </Typography>
-              </Box>
-            ))}
+            {taskChildren.map((task, i) => {
+              const isDoneTask = taskDoneStates
+                ? (taskDoneStates[i] ?? false)
+                : (task.done ?? false);
+              const toggleLabel = isDoneTask
+                ? `Mark "${task.title}" as not done`
+                : `Mark "${task.title}" as done`;
+              return (
+                <Box key={i} sx={taskRowSx}>
+                  <Box
+                    component={onToggleTask ? 'button' : 'span'}
+                    aria-label={onToggleTask ? toggleLabel : undefined}
+                    aria-pressed={onToggleTask ? isDoneTask : undefined}
+                    onClick={onToggleTask ? () => onToggleTask(i, !isDoneTask) : undefined}
+                    sx={
+                      (onToggleTask
+                        ? [taskToggleButtonSx, taskToggleColorSx(isDoneTask)]
+                        : [taskIconStaticSx, taskIconColorSx(isDoneTask)]) as PaperProps['sx']
+                    }
+                  >
+                    <GiselleIcon
+                      icon={isDoneTask ? 'solar:check-circle-bold' : 'solar:circle-line-duotone'}
+                      width={MILESTONE_TASK_ICON_SIZE}
+                    />
+                  </Box>
+                  <Typography variant="body2" sx={taskTitleSx(isDoneTask)}>
+                    {task.title}
+                  </Typography>
+                </Box>
+              );
+            })}
           </Box>
         </Collapse>
       )}

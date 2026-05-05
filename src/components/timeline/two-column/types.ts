@@ -299,6 +299,19 @@ export type TimelineTwoColumnProps = Omit<BoxProps, 'children'> & {
    */
   onToggleMilestoneDone?: (phaseKey: number, milestoneIndex: number, done: boolean) => void;
   /**
+   * Called when the user toggles a task (sub-item) within a milestone or phase.
+   * Fires unconditionally — task toggles are always interactive regardless of `checklist`.
+   *
+   * Receives the parent phase `key`, the milestone `index` (or `null` for phase-level tasks),
+   * the task `index`, and the new `done` value.
+   */
+  onToggleTaskDone?: (
+    phaseKey: number,
+    milestoneIndex: number | null,
+    taskIndex: number,
+    done: boolean
+  ) => void;
+  /**
    * Controlled selection — the key of the currently selected phase.
    * When set, the matching phase dot is shown in its active (enlarged) state.
    * Intended for hero navigation use: the parent controls which phase is focused.
@@ -424,6 +437,8 @@ export type MilestoneRowCtx = {
   phaseSide: 'left' | 'right';
   checklist: boolean;
   localMilestoneDone: Record<string, boolean>;
+  /** Done state per task, keyed by `${phaseKey}-m${milestoneIdx}-t${taskIdx}`. */
+  localTaskDoneMap: Record<string, boolean>;
   expandedMiIdx: number | null;
   anyExpanded: boolean;
   dotColor: HighlightedPaletteKey;
@@ -431,6 +446,8 @@ export type MilestoneRowCtx = {
   viewedKeys: Set<string>;
   onMarkViewed: ((key: string) => void) | undefined;
   handleToggleMilestone: (phaseKey: number, mi: number) => void;
+  /** Toggles a single task within a milestone. Always wired (not gated on checklist). */
+  handleToggleTask: (phaseKey: number, mi: number, taskIdx: number) => void;
   handleExpandMilestone: (phaseKey: number, milestoneIndex: number) => void;
   /** Called with the mounted card element so the parent can measure its height. */
   onMeasure: (mi: number, el: HTMLDivElement | null) => void;

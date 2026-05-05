@@ -26,7 +26,6 @@ import {
   photoImgSx,
   labeledIconStripLabelSx,
   detailBulletsContainerSx,
-  detailBulletsRowSx,
   tooltipAlertListSx,
   cornerBadgeCircleSx,
   statusBadgeWrapperSx,
@@ -42,6 +41,12 @@ import {
   projectLogoSx,
   eyeButtonSx,
   phaseCardIconBoxSx,
+  taskRowSx,
+  taskToggleButtonSx,
+  taskIconStaticSx,
+  taskToggleColorSx,
+  taskIconColorSx,
+  taskTitleSx,
 } from './phase-card.styles';
 
 // ----------------------------------------------------------------------
@@ -75,6 +80,9 @@ export const PHASE_PILL_ICON_SIZE = 16;
 
 /** Font size for the count label in the phase card's expandable details pill. */
 export const PHASE_PILL_TEXT_FONT_SIZE = '0.75rem';
+
+/** Icon size (px) for task done-toggle icons in the expanded detail list. Meets minimum inline icon rule (16px). */
+export const PHASE_TASK_ICON_SIZE = 16;
 
 // ----------------------------------------------------------------------
 
@@ -155,27 +163,49 @@ type CardDetailBulletsProps = {
   id: string;
   details: Task[];
   in: boolean;
+  taskDoneStates?: boolean[];
+  onToggleTask?: (taskIndex: number, done: boolean) => void;
 };
 
-function CardDetailBullets({ id, details, in: expanded }: CardDetailBulletsProps) {
+function CardDetailBullets({
+  id,
+  details,
+  in: expanded,
+  taskDoneStates,
+  onToggleTask,
+}: CardDetailBulletsProps) {
   return (
     <Collapse in={expanded} timeout={50}>
       <Box id={id} sx={detailBulletsContainerSx}>
-        {details.map((task, i) => (
-          <Box key={i} sx={detailBulletsRowSx}>
-            <Typography
-              aria-hidden="true"
-              component="span"
-              variant="body2"
-              sx={{ color: 'text.disabled', flexShrink: 0, lineHeight: 1.6 }}
-            >
-              ›
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
-              {task.title}
-            </Typography>
-          </Box>
-        ))}
+        {details.map((task, i) => {
+          const isDoneTask = taskDoneStates ? (taskDoneStates[i] ?? false) : (task.done ?? false);
+          const toggleLabel = isDoneTask
+            ? `Mark "${task.title}" as not done`
+            : `Mark "${task.title}" as done`;
+          return (
+            <Box key={i} sx={taskRowSx}>
+              <Box
+                component={onToggleTask ? 'button' : 'span'}
+                aria-label={onToggleTask ? toggleLabel : undefined}
+                aria-pressed={onToggleTask ? isDoneTask : undefined}
+                onClick={onToggleTask ? () => onToggleTask(i, !isDoneTask) : undefined}
+                sx={
+                  (onToggleTask
+                    ? [taskToggleButtonSx, taskToggleColorSx(isDoneTask)]
+                    : [taskIconStaticSx, taskIconColorSx(isDoneTask)]) as BoxProps['sx']
+                }
+              >
+                <GiselleIcon
+                  icon={isDoneTask ? 'solar:check-circle-bold' : 'solar:circle-line-duotone'}
+                  width={PHASE_TASK_ICON_SIZE}
+                />
+              </Box>
+              <Typography variant="body2" sx={taskTitleSx(isDoneTask)}>
+                {task.title}
+              </Typography>
+            </Box>
+          );
+        })}
       </Box>
     </Collapse>
   );
@@ -686,6 +716,17 @@ export type PhaseCardProps = Omit<BoxProps, 'children'> & {
    * the conflict group and to merge updated dates on Apply.
    */
   allPhases?: TimelinePhase[];
+  /**
+   * Done state for each task (sub-item) in this phase, indexed by position.
+   * Provided by `TimelineTwoColumn` when task-level done state is active.
+   * Falls back to `task.done` from the data when absent.
+   */
+  taskDoneStates?: boolean[];
+  /**
+   * Called when the user clicks a task toggle icon.
+   * When provided, task rows are interactive; when absent they are decorative.
+   */
+  onToggleTask?: (taskIndex: number, done: boolean) => void;
 };
 
 /**
@@ -713,6 +754,8 @@ export function PhaseCard({
   columnSide = 'right',
   onPhasesChange,
   allPhases,
+  taskDoneStates,
+  onToggleTask,
   sx,
   ...other
 }: PhaseCardProps) {
@@ -929,7 +972,15 @@ export function PhaseCard({
           </Box>
         </Box>
 
-        {hasDetails && <CardDetailBullets id={detailsId} details={taskChildren} in={expanded} />}
+        {hasDetails && (
+          <CardDetailBullets
+            id={detailsId}
+            details={taskChildren}
+            in={expanded}
+            taskDoneStates={taskDoneStates}
+            onToggleTask={onToggleTask}
+          />
+        )}
       </Paper>
 
       {/* Viewed eye badge — floats outside the card at the bottom on the outer edge. */}
