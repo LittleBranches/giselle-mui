@@ -51,7 +51,7 @@ as named exports from `giselle-mui`, so consuming projects have them out of the 
 | Add tests for all theme utilities (22 tests in `theme-utils.test.ts`) | Theming | ✅ |
 | Update `theming/nextjs.md` to show usage from giselle-mui | Theming | ✅ |
 
-### Phase B — Giselle brand theme preset — Theming 🔄 In progress — 5 May 2026
+### Phase B — Giselle brand theme preset — Theming ✅ Done — 5 May 2026
 
 **Goal:** Define the Giselle default palette and typography scale as a named export
 (`giselleTheme`) — a ready-to-use `extendTheme()` result that consuming projects can
@@ -70,7 +70,7 @@ The default palette decisions (documented in `src/utils/theme-preset.ts` JSDoc):
 | Define `giselleTheme` using `extendTheme()` with the Giselle palette | Theming | ✅ |
 | Ensure all six palette keys are covered: `primary`, `secondary`, `info`, `success`, `warning`, `error` | Theming | ✅ |
 | Export `giselleTheme` from `giselle-mui/src/index.ts` | Theming | ✅ |
-| Document the palette decisions in `theming/nextjs.md` | Theming | ⬜ |
+| Document the palette decisions in `theming/nextjs.md` | Theming | ✅ |
 
 ### Phase C — GiselleThemeProvider component — Theming (HIGH priority)
 
@@ -200,7 +200,9 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 
 | Task | Label | Status |
 | ------------------------------------------------------------------------------------------------- | ------- | ------ |
-| Extract `TwoColumnShowcaseRow` — clean, zero Minimals, ready now | Components | ⬜ |
+| Extract `TwoColumnShowcaseRow` — clean, zero Minimals, ready now | Components | ✅ |
+| Extract `SectionTitle` + `SectionCaption` — section heading group with optional gradient accent | Components | ✅ |
+| Extract `FloatingSubNav` — sticky/fixed pill nav with framer-motion, `ReactNode` icon slot | Components | ✅ |
 | Extract `OptionWithBlurb` — tiny wrapper, clean, zero Minimals | Components | ⬜ |
 | Extract `SectionPendingLoader` — replace internal `Iconify` with `GiselleIcon` | Components | ⬜ |
 | Extract `FloatingControlBar` — replace `channelAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | Components | ⬜ |
