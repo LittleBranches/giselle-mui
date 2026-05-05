@@ -48,7 +48,9 @@ Ripeness scale: 🟢 green = alpha · 🟡 yellow-green = beta · 🟠 golden = 
 
 1. **Zero proprietary dependencies.** Only `react`, `react-dom`, `@mui/material`,
    `@emotion/react`, `@emotion/styled`, and `@iconify/react` are allowed as
-   peer/direct dependencies.
+   peer/direct dependencies — plus the explicitly extended set listed in the
+   **Additional allowed peer dependencies** section below (`@mui/lab`,
+   `framer-motion`, `apexcharts`, `react-apexcharts`).
 
 2. **`sx` array spread on root element.** Always:
    `sx={[baseStyles, ...(Array.isArray(sx) ? sx : [sx])]}`.

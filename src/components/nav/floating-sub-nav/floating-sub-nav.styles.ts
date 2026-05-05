@@ -38,6 +38,16 @@ export const stickyWrapperSx: SxProps<Theme> = (theme) => ({
   pointerEvents: 'none',
 });
 
+/**
+ * Inner box for the sticky variant — floats the pill above the zero-height anchor
+ * via `translateY(-100%)` while restoring pointer events on this element only.
+ */
+export const stickyInnerSx: SxProps<Theme> = {
+  transform: 'translateY(-100%)',
+  pointerEvents: 'auto',
+  pb: { xs: '23px', md: '31px' },
+};
+
 /** Fixed outer wrapper — viewport-anchored, centred. */
 export const fixedWrapperSx: SxProps<Theme> = (theme) => ({
   position: 'fixed',

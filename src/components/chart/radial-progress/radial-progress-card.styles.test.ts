@@ -3,7 +3,11 @@ import { describe, it, expect } from 'vitest';
 
 import type { Theme } from '@mui/material/styles';
 
-import { buildRadialProgressOptions, legendDotSx } from './radial-progress-card.styles';
+import {
+  buildRadialProgressOptions,
+  legendDotSx,
+  LEGEND_DOT_SIZE,
+} from './radial-progress-card.styles';
 
 // ---------------------------------------------------------------------------
 // Minimal mock theme
@@ -18,6 +22,10 @@ const mockTheme = {
         primary: 'var(--mui-palette-text-primary)',
       },
     },
+  },
+  palette: {
+    text: { secondary: 'rgba(0,0,0,0.6)', primary: 'rgba(0,0,0,0.87)' },
+    grey: { 200: '#eeeeee' } as Record<string, string>,
   },
 } as unknown as Theme;
 
@@ -80,12 +88,17 @@ describe('buildRadialProgressOptions', () => {
     expect(dl?.value?.color).toBe('var(--mui-palette-text-primary)');
   });
 
-  it('falls back to hardcoded colours when theme.vars is absent', () => {
-    const bareTheme = {} as unknown as Theme;
+  it('falls back to palette tokens when theme.vars is absent', () => {
+    const bareTheme = {
+      palette: {
+        text: { secondary: 'rgba(0,0,0,0.6)', primary: 'rgba(0,0,0,0.87)' },
+        grey: { 200: '#eeeeee' } as Record<string, string>,
+      },
+    } as unknown as Theme;
     const opts = buildRadialProgressOptions(bareTheme, labels, colors, 35, '%');
     const dl = opts.plotOptions?.radialBar?.dataLabels;
-    expect(dl?.total?.color).toBe('#888');
-    expect(dl?.value?.color).toBe('#222');
+    expect(dl?.total?.color).toBe('rgba(0,0,0,0.6)');
+    expect(dl?.value?.color).toBe('rgba(0,0,0,0.87)');
   });
 });
 
@@ -99,11 +112,15 @@ describe('legendDotSx', () => {
     expect(sx.bgcolor).toBe('#2e7d32');
   });
 
-  it('renders as a 10 × 10 circle', () => {
+  it('renders as a 12 × 12 circle (minimum readable size for status indicators)', () => {
     const sx = legendDotSx('red') as Record<string, unknown>;
-    expect(sx.width).toBe(10);
-    expect(sx.height).toBe(10);
+    expect(sx.width).toBe(12);
+    expect(sx.height).toBe(12);
     expect(sx.borderRadius).toBe('50%');
+  });
+
+  it('minimum size regression — LEGEND_DOT_SIZE must be >= 12', () => {
+    expect(LEGEND_DOT_SIZE).toBeGreaterThanOrEqual(12);
   });
 
   it('does not capture pointer events (flexShrink: 0 present)', () => {

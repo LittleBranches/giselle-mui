@@ -3,6 +3,8 @@ import type { StackProps } from '@mui/material/Stack';
 import type { Theme, SxProps } from '@mui/material/styles';
 
 import Box from '@mui/material/Box';
+// In MUI v7, `@mui/material/Grid` exports Grid v2 (Grid v1 was removed).
+// The `size={}` prop is the correct v2 API — this import is intentional.
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
