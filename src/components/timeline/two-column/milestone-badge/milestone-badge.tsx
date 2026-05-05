@@ -1,5 +1,5 @@
 import type { PaperProps } from '@mui/material/Paper';
-import type { TimelinePhase, HighlightedPaletteKey } from '../types';
+import type { Task, TimelineMilestone, HighlightedPaletteKey } from '../types';
 
 import { useCallback, useState, type ReactNode, type KeyboardEvent } from 'react';
 import type React from 'react';
@@ -52,7 +52,7 @@ export const MILESTONE_EYE_BUTTON_MIN_SIZE = 28;
 
 export type MilestoneBadgeProps = Omit<PaperProps, 'children'> & {
   /** The milestone data object from the parent phase's `milestones` array. */
-  milestone: NonNullable<TimelinePhase['milestones']>[number];
+  milestone: TimelineMilestone;
   /** Dims and desaturates the card. Mirrors the checklist done state from the parent timeline. */
   done?: boolean;
   /** Whether this card's details section is currently expanded. Controlled by the parent accordion. */
@@ -112,7 +112,20 @@ export function MilestoneBadge({
   // against the centre spine instead of leaving a gap at the right edge of the card.
   // Alignment resets to left only when expanded.
   const rightAlign = columnSide === 'left' && !isExpanded;
-  const hasDetails = !!m.details?.length;
+
+  /**
+   * Normalises milestone expandable content to `Task[]`.
+   *
+   * Resolution order:
+   *   1. `m.children` — new structured form (Task tree, any depth).
+   *   2. `m.details`  — legacy flat string array, mapped to `{ title }` shims.
+   *   3. Empty array  — milestone has no expandable content.
+   */
+  const taskChildren: Task[] = m.children?.length
+    ? m.children
+    : (m.details?.map((title: string) => ({ title })) ?? []);
+
+  const hasDetails = taskChildren.length > 0;
   const colorKey = (m.color ?? 'primary') as HighlightedPaletteKey;
   const titleSlug = String(m.title)
     .replace(/[^a-z0-9]/gi, '-')
@@ -180,6 +193,10 @@ export function MilestoneBadge({
           ...(done && {
             opacity: 0.45,
             filter: 'grayscale(1)',
+            // Override parent msCardWrapperSx pointerEvents:none (applied when another
+            // card is expanded/blurred). Done milestone cards must always be hoverable
+            // so the reader can temporarily restore full colour by hovering.
+            pointerEvents: 'auto',
           }),
           // Hover reveals the styled card for ALL milestones (title preview),
           // but cursor:pointer only for expandable ones.
@@ -306,7 +323,7 @@ export function MilestoneBadge({
       {hasDetails && (
         <Box
           sx={milestoneDetailPillSx}
-          aria-label={`${m.details?.length ?? 0} expandable detail${(m.details?.length ?? 0) === 1 ? '' : 's'}`}
+          aria-label={`${taskChildren.length} expandable detail${taskChildren.length === 1 ? '' : 's'}`}
         >
           <Box
             component="span"
@@ -323,7 +340,7 @@ export function MilestoneBadge({
             variant="caption"
             sx={{ fontWeight: 600, lineHeight: 1, fontSize: MILESTONE_PILL_TEXT_FONT_SIZE }}
           >
-            {m.details?.length ?? 0}
+            {taskChildren.length}
           </Typography>
         </Box>
       )}
@@ -331,7 +348,7 @@ export function MilestoneBadge({
       {hasDetails && (
         <Collapse in={isExpanded} timeout={50}>
           <Box id={detailsId} sx={milestoneDetailListSx}>
-            {m.details?.map((detail, i) => (
+            {taskChildren.map((task, i) => (
               <Box key={i} sx={milestoneDetailRowSx}>
                 <Typography
                   aria-hidden="true"
@@ -342,7 +359,7 @@ export function MilestoneBadge({
                   ›
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
-                  {detail}
+                  {task.title}
                 </Typography>
               </Box>
             ))}

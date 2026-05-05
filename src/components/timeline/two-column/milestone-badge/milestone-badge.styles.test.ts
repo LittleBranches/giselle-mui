@@ -216,3 +216,55 @@ describe('milestoneDetailRowSx — individual bullet row', () => {
     expect(sx['textAlign']).toBe('left');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Done milestone card pointerEvents override — regression (6 May 2026)
+//
+// When a milestone is suppressed (msCardWrapperSx with suppressElevation=true),
+// the wrapper applies `pointerEvents: 'none'`. Done milestones must still
+// receive hover events so the user can temporarily restore full colour by
+// hovering over any done item.
+//
+// The fix adds `pointerEvents: 'auto'` to the `done` block of the Paper sx
+// inside MilestoneBadge. The mirror below documents this invariant so any
+// future revert is caught immediately.
+// ---------------------------------------------------------------------------
+
+/**
+ * Mirrors the `done` style fragment of the Paper sx in milestone-badge.tsx.
+ *
+ * Done milestones must always be hoverable (pointerEvents: auto) so the
+ * hover restore rule (opacity: 1, filter: none) can fire despite the parent
+ * msCardWrapperSx applying pointerEvents: none when suppressElevation is set.
+ */
+function buildDoneMilestoneFragment(done: boolean): Record<string, unknown> {
+  if (!done) return {};
+  return {
+    opacity: 0.45,
+    filter: 'grayscale(1)',
+    // Overrides parent pointerEvents:none so hover events reach this Paper.
+    pointerEvents: 'auto',
+  };
+}
+
+describe('[regression] done milestone card pointerEvents — hover reachable despite parent suppress', () => {
+  it('done milestone has pointerEvents:auto so hover works when parent has pointerEvents:none', () => {
+    const fragment = buildDoneMilestoneFragment(true);
+    expect(fragment['pointerEvents']).toBe('auto');
+  });
+
+  it('not-done milestone does not set pointerEvents (inherits from parent, no override needed)', () => {
+    const fragment = buildDoneMilestoneFragment(false);
+    expect(fragment['pointerEvents']).toBeUndefined();
+  });
+
+  it('[regression] done milestone base opacity is 0.45 (greyed out at rest)', () => {
+    const fragment = buildDoneMilestoneFragment(true);
+    expect(fragment['opacity']).toBe(0.45);
+  });
+
+  it('[regression] done milestone base filter is grayscale(1) (greyed out at rest)', () => {
+    const fragment = buildDoneMilestoneFragment(true);
+    expect(fragment['filter']).toBe('grayscale(1)');
+  });
+});

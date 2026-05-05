@@ -1,6 +1,6 @@
 import type { Theme } from '@mui/material/styles';
 import type { BoxProps } from '@mui/material/Box';
-import type { TimelinePhase, HighlightedPaletteKey, TimelinePlatformItem } from '../types';
+import type { Task, TimelinePhase, HighlightedPaletteKey, TimelinePlatformItem } from '../types';
 
 import {
   useState,
@@ -153,7 +153,7 @@ function LabeledIconStrip({ label, children }: LabeledIconStripProps) {
 type CardDetailBulletsProps = {
   /** Matches `aria-controls` on the parent Paper so screen readers wire the relationship. */
   id: string;
-  details: string[];
+  details: Task[];
   in: boolean;
 };
 
@@ -161,7 +161,7 @@ function CardDetailBullets({ id, details, in: expanded }: CardDetailBulletsProps
   return (
     <Collapse in={expanded} timeout={50}>
       <Box id={id} sx={detailBulletsContainerSx}>
-        {details.map((detail, i) => (
+        {details.map((task, i) => (
           <Box key={i} sx={detailBulletsRowSx}>
             <Typography
               aria-hidden="true"
@@ -172,7 +172,7 @@ function CardDetailBullets({ id, details, in: expanded }: CardDetailBulletsProps
               ›
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
-              {detail}
+              {task.title}
             </Typography>
           </Box>
         ))}
@@ -503,6 +503,20 @@ function buildPaperSx(p: PaperSxParams) {
   });
 }
 
+/**
+ * Normalises phase expandable content to `Task[]`.
+ *
+ * Resolution order:
+ *   1. `phase.children` — new structured form (Task tree, any depth).
+ *   2. `phase.details` — legacy flat string array, mapped to `{ title }` shims.
+ *   3. Empty array — phase has no expandable content.
+ */
+function resolveTaskChildren(phase: TimelinePhase): Task[] {
+  if (phase.children?.length) return phase.children;
+  if (phase.details?.length) return phase.details.map((title) => ({ title }));
+  return [];
+}
+
 /** Returns an onClick handler that calls `toggle` only when the card has details. */
 function buildCardClickHandler(hasDetails: boolean, toggle: () => void): () => void {
   return () => {
@@ -719,7 +733,8 @@ export function PhaseCard({
   const handleMouseEnter = useCallback(() => setIsHovered(true), []);
   const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
-  const hasDetails = Boolean(phase.details?.length);
+  const taskChildren = resolveTaskChildren(phase);
+  const hasDetails = taskChildren.length > 0;
   const isScenario = phase.variant === 'scenario';
   const isHighlighted = isHighlightedVariant(phase.variant);
   const detailsId = `timeline-details-${String(phase.key).replace('.', '-')}`;
@@ -841,7 +856,7 @@ export function PhaseCard({
             {hasDetails && (
               <Box
                 sx={detailCountPillSx}
-                aria-label={`${phase.details?.length ?? 0} expandable detail${(phase.details?.length ?? 0) === 1 ? '' : 's'}`}
+                aria-label={`${taskChildren.length} expandable detail${taskChildren.length === 1 ? '' : 's'}`}
               >
                 <Box
                   component="span"
@@ -858,7 +873,7 @@ export function PhaseCard({
                   variant="caption"
                   sx={{ fontWeight: 600, lineHeight: 1, fontSize: PHASE_PILL_TEXT_FONT_SIZE }}
                 >
-                  {phase.details?.length ?? 0}
+                  {taskChildren.length}
                 </Typography>
               </Box>
             )}
@@ -914,9 +929,7 @@ export function PhaseCard({
           </Box>
         </Box>
 
-        {hasDetails && (
-          <CardDetailBullets id={detailsId} details={phase.details ?? []} in={expanded} />
-        )}
+        {hasDetails && <CardDetailBullets id={detailsId} details={taskChildren} in={expanded} />}
       </Paper>
 
       {/* Viewed eye badge — floats outside the card at the bottom on the outer edge. */}

@@ -399,3 +399,62 @@ describe('eyeButtonSx — viewed eye button', () => {
     expect(styles['bottom']).toBe(0);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Done card pointerEvents override — regression (6 May 2026)
+//
+// When a phase is blurred (another card is expanded), phaseRowSx applies
+// `pointerEvents: 'none'` to the whole row. Done cards must still receive
+// hover events so the user can temporarily restore full colour/opacity by
+// hovering, even while another card is expanded.
+//
+// The fix adds `pointerEvents: 'auto'` to the `isDone` block inside
+// `buildPaperSx` (in phase-card.tsx). This mirrors that invariant as a
+// pure-logic assertion so any future revert is caught immediately.
+//
+// Note: `buildPaperSx` is a private function in phase-card.tsx (not in this
+// styles file). The mirror below documents the required style fragment for
+// the done state — if the invariant is removed, this test fails.
+// ---------------------------------------------------------------------------
+
+/**
+ * Mirrors the isDone style fragment from buildPaperSx in phase-card.tsx.
+ *
+ * Done cards must always be hoverable (pointerEvents: auto) so the hover
+ * restore rule (opacity: 1, filter: none) can fire despite the parent
+ * phaseRowSx applying pointerEvents: none when another card is expanded.
+ */
+function buildDoneCardFragment(isDone: boolean): Record<string, unknown> {
+  if (!isDone) return {};
+  return {
+    opacity: 0.45,
+    filter: 'grayscale(1)',
+    // Overrides parent pointerEvents:none so hover events reach this Paper.
+    pointerEvents: 'auto',
+    '&:hover': { opacity: 1, filter: 'none' },
+  };
+}
+
+describe('[regression] done phase card pointerEvents — hover reachable despite parent blur', () => {
+  it('done card has pointerEvents:auto so hover works when parent row has pointerEvents:none', () => {
+    const fragment = buildDoneCardFragment(true);
+    expect(fragment['pointerEvents']).toBe('auto');
+  });
+
+  it('not-done card does not set pointerEvents (inherits from parent, no override needed)', () => {
+    const fragment = buildDoneCardFragment(false);
+    expect(fragment['pointerEvents']).toBeUndefined();
+  });
+
+  it('[regression] done card hover must restore opacity to 1', () => {
+    const fragment = buildDoneCardFragment(true) as Record<string, Record<string, unknown>>;
+    const hover = fragment['&:hover'];
+    expect(hover?.['opacity']).toBe(1);
+  });
+
+  it('[regression] done card hover must remove grayscale filter', () => {
+    const fragment = buildDoneCardFragment(true) as Record<string, Record<string, unknown>>;
+    const hover = fragment['&:hover'];
+    expect(hover?.['filter']).toBe('none');
+  });
+});

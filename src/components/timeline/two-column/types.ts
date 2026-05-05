@@ -14,6 +14,39 @@ export type HighlightedPaletteKey = Exclude<
 // ----------------------------------------------------------------------
 
 /**
+ * Base unit for any trackable work item in the timeline.
+ *
+ * `TimelinePhase`, `TimelineMilestone`, and every nested sub-task all share this shape.
+ * Having a common base makes parent-child done-state propagation computable at any depth:
+ *
+ * - All `children` done → parent can be auto-marked done.
+ * - Any `children` un-done → parent reverts to not-done.
+ * - Nesting is unbounded: a `Task` child can itself have `children`.
+ *
+ * ```
+ * TimelinePhase  (extends Task)
+ *   └─ milestones: TimelineMilestone[]  (each extends Task)
+ *        └─ children: Task[]
+ *             └─ children: Task[]   ← infinite depth
+ * ```
+ */
+export type Task = {
+  /** Display text for this work item. */
+  title: string;
+  /** Whether this task is complete. */
+  done?: boolean;
+  /**
+   * Nested sub-tasks. Can be nested to any depth.
+   *
+   * Replaces the legacy flat `details: string[]` field. Migrate data files by converting
+   * each string to `{ title: string }`. Add `done?` and further `children?` as needed.
+   */
+  children?: Task[];
+};
+
+// ----------------------------------------------------------------------
+
+/**
  * A single platform / tech-stack entry for `TimelinePhase.platforms`.
  *
  * - **Preferred form:** `{ icon: ReactNode; label: string }` — renders a tooltip-wrapped icon slot.
@@ -26,7 +59,77 @@ export type TimelinePlatformItem = { icon: ReactNode; label: string } | string;
 
 // ----------------------------------------------------------------------
 
-export type TimelinePhase = {
+/**
+ * A milestone on the timeline spine — a tracked point-in-time event between two phases.
+ *
+ * Extends `Task` — every milestone has its own `done` state and can carry nested sub-tasks
+ * via `children`. The legacy `details: string[]` flat array is preserved for backward
+ * compatibility but superseded by `children`.
+ */
+export type TimelineMilestone = Task & {
+  /** Human-readable date shown on the milestone badge (e.g. `'Mar 2022'`). */
+  date: string;
+  /** Display title of the milestone. */
+  title: string;
+  /**
+   * Glanceable 2–4 word label shown in the collapsed milestone card at rest.
+   * Falls back to `title` when omitted.
+   */
+  shortTitle?: string;
+  /**
+   * Short description shown when the milestone card is hovered or expanded.
+   * Provides context about what this milestone is and why it matters.
+   */
+  description?: string;
+  /** Icon rendered inside the milestone dot. Pass any ReactNode icon slot. */
+  icon: ReactNode;
+  /** MUI TimelineDot color. */
+  color?: TimelineDotProps['color'];
+  /**
+   * @deprecated Use `children` (inherited from `Task`) instead.
+   *
+   * Kept for backward compatibility. The component renders `children` first; when
+   * absent it falls back to mapping these strings to `{ title: string }` Task objects.
+   * Migrate data files by converting `details: ['text']` to `children: [{ title: 'text' }]`.
+   */
+  details?: string[];
+  /** Dims the milestone badge and card — mirrors the phase-level `done` flag. */
+  done?: boolean;
+  /** Renders the milestone badge in error (red) colour when not done. */
+  overdue?: boolean;
+  /** Marks this milestone as newly added — renders a "NEW" dot near the title. Clear once seen. */
+  new?: boolean;
+  /**
+   * Overrides the spine dot circle background colour.
+   * Accepts any CSS colour string (e.g. `'#111'`).
+   * Useful when a brand icon has a specific colour that clashes with the palette-derived background.
+   */
+  dotBg?: string;
+  /**
+   * Custom tooltip shown on the milestone dot in the centre spine.
+   *
+   * When omitted the tooltip is computed automatically:
+   * - **Read-only mode:** first sentence of `description` (capped at 72 characters) →
+   *   falls back to `shortTitle ?? title` + `date` when `description` is absent.
+   * - **Checklist mode:** status label (`Done`, `Blocking`, etc.) + `date`.
+   *
+   * Set this explicitly to override the computed value with a custom metric or note.
+   */
+  dotTooltip?: string;
+  /**
+   * Which column this milestone renders in.
+   *
+   * Inherits the parent `phase.side` when omitted — the milestone appears in the
+   * same column as its phase card. Set explicitly to place the milestone in the
+   * **opposite** column (e.g. a tech-context event on a professional phase that
+   * should appear in the "Education & Open Source" column).
+   */
+  side?: 'left' | 'right';
+};
+
+// ----------------------------------------------------------------------
+
+export type TimelinePhase = Task & {
   /** Numeric sort key. Fractional keys (e.g. 4.5) interleave life events between roles. */
   key: number;
   /** Display title of the phase — shown as the card heading. */
@@ -52,9 +155,13 @@ export type TimelinePhase = {
   color?: TimelineDotProps['color'];
   /** Which column this item appears in. */
   side: 'left' | 'right';
-  /** Dims the card and separator — used for completed/past steps. */
-  done?: boolean;
-  /** Optional expandable bullet-point details. */
+  /**
+   * @deprecated Use `children` (inherited from `Task`) instead.
+   *
+   * Kept for backward compatibility. The component renders `children` first; when
+   * absent it falls back to mapping these strings to `{ title: string }` Task objects.
+   * Migrate data files by converting `details: ['text']` to `children: [{ title: 'text' }]`.
+   */
   details?: string[];
   /**
    * Custom tooltip shown on the phase dot in the centre spine.
@@ -103,56 +210,7 @@ export type TimelinePhase = {
    * Nested milestone keypoints on the connector spine between this phase and the next.
    * Each milestone renders as a coloured badge dot on the spine.
    */
-  milestones?: Array<{
-    date: string;
-    title: string;
-    /**
-     * Glanceable 2–4 word label shown in the collapsed milestone card at rest.
-     * Falls back to `title` when omitted.
-     */
-    shortTitle?: string;
-    /**
-     * Short description shown when the milestone card is hovered or expanded.
-     * Provides context about what this milestone is and why it matters.
-     */
-    description?: string;
-    icon: ReactNode;
-    color?: TimelineDotProps['color'];
-    /** Short bullet-point facts shown when the card is expanded. */
-    details?: string[];
-    /** Dims the milestone badge and card — mirrors the phase-level `done` flag. */
-    done?: boolean;
-    /** Renders the milestone badge in error (red) colour when not done. */
-    overdue?: boolean;
-    /** Marks this milestone as newly added — renders a "NEW" dot near the title. Clear once seen. */
-    new?: boolean;
-    /**
-     * Overrides the spine dot circle background colour.
-     * Accepts any CSS colour string (e.g. `'#111'`).
-     * Useful when a brand icon has a specific colour that clashes with the palette-derived background.
-     */
-    dotBg?: string;
-    /**
-     * Custom tooltip shown on the milestone dot in the centre spine.
-     *
-     * When omitted the tooltip is computed automatically:
-     * - **Read-only mode:** first sentence of `description` (capped at 72 characters) →
-     *   falls back to `shortTitle ?? title` + `date` when `description` is absent.
-     * - **Checklist mode:** status label (`Done`, `Blocking`, etc.) + `date`.
-     *
-     * Set this explicitly to override the computed value with a custom metric or note.
-     */
-    dotTooltip?: string;
-    /**
-     * Which column this milestone renders in.
-     *
-     * Inherits the parent `phase.side` when omitted — the milestone appears in the
-     * same column as its phase card. Set explicitly to place the milestone in the
-     * **opposite** column (e.g. a tech-context event on a professional phase that
-     * should appear in the "Education & Open Source" column).
-     */
-    side?: 'left' | 'right';
-  }>;
+  milestones?: TimelineMilestone[];
   /**
    * Client logos shown as a horizontal strip directly in the card (always visible).
    * Each entry is a public path (e.g. '/assets/icons/clients/nbn.svg') plus an accessible name.

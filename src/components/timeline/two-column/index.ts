@@ -4,7 +4,9 @@ export { TimelineTwoColumn } from './two-column';
 export type { PhaseCardProps } from './phase-card';
 export type { TimelineDotComponentProps } from './timeline-dot';
 export type {
+  Task,
   TimelinePhase,
+  TimelineMilestone,
   HighlightedPaletteKey,
   TimelineTwoColumnProps,
   TimelinePlatformItem,

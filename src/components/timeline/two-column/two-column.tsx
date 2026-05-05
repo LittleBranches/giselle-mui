@@ -344,17 +344,21 @@ export function TimelineTwoColumn({
       setLocalMilestoneDone(updated);
       onToggleMilestoneDone?.(phaseKey, milestoneIndex, next);
 
-      // Auto-done: if all milestones of this phase are now done, mark the phase done too.
+      // Bidirectional parent-child sync:
+      //   All milestones done  → parent phase automatically becomes done.
+      //   Any milestone undone → parent phase automatically becomes not-done.
+      // Both directions fire regardless of whether the phase was manually toggled.
       const phase = phases.find((p) => p.key === phaseKey);
       if (phase?.milestones?.length) {
         const allDone = phase.milestones.every((_, i) => updated[`${phaseKey}-${i}`] ?? false);
-        if (allDone && !localPhaseDone[String(phaseKey)]) {
+        const currentPhaseDone = localPhaseDone[String(phaseKey)] ?? false;
+        if (allDone !== currentPhaseDone) {
           setPhaseToggleCounts((prev) => ({
             ...prev,
             [String(phaseKey)]: (prev[String(phaseKey)] ?? 0) + 1,
           }));
-          setLocalPhaseDone((prev) => ({ ...prev, [String(phaseKey)]: true }));
-          onTogglePhaseDone?.(phaseKey, true);
+          setLocalPhaseDone((prev) => ({ ...prev, [String(phaseKey)]: allDone }));
+          onTogglePhaseDone?.(phaseKey, allDone);
         }
       }
     },

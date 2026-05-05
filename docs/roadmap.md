@@ -120,7 +120,7 @@ function GiselleThemeProvider({ children, themeOverrides, theme }: Props) {
 
 | Task                                                                                   | Label   | Status |
 | -------------------------------------------------------------------------------------- | ------- | ------ |
-| Complete Phase B (Giselle theme preset) — this prerequisite is already met              | Theming | ✅     |
+| Complete Phase B (Giselle theme preset) — this prerequisite is already met             | Theming | ✅     |
 | Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ⬜     |
 | Implement `GiselleThemeProvider` wrapping `CssVarsProvider` with merge logic           | Theming | ⬜     |
 | Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | Theming | ⬜     |
@@ -209,11 +209,15 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 
 **Write from scratch** (no copy from alexrebula — independent implementations):
 
-| Task                                                                                              | Label      | Status |
-| ------------------------------------------------------------------------------------------------- | ---------- | ------ |
-| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot     | Components | ⬜     |
-| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha` | Components | ⬜     |
-| `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand        | Components | ⬜     |
+| Task                                                                                                                                             | Label      | Status |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ------ |
+| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot                                                    | Components | ✅     |
+| `StatCard` — data card with sparkline, six palette variants, `StatCardItem[]` data prop — ✅ Done 5 May 2026                                     | Components | ✅     |
+| `RadialProgressCard` — Card wrapping an ApexCharts radialBar with configurable progress items and palette keys                                   | Components | ✅     |
+| `resolveMaturityColor(pct)` + `resolveMaturityLabel(pct)` — maps readiness percentages to MUI palette key and mango-stage label                  | Utilities  | ✅     |
+| `assignMilestoneSidesByDone(phases)` — derives milestone column placement from `done` state; exported so consumers don't reimplement the pattern | Utilities  | ✅     |
+| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha`                                                | Components | ⬜     |
+| `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand                                                       | Components | ⬜     |
 
 **When this phase is done:**
 
