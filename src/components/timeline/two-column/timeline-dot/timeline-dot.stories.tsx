@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { GiselleIcon } from '../../../giselle-icon/giselle-icon';
+import { GiselleIcon } from '../../../icon/giselle/giselle-icon';
 import { TimelineDot } from './timeline-dot';
 import type { HighlightedPaletteKey } from '../types';
 
@@ -11,7 +11,7 @@ import type { HighlightedPaletteKey } from '../types';
 
 const meta: Meta<typeof TimelineDot> = {
   component: TimelineDot,
-  title: 'Components/TimelineDot',
+  title: 'Giselle MUI/Timeline/Dot',
 };
 
 export default meta;

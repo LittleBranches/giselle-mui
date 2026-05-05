@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { GiselleIcon } from '../../giselle-icon/giselle-icon';
+import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { MetricCard, MetricCardDecoration } from './metric-card';
 import type { MetricCardColor } from './metric-card';
 
@@ -19,7 +19,7 @@ const ALL_COLORS: MetricCardColor[] = [
 
 const meta: Meta<typeof MetricCard> = {
   component: MetricCard,
-  title: 'Components/MetricCard',
+  title: 'Cards/Metric',
 };
 
 export default meta;

@@ -320,18 +320,145 @@ is safe: `displayTitle = isExpanded || isHovered ? m.title : (m.shortTitle ?? m.
 
 ---
 
+---
+
+## Bug 4 — Hovered phase card covered by next collapsed phase (OPEN — not yet fixed)
+
+**Detected:** May 5, 2026 — visually in the browser after phase cards were made absolutely
+positioned  
+**Status:** ⚠️ OPEN — not yet fixed. Documented here to preserve context for the fix.
+
+### Symptom
+
+When hovering a `PhaseCard`, the card's visual expansion overflows vertically into the
+space occupied by the next `<li>`. The next `<li>` has its own stacking context (z-index 1
+or 2 from `phaseLiSx`) and paints over the hovered card. The hovered card appears clipped
+or hidden behind the content of the phase below it.
+
+### Why this happens — stacking context architecture
+
+Each phase is rendered as a `<Box component="li">` with `phaseLiSx`, which sets
+`position: 'relative'` and `overflow: 'visible'`. The `overflow: 'visible'` allows card
+expansion to visually exceed the `<li>` boundary, but the default `zIndex: 1` means the
+**next** `<li>` (also `zIndex: 1`) paints over anything that overflows from the previous one.
+
+This was already a known issue for **milestone cards**, and it was fixed. The existing fix
+has two parts:
+
+**Part 1 — `msCardWrapperSx` raises the individual wrapper on hover:**
+
+```ts
+// two-column.styles.ts
+'&:hover': { zIndex: 999 },
+```
+
+**Part 2 — `phaseLiSx` raises the entire `<li>` when a milestone inside it is hovered:**
+
+```ts
+// two-column.styles.ts
+'&:has([data-ms-card]:hover)': { zIndex: 3 },
+```
+
+Part 2 is the critical one: raising the milestone card wrapper alone (Part 1) is not enough
+because the `<li>` itself is a stacking context. If the `<li>` is at `zIndex: 1` and the
+next `<li>` is also at `zIndex: 1`, the next one wins in source order (paints on top). The
+`:has()` rule brings the hovering `<li>` to `zIndex: 3`, above any neighbouring `<li>`.
+
+**The gap:** The `:has()` selector targets `[data-ms-card]` — a data attribute set on
+milestone card wrappers. **There is no equivalent rule for phase cards.** Phase cards do
+not carry a `data-phase-card` attribute, and `phaseLiSx` has no `:has([data-phase-card]:hover)`
+rule. So when a phase card overflows and is hovered, its parent `<li>` stays at `zIndex: 1`
+and the next `<li>` (also `zIndex: 1`, later in source order) occludes it.
+
+### What the fix must do
+
+1. **Add `data-phase-card` attribute** to the hover-sensitive root element of `PhaseCard`
+   (the Paper or its outermost container that receives `:hover`).
+
+2. **Add `:has([data-phase-card]:hover)` to `phaseLiSx`:**
+
+   ```ts
+   // two-column.styles.ts — phaseLiSx
+   '&:has([data-ms-card]:hover)': { zIndex: 3 },    // existing — milestone cards
+   '&:has([data-phase-card]:hover)': { zIndex: 3 }, // NEW — phase cards
+   ```
+
+3. **Do not change** the base `zIndex: 1 | 2` values in `phaseLiSx` — these are pinned by
+   existing regression tests in `two-column.styles.test.ts`. Change only the `:has()` rules.
+
+4. **Do not change** `msCardWrapperSx` z-index values — they are also pinned by the styles
+   test.
+
+### Existing regression tests that must not break
+
+These tests in `two-column.styles.test.ts` pin the current z-index values. Any fix must
+leave them passing:
+
+| Test                                                              | Assertion                                               |
+| ----------------------------------------------------------------- | ------------------------------------------------------- |
+| `phaseLiSx — uses zIndex=1 when no milestone expanded`            | `styles['zIndex'] === 1`                                |
+| `phaseLiSx — uses zIndex=2 when a milestone is expanded`          | `styles['zIndex'] === 2`                                |
+| `phaseLiSx — has :has() pseudo-class for hovered milestone cards` | `styles['&:has([data-ms-card]:hover)']['zIndex'] === 3` |
+| `floatingDatePillSx — has z-index 2 so it renders above dot`      | `sx['zIndex'] === 2`                                    |
+| `markerPhaseLiSx — is relatively positioned`                      | `sx['zIndex'] === 1`                                    |
+
+### Regression tests that must be added alongside the fix
+
+The following tests must be written **before or alongside** the fix, not after. They are the
+automated guard against re-introducing this occlusion in the future.
+
+**In `two-column.styles.test.ts` — `phaseLiSx` describe block:**
+
+```ts
+it('[regression] has :has() pseudo-class that raises <li> when a phase card inside is hovered', () => {
+  const styles = phaseLiSx({ zIndex: 1 }) as Record<string, unknown>;
+  const hasRule = styles['&:has([data-phase-card]:hover)'] as Record<string, number>;
+  expect(hasRule['zIndex']).toBe(3);
+});
+```
+
+**In `phase-card/index.test.ts` — rendering assertions:**
+
+```ts
+it('[regression] root Paper element carries data-phase-card attribute so phaseLiSx :has() rule can fire', () => {
+  // renderToStaticMarkup(createElement(PhaseCard, minimalProps))
+  // expect(html).toContain('data-phase-card');
+});
+```
+
+### CSS `:has()` browser support note
+
+The `:has()` selector is already used in this component (`'&:has([data-ms-card]:hover)'`).
+Browser support is Chrome ≥ 121, Firefox ≥ 121, Safari ≥ 17 — matching the project's
+minimum browser target matrix. No polyfill needed; the pattern is already established.
+
+### Why the test for CSS hover state can only go so far
+
+JSDOM cannot evaluate `:hover` pseudo-class state (the browser CSS engine is absent). The
+unit tests above guard the **structural contract** — that the attribute exists and the `:has()`
+rule is present in the sx object. They cannot simulate a mouse hover and assert visual
+occlusion is prevented. The only verification for the actual visual fix is manual
+browser testing after the fix is applied.
+
+---
+
 ## Three-bug cascade — timeline
 
-| #   | Bug                    | Introduced                | Fixed                   | Symptoms                                                           |
-| --- | ---------------------- | ------------------------- | ----------------------- | ------------------------------------------------------------------ |
-| 1   | Toggle → open-only     | `651173d`                 | `84dfd55`               | hover permanently blocked after expanding any card                 |
-| 2   | Hover feedback loop    | `651173d` (RO)            | `4d865ea` (incorrectly) | cards flickered on hover                                           |
-| 2b  | Hover title regression | `4d865ea` (incorrect fix) | `0c82104`               | full title no longer shown on hover                                |
-| 3   | Expand layout shift    | `651173d` (RO)            | `0c82104`               | all milestone cards shift on expand, expanded card goes off-screen |
+| #   | Bug                                    | Introduced                | Fixed                   | Symptoms                                                             |
+| --- | -------------------------------------- | ------------------------- | ----------------------- | -------------------------------------------------------------------- |
+| 1   | Toggle → open-only                     | `651173d`                 | `84dfd55`               | hover permanently blocked after expanding any card                   |
+| 2   | Hover feedback loop                    | `651173d` (RO)            | `4d865ea` (incorrectly) | cards flickered on hover                                             |
+| 2b  | Hover title regression                 | `4d865ea` (incorrect fix) | `0c82104`               | full title no longer shown on hover                                  |
+| 3   | Expand layout shift                    | `651173d` (RO)            | `0c82104`               | all milestone cards shift on expand, expanded card goes off-screen   |
+| 4   | Phase card covered by next `<li>` item | phase cards made absolute | ⚠️ OPEN                 | hovered phase card hidden behind content of the next collapsed phase |
 
 **Root cause of bugs 2, 2b, 3:** A single architectural error — `ResizeObserver` feeding
 back into layout state during user interaction. Corrected by removing ResizeObserver and
 using a one-shot measurement approach.
+
+**Root cause of bug 4:** The `:has([data-ms-card]:hover)` stacking fix was applied only
+for milestone cards. Phase cards were not given the equivalent `data-phase-card` attribute
+or `:has()` rule when they were moved to absolute positioning.
 
 ---
 

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { GiselleIcon } from '../../giselle-icon/giselle-icon';
+import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { TimelineTwoColumn } from './two-column';
 import type { TimelinePhase } from './types';
 import {
@@ -11,13 +11,13 @@ import {
   storyOverlineSx,
   storyResponsiveBoxSx,
   storyFooterButtonSx,
-} from './stories.styles';
+} from './two-column.stories.styles';
 
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof TimelineTwoColumn> = {
   component: TimelineTwoColumn,
-  title: 'Components/TimelineTwoColumn',
+  title: 'Giselle MUI/Timeline/Two Column',
   parameters: {
     docs: {
       description: {

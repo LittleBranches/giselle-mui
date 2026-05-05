@@ -252,6 +252,82 @@ remToPx(0.875); // 14
 
 ---
 
+## Giselle brand theme preset
+
+`giselleTheme` is a ready-to-use `extendTheme()` result carrying the full Giselle
+brand palette for both light and dark colour schemes. Pass it directly to
+`CssVarsProvider` instead of writing your own palette from scratch.
+
+```tsx
+import { CssVarsProvider } from '@mui/material/styles';
+import { giselleTheme } from '@alexrebula/giselle-mui';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html suppressHydrationWarning>
+      <body>
+        <AppRouterCacheProvider>
+          <CssVarsProvider theme={giselleTheme} defaultMode="system">
+            {children}
+          </CssVarsProvider>
+        </AppRouterCacheProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### Palette decisions
+
+The Giselle palette is named after the Carabao mango tree — the Philippine national
+fruit and the ecosystem's brand metaphor:
+
+| Key         | Light mode                 | Dark mode              | Rationale                                           |
+| ----------- | -------------------------- | ---------------------- | --------------------------------------------------- |
+| `primary`   | Deep grove green `#2E7D32` | Lime green `#76C442`   | Tree foundation; 4.76:1 contrast on white (WCAG AA) |
+| `secondary` | Mango gold `#F5A623`       | Mango gold `#F5A623`   | Fruit accent; unchanged in both modes               |
+| `info`      | Accessible blue `#0288D1`  | Light blue `#29B6F6`   | Standard MUI default family                         |
+| `success`   | Leaf green `#388E3C`       | Leaf green `#66BB6A`   | Distinct from primary to avoid ambiguity            |
+| `warning`   | Amber orange `#ED6C02`     | Amber `#FFA726`        | Warm; complements the mango gold family             |
+| `error`     | Standard red `#D32F2F`     | Standard red `#F44336` | Conventional danger signal                          |
+
+### Overriding individual palette keys
+
+Spread the preset and override only what you need:
+
+```ts
+import { extendTheme } from '@mui/material/styles';
+import { giselleTheme } from '@alexrebula/giselle-mui';
+
+const myTheme = extendTheme({
+  ...giselleTheme,
+  colorSchemes: {
+    ...giselleTheme.colorSchemes,
+    light: {
+      palette: {
+        ...giselleTheme.colorSchemes?.light?.palette,
+        primary: { main: '#1976d2' }, // override primary only
+      },
+    },
+  },
+});
+```
+
+### Exported palette constants
+
+The individual hex values are exported so you can reference them in custom tokens or
+`channelAlpha` calls without hardcoding strings:
+
+```ts
+import {
+  GISELLE_PRIMARY_MAIN, // '#2E7D32'
+  GISELLE_PRIMARY_DARK_MAIN, // '#76C442'
+  GISELLE_SECONDARY_MAIN, // '#F5A623'
+} from '@alexrebula/giselle-mui';
+```
+
+---
+
 ## Roadmap note
 
 The `@alexrebula/giselle-mui` package is in beta. A dedicated Next.js integration example

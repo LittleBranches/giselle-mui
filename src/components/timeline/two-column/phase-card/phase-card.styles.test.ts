@@ -22,7 +22,7 @@ import {
   platformStripSx,
   projectLogoSx,
   eyeButtonSx,
-} from './styles';
+} from './phase-card.styles';
 
 const mockTheme = {
   vars: { palette: { grey: { '900Channel': '33 43 54' } } },

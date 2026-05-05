@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { GiselleIcon } from '../giselle-icon/giselle-icon';
+import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { IconActionBar } from './icon-action-bar';
 
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof IconActionBar> = {
   component: IconActionBar,
-  title: 'Components/IconActionBar',
+  title: 'Data Display/Action Bar',
 };
 
 export default meta;

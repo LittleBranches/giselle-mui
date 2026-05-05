@@ -11,7 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
 import { DEFAULT_EXPANDABLE_ICON } from '../icons';
-import { GiselleIcon } from '../../../giselle-icon/giselle-icon';
+import { GiselleIcon } from '../../../icon/giselle/giselle-icon';
 import {
   milestoneNewBadgeRowSx,
   milestoneNewDotSx,
@@ -22,7 +22,7 @@ import {
   milestoneDetailPillSx,
   milestoneDetailListSx,
   milestoneDetailRowSx,
-} from './styles';
+} from './milestone-badge.styles';
 
 // ----------------------------------------------------------------------
 

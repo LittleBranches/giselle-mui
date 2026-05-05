@@ -89,15 +89,15 @@ src/components/<name>/
   <name>.tsx          — pure JSX composition only (no types, no utility functions)
   <name>.styles.ts    — all sx constants (static) and sx factories (dynamic)
   <name>.styles.test.ts — mock-theme assertions for every exported sx function
-  <name>.stories.tsx  — Storybook stories (see story decision rule below)
-  <name>.test.ts      — Vitest unit tests
+  <name>.stories.tsx  — Storybook stories — MUST include the component name (Storybook glob: `*.stories.@(ts|tsx)`)
+  <name>.test.ts      — Vitest unit tests — MUST end in `.test.ts` (vitest glob: `src/**/*.test.ts`)
   index.ts            — barrel: re-exports component and types
   README.md           — why it exists, why it belongs here, design decisions, library safety
 ```
 
 **Separation rule — non-negotiable for every component:**
 
-- TypeScript types and interfaces → separate `types.ts` file (not inside `.tsx`)
+- **TypeScript `type` aliases AND `interface` declarations → `types.ts`** (never inside `.tsx`). This applies to every exported and internal type without exception — `Props`, `Item`, `Config`, helper union types, internal-only types. If it is a type, it does not live in a `.tsx` file.
 - Pure logic / helper functions (no JSX) → separate `utils.ts` file (not inside `.tsx`)
 - Any `sx={}` with more than ~3 properties → `<name>.styles.ts` (enforced by ESLint)
 - The `.tsx` file is the **composition layer only**: it imports from the above, renders JSX, wires props.
@@ -112,11 +112,13 @@ src/components/
   card/
     metric/   — MetricCard + MetricCardDecoration
     quote/    — QuoteCard
+    selectable/ — SelectableCard
+  action-bar/
+    icon/     — IconActionBar
+  icon/
+    giselle/  — GiselleIcon
   timeline/
     two-column/ — TimelineTwoColumn (see layout below)
-  giselle-icon/
-  icon-action-bar/
-  selectable-card/
 ```
 
 ### TimelineTwoColumn internal file layout
@@ -126,14 +128,14 @@ It demonstrates the full types/utils/styles split:
 
 ```
 src/components/timeline/two-column/
-  two-column.tsx    — pure JSX composition only (no types, no logic functions)
-  types.ts          — all exported + internal TypeScript interfaces
-  utils.ts          — all pure logic functions (no JSX return); fully unit-testable
-  styles.ts         — all sx constants (static) and sx factories (dynamic)
-  index.ts          — barrel
-  stories.tsx       — Storybook stories
-  stories.styles.ts — sx constants used only in stories
-  *.test.ts         — co-located unit test files
+  two-column.tsx                       — pure JSX composition only (no types, no logic functions)
+  types.ts                             — all exported + internal TypeScript interfaces
+  utils.ts                             — all pure logic functions (no JSX return); fully unit-testable
+  styles.ts                            — all sx constants (static) and sx factories (dynamic)
+  index.ts                             — barrel
+  timeline-two-column.stories.tsx      — Storybook stories (must match *.stories.tsx glob)
+  stories.styles.ts                    — sx constants used only in stories
+  *.test.ts                            — co-located unit test files
   phase-card/       — PhaseCard sub-component (exported from package barrel)
   milestone-badge/  — MilestoneBadge sub-component (exported from package barrel)
   spine-connector/  — SpineConnector sub-component (internal)
@@ -149,7 +151,7 @@ src/components/timeline/two-column/
 
 ## Test conventions
 
-- File extension must be `.test.ts` (not `.tsx`) — vitest config uses `include: ['src/**/*.test.ts']`
+- File extension must be `.test.ts` (not `.tsx`) — vitest config uses `include: ['src/**/*.test.ts']`. A file named `test.ts` (no component-name prefix) does NOT match `*.test.ts` and will be silently skipped.
 - Add `// @vitest-environment jsdom` at top of every test file
 - Use `React.createElement` (not JSX) — avoids JSX transform requirement in `.ts` files
 - Use `renderToStaticMarkup` for structure/ARIA tests
@@ -167,6 +169,38 @@ src/components/timeline/two-column/
 
 When asked to add a component, always verify: does this encode a non-obvious decision
 that saves every consumer from rediscovering it? If not, it should not be in this library.
+
+### Layout components belong here (not in alexrebula)
+
+Any section layout pattern that is **used by more than one section page** — or that is
+clearly general enough to be — belongs in `giselle-mui` as a named layout component, not
+inline in `alexrebula/src/sections/`. Examples of patterns that belong here:
+
+- Sidebar + main content grid (`<SidebarContentLayout>`)
+- Gauge / radial-bar visualisation card (`<RadialGaugeCard>`)
+- Two-column page layout with sticky sidebar
+- KPI stats column alongside a timeline
+
+**Decision rule — ask before writing any new JSX in `alexrebula/src/sections/`:**
+> Would a second section page (or a different project) want this exact layout structure?
+> If yes → create a named component in `giselle-mui/src/components/layout/` first, then import it.
+
+This was violated when `StoreReadinessSectionInner` and `ReadinessGauge` were written directly
+in `alexrebula/src/sections/store-readiness/view.tsx`. Both belong in giselle-mui:
+- `ReadinessGauge` → `src/components/chart/radial-gauge/` (wraps ApexCharts radialBar)
+- The sidebar+timeline layout → `src/components/layout/sidebar-timeline/`
+
+**Backlog items (not yet extracted — add to roadmap when taking these on):**
+- `ReadinessGauge` → giselle-mui `chart/radial-gauge/`
+- `SidebarTimelineLayout` → giselle-mui `layout/sidebar-timeline/`
+
+### Chart/ApexCharts options follow the data-layer convention
+
+When a component uses ApexCharts:
+- Chart `options` objects must **not** be defined inline in JSX.
+- Static options → module-level `const` in a `*.styles.ts` file.
+- Options that depend on theme tokens → a factory function in `*.styles.ts` that accepts `theme`.
+- The component receives the result and passes it to `<ReactApexChart options={...} />` — never defines it inline.
 
 - `TimelineTwoColumn` visual pages for roadmap docs — see the **Roadmap visual sync rule**
   in the `alexrebula` copilot instructions. `TimelineTwoColumn` is the designated component
@@ -207,25 +241,45 @@ At the start of every new Copilot session in this package, read these files:
 
 | Component                                            | File                                  | Status                                     |
 | ---------------------------------------------------- | ------------------------------------- | ------------------------------------------ |
-| `GiselleIcon`                                        | `src/components/giselle-icon/`        | ✅ Shipped + tested                        |
+| `GiselleIcon`                                        | `src/components/icon/giselle/`        | ✅ Shipped + tested                        |
 | `MetricCard` + `MetricCardDecoration`                | `src/components/card/metric/`         | ✅ Shipped + tested                        |
 | `QuoteCard`                                          | `src/components/card/quote/`          | ✅ Shipped + tested                        |
-| `SelectableCard`                                     | `src/components/selectable-card/`     | ✅ Shipped + tested                        |
+| `SelectableCard`                                     | `src/components/card/selectable/`     | ✅ Shipped + tested                        |
 | `createIconRegistrar`                                | `src/utils/create-icon-registrar.ts`  | ✅ Shipped + tested                        |
 | `TimelineTwoColumn`                                  | `src/components/timeline/two-column/` | ✅ Shipped + tested                        |
-| `IconActionBar`                                      | `src/components/icon-action-bar/`     | ✅ Shipped + tested                        |
+| `IconActionBar`                                      | `src/components/action-bar/icon/`     | ✅ Shipped + tested                        |
 | `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts`            | ✅ Shipped + tested (Phase A — 4 May 2026) |
+| `giselleTheme`, palette constants                    | `src/utils/theme-preset.ts`           | ✅ Shipped + tested (Phase B — 5 May 2026) |
+| `StatCard`                                           | `src/components/card/stat/`           | ✅ Shipped + tested (5 May 2026)           |
+
+### Section-level companion types (canonical location)
+
+These types must be defined here and imported from `@alexrebula/giselle-mui` by all consumers.
+**Never re-define them in alexrebula data files or anywhere else.**
+
+| Type                   | Location                                      | Purpose                                                                            |
+| ---------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `TimelineSidebar`      | `src/components/timeline/two-column/types.ts` | Sidebar heading/body/chip for a timeline section page                              |
+| `TimelineColumnLabels` | `src/components/timeline/two-column/types.ts` | Column header labels (`left`, `right`, optional subtitles)                         |
+| `TimelineSectionData`  | `src/components/timeline/two-column/types.ts` | Aggregated `{ sidebar, columnLabels, phases }` — pass directly to a section view   |
+| `StatCardItem`         | `src/components/card/stat/types.ts`           | Data-layer shape for one `StatCard` entry (uses `iconId: string`, not `ReactNode`) |
+
+**Why this matters:** Types defined in data files are invisible to consumers of this library.
+They also diverge over time — the same shape ends up with three different names across three
+data files. Define once in giselle-mui, import everywhere.
 
 ### Next planned work (priority order)
 
-1. **Phase B — Giselle brand theme preset** — define the Giselle green + amber palette as `giselleTheme` using `extendTheme()`. Export from `src/index.ts`. See `docs/roadmap.md` Phase B.
-2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C.
+1. **Phase B — finalize** — add `giselleTheme` usage to `docs/theming/nextjs.md`. One docs update to close Phase B. Branch: `feature/giselle-theme-preset`.
+2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C. Blocked until Phase B PR merges.
 3. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
 4. **RoadmapTimeline component** — Phase A prerequisite (`channelAlpha`) is now met. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
 
 ### Additional allowed peer dependencies
 
 - `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). Acceptable under the zero-proprietary-dependencies rule.
+- `framer-motion` — used in `FloatingSubNav`. **Always use `motion.div`, never `m.div`.** The `m.*` API requires `LazyMotion` in the consumer's tree — this is an invisible requirement that breaks any app not using lazy motion (including Storybook). `motion.*` works without a provider and is correct for library components.
+- `apexcharts` + `react-apexcharts` — used in `RadialProgressCard` (optional peer deps — declared with `peerDependenciesMeta.optional: true`). Lazy-loaded via `React.lazy + Suspense` so consumers without ApexCharts installed do not pay the bundle cost.
 
 ### tsup `external` rule — non-negotiable
 
@@ -288,12 +342,17 @@ steps **in order** before switching to the portfolio:
 # 1. Build the distributable (tsup) — produces dist/index.js and dist/index.d.ts
 npm run build
 
-# 2. Push to the portfolio via yalc — no restart or cache clear needed
+# 2. Push to the portfolio via yalc — updates node_modules/@alexrebula/giselle-mui
 yalc push
+
+# 3. In the portfolio — clear the Turbopack module-graph cache, then restart
+#    (in alexrebula/) rm -rf .next && npm run dev
+#    Turbopack caches the full module graph inside .next/dev/. Skipping this step
+#    means the old pre-fix bundle stays loaded — components that were null stay null.
 ```
 
 `yalc push` updates `node_modules/@alexrebula/giselle-mui` in the portfolio automatically.
-Turbopack picks up the new files on the next import.
+**Always clear `.next` in the portfolio after a `yalc push`.**
 
 ---
 
@@ -318,6 +377,7 @@ Checks (in order): Prettier → ESLint → `tsc --noEmit` → Vitest → tsup bu
 
 - Config: `.storybook/main.ts` (react-vite builder) + `.storybook/preview.tsx` (wraps stories in `CssVarsProvider`)
 - Stories live co-located with their component: `src/components/<name>/<name>.stories.tsx`
+- **The filename MUST match `*.stories.tsx`** — Storybook's glob is `src/**/*.stories.@(ts|tsx)`. A file named `stories.tsx` (no component-name prefix) is invisible to Storybook and will never appear in the UI.
 - Every story file must pass `tsc --noEmit`, ESLint, and Prettier — they are in `src/` and covered by all checks
 - Named component helpers (e.g. `function ToggleDemo()`) must be used whenever a story render function uses React hooks — anonymous arrow functions inside `render:` violate the `react-hooks/rules-of-hooks` ESLint rule
 
@@ -424,6 +484,34 @@ Every exported component function and every exported prop interface must have JS
 A component gets its own subfolder (`src/components/<name>/`) **only when it is exported from `src/index.ts`** (independently usable by consumers).
 
 Internal sub-components — helpers, local wrappers, private building blocks that only make sense inside their parent — stay flat in the parent's folder. Creating a subfolder for an internal component implies it is independently usable; that false signal causes confusion during refactors.
+
+### Storybook title grouping convention (enforce always — no exceptions)
+
+Every story file must use the correct group path. The `'Components'` group is **abolished** — it is a catch-all that gives no information. The canonical group map is:
+
+| Group | Contents |
+|---|---|
+| `Cards/Stat` | `StatCard` |
+| `Cards/Metric` | `MetricCard` + `MetricCardDecoration` |
+| `Cards/Quote` | `QuoteCard` |
+| `Cards/Selectable` | `SelectableCard` |
+| `Data Display/Icon` | `GiselleIcon` |
+| `Data Display/Action Bar` | `IconActionBar` |
+| `Giselle MUI/Timeline/Two Column` | `TimelineTwoColumn` |
+| `Giselle MUI/Timeline/Dot` | `TimelineDot` |
+| `Navigation/Floating Sub Nav` | `FloatingSubNav` |
+| `Layout/Section Title` | `SectionTitle` |
+| `Layout/Two Column Showcase Row` | `TwoColumnShowcaseRow` |
+
+**Rules:**
+- New card-type components → `Cards/<Name>` (just the noun, no "Card" suffix in the story title)
+- New display/presentational components → `Data Display/<Name>`
+- New complex compositions tied to the Timeline → `Giselle MUI/Timeline/<Name>`
+- New navigation components → `Navigation/<Name>`
+- New page-layout helpers → `Layout/<Name>`
+- Never use `'Components'` as a group — it is not informative
+
+---
 
 ### Storybook story decision rule
 

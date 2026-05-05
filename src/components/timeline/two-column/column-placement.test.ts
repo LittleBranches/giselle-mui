@@ -3,22 +3,21 @@
 /**
  * Column placement tests for milestone rows in TimelineTwoColumn.
  *
- * Invariant — milestones must always render in the OPPOSITE visual column
- * from their parent phase card, INSIDE the same TimelineItem:
- *   - Phase side='right' → phase card in LEFT column  → milestones in RIGHT column
- *   - Phase side='left'  → phase card in RIGHT column → milestones in LEFT column
+ * Invariant — milestones render in the SAME visual column as their parent phase card
+ * when no explicit `ms.side` is set. With a `ms.side` override, the milestone renders
+ * in the specified column regardless of the phase card column:
+ *   - Phase side='left'  → phase card in LEFT column  → milestone (no side) in LEFT column
+ *   - Phase side='right' → phase card in RIGHT column → milestone (no side) in RIGHT column
+ *   - Milestone side='right' on phase side='left' → milestone in RIGHT column
  *
- * Why opposite, and inside the same row? Milestones belong to a period. Rendering
- * them as separate rows (flatMap) causes them to appear BELOW the phase card in
- * the DOM flow — outside the visual period. Putting them in the opposite column of
- * the same TimelineItem keeps them visually alongside the period card.
+ * `side` is direct (not inverted): `side='left'` means LEFT column, `side='right'` RIGHT column.
  *
  * DOM structure per phase (ONE <li data-testid="tl-item"> containing nested flex rows):
  *   <li data-testid="tl-item">
  *     <div>  ← phase row (flex row)
  *       <div data-col="left">    ← phase card cell
  *       <div data-col="center"> ← phase dot + spine
- *       <div data-col="right">  ← empty or phase card (side='left')
+ *       <div data-col="right">  ← empty or phase card (side='right')
  *     <div>  ← milestone row 0 (flex row)
  *       <div data-col="left">    ← milestone card or empty
  *       <div data-col="center"> ← ms dot + spine
@@ -102,7 +101,7 @@ import { TimelineTwoColumn } from './two-column';
 
 const stubIcon = React.createElement('span', null) as unknown as ReactElement<{ width?: number }>;
 
-function makePhase(side: 'left' | 'right'): TimelinePhase {
+function makePhase(side: 'left' | 'right', msSide?: 'left' | 'right'): TimelinePhase {
   return {
     key: 1,
     title: 'Test Phase',
@@ -116,6 +115,7 @@ function makePhase(side: 'left' | 'right'): TimelinePhase {
         title: 'A Milestone',
         icon: stubIcon,
         color: 'info' as const,
+        ...(msSide !== undefined ? { side: msSide } : {}),
       },
     ],
   };
@@ -123,12 +123,12 @@ function makePhase(side: 'left' | 'right'): TimelinePhase {
 
 const cleanups: Array<() => void> = [];
 
-function renderAndMount(side: 'left' | 'right'): HTMLElement {
+function renderAndMount(side: 'left' | 'right', msSide?: 'left' | 'right'): HTMLElement {
   const container = document.createElement('div');
   document.body.appendChild(container);
   const root = ReactDOM.createRoot(container);
   act(() => {
-    root.render(React.createElement(TimelineTwoColumn, { phases: [makePhase(side)] }));
+    root.render(React.createElement(TimelineTwoColumn, { phases: [makePhase(side, msSide)] }));
   });
   cleanups.push(() => {
     act(() => root.unmount());
@@ -159,8 +159,15 @@ afterEach(() => {
 
 // ── Tests ─────────────────────────────────────────────────────────────────
 
-describe('milestone opposite-column placement', () => {
-  it('phase side=right → phase card in LEFT col (0) → milestone must be in RIGHT col (2)', () => {
+describe('milestone same-column placement (direct — no mirroring)', () => {
+  it('phase side=left → phase card in LEFT col (0) → milestone (no side) in LEFT col (0)', () => {
+    const container = renderAndMount('left');
+    const items = container.querySelectorAll('[data-testid="tl-item"]');
+    expect(items).toHaveLength(1);
+    expect(badgeColumnIndex(items[0]!)).toBe(0);
+  });
+
+  it('phase side=right → phase card in RIGHT col (2) → milestone (no side) in RIGHT col (2)', () => {
     const container = renderAndMount('right');
     const items = container.querySelectorAll('[data-testid="tl-item"]');
     // One TimelineItem per phase — milestones are INSIDE the phase row, not separate rows.
@@ -168,20 +175,29 @@ describe('milestone opposite-column placement', () => {
     expect(badgeColumnIndex(items[0]!)).toBe(2);
   });
 
-  it('phase side=left → phase card in RIGHT col (2) → milestone must be in LEFT col (0)', () => {
-    const container = renderAndMount('left');
-    const items = container.querySelectorAll('[data-testid="tl-item"]');
-    expect(items).toHaveLength(1);
-    expect(badgeColumnIndex(items[0]!)).toBe(0);
-  });
-
-  it('milestone column is never the same as its parent phase card column', () => {
-    // Phase card column: side=right → col 0 (left), side=left → col 2 (right).
-    const phaseCardCol: Record<'left' | 'right', number> = { right: 0, left: 2 };
+  it('milestone column matches its parent phase card column when ms.side is not set', () => {
+    // Both phase sides: milestone column == phase card column.
+    const phaseCardCol: Record<'left' | 'right', number> = { left: 0, right: 2 };
     for (const side of ['left', 'right'] as const) {
       const container = renderAndMount(side);
       const items = container.querySelectorAll('[data-testid="tl-item"]');
-      expect(badgeColumnIndex(items[0]!)).not.toBe(phaseCardCol[side]);
+      expect(badgeColumnIndex(items[0]!)).toBe(phaseCardCol[side]);
     }
+  });
+});
+
+describe('milestone explicit side override', () => {
+  it('ms.side=right on phase side=left → milestone in RIGHT col (2), overriding parent', () => {
+    const container = renderAndMount('left', 'right');
+    const items = container.querySelectorAll('[data-testid="tl-item"]');
+    expect(items).toHaveLength(1);
+    expect(badgeColumnIndex(items[0]!)).toBe(2);
+  });
+
+  it('ms.side=left on phase side=right → milestone in LEFT col (0), overriding parent', () => {
+    const container = renderAndMount('right', 'left');
+    const items = container.querySelectorAll('[data-testid="tl-item"]');
+    expect(items).toHaveLength(1);
+    expect(badgeColumnIndex(items[0]!)).toBe(0);
   });
 });

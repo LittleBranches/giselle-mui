@@ -8,4 +8,7 @@ export type {
   HighlightedPaletteKey,
   TimelineTwoColumnProps,
   TimelinePlatformItem,
+  TimelineSidebar,
+  TimelineColumnLabels,
+  TimelineSectionData,
 } from './types';

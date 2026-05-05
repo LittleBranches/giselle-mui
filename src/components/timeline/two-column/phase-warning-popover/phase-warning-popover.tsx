@@ -17,7 +17,7 @@ import {
   sliderRowHeaderSx,
   actionsRowSx,
   ganttBarSx,
-} from './styles';
+} from './phase-warning-popover.styles';
 
 // ----------------------------------------------------------------------
 
