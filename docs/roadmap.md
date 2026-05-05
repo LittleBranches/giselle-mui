@@ -42,14 +42,14 @@ See [`theming/nextjs.md`](./theming/nextjs.md) for full usage examples and integ
 **Goal:** Ship the small theme-building primitives needed by any MUI v7 project
 as named exports from `giselle-mui`, so consuming projects have them out of the box.
 
-| Task | Label | Status |
+| Task                                                                  | Label   | Status |
 | --------------------------------------------------------------------- | ------- | ------ |
-| Add `channelAlpha(channel, alpha)` to `giselle-mui/src/utils/` | Theming | ✅ |
-| Add `hexToChannel(hex)` to `giselle-mui/src/utils/` | Theming | ✅ |
-| Add `pxToRem(px)` and `remToPx(rem)` to `giselle-mui/src/utils/` | Theming | ✅ |
-| Export all theme utilities from `giselle-mui/src/index.ts` | Theming | ✅ |
-| Add tests for all theme utilities (22 tests in `theme-utils.test.ts`) | Theming | ✅ |
-| Update `theming/nextjs.md` to show usage from giselle-mui | Theming | ✅ |
+| Add `channelAlpha(channel, alpha)` to `giselle-mui/src/utils/`        | Theming | ✅     |
+| Add `hexToChannel(hex)` to `giselle-mui/src/utils/`                   | Theming | ✅     |
+| Add `pxToRem(px)` and `remToPx(rem)` to `giselle-mui/src/utils/`      | Theming | ✅     |
+| Export all theme utilities from `giselle-mui/src/index.ts`            | Theming | ✅     |
+| Add tests for all theme utilities (22 tests in `theme-utils.test.ts`) | Theming | ✅     |
+| Update `theming/nextjs.md` to show usage from giselle-mui             | Theming | ✅     |
 
 ### Phase B — Giselle brand theme preset — Theming ✅ Done — 5 May 2026
 
@@ -64,13 +64,13 @@ The default palette decisions (documented in `src/utils/theme-preset.ts` JSDoc):
 - **Secondary:** `#F5A623` Mango gold — unchanged across modes
 - **Info / Success / Warning / Error:** standard MUI v7 family values, both modes
 
-| Task | Label | Status |
+| Task                                                                                                   | Label   | Status |
 | ------------------------------------------------------------------------------------------------------ | ------- | ------ |
-| Decide final hex values for `primary` and `secondary` Giselle palette colours | Theming | ✅ |
-| Define `giselleTheme` using `extendTheme()` with the Giselle palette | Theming | ✅ |
-| Ensure all six palette keys are covered: `primary`, `secondary`, `info`, `success`, `warning`, `error` | Theming | ✅ |
-| Export `giselleTheme` from `giselle-mui/src/index.ts` | Theming | ✅ |
-| Document the palette decisions in `theming/nextjs.md` | Theming | ✅ |
+| Decide final hex values for `primary` and `secondary` Giselle palette colours                          | Theming | ✅     |
+| Define `giselleTheme` using `extendTheme()` with the Giselle palette                                   | Theming | ✅     |
+| Ensure all six palette keys are covered: `primary`, `secondary`, `info`, `success`, `warning`, `error` | Theming | ✅     |
+| Export `giselleTheme` from `giselle-mui/src/index.ts`                                                  | Theming | ✅     |
+| Document the palette decisions in `theming/nextjs.md`                                                  | Theming | ✅     |
 
 ### Phase C — GiselleThemeProvider component — Theming (HIGH priority)
 
@@ -118,15 +118,15 @@ function GiselleThemeProvider({ children, themeOverrides, theme }: Props) {
 }
 ```
 
-| Task | Label | Status |
+| Task                                                                                   | Label   | Status |
 | -------------------------------------------------------------------------------------- | ------- | ------ |
-| Complete Phase B (Giselle theme preset) — this is a direct prerequisite | Theming | ⬜ |
-| Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ⬜ |
-| Implement `GiselleThemeProvider` wrapping `CssVarsProvider` with merge logic | Theming | ⬜ |
-| Export `GiselleThemeProvider` from `giselle-mui/src/index.ts` | Theming | ⬜ |
-| Add Storybook story: default palette, with overrides, fully custom | Theming | ⬜ |
-| Add Vitest test: renders correctly, passes `data-mui-color-scheme` to DOM | Theming | ⬜ |
-| Update `theming/nextjs.md` with the new zero-config usage pattern | Theming | ⬜ |
+| Complete Phase B (Giselle theme preset) — this is a direct prerequisite                | Theming | ⬜     |
+| Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ⬜     |
+| Implement `GiselleThemeProvider` wrapping `CssVarsProvider` with merge logic           | Theming | ⬜     |
+| Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | Theming | ⬜     |
+| Add Storybook story: default palette, with overrides, fully custom                     | Theming | ⬜     |
+| Add Vitest test: renders correctly, passes `data-mui-color-scheme` to DOM              | Theming | ⬜     |
+| Update `theming/nextjs.md` with the new zero-config usage pattern                      | Theming | ⬜     |
 
 **Storybook note:** Storybook in `giselle-mui` must be able to test two things:
 
@@ -164,24 +164,24 @@ in a one-import swap.
 
 Full design: [`docs/components/settings-provider-plan.md`](../components/settings-provider-plan.md)
 
-| Task | Label | Status |
+| Task                                                                                                     | Label   | Status |
 | -------------------------------------------------------------------------------------------------------- | ------- | ------ |
-| Phase α: Port `useLocalStorage<T>` to `src/utils/use-local-storage.ts` | Theming | ⬜ |
-| Phase α: Write `isDeepEqual(a, b)` — covers primitives, arrays, plain objects (no es-toolkit) | Theming | ⬜ |
-| Phase α: Write `getCookieValue` / `setCookieValue` — SSR-safe (`typeof document !== 'undefined'`) | Theming | ⬜ |
-| Phase α: Tests for all three utilities | Theming | ⬜ |
-| Phase 1: Define `BaseSettingsState`, `GiselleSettingsContextValue<T>`, `GiselleSettingsProviderProps<T>` | Theming | ⬜ |
-| Phase 1: Implement `GiselleSettingsProvider<T>` — localStorage by default, `initialState?` for SSR | Theming | ⬜ |
-| Phase 1: Version check on mount — reset to defaults if stored version mismatches | Theming | ⬜ |
-| Phase 1: Export `useGiselleSettings<T>()` hook | Theming | ⬜ |
-| Phase 1: Storybook story — default, `setField`, `canReset`/`onReset`, drawer toggle | Theming | ⬜ |
-| Phase 1: Vitest tests — render, `setField`, `canReset`, `onReset`, version mismatch reset | Theming | ⬜ |
-| Phase 2: `storage: 'cookie'` option (client-side `document.cookie`) | Theming | ⬜ |
-| Phase 2: `storage: StorageAdapter<T>` custom adapter | Theming | ⬜ |
-| Phase 2: `detectGiselleSettings()` server helper (separate `/server` entrypoint) | Theming | ⬜ |
-| Phase 3: `SettingsThemeBridge` — internal bridge wiring settings state into `GiselleThemeProvider` | Theming | ⬜ |
-| Phase 3: `GiselleThemeAndSettingsProvider` convenience wrapper | Theming | ⬜ |
-| Phase 3: Migration guide in README and `theming/nextjs.md` | Theming | ⬜ |
+| Phase α: Port `useLocalStorage<T>` to `src/utils/use-local-storage.ts`                                   | Theming | ⬜     |
+| Phase α: Write `isDeepEqual(a, b)` — covers primitives, arrays, plain objects (no es-toolkit)            | Theming | ⬜     |
+| Phase α: Write `getCookieValue` / `setCookieValue` — SSR-safe (`typeof document !== 'undefined'`)        | Theming | ⬜     |
+| Phase α: Tests for all three utilities                                                                   | Theming | ⬜     |
+| Phase 1: Define `BaseSettingsState`, `GiselleSettingsContextValue<T>`, `GiselleSettingsProviderProps<T>` | Theming | ⬜     |
+| Phase 1: Implement `GiselleSettingsProvider<T>` — localStorage by default, `initialState?` for SSR       | Theming | ⬜     |
+| Phase 1: Version check on mount — reset to defaults if stored version mismatches                         | Theming | ⬜     |
+| Phase 1: Export `useGiselleSettings<T>()` hook                                                           | Theming | ⬜     |
+| Phase 1: Storybook story — default, `setField`, `canReset`/`onReset`, drawer toggle                      | Theming | ⬜     |
+| Phase 1: Vitest tests — render, `setField`, `canReset`, `onReset`, version mismatch reset                | Theming | ⬜     |
+| Phase 2: `storage: 'cookie'` option (client-side `document.cookie`)                                      | Theming | ⬜     |
+| Phase 2: `storage: StorageAdapter<T>` custom adapter                                                     | Theming | ⬜     |
+| Phase 2: `detectGiselleSettings()` server helper (separate `/server` entrypoint)                         | Theming | ⬜     |
+| Phase 3: `SettingsThemeBridge` — internal bridge wiring settings state into `GiselleThemeProvider`       | Theming | ⬜     |
+| Phase 3: `GiselleThemeAndSettingsProvider` convenience wrapper                                           | Theming | ⬜     |
+| Phase 3: Migration guide in README and `theming/nextjs.md`                                               | Theming | ⬜     |
 
 ---
 
@@ -198,22 +198,22 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 
 **Extraction candidates** (need only light cleanup — not a full rewrite):
 
-| Task | Label | Status |
-| ------------------------------------------------------------------------------------------------- | ------- | ------ |
-| Extract `TwoColumnShowcaseRow` — clean, zero Minimals, ready now | Components | ✅ |
-| Extract `SectionTitle` + `SectionCaption` — section heading group with optional gradient accent | Components | ✅ |
-| Extract `FloatingSubNav` — sticky/fixed pill nav with framer-motion, `ReactNode` icon slot | Components | ✅ |
-| Extract `OptionWithBlurb` — tiny wrapper, clean, zero Minimals | Components | ⬜ |
-| Extract `SectionPendingLoader` — replace internal `Iconify` with `GiselleIcon` | Components | ⬜ |
-| Extract `FloatingControlBar` — replace `channelAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | Components | ⬜ |
+| Task                                                                                              | Label      | Status |
+| ------------------------------------------------------------------------------------------------- | ---------- | ------ |
+| Extract `TwoColumnShowcaseRow` — clean, zero Minimals, ready now                                  | Components | ✅     |
+| Extract `SectionTitle` + `SectionCaption` — section heading group with optional gradient accent   | Components | ✅     |
+| Extract `FloatingSubNav` — sticky/fixed pill nav with framer-motion, `ReactNode` icon slot        | Components | ✅     |
+| Extract `OptionWithBlurb` — tiny wrapper, clean, zero Minimals                                    | Components | ⬜     |
+| Extract `SectionPendingLoader` — replace internal `Iconify` with `GiselleIcon`                    | Components | ⬜     |
+| Extract `FloatingControlBar` — replace `channelAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | Components | ⬜     |
 
 **Write from scratch** (no copy from alexrebula — independent implementations):
 
-| Task | Label | Status |
-| ------------------------------------------------------------------------------------------------- | ------- | ------ |
-| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot | Components | ⬜ |
-| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha` | Components | ⬜ |
-| `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand | Components | ⬜ |
+| Task                                                                                              | Label      | Status |
+| ------------------------------------------------------------------------------------------------- | ---------- | ------ |
+| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot     | Components | ⬜     |
+| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha` | Components | ⬜     |
+| `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand        | Components | ⬜     |
 
 **When this phase is done:**
 
@@ -279,14 +279,14 @@ export interface DetailsDrawerProps {
 }
 ```
 
-| Task | Label | Status |
-| ---------------------------------------------------------------------------------------------- | ------- | ------ |
-| Implement `DetailsDrawer` — slide animation, backdrop, close button, slots | Components | ⬜ |
-| Responsive width: `{ xs: '100%', md: 480 }` default, overridable via `width` prop | Components | ⬜ |
-| Export from `src/index.ts` + barrel `src/components/details-drawer/index.ts` | Components | ⬜ |
-| Storybook story: empty, with title, with footer, with full `TimelineItemDetails` inside | Components | ⬜ |
-| Vitest test: renders open/closed, close button calls `onClose`, backdrop click calls `onClose` | Components | ⬜ |
-| README: why this exists, design decisions, copyright note | Components | ⬜ |
+| Task                                                                                           | Label      | Status |
+| ---------------------------------------------------------------------------------------------- | ---------- | ------ |
+| Implement `DetailsDrawer` — slide animation, backdrop, close button, slots                     | Components | ⬜     |
+| Responsive width: `{ xs: '100%', md: 480 }` default, overridable via `width` prop              | Components | ⬜     |
+| Export from `src/index.ts` + barrel `src/components/details-drawer/index.ts`                   | Components | ⬜     |
+| Storybook story: empty, with title, with footer, with full `TimelineItemDetails` inside        | Components | ⬜     |
+| Vitest test: renders open/closed, close button calls `onClose`, backdrop click calls `onClose` | Components | ⬜     |
+| README: why this exists, design decisions, copyright note                                      | Components | ⬜     |
 
 ---
 
@@ -369,21 +369,21 @@ decoupled — the consumer owns the open/close state.
 **Prerequisite:** Phase F (`DetailsDrawer`) — `TimelineItemDetails` is always rendered
 inside a `DetailsDrawer`.
 
-| Task | Label | Status |
-| -------------------------------------------------------------------------------------- | ------- | ------ |
-| Define `TimelineItemDetailData` interface in `types.ts` | Components | ⬜ |
-| Implement `TimelineItemDetails` — read-only layout, all field slots | Components | ⬜ |
-| Status chip: maps `color` + `done`/`overdue` to label + palette color | Components | ⬜ |
-| Photo slot: responsive row of thumbnails with lightbox-ready click handler | Components | ⬜ |
-| Sub-items slot: styled list from `details[]` array | Components | ⬜ |
-| Links slot: anchor list with `GiselleIcon` icon per item | Components | ⬜ |
-| Extra fields slot: `label: value` rows for consumer-defined metadata | Components | ⬜ |
-| Export from `src/index.ts` + barrel `src/components/timeline-item-details/index.ts` | Components | ⬜ |
-| Storybook story: phase item, milestone item, overdue item, minimal item (no optionals) | Components | ⬜ |
-| Vitest test: renders all slots, status chip label for each `color`/`done` combination | Components | ⬜ |
-| README: why it exists, why it belongs here, design decisions | Components | ⬜ |
-| Phase G v2: edit mode — controlled inputs, `onSave`, `onCancel` callbacks | Components | ⬜ |
-| Phase G v2: wire `TimelineTwoColumn.onItemClick` to open drawer with item data | Components | ⬜ |
+| Task                                                                                   | Label      | Status |
+| -------------------------------------------------------------------------------------- | ---------- | ------ |
+| Define `TimelineItemDetailData` interface in `types.ts`                                | Components | ⬜     |
+| Implement `TimelineItemDetails` — read-only layout, all field slots                    | Components | ⬜     |
+| Status chip: maps `color` + `done`/`overdue` to label + palette color                  | Components | ⬜     |
+| Photo slot: responsive row of thumbnails with lightbox-ready click handler             | Components | ⬜     |
+| Sub-items slot: styled list from `details[]` array                                     | Components | ⬜     |
+| Links slot: anchor list with `GiselleIcon` icon per item                               | Components | ⬜     |
+| Extra fields slot: `label: value` rows for consumer-defined metadata                   | Components | ⬜     |
+| Export from `src/index.ts` + barrel `src/components/timeline-item-details/index.ts`    | Components | ⬜     |
+| Storybook story: phase item, milestone item, overdue item, minimal item (no optionals) | Components | ⬜     |
+| Vitest test: renders all slots, status chip label for each `color`/`done` combination  | Components | ⬜     |
+| README: why it exists, why it belongs here, design decisions                           | Components | ⬜     |
+| Phase G v2: edit mode — controlled inputs, `onSave`, `onCancel` callbacks              | Components | ⬜     |
+| Phase G v2: wire `TimelineTwoColumn.onItemClick` to open drawer with item data         | Components | ⬜     |
 
 ---
 
@@ -417,20 +417,20 @@ is copied or adapted from `alexrebula/src/`. The public MIT boundary must not be
 shell components depend on a theme context and settings context being available without
 consumer boilerplate.
 
-| Task | Label | Status |
-| -------------------------------------------------------------------------------------------------- | ---------- | ------ |
-| Define `TrackerSectionLayout` component — heading + stat grid + sidebar/timeline split | Components | ⬜ |
-| Extract `SidebarTimelineLayout` — generic 1/3 sticky sidebar + 2/3 scrolling main | Layout | ⬜ |
-| Navigation: `AppTopBar` — responsive header with title, nav links, icon-action slots | Navigation | ⬜ |
-| Navigation: `AppSidebarDrawer` — collapsible nav drawer with icon + label items | Navigation | ⬜ |
-| Navigation: `FloatingSubNav` — anchored in-page section navigator (already in library, audit) | Navigation | ⬜ |
-| `AppLayout` — application shell: composes `AppTopBar` + `AppSidebarDrawer` + main slot | Layout | ⬜ |
-| Auth: `LoginCard` — email + password fields + submit button (structural, no backend) | Auth | ⬜ |
-| Auth: `AuthPageLayout` — full-screen split or centred shell that wraps `LoginCard` | Auth | ⬜ |
-| Chart: `DonutSummaryCard` — Card wrapping a donut chart with centred total label + legend | Chart | ⬜ |
-| Chart: `AreaSparklineCard` — Card with a full-bleed area chart and overlaid stat | Chart | ⬜ |
-| Export all Phase H symbols from `src/index.ts` | Core | ⬜ |
-| Storybook stories for every Phase H component | Components | ⬜ |
-| Vitest tests for every Phase H component + utility | Components | ⬜ |
-| README for every Phase H component folder | Components | ⬜ |
-| Docusaurus page in `giselle-docs` wiring Phase H component docs | Docs | ⬜ |
+| Task                                                                                          | Label      | Status |
+| --------------------------------------------------------------------------------------------- | ---------- | ------ |
+| Define `TrackerSectionLayout` component — heading + stat grid + sidebar/timeline split        | Components | ⬜     |
+| Extract `SidebarTimelineLayout` — generic 1/3 sticky sidebar + 2/3 scrolling main             | Layout     | ⬜     |
+| Navigation: `AppTopBar` — responsive header with title, nav links, icon-action slots          | Navigation | ⬜     |
+| Navigation: `AppSidebarDrawer` — collapsible nav drawer with icon + label items               | Navigation | ⬜     |
+| Navigation: `FloatingSubNav` — anchored in-page section navigator (already in library, audit) | Navigation | ⬜     |
+| `AppLayout` — application shell: composes `AppTopBar` + `AppSidebarDrawer` + main slot        | Layout     | ⬜     |
+| Auth: `LoginCard` — email + password fields + submit button (structural, no backend)          | Auth       | ⬜     |
+| Auth: `AuthPageLayout` — full-screen split or centred shell that wraps `LoginCard`            | Auth       | ⬜     |
+| Chart: `DonutSummaryCard` — Card wrapping a donut chart with centred total label + legend     | Chart      | ⬜     |
+| Chart: `AreaSparklineCard` — Card with a full-bleed area chart and overlaid stat              | Chart      | ⬜     |
+| Export all Phase H symbols from `src/index.ts`                                                | Core       | ⬜     |
+| Storybook stories for every Phase H component                                                 | Components | ⬜     |
+| Vitest tests for every Phase H component + utility                                            | Components | ⬜     |
+| README for every Phase H component folder                                                     | Components | ⬜     |
+| Docusaurus page in `giselle-docs` wiring Phase H component docs                               | Docs       | ⬜     |
