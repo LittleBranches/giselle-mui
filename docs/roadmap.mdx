@@ -3,11 +3,117 @@ sidebar_position: 2
 sidebar_label: 'Roadmap'
 ---
 
+import { RoadmapTimeline } from '@site/src/components/RoadmapTimeline';
+
+export const roadmapPhases = [
+  // ── Theming phases (side: 'left' → card renders in RIGHT column) ──────────
+  {
+    key: 1,
+    title: 'Phase A — Theme token utilities',
+    shortTitle: 'Phase A',
+    description: 'channelAlpha, hexToChannel, pxToRem, remToPx — standalone helpers for any MUI v7 project.',
+    date: '4 May 2026',
+    side: 'left',
+    color: 'success',
+    done: true,
+    details: [
+      'channelAlpha(channel, alpha) — CSS-variable-safe alpha tint',
+      'hexToChannel(hex) — hex to space-separated RGB channel string',
+      'pxToRem(px) / remToPx(rem) — unit conversion utilities',
+      '22 unit tests, all green',
+    ],
+  },
+  {
+    key: 2,
+    title: 'Phase B — Giselle brand theme preset',
+    shortTitle: 'Phase B',
+    description: 'giselleTheme — a ready-to-use extendTheme() result with the Giselle palette. Import and use, or extend.',
+    date: '5 May 2026',
+    side: 'left',
+    color: 'success',
+    done: true,
+    details: [
+      'Primary light: #2E7D32 Deep grove green — WCAG 4.76:1 against white',
+      'Primary dark: #76C442 Lime — readable on dark backgrounds',
+      'Secondary: #F5A623 Mango gold — both modes',
+      'All six MUI palette keys covered',
+    ],
+  },
+  {
+    key: 3,
+    title: 'Phase C — GiselleThemeProvider',
+    shortTitle: 'Phase C',
+    description: 'A zero-config CssVarsProvider wrapper with the Giselle palette as default. Accepts themeOverrides or a fully custom theme.',
+    date: 'May 2026',
+    side: 'left',
+    color: 'warning',
+    active: true,
+    activeLabel: 'Next',
+    details: [
+      'Zero-config: <GiselleThemeProvider> just works',
+      'themeOverrides prop for partial token overrides',
+      'theme prop to bypass defaults entirely',
+    ],
+  },
+  {
+    key: 4,
+    title: 'Phase D — GiselleSettingsProvider',
+    shortTitle: 'Phase D',
+    description: 'Framework-agnostic settings persistence: color mode, direction, font size, color presets. Replaces Minimals SettingsProvider.',
+    date: 'Jun 2026',
+    side: 'left',
+    color: 'info',
+    details: [
+      'useLocalStorage<T> utility',
+      'Storage adapters: localStorage (default), cookie, custom',
+      'Server-safe detectGiselleSettings() helper',
+      'GiselleThemeAndSettingsProvider convenience wrapper',
+    ],
+  },
+  // ── Component phases (side: 'right' → card renders in LEFT column) ────────
+  {
+    key: 5,
+    title: 'Phase E — Standalone UI primitives',
+    shortTitle: 'Phase E',
+    description: 'Layout and section components every portfolio or product site needs: SectionContainer, HeroSection, FAQAccordion, StatCard, and more.',
+    date: 'Jun 2026',
+    side: 'right',
+    color: 'secondary',
+    milestones: [
+      { key: 0, date: '5 May 2026', shortTitle: 'StatCard', title: 'StatCard', description: 'Data card with sparkline, six palette variants.', color: 'success', done: true },
+      { key: 1, date: '5 May 2026', shortTitle: 'RadialProgressCard', title: 'RadialProgressCard', description: 'Card wrapping an ApexCharts radialBar.', color: 'success', done: true },
+      { key: 2, date: 'Jun 2026', shortTitle: 'HeroSection', title: 'HeroSection', description: 'Full-width hero: headline, subtitle, CTA slot.', color: 'secondary' },
+      { key: 3, date: 'Jun 2026', shortTitle: 'FAQAccordion', title: 'FAQAccordion', description: 'MUI Accordion with icon slot and accessible expand.', color: 'secondary' },
+    ],
+  },
+  {
+    key: 6,
+    title: 'Phase F — DetailsDrawer',
+    shortTitle: 'Phase F',
+    description: 'Slide-in detail panel: shell only, content via slot. Responsive width, backdrop, header + footer slots.',
+    date: 'Jul 2026',
+    side: 'right',
+    color: 'primary',
+  },
+  {
+    key: 7,
+    title: 'Phase G — TimelineItemDetails',
+    shortTitle: 'Phase G',
+    description: 'Read/edit panel for any timeline item. Rendered inside DetailsDrawer.',
+    date: 'Jul 2026',
+    side: 'right',
+    color: 'primary',
+  },
+];
+
 # @alexrebula/giselle-mui — Roadmap
 
 > This file is the source of truth for the giselle-mui library build. It covers theme utilities (Phases A–D), components, and extraction candidates. Summary entries for completed phases bubble up to `alexrebula/docs/roadmap.md` Phase 1.5 (private companion repo — not linkable from here).
 
+<RoadmapTimeline phases={roadmapPhases} />
+
 ---
+
 
 ## Current state
 

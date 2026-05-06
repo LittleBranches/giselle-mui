@@ -127,7 +127,9 @@ function buildMilestoneRow(
   const effectiveMsSide = ms.side ?? ctx.phaseSide;
   const isThisMsExpanded = ctx.expandedMiIdx === mi;
   const topPercent = ((mi + 1) / (totalMilestones + 1)) * 100;
-  const stopProp = isThisMsExpanded ? (e: React.MouseEvent) => e.stopPropagation() : undefined;
+  // Always stop propagation from milestone card wrappers — same reason as phase cards:
+  // prevents the document "close all" handler from racing with this card's state update.
+  const stopProp = (e: React.MouseEvent) => e.stopPropagation();
   const suppressElevation = ctx.anyExpanded && !isThisMsExpanded;
   const msDoneForBadge = msDone;
   const dotChecklistProps = ctx.checklist
@@ -378,6 +380,15 @@ export function TimelineTwoColumn({
     // Toggle: clicking an already-expanded phase card collapses it.
     setExpandedPhaseKey((prev) => (prev === phaseKey ? null : phaseKey));
   }, []);
+
+  // Stable stop-propagation handler — used by ALL card wrappers (phase and milestone).
+  // This prevents the document "close all" listener from firing on card clicks,
+  // which would otherwise race with and cancel the card's own expand/collapse state update.
+  // Cards that are NOT clicked still close because handleExpandPhaseCard / handleExpandMilestone
+  // sets the new open key, implicitly closing all others via controlled state.
+  // Clicking genuinely outside a card (no card wrapper intercepts) still reaches the document
+  // handler and closes everything, which is the correct "click away to close" behaviour.
+  const stopCardPropagation = useCallback((e: React.MouseEvent) => e.stopPropagation(), []);
 
   const handleTogglePhase = useCallback(
     (key: number) => {
@@ -648,17 +659,13 @@ export function TimelineTwoColumn({
           const expandedMiIdx = expandedMilestoneMap[String(phase.key)] ?? null;
           const isThisPhaseExpanded = expandedPhaseKey === phase.key;
 
-          // stopPropagation: only needed while the card is expanded, so the
-          // document listener does not collapse it on clicks within the card.
-          const phaseCardStopProp = isThisPhaseExpanded
-            ? (e: React.MouseEvent) => e.stopPropagation()
-            : undefined;
-
           const phaseViewKey = `phase-${phase.key}`;
 
           // Single PhaseCard node — rendered in whichever column matches phase.side.
+          // stopCardPropagation is always active — prevents the document "close all" handler
+          // from racing with this card's own expand/collapse state update on every click.
           const phaseCardNode = (
-            <Box onClick={phaseCardStopProp}>
+            <Box onClick={stopCardPropagation}>
               <PhaseCard
                 phase={phase}
                 columnSide={phase.side}

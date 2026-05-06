@@ -196,7 +196,9 @@ function CardDetailBullets({
                 }
               >
                 <GiselleIcon
-                  icon={isDoneTask ? 'solar:check-circle-bold' : 'solar:circle-line-duotone'}
+                  icon={
+                    isDoneTask ? 'solar:check-circle-bold' : 'solar:record-minimalistic-outline'
+                  }
                   width={PHASE_TASK_ICON_SIZE}
                 />
               </Box>
@@ -926,7 +928,7 @@ export function PhaseCard({
               </Box>
             )}
 
-            {(isHovered || expanded) && phase.description && (
+            {expanded && phase.description && (
               <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
                 {phase.description}
               </Typography>

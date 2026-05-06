@@ -263,13 +263,13 @@ Full workflow, publishing steps, and the reasoning behind yalc:
 | ------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | Core components          | ✅ Done    | `GiselleIcon`, `MetricCard`, `SelectableCard`, `QuoteCard`, `TimelineTwoColumn` — all with unit tests + READMEs                      |
 | Storybook stories        | ✅ Done    | Stories shipped for all components. Deployed locally; public hosting planned.                                                        |
-| Phase A theme utilities  | ✅ Done    | `channelAlpha`, `hexToChannel`, `pxToRem`/`remToPx` — see [`docs/roadmap.md`](./docs/roadmap.md)                                     |
-| Phase B brand theme      | ✅ Done    | `giselleTheme` preset + palette constants — import from `@alexrebula/giselle-mui/utils` — see [`docs/roadmap.md`](./docs/roadmap.md) |
+| Phase A theme utilities  | ✅ Done    | `channelAlpha`, `hexToChannel`, `pxToRem`/`remToPx` — see [`docs/roadmap.md`](./docs/roadmap.mdx)                                     |
+| Phase B brand theme      | ✅ Done    | `giselleTheme` preset + palette constants — import from `@alexrebula/giselle-mui/utils` — see [`docs/roadmap.md`](./docs/roadmap.mdx) |
 | npm publish              | ⬜ Planned | Alongside portfolio launch, May/June 2026                                                                                            |
 | Additional components    | ⬜ Planned | Components extracted from portfolio patterns as they meet the extraction checklist                                                   |
 | Storybook public hosting | ⬜ Planned | Chromatic or self-hosted, cross-linked from Docusaurus                                                                               |
 
-Full detail: [`docs/roadmap.md`](./docs/roadmap.md)
+Full detail: [`docs/roadmap.md`](./docs/roadmap.mdx)
 
 ---
 

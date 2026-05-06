@@ -603,7 +603,7 @@ export const LifeEventVsMarker: Story = {
             color: 'info',
             side: 'left',
             variant: 'life-event',
-            icon: icon('solar:airplane-bold'),
+            icon: icon('solar:planet-bold'),
             details: [
               'Closed the main office; team moved fully distributed',
               'Introduced async-first RFC process for major decisions',
@@ -685,17 +685,6 @@ export const LifeEventVsMarker: Story = {
  * - The highlighted card background (tinted, left border) distinguishes it from normal phases
  */
 export const ScenarioVariant: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'A `variant: "scenario"` card (right column) alongside a regular phase. ' +
-          'Observe: the scenario card has a coloured left border, tinted background, ' +
-          'an overline label pill at the top (the `scenarioLabel`), and an `h6` title — ' +
-          'all distinguishing it as hypothetical/optional rather than committed.',
-      },
-    },
-  },
   render: () => (
     <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
       <TimelineTwoColumn
@@ -1013,7 +1002,7 @@ export const FooterSlot: Story = {
           color: 'primary',
           side: 'right',
           active: true,
-          icon: icon('solar:servers-bold'),
+          icon: icon('solar:server-bold'),
           details: [
             'Internal developer platform for 200+ engineers',
             'TypeScript monorepo with shared tooling',
@@ -1037,7 +1026,7 @@ const OVERLAPPING_PHASES: TimelinePhase[] = [
     date: 'Jan 2022 – Aug 2022',
     color: 'primary',
     side: 'right',
-    icon: icon('solar:servers-bold'),
+    icon: icon('solar:server-bold'),
     details: ['REST + GraphQL endpoints', 'OAuth 2.0 authentication', 'Rate limiting at 1k rps'],
   },
   {

@@ -390,7 +390,9 @@ export function MilestoneBadge({
                     }
                   >
                     <GiselleIcon
-                      icon={isDoneTask ? 'solar:check-circle-bold' : 'solar:circle-line-duotone'}
+                      icon={
+                        isDoneTask ? 'solar:check-circle-bold' : 'solar:record-minimalistic-outline'
+                      }
                       width={MILESTONE_TASK_ICON_SIZE}
                     />
                   </Box>
