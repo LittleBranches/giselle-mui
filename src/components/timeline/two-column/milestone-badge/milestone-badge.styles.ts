@@ -1,6 +1,21 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { HighlightedPaletteKey } from '../types';
 
+// ----------------------------------------------------------------------
+
+/**
+ * Inline icon slot inside detail-count and similar pill badges.
+ *
+ * Forces the SVG to the exact icon size used by the pill.
+ *
+ * @param iconSize - Width and height applied to the `& svg` selector (px).
+ */
+export const pillIconBoxSx = (iconSize: number): SxProps<Theme> => ({
+  display: 'inline-flex',
+  flexShrink: 0,
+  '& svg': { width: iconSize, height: iconSize },
+});
+
 /**
  * Styles for the `MilestoneBadge` component.
  *

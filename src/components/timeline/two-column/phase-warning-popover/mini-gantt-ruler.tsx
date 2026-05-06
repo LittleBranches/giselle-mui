@@ -1,18 +1,11 @@
 import Box from '@mui/material/Box';
 
-import type { TimelinePhase } from '../types';
 import { ganttTrackSx, ganttBarSx } from './phase-warning-popover.styles';
 import type { MiniGanttRulerProps } from './types';
+import { resolveSliderColor } from './utils';
 
-// ----------------------------------------------------------------------
-
-/** Resolve phase color to a valid MUI Slider color prop value. */
-export function resolveSliderColor(
-  color: TimelinePhase['color']
-): 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' {
-  if (!color || color === 'inherit' || color === 'grey') return 'primary';
-  return color as 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning';
-}
+// Re-export — keeps `import { resolveSliderColor } from './mini-gantt-ruler'` working.
+export { resolveSliderColor } from './utils';
 
 // ----------------------------------------------------------------------
 

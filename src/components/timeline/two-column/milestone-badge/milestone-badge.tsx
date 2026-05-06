@@ -28,6 +28,7 @@ import {
   taskToggleColorSx,
   taskIconColorSx,
   taskTitleSx,
+  pillIconBoxSx,
 } from './milestone-badge.styles';
 import {
   MILESTONE_DATE_FONT_SIZE,
@@ -196,14 +197,7 @@ export function MilestoneBadge({
           sx={milestoneDetailPillSx}
           aria-label={`${taskChildren.length} expandable detail${taskChildren.length === 1 ? '' : 's'}`}
         >
-          <Box
-            component="span"
-            sx={{
-              display: 'inline-flex',
-              flexShrink: 0,
-              '& svg': { width: MILESTONE_PILL_ICON_SIZE, height: MILESTONE_PILL_ICON_SIZE },
-            }}
-          >
+          <Box component="span" sx={pillIconBoxSx(MILESTONE_PILL_ICON_SIZE)}>
             {expandableIcon ?? DEFAULT_EXPANDABLE_ICON}
           </Box>
           <Typography

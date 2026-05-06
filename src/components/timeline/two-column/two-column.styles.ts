@@ -273,3 +273,15 @@ export const markerDateSpanSx: SxProps<Theme> = {
   fontWeight: 400,
   opacity: 0.7,
 };
+
+/**
+ * Wrapper around the phase dot and its floating date pill.
+ *
+ * `position: relative` is required so the absolutely-positioned pill floats
+ * above the dot without affecting the row's layout flow.
+ * `display: inline-flex` keeps the wrapper tight to the dot's own size.
+ */
+export const phaseDotWrapperSx: SxProps<Theme> = {
+  position: 'relative',
+  display: 'inline-flex',
+};

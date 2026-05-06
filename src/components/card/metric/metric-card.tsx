@@ -1,4 +1,4 @@
-import type { MetricCardProps, MetricCardDecorationProps } from './types';
+import type { MetricCardProps } from './types';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -6,8 +6,9 @@ import Typography from '@mui/material/Typography';
 
 import { decorationOverlaySx, metricCardPaperSx, metricCardIconBoxSx } from './metric-card.styles';
 
-// Re-exports — keeps `import { MetricCardColor, MetricCardProps } from './metric-card'` working.
+// Re-exports — keeps existing imports from './metric-card' working.
 export type { MetricCardColor, MetricCardProps, MetricCardDecorationProps } from './types';
+export { MetricCardDecoration } from './metric-card-decoration';
 
 // ----------------------------------------------------------------------
 
@@ -77,42 +78,5 @@ export function MetricCard({
         </Box>
       )}
     </Paper>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-/**
- * MetricCardDecoration — the rotated gradient rectangle that sits behind MetricCard content.
- *
- * Pass as the `decoration` prop of `MetricCard`. The card clips it via `overflow: hidden`.
- *
- * @example
- * import { MetricCard, MetricCardDecoration } from '@alexrebula/giselle-mui';
- * <MetricCard decoration={<MetricCardDecoration color="primary" />} ... />
- */
-export function MetricCardDecoration({
-  color = 'primary',
-  sx,
-  ...other
-}: MetricCardDecorationProps) {
-  return (
-    <Box
-      sx={[
-        (theme) => ({
-          top: -40,
-          right: -56,
-          width: 140,
-          height: 140,
-          opacity: 0.1,
-          borderRadius: 4,
-          position: 'absolute',
-          transform: 'rotate(40deg)',
-          background: `linear-gradient(to right, ${theme.vars!.palette[color].main}, transparent)`,
-        }),
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
-      {...other}
-    />
   );
 }

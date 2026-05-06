@@ -8,3 +8,4 @@ export * from './card-corner-alert-badge';
 export * from './card-status-badge';
 export * from './card-decoration';
 export * from './scenario-badge';
+export * from './platform-strip';

@@ -1,7 +1,7 @@
 import type { CardCornerAlert, PhaseCardProps } from './types';
-import type { HighlightedPaletteKey, TimelinePlatformItem } from '../types';
+import type { HighlightedPaletteKey } from '../types';
 
-import { useState, useRef, useCallback, type ReactNode, type MouseEvent } from 'react';
+import { useState, useRef, useCallback, type MouseEvent } from 'react';
 import { PhaseWarningPopover } from '../phase-warning-popover';
 
 import Box from '@mui/material/Box';
@@ -18,8 +18,8 @@ import {
   buildCardClickHandler,
   buildCardKeyDownHandler,
   resolveCardExpansion,
-  derivePlatformEntry,
 } from './utils';
+import { buildPlatformStripItems } from './platform-strip';
 import {
   photoImgSx,
   detailCountPillSx,
@@ -30,6 +30,7 @@ import {
   eyeButtonSx,
   buildPaperSx,
   buildDateTypographySx,
+  pillIconBoxSx,
 } from './phase-card.styles';
 import {
   PHASE_EYE_ICON_SIZE,
@@ -47,30 +48,7 @@ import { CardDecoration } from './card-decoration';
 export type { PhaseCardProps } from './types';
 // Re-exports — keeps test imports from './phase-card' working.
 export { resolveCornerBadgeAlign, resolvePhotoSources, derivePlatformEntry } from './utils';
-
-// ----------------------------------------------------------------------
-
-/**
- * Maps a phase's platform items into icon/chip nodes for inline rendering.
- *
- * @internal — not part of the public component API; exported for testing only.
- */
-export function buildPlatformStripItems(platforms: TimelinePlatformItem[]): ReactNode[] {
-  return platforms.map((p, i) => {
-    const { label, icon } = derivePlatformEntry(p);
-    return (
-      <Tooltip key={`platform-${i}`} title={label} arrow placement="top">
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {icon ?? (
-            <Box component="span" sx={{ fontSize: 11, px: 0.5 }}>
-              {label}
-            </Box>
-          )}
-        </Box>
-      </Tooltip>
-    );
-  });
-}
+export { buildPlatformStripItems } from './platform-strip';
 
 // ----------------------------------------------------------------------
 
@@ -242,14 +220,7 @@ export function PhaseCard({
                 sx={detailCountPillSx}
                 aria-label={`${taskChildren.length} expandable detail${taskChildren.length === 1 ? '' : 's'}`}
               >
-                <Box
-                  component="span"
-                  sx={{
-                    display: 'inline-flex',
-                    flexShrink: 0,
-                    '& svg': { width: PHASE_PILL_ICON_SIZE, height: PHASE_PILL_ICON_SIZE },
-                  }}
-                >
+                <Box component="span" sx={pillIconBoxSx(PHASE_PILL_ICON_SIZE)}>
                   {expandableIcon ?? DEFAULT_EXPANDABLE_ICON}
                 </Box>
                 <Typography

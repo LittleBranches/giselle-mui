@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { quoteMarkSx, quoteTextSx } from './quote-card.styles';
+import { quoteMarkSx, quoteTextSx, quoteCardPaperSx } from './quote-card.styles';
 
 // Re-exports — keeps `import { QuoteCardProps } from './quote-card'` working.
 export type { QuoteCardProps } from './types';
@@ -53,15 +53,7 @@ export function QuoteCard({
   return (
     <Paper
       elevation={elevation}
-      sx={[
-        (theme) => ({
-          p: 3,
-          borderRadius: 2,
-          bgcolor: `rgba(${theme.vars!.palette[color].mainChannel} / 0.06)`,
-          border: `1px solid rgba(${theme.vars!.palette[color].mainChannel} / 0.12)`,
-        }),
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
+      sx={[quoteCardPaperSx(color), ...(Array.isArray(sx) ? sx : [sx])]}
       {...other}
     >
       <Box sx={{ display: 'flex', gap: 2 }}>

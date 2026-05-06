@@ -1,4 +1,4 @@
-import type { TimelineTwoColumnProps, Milestone, MilestoneRowCtx } from './types';
+import type { TimelineTwoColumnProps, MilestoneRowCtx } from './types';
 
 import {
   useMemo,
@@ -18,14 +18,11 @@ const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffec
 
 import Box from '@mui/material/Box';
 import Timeline from '@mui/lab/Timeline';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 
 import { PhaseCard } from './phase-card';
-import { TimelineDot } from './timeline-dot';
-import { MilestoneBadge } from './milestone-badge';
-import { SpineConnector } from './spine-connector';
-import { TimelineColumn } from './timeline-column';
+import { MilestoneRow } from './milestone-row';
+import { MarkerRow } from './marker-row';
+import { PhaseRow } from './phase-row';
 import {
   detectPhaseOverlaps,
   sortMilestonesAsc,
@@ -34,181 +31,15 @@ import {
   resolvePhaseState,
   resolvePhaseDotHandlers,
   buildPhaseCardTsxProps,
-  resolvePhaseTooltip,
-  resolveMilestoneTooltip,
-  buildPhaseDotTsxProps,
-  resolveMilestoneState,
-  resolveMilestoneDotHandlers,
   computeSlotHeights,
 } from './utils';
-import {
-  msRowSx,
-  msColumnBoxSx,
-  msDotWrapperSx,
-  floatingDatePillSx,
-  markerPhaseLiSx,
-  markerLeftLabelSx,
-  markerCenterSx,
-  markerRightLabelSx,
-  phaseRowSx,
-  phaseLiSx,
-  msCardWrapperSx,
-  centerColumnSx,
-  timelineRootSx,
-  markerRowInnerSx,
-  markerCaptionSx,
-  markerDateSpanSx,
-} from './two-column.styles';
+import { phaseLiSx, timelineRootSx } from './two-column.styles';
 
 // ----------------------------------------------------------------------
 
 // Stable empty Set — returned when `viewedKeys` prop is undefined so callers
 // always get the same reference and avoid creating a new Set on every render.
 const EMPTY_VIEWED_KEYS = new Set<string>();
-
-/** Builds the full JSX node for a single milestone row. */
-function buildMilestoneRow(
-  ms: Milestone,
-  mi: number,
-  totalMilestones: number,
-  ctx: MilestoneRowCtx
-): React.ReactNode {
-  const { msDone, msColor } = resolveMilestoneState(
-    ms,
-    mi,
-    ctx.phaseKey,
-    ctx.dotColor,
-    ctx.checklist,
-    ctx.localMilestoneDone
-  );
-  const { msDotClickAction, msDotKeyDown, msDotAriaLabel } = resolveMilestoneDotHandlers(
-    ms,
-    mi,
-    ctx.phaseKey,
-    msDone,
-    ctx.checklist,
-    ctx.handleToggleMilestone
-  );
-
-  // Milestone inherits the parent phase side when no explicit side is set.
-  // Explicit ms.side overrides — used for context milestones that factually belong
-  // in the opposite column from their parent phase (e.g. tech/world-event entries
-  // on a professional phase that belong in the Education & Open Source column).
-  const effectiveMsSide = ms.side ?? ctx.phaseSide;
-  const isThisMsExpanded = ctx.expandedMiIdx === mi;
-  const topPercent = ((mi + 1) / (totalMilestones + 1)) * 100;
-  // Always stop propagation from milestone card wrappers — same reason as phase cards:
-  // prevents the document "close all" handler from racing with this card's state update.
-  const stopProp = (e: React.MouseEvent) => e.stopPropagation();
-  const suppressElevation = ctx.anyExpanded && !isThisMsExpanded;
-  const msDoneForBadge = msDone;
-  const dotChecklistProps = ctx.checklist
-    ? {
-        role: 'checkbox' as const,
-        'aria-checked': msDone,
-        'aria-label': msDotAriaLabel,
-        tabIndex: 0,
-      }
-    : {};
-
-  return (
-    <Box key={`ms-row-${mi}`} sx={msRowSx(topPercent)}>
-      {/* Left column — milestone card for milestones with effective side='left' */}
-      <Box data-col="left" sx={msColumnBoxSx(effectiveMsSide === 'left')}>
-        {effectiveMsSide === 'left' && (
-          <Box
-            data-ms-card="true"
-            ref={(el: HTMLDivElement | null) => ctx.onMeasure(mi, el)}
-            onClick={stopProp}
-            sx={msCardWrapperSx(isThisMsExpanded, suppressElevation, 'left')}
-          >
-            <MilestoneBadge
-              milestone={ms}
-              done={msDoneForBadge}
-              isExpanded={isThisMsExpanded}
-              suppressElevation={suppressElevation}
-              stableId={`${ctx.phaseKey}-${mi}`}
-              expandableIcon={ctx.expandableIcon}
-              columnSide="left"
-              isViewed={ctx.viewedKeys.has(`ms-${ctx.phaseKey}-${mi}`)}
-              onMarkViewed={
-                ctx.onMarkViewed ? () => ctx.onMarkViewed!(`ms-${ctx.phaseKey}-${mi}`) : undefined
-              }
-              taskDoneStates={ms.children?.map(
-                (task, ti) =>
-                  ctx.localTaskDoneMap[`${ctx.phaseKey}-m${mi}-t${ti}`] ?? task.done ?? false
-              )}
-              onToggleTask={(taskIdx, _done) => ctx.handleToggleTask(ctx.phaseKey, mi, taskIdx)}
-              onRequestExpand={() => ctx.handleExpandMilestone(ctx.phaseKey, mi)}
-            />
-          </Box>
-        )}
-      </Box>
-
-      {/* Centre: milestone dot — blurs with siblings when another card is open */}
-      <Box data-col="center" sx={centerColumnSx}>
-        {/* Dot + floating date pill: relative wrapper so pill doesn't affect row height/centering */}
-        <Box sx={msDotWrapperSx(suppressElevation)}>
-          {ms.date && (
-            <Typography variant="caption" aria-hidden sx={floatingDatePillSx}>
-              {ms.date}
-            </Typography>
-          )}
-          <Tooltip
-            title={resolveMilestoneTooltip(ctx.checklist, msColor, msDone, ms)}
-            placement="top"
-            arrow
-          >
-            <span>
-              <TimelineDot
-                icon={ms.icon}
-                color={msColor}
-                dotBg={ms.dotBg}
-                size="milestone"
-                done={msDone}
-                onClick={msDotClickAction}
-                onKeyDown={msDotKeyDown}
-                {...dotChecklistProps}
-              />
-            </span>
-          </Tooltip>
-        </Box>
-        {/* No spine here — the phase row's SpineConnector runs behind all milestone dots */}
-      </Box>
-
-      {/* Right column — milestone card for milestones with effective side='right' */}
-      <Box data-col="right" sx={msColumnBoxSx(effectiveMsSide === 'right')}>
-        {effectiveMsSide === 'right' && (
-          <Box
-            data-ms-card="true"
-            ref={(el: HTMLDivElement | null) => ctx.onMeasure(mi, el)}
-            onClick={stopProp}
-            sx={msCardWrapperSx(isThisMsExpanded, suppressElevation, 'right')}
-          >
-            <MilestoneBadge
-              milestone={ms}
-              done={msDoneForBadge}
-              isExpanded={isThisMsExpanded}
-              suppressElevation={suppressElevation}
-              stableId={`${ctx.phaseKey}-${mi}`}
-              expandableIcon={ctx.expandableIcon}
-              isViewed={ctx.viewedKeys.has(`ms-${ctx.phaseKey}-${mi}`)}
-              onMarkViewed={
-                ctx.onMarkViewed ? () => ctx.onMarkViewed!(`ms-${ctx.phaseKey}-${mi}`) : undefined
-              }
-              taskDoneStates={ms.children?.map(
-                (task, ti) =>
-                  ctx.localTaskDoneMap[`${ctx.phaseKey}-m${mi}-t${ti}`] ?? task.done ?? false
-              )}
-              onToggleTask={(taskIdx, _done) => ctx.handleToggleTask(ctx.phaseKey, mi, taskIdx)}
-              onRequestExpand={() => ctx.handleExpandMilestone(ctx.phaseKey, mi)}
-            />
-          </Box>
-        )}
-      </Box>
-    </Box>
-  );
-}
 
 // ----------------------------------------------------------------------
 
@@ -556,57 +387,16 @@ export function TimelineTwoColumn({
           // (e.g. a certification, a visa grant, a birth date outside any period).
           // The label floats to whichever side `phase.side` specifies (direct, not inverted).
           if (phase.variant === 'marker') {
-            // Use resolvePhaseTooltip so the marker tooltip is consistent with all other
-            // phase dots: description preview → shortTitle + date → title fallback.
-            // Previously this fell back to bare `phase.title`, dropping date and shortTitle.
-            const markerTooltip = resolvePhaseTooltip(checklist, dotColor, isDone, phase);
             return (
-              <Box key={phase.key} component="li" data-testid="tl-item" sx={markerPhaseLiSx}>
-                <Box sx={markerRowInnerSx}>
-                  {/* Left label — shown when side === 'left' */}
-                  <Box sx={markerLeftLabelSx}>
-                    {phase.side === 'left' && (
-                      <Typography variant="caption" sx={markerCaptionSx}>
-                        {phase.shortTitle ?? phase.title}
-                        {phase.date && (
-                          <Box component="span" sx={markerDateSpanSx}>
-                            · {phase.date}
-                          </Box>
-                        )}
-                      </Typography>
-                    )}
-                  </Box>
-                  {/* Spine dot */}
-                  <Box data-col="center" sx={markerCenterSx}>
-                    <Tooltip title={markerTooltip} placement="top" arrow>
-                      <span>
-                        <TimelineDot
-                          icon={phase.icon}
-                          color={dotColor}
-                          size="milestone"
-                          done={isDone}
-                        />
-                      </span>
-                    </Tooltip>
-                    {!isLastPhase && (
-                      <SpineConnector dotColor={dotColor} yearMilestone={yearLabelValue} />
-                    )}
-                  </Box>
-                  {/* Right label — shown when side !== 'left' */}
-                  <Box sx={markerRightLabelSx}>
-                    {phase.side !== 'left' && (
-                      <Typography variant="caption" sx={markerCaptionSx}>
-                        {phase.shortTitle ?? phase.title}
-                        {phase.date && (
-                          <Box component="span" sx={markerDateSpanSx}>
-                            · {phase.date}
-                          </Box>
-                        )}
-                      </Typography>
-                    )}
-                  </Box>
-                </Box>
-              </Box>
+              <MarkerRow
+                key={phase.key}
+                phase={phase}
+                isLastPhase={isLastPhase}
+                dotColor={dotColor}
+                isDone={isDone}
+                checklist={checklist}
+                yearLabelValue={yearLabelValue}
+              />
             );
           }
 
@@ -711,75 +501,39 @@ export function TimelineTwoColumn({
 
           // ── Phase row ──────────────────────────────────────────────────────
           rows.push(
-            <Box key="phase-row" sx={phaseRowSx(anyExpanded && expandedPhaseKey !== phase.key)}>
-              {/* Left column — shows cards for phases with side === 'left' */}
-              <TimelineColumn
-                columnSide="left"
-                hasContent={phase.side === 'left'}
-                bottomPadding={phaseCardGap}
-              >
-                {phase.side === 'left' && phaseCardNode}
-              </TimelineColumn>
-
-              {/* Centre: phase dot + spine */}
-              <Box data-col="center" sx={centerColumnSx}>
-                {/* Dot wrapper: relative so the date pill can float above without affecting layout */}
-                <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-                  {!phase.hideDate && phase.date && (
-                    <Typography variant="caption" aria-hidden sx={floatingDatePillSx}>
-                      {phase.date}
-                    </Typography>
-                  )}
-                  <Tooltip
-                    title={resolvePhaseTooltip(checklist, dotColor, isDone, phase)}
-                    placement="top"
-                    arrow
-                  >
-                    <span>
-                      <TimelineDot
-                        icon={phase.icon}
-                        color={dotColor}
-                        size="phase"
-                        {...buildPhaseDotTsxProps(
-                          phase,
-                          checklist,
-                          isDone,
-                          dotAriaLabel,
-                          phaseToggleCounts,
-                          selectedPhaseKey
-                        )}
-                        onClick={dotClickAction}
-                        onKeyDown={dotKeyDownHandler}
-                      />
-                    </span>
-                  </Tooltip>
-                </Box>
-                {/* SpineConnector spans the full li height — milestone dots overlay it at % positions */}
-                {!isLastPhase && (
-                  <SpineConnector
-                    dotColor={dotColor}
-                    yearMilestone={yearLabelValue}
-                    yearLabelMarginBottom={yearLabelMarginBottom}
-                  />
-                )}
-              </Box>
-
-              {/* Right column — shows cards for phases with side === 'right' */}
-              <TimelineColumn
-                columnSide="right"
-                hasContent={phase.side === 'right'}
-                bottomPadding={phaseCardGap}
-              >
-                {phase.side === 'right' && phaseCardNode}
-              </TimelineColumn>
-            </Box>
+            <PhaseRow
+              key="phase-row"
+              phase={phase}
+              isSuppressed={anyExpanded && expandedPhaseKey !== phase.key}
+              phaseCardGap={phaseCardGap}
+              phaseCardNode={phaseCardNode}
+              dotColor={dotColor}
+              isDone={isDone}
+              isLastPhase={isLastPhase}
+              yearLabelValue={yearLabelValue}
+              yearLabelMarginBottom={yearLabelMarginBottom}
+              checklist={checklist}
+              dotClickAction={dotClickAction}
+              dotKeyDownHandler={dotKeyDownHandler}
+              dotAriaLabel={dotAriaLabel}
+              phaseToggleCounts={phaseToggleCounts}
+              selectedPhaseKey={selectedPhaseKey}
+            />
           );
 
           // ── Milestone rows ─────────────────────────────────────────────────
           // Cards are absolutely positioned within their column so expanding one
           // never displaces the spine dots below it.
           phaseMilestones.forEach((ms, mi) => {
-            rows.push(buildMilestoneRow(ms, mi, phaseMilestones.length, milestoneCtx));
+            rows.push(
+              <MilestoneRow
+                key={`ms-row-${mi}`}
+                ms={ms}
+                mi={mi}
+                totalMilestones={phaseMilestones.length}
+                ctx={milestoneCtx}
+              />
+            );
           });
 
           return (

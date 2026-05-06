@@ -1,35 +1,16 @@
 import type { Theme, SxProps } from '@mui/material/styles';
-import type { HighlightedPaletteKey } from '../types';
 import type { TimelineDotComponentProps } from './types';
 
 import Box from '@mui/material/Box';
 
 import { pulseRing } from '../animations';
 import { timelineDotInnerSx } from './timeline-dot.styles';
-import { getDotSize, getIconSize, normaliseSx } from './utils';
+import { getDotSize, getIconSize, normaliseSx, resolveEffectiveColor } from './utils';
 import { DotInner } from './dot-inner';
 
-// Re-exports — keeps existing `import { TimelineDotComponentProps } from './timeline-dot'` working.
+// Re-exports — keeps existing imports from './timeline-dot' working.
 export type { TimelineDotComponentProps } from './types';
-
-// ----------------------------------------------------------------------
-
-/**
- * Resolves the effective palette key for a dot.
- *
- * Done dots **always** render as `'success'` regardless of the `color` prop — this
- * is a hard visual contract: the green checkmark is the universal "done" signal on
- * the timeline. Passing any other color when `done=true` would produce a coloured
- * checkmark that conflicts with that signal.
- *
- * Exported so tests can assert the rule independently of theme rendering.
- */
-export function resolveEffectiveColor(
-  color: HighlightedPaletteKey,
-  done: boolean
-): HighlightedPaletteKey {
-  return done ? 'success' : color;
-}
+export { resolveEffectiveColor } from './utils';
 
 // ----------------------------------------------------------------------
 

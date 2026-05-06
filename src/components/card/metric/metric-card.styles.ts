@@ -41,3 +41,26 @@ export const metricCardIconBoxSx =
     justifyContent: 'center',
     color: (theme.vars!.palette as unknown as Record<string, { main: string }>)[color]?.main,
   });
+
+// ----------------------------------------------------------------------
+
+/**
+ * Rotated gradient rectangle decoration for `MetricCardDecoration`.
+ *
+ * @param color - MUI palette key for the gradient colour.
+ */
+export const metricCardDecorationSx =
+  (color: string): SxProps<Theme> =>
+  (theme) => ({
+    top: -40,
+    right: -56,
+    width: 140,
+    height: 140,
+    opacity: 0.1,
+    borderRadius: 4,
+    position: 'absolute',
+    transform: 'rotate(40deg)',
+    background: `linear-gradient(to right, ${
+      (theme.vars!.palette as unknown as Record<string, { main: string }>)[color]?.main
+    }, transparent)`,
+  });

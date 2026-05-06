@@ -495,3 +495,18 @@ export const cornerAlertTooltipSx: SxProps<Theme> = {
   bgcolor: 'grey.900',
   '& .MuiTooltip-arrow': { color: 'grey.900' },
 };
+
+// ── Pill icon box ─────────────────────────────────────────────────────────────
+
+/**
+ * Inline icon slot inside detail-count and similar pill badges.
+ *
+ * Forces the SVG to the exact icon size used by the pill.
+ *
+ * @param iconSize - Width and height applied to the `& svg` selector (px).
+ */
+export const pillIconBoxSx = (iconSize: number): SxProps<Theme> => ({
+  display: 'inline-flex',
+  flexShrink: 0,
+  '& svg': { width: iconSize, height: iconSize },
+});

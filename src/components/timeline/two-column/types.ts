@@ -472,6 +472,68 @@ export type TimelineColumnProps = {
   children: ReactNode;
 };
 
+/** Props for the `MilestoneRow` internal sub-component. @internal */
+export type MilestoneRowProps = {
+  /** The milestone data to render. */
+  ms: Milestone;
+  /** Zero-based index of this milestone within its parent phase. */
+  mi: number;
+  /** Total number of milestones in the parent phase — used to compute vertical position. */
+  totalMilestones: number;
+  /** Shared context derived from the parent phase row. */
+  ctx: MilestoneRowCtx;
+};
+
+/** Props for the `MarkerRow` internal sub-component. @internal */
+export type MarkerRowProps = {
+  /** The phase data for this marker. `variant` must be `'marker'`. */
+  phase: TimelinePhase;
+  /** Whether this is the last visible phase — suppresses the spine connector below. */
+  isLastPhase: boolean;
+  /** Resolved dot colour for this phase (accounts for overdue, done, and data colour). */
+  dotColor: HighlightedPaletteKey;
+  /** Whether this phase is marked done. */
+  isDone: boolean;
+  /** Whether the timeline is in interactive checklist mode. */
+  checklist: boolean;
+  /** Year boundary value shown on the spine connector, or `null` when no boundary exists. */
+  yearLabelValue: string | null;
+};
+
+/** Props for the `PhaseRow` internal sub-component. @internal */
+export type PhaseRowProps = {
+  /** The phase data for this row. */
+  phase: TimelinePhase;
+  /** When `true`, this row should appear blurred/dimmed because another card is open. */
+  isSuppressed: boolean;
+  /** Gap (px) added below the phase card — passed through to `TimelineColumn`. */
+  phaseCardGap: number;
+  /** Pre-built phase card node — computed by the parent and passed through as a slot. */
+  phaseCardNode: ReactNode;
+  /** Resolved dot colour for this phase. */
+  dotColor: HighlightedPaletteKey;
+  /** Whether this phase is marked done. */
+  isDone: boolean;
+  /** Whether this is the last visible phase — suppresses the spine connector below. */
+  isLastPhase: boolean;
+  /** Year boundary value shown on the spine connector, or `null` when no boundary exists. */
+  yearLabelValue: string | null;
+  /** Bottom offset (px) of the year-boundary label chip — passed through to `SpineConnector`. */
+  yearLabelMarginBottom: number;
+  /** Whether the timeline is in interactive checklist mode. */
+  checklist: boolean;
+  /** Click handler for the phase dot — `undefined` in read-only mode. */
+  dotClickAction: (() => void) | undefined;
+  /** Keyboard handler for the phase dot — `undefined` in read-only mode. */
+  dotKeyDownHandler: ((e: React.KeyboardEvent) => void) | undefined;
+  /** Accessible label for the phase dot — `undefined` in read-only mode. */
+  dotAriaLabel: string | undefined;
+  /** Per-phase toggle counts — drives the pulse animation on the dot. */
+  phaseToggleCounts: Record<string, number>;
+  /** Controlled selected phase key — drives the active dot state. */
+  selectedPhaseKey: number | undefined;
+};
+
 // ----------------------------------------------------------------------
 // Section-level companion types — used by alexrebula data factories and view components.
 // Defining them here avoids type definitions in data files (see copilot-instructions.md).
