@@ -834,10 +834,10 @@ Every dot on the timeline — phase dots and milestone dots alike — must be **
 **Where it is set:** in `timeline-two-column.tsx`, the `PhaseCard` call site:
 
 ```tsx
-<PhaseCard phase={phase} columnSide={phase.side === 'left' ? 'right' : 'left'} {...buildPhaseCardTsxProps(...)} />
+<PhaseCard phase={phase} columnSide={phase.side} {...buildPhaseCardTsxProps(...)} />
 ```
 
-Note: `phase.side` is **inverted** from the actual column (`phase.side='right'` → card in **LEFT** column, outer edge on left). So `columnSide` must use the opposite of `phase.side`.
+`phase.side` is **direct** — `'left'` means the card renders in the left column, `'right'` in the right column. `columnSide` matches it directly so the badge floats on the outer edge of whichever column the card is in.
 
 The logic is encapsulated in `resolveCornerBadgeAlign(columnSide)` in `phase-card.tsx`, which returns `{ left?, right?, transform, tooltipPlacement }`. Exported for regression tests.
 

@@ -212,11 +212,11 @@ export const ExpandedState: Story = {
  *
  * ### Design decision: `columnSide` vs `phase.side`
  *
- * `phase.side` is a data-layer value that controls which column of the timeline the
- * *milestones* render in — not the card itself. `columnSide` is a display-layer prop
- * that tells `PhaseCard` where to anchor its corner alert badge (always on the outer edge,
- * away from the spine). In `TimelineTwoColumn`, `columnSide` is set to the **inverse** of
- * `phase.side` so the badge always floats outward.
+ * `phase.side` controls which column the phase card renders in — `'left'` → left column,
+ * `'right'` → right column. `columnSide` is a display-layer prop that tells `PhaseCard`
+ * where to anchor its corner alert badge (always on the outer edge, away from the spine).
+ * In `TimelineTwoColumn`, `columnSide={phase.side}` is passed directly — the badge
+ * floats on the outer edge of whichever column the card is in.
  *
  * This story sets `columnSide="left"` to demonstrate badge mirroring in isolation.
  */

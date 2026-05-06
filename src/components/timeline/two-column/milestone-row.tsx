@@ -58,7 +58,16 @@ export function MilestoneRow({ ms, mi, totalMilestones, ctx }: MilestoneRowProps
   // on a professional phase that belong in the Education & Open Source column).
   const effectiveMsSide = ms.side ?? ctx.phaseSide;
   const isThisMsExpanded = ctx.expandedMiIdx === mi;
-  const topPercent = ((mi + 1) / (totalMilestones + 1)) * 100;
+  // Reserve 2 slots at the top of the <li> for phase-card clearance.
+  // Without the reserve, the first milestone card can overlap the phase card because
+  // slotHeight (measuredCardH + 16) is often shorter than the phase card.
+  // With PHASE_CARD_RESERVE_SLOTS=2, the first milestone starts at
+  // (RESERVE+1)/(RESERVE+n+1) of liHeight = (3 × slotHeight) from the top,
+  // safely below any phase card up to ~(3 × slotHeight - cardH/2 - 6 - 15) px tall.
+  // phaseMinHeight in two-column.tsx uses the same constant — keep in sync.
+  const PHASE_CARD_RESERVE_SLOTS = 2;
+  const topPercent =
+    ((PHASE_CARD_RESERVE_SLOTS + mi + 1) / (PHASE_CARD_RESERVE_SLOTS + totalMilestones + 1)) * 100;
   // Always stop propagation from milestone card wrappers — same reason as phase cards:
   // prevents the document "close all" handler from racing with this card's state update.
   const stopProp = (e: React.MouseEvent) => e.stopPropagation();

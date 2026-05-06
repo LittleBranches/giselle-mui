@@ -487,10 +487,17 @@ export function TimelineTwoColumn({
           const rows: ReactNode[] = [];
 
           // Pre-compute phase <li> minHeight before JSX so phaseLiSx receives a plain value.
-          // See inline comments in phaseLiSx (timeline-two-column.styles.ts) for the derivation.
+          //
+          // PHASE_CARD_RESERVE_SLOTS = 2 matches the same constant in milestone-row.tsx.
+          // Those 2 extra slots push the first milestone to (RESERVE+1) × slotHeight from
+          // the <li> top, ensuring it always starts below the phase card — regardless of
+          // viewport width or how many lines the phase card title wraps to.
+          // Without the reserve the first milestone was at 1 × slotHeight, which overlapped
+          // phase cards taller than ~(slotHeight − cardH/2 − 15) px.
+          const PHASE_CARD_RESERVE_SLOTS = 2;
           const phaseMinHeight =
             phaseMilestones.length > 0
-              ? (phaseMilestones.length + 1) *
+              ? (PHASE_CARD_RESERVE_SLOTS + phaseMilestones.length + 1) *
                 (yearLabelValue !== null
                   ? Math.max(
                       msSlotHeights[String(phase.key)] ?? milestoneSlotHeight,

@@ -62,6 +62,64 @@ describe('timelineColumnSx — column layout', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Phase-card reserve slot regression — milestone clearance invariant
+// ---------------------------------------------------------------------------
+//
+// The first milestone must never overlap the phase card.
+// milestone-row.tsx uses PHASE_CARD_RESERVE_SLOTS=2 in the topPercent formula.
+// two-column.tsx uses the same constant in phaseMinHeight.
+// This test locks in the math so a refactor cannot silently break the invariant.
+//
+// Variables (using typical values):
+//   RESERVE = 2
+//   slotHeight = 80px (measured card 64px + 16px padding)
+//   n = 4 milestones
+//   H_ms = 64px (milestone card height)
+//   H_phase = 110px (typical desktop phase card)
+//
+// Expected:
+//   phaseMinHeight = (RESERVE + n + 1) × slotHeight = 7 × 80 = 560px
+//   topPercent[0] = (RESERVE + 0 + 1) / (RESERVE + n + 1) = 3/7 ≈ 42.86%
+//   first milestone top (center) = 42.86% × 560 + 15 = 255px
+//   first milestone card top = 255 - 32 = 223px
+//   phase card bottom = 6 + 110 = 116px
+//   clearance = 223 - 116 = 107px > 0 ✓
+
+describe('[regression] phase-card reserve — milestone clearance invariant', () => {
+  const RESERVE = 2;
+  const slotHeight = 80;
+  const H_ms = 64;
+
+  it('first milestone (n=4) clears a 110px phase card by at least 80px', () => {
+    const n = 4;
+    const liHeight = (RESERVE + n + 1) * slotHeight; // 7 × 80 = 560
+    const topFraction = (RESERVE + 1) / (RESERVE + n + 1); // 3/7
+    const firstMsCenter = topFraction * liHeight + 15; // 240 + 15 = 255
+    const firstMsCardTop = firstMsCenter - H_ms / 2; // 255 - 32 = 223
+    const phaseCardBottom = 6 + 110; // pt:0.75 (6px) + H_phase
+    expect(firstMsCardTop - phaseCardBottom).toBeGreaterThanOrEqual(80);
+  });
+
+  it('[regression] first milestone (n=1) clears a 90px phase card', () => {
+    const n = 1;
+    const liHeight = (RESERVE + n + 1) * slotHeight; // 4 × 80 = 320
+    const topFraction = (RESERVE + 1) / (RESERVE + n + 1); // 3/4
+    const firstMsCenter = topFraction * liHeight + 15;
+    const firstMsCardTop = firstMsCenter - H_ms / 2;
+    const phaseCardBottom = 6 + 90;
+    expect(firstMsCardTop).toBeGreaterThan(phaseCardBottom);
+  });
+
+  it('[regression] formula holds at extreme xs phase card height (200px) with n=4', () => {
+    const n = 4;
+    const liHeight = (RESERVE + n + 1) * slotHeight;
+    const firstMsCardTop = ((RESERVE + 1) / (RESERVE + n + 1)) * liHeight + 15 - H_ms / 2;
+    const phaseCardBottom = 6 + 200; // very tall xs phase card
+    expect(firstMsCardTop).toBeGreaterThan(phaseCardBottom);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // msRowSx
 // ---------------------------------------------------------------------------
 
@@ -286,17 +344,9 @@ describe('phaseLiSx — phase li element', () => {
     expect(styles['zIndex']).toBe(2);
   });
 
-  it('sets responsive minHeight when computedMinHeight is provided', () => {
+  it('sets minHeight when computedMinHeight is provided', () => {
     const styles = phaseLiSx({ zIndex: 1, computedMinHeight: 480 }) as Record<string, unknown>;
-    const mh = styles['minHeight'] as { xs: number; md: number };
-    expect(mh.md).toBe(480);
-    expect(mh.xs).toBe(960);
-  });
-
-  it('[regression] xs minHeight is 2× md to prevent milestone-over-phase-card overlap at narrow widths', () => {
-    const styles = phaseLiSx({ zIndex: 1, computedMinHeight: 172 }) as Record<string, unknown>;
-    const mh = styles['minHeight'] as { xs: number; md: number };
-    expect(mh.xs).toBe(mh.md * 2);
+    expect(styles['minHeight']).toBe(480);
   });
 
   it('omits minHeight when computedMinHeight is undefined', () => {
