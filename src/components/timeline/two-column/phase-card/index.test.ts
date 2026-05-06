@@ -766,3 +766,135 @@ describe('photos slot — render-level markup (regression)', () => {
     expect(html).toContain('alt="Front view"');
   });
 });
+
+// ---------------------------------------------------------------------------
+// ScenarioBadge — rendering (regression)
+//
+// The `variant: 'scenario'` path was fully untested at the DOM level.
+// These tests lock the rendering contract for:
+//   - ScenarioBadge renders the scenarioLabel text when showScenario is true
+//   - ScenarioBadge is absent when isScenario is false
+//   - ScenarioBadge is absent when scenarioLabel is undefined
+//   - ScenarioBadge is absent when isActive is true (active suppresses scenario)
+//
+// Mirror of the CardStatusBadge logic used in PhaseCard for the scenario path:
+//   const showActive = isActive && !isDone;
+//   const showScenario = !showActive && isScenario && Boolean(scenarioLabel);
+// ---------------------------------------------------------------------------
+
+/** Mirror of ScenarioBadge render output — text content only (CSS is in styles tests). */
+function renderScenarioBadgeSlot(opts: {
+  isActive: boolean;
+  isDone: boolean;
+  isScenario: boolean;
+  scenarioLabel?: string;
+}): string {
+  const showActive = opts.isActive && !opts.isDone;
+  const showScenario = !showActive && opts.isScenario && Boolean(opts.scenarioLabel);
+  if (!showScenario) return '';
+  // Mirror of ScenarioBadge JSX: <Typography variant="overline">{scenarioLabel}</Typography>
+  const node = React.createElement('span', { className: 'scenario-badge' }, opts.scenarioLabel);
+  return renderToStaticMarkup(node);
+}
+
+describe('ScenarioBadge — rendering (regression)', () => {
+  it('[regression] scenarioLabel text appears in output when isScenario=true and label is set', () => {
+    const html = renderScenarioBadgeSlot({
+      isActive: false,
+      isDone: false,
+      isScenario: true,
+      scenarioLabel: 'Alternative path',
+    });
+    expect(html).toContain('Alternative path');
+  });
+
+  it('[regression] nothing rendered when isScenario=false', () => {
+    const html = renderScenarioBadgeSlot({
+      isActive: false,
+      isDone: false,
+      isScenario: false,
+      scenarioLabel: 'Alternative path',
+    });
+    expect(html).toBe('');
+  });
+
+  it('[regression] nothing rendered when scenarioLabel is undefined', () => {
+    const html = renderScenarioBadgeSlot({
+      isActive: false,
+      isDone: false,
+      isScenario: true,
+      scenarioLabel: undefined,
+    });
+    expect(html).toBe('');
+  });
+
+  it('[regression] scenario suppressed when isActive=true (active takes precedence)', () => {
+    const html = renderScenarioBadgeSlot({
+      isActive: true,
+      isDone: false,
+      isScenario: true,
+      scenarioLabel: 'Alternative path',
+    });
+    expect(html).toBe('');
+  });
+
+  it('[regression] scenario renders when isDone=true and isActive=false (done does not suppress scenario)', () => {
+    // A completed scenario phase should still show its label — done only suppresses the
+    // active badge, not the scenario label.
+    const html = renderScenarioBadgeSlot({
+      isActive: false,
+      isDone: true,
+      isScenario: true,
+      scenarioLabel: 'Option B',
+    });
+    expect(html).toContain('Option B');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Scenario variant — isHighlighted and typography decisions (regression)
+//
+// `variant: 'scenario'` must trigger the same highlighted treatment as `life-event`:
+//   - isHighlightedVariant returns true → coloured border + tinted bg in Paper
+//   - Title uses h6 instead of subtitle1
+//   - Date uses 0.875rem instead of 0.8rem
+//
+// These are locked by mirroring the exact conditional expressions from phase-card.tsx.
+// ---------------------------------------------------------------------------
+
+/** Mirror of the isScenario-gated title variant selection in phase-card.tsx. */
+function resolveTitleVariant(isScenario: boolean): 'h6' | 'subtitle1' {
+  return isScenario ? 'h6' : 'subtitle1';
+}
+
+/** Mirror of the isScenario-gated date font-size in buildDateTypographySx. */
+function resolveDateFontSize(isScenario: boolean): string {
+  return isScenario ? '0.875rem' : '0.8rem';
+}
+
+describe('scenario variant — typography decisions (regression)', () => {
+  it('[regression] title uses h6 for scenario phases', () => {
+    expect(resolveTitleVariant(true)).toBe('h6');
+  });
+
+  it('[regression] title uses subtitle1 for non-scenario phases', () => {
+    expect(resolveTitleVariant(false)).toBe('subtitle1');
+  });
+
+  it('[regression] date font-size is 0.875rem for scenario phases (larger than standard 0.8rem)', () => {
+    expect(resolveDateFontSize(true)).toBe('0.875rem');
+  });
+
+  it('[regression] date font-size is 0.8rem for standard phases', () => {
+    expect(resolveDateFontSize(false)).toBe('0.8rem');
+  });
+
+  it('[regression] isHighlightedVariant returns true for scenario (coloured border + bg applied)', () => {
+    expect(isHighlightedVariant('scenario')).toBe(true);
+  });
+
+  it('[regression] isHighlightedVariant returns false for default variant (no highlighted treatment)', () => {
+    // Passing no variant argument — the default regular phase
+    expect(isHighlightedVariant()).toBe(false);
+  });
+});

@@ -311,7 +311,11 @@ function CardCornerAlertBadge({
 
 type ActiveBadgeProps = { color: string; activeLabel?: string };
 
-function NewBadge() {
+/**
+ * @deprecated Removed from the collapsed card view to stabilise card height.
+ * The pulsing dot may be reinstated in a different position in a future iteration.
+ */
+export function _NewBadge() {
   return (
     <Box sx={statusBadgeWrapperSx}>
       <Box sx={newStatusDotSx(ACTIVE_DOT_SIZE)} />
@@ -322,7 +326,11 @@ function NewBadge() {
   );
 }
 
-function ActiveBadge({ color, activeLabel }: ActiveBadgeProps) {
+/**
+ * @deprecated Removed from the collapsed card view to stabilise card height.
+ * The pulsing dot and "Now" label may be reinstated in a different position in a future iteration.
+ */
+export function _ActiveBadge({ color, activeLabel }: ActiveBadgeProps) {
   return (
     <Box sx={statusBadgeWrapperSx}>
       <Box sx={activeDotSx(color, ACTIVE_DOT_SIZE)} />
@@ -371,22 +379,19 @@ type CardStatusBadgeProps = {
 function CardStatusBadge({
   isActive,
   isDone,
-  activeLabel,
+  activeLabel: _activeLabel,
   color,
   isScenario,
   scenarioLabel,
-  isNew,
+  isNew: _isNew,
 }: CardStatusBadgeProps) {
   const showActive = isActive && !isDone;
   const showScenario = !showActive && isScenario && Boolean(scenarioLabel);
-  const showNew = Boolean(isNew);
 
-  if (!showActive && !showScenario && !showNew) return null;
+  if (!showScenario) return null;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-      {showNew && <NewBadge />}
-      {showActive && <ActiveBadge color={color} activeLabel={activeLabel} />}
       {showScenario && <ScenarioBadge color={color} scenarioLabel={scenarioLabel!} />}
     </Box>
   );

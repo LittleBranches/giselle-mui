@@ -643,6 +643,114 @@ export const LifeEventVsMarker: Story = {
 // ----------------------------------------------------------------------
 
 /**
+ * **Scenario variant** — a hypothetical or speculative phase card alongside real phases.
+ *
+ * ---
+ *
+ * ### What `variant: 'scenario'` is
+ *
+ * A **scenario** phase represents a possible future path or a counterfactual — it is NOT
+ * a committed event. The card uses a highlighted background (tinted left border + coloured
+ * background), an overline `scenarioLabel` pill at the top, and renders the title as `h6`
+ * instead of `subtitle1`. The date font-size increases to `0.875rem` (vs `0.8rem` for
+ * regular phases) to match the more prominent treatment.
+ *
+ * ### When to use `variant: 'scenario'`
+ *
+ * | Situation | Use |
+ * |---|---|
+ * | Committed phase (past or planned) | default (no variant) |
+ * | Discrete event with no card needed | `marker` |
+ * | Life period that spans time with context | `life-event` |
+ * | Hypothetical, optional, or alternative path | `scenario` |
+ *
+ * ### Design decisions this variant encodes
+ *
+ * - `scenarioLabel` is the pill text that labels the scenario (e.g. `'Option A'`, `'If funded'`).
+ *   Without it the `ScenarioBadge` does not render — do not use `variant: 'scenario'` without
+ *   also providing `scenarioLabel`.
+ * - `isHighlightedVariant('scenario')` returns `true` — the same highlighting applied to
+ *   `life-event` is applied here. This suppresses the `CardDecoration` rectangle and
+ *   switches the Paper bg to a coloured tint at 10% opacity (vs 8% for `life-event`).
+ * - `ScenarioBadge` is the **only** badge that renders in the `CardStatusBadge` slot for
+ *   a `variant: 'scenario'` phase. It is suppressed when `isActive=true` — if a scenario
+ *   is ever marked active, the scenario label disappears (active badge took priority in
+ *   the old code; now the badge area is reserved for `ScenarioBadge` only).
+ *
+ * ### The canvas shows
+ *
+ * - One `variant: 'scenario'` card (right column) alongside a regular phase (left column)
+ * - The `scenarioLabel` pill appears below the card date
+ * - The title uses `h6` typography — visually larger than a regular `subtitle1` phase title
+ * - The highlighted card background (tinted, left border) distinguishes it from normal phases
+ */
+export const ScenarioVariant: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A `variant: "scenario"` card (right column) alongside a regular phase. ' +
+          'Observe: the scenario card has a coloured left border, tinted background, ' +
+          'an overline label pill at the top (the `scenarioLabel`), and an `h6` title — ' +
+          'all distinguishing it as hypothetical/optional rather than committed.',
+      },
+    },
+  },
+  render: () => (
+    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+      <TimelineTwoColumn
+        phases={[
+          {
+            key: 1,
+            title: 'Frontend Developer',
+            shortTitle: 'Frontend Dev',
+            description:
+              'Fintech SaaS — React, TypeScript, real-time dashboards. First experience owning a component library.',
+            date: 'Jun 2011 – Feb 2014',
+            side: 'right',
+            color: 'primary',
+            done: true,
+            icon: icon('solar:chart-bold-duotone'),
+            milestones: [
+              {
+                date: 'Nov 2013',
+                shortTitle: 'TypeScript migration',
+                title: 'TypeScript migration complete',
+                description: 'Full codebase migrated to TypeScript strict mode.',
+                icon: msIcon('solar:shield-check-bold'),
+                color: 'success',
+                done: true,
+              },
+            ],
+          },
+          {
+            key: 2,
+            title: 'Pivot to Product Engineering',
+            shortTitle: 'Product Eng pivot',
+            description:
+              'A hypothetical path: if the platform team had been resourced in 2014, this is where the roadmap would have gone — internal tooling, design system, and API platform ownership.',
+            date: 'Mar 2014',
+            side: 'left',
+            color: 'warning',
+            variant: 'scenario',
+            scenarioLabel: 'Alternative path',
+            icon: icon('solar:alt-arrow-right-bold'),
+            details: [
+              'Internal tooling platform',
+              'Design system from scratch',
+              'API gateway + versioning strategy',
+            ],
+          },
+        ]}
+      />
+    </Box>
+  ),
+  argTypes: { phases: { control: false }, sx: { control: false } },
+};
+
+// ----------------------------------------------------------------------
+
+/**
  * **Dot tooltip added value** — why tooltips show description previews, not just the name.
  *
  * ---
