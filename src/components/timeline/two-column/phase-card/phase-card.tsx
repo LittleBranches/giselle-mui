@@ -8,9 +8,10 @@ import type {
   CardStatusBadgeProps,
   CardDecorationProps,
   CardCornerAlert,
+  PhaseCardProps,
 } from './types';
 
-import { useState, useRef, useCallback, type ReactNode } from 'react';
+import { useState, useRef, useCallback, type ReactNode, type MouseEvent } from 'react';
 import { PhaseWarningPopover } from '../phase-warning-popover';
 
 import Box from '@mui/material/Box';
@@ -366,7 +367,7 @@ export function PhaseCard({
   onToggleTask,
   sx,
   ...other
-}: import('./types').PhaseCardProps) {
+}: PhaseCardProps) {
   const badgeRef = useRef<HTMLElement>(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const handleOpenPopover = useCallback(() => setPopoverOpen(true), []);
@@ -569,7 +570,7 @@ export function PhaseCard({
 
             {/* Optional footer slot — shown only in expanded state (level 3) */}
             {expanded && phase.footer != null && (
-              <Box sx={{ mt: 1 }} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+              <Box sx={{ mt: 1 }} onClick={(e: MouseEvent) => e.stopPropagation()}>
                 {phase.footer}
               </Box>
             )}
@@ -598,7 +599,7 @@ export function PhaseCard({
           <Box
             component="button"
             type="button"
-            onClick={(e: React.MouseEvent) => {
+            onClick={(e: MouseEvent) => {
               e.stopPropagation();
               onMarkViewed();
             }}
