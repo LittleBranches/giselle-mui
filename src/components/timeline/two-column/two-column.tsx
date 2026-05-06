@@ -281,12 +281,14 @@ export function TimelineTwoColumn({
     Object.fromEntries(phases.map((p) => [String(p.key), p.done ?? false]))
   );
   const [localMilestoneDone, setLocalMilestoneDone] = useState<Record<string, boolean>>(() => {
+    const sortFn = sortOrder === 'asc' ? sortMilestonesAsc : sortMilestonesDesc;
     const m: Record<string, boolean> = {};
-    phases.forEach((p) =>
-      p.milestones?.forEach((ms, i) => {
+    phases.forEach((p) => {
+      const sortedMs = p.milestones ? sortFn([...p.milestones]) : [];
+      sortedMs.forEach((ms, i) => {
         m[`${p.key}-${i}`] = ms.done ?? false;
-      })
-    );
+      });
+    });
     return m;
   });
 
@@ -294,12 +296,14 @@ export function TimelineTwoColumn({
   // Key format: `${phaseKey}-m${milestoneIdx}-t${taskIdx}` for milestone tasks,
   //             `${phaseKey}-t${taskIdx}` for phase-level tasks.
   const [localTaskDoneMap, setLocalTaskDoneMap] = useState<Record<string, boolean>>(() => {
+    const sortFn = sortOrder === 'asc' ? sortMilestonesAsc : sortMilestonesDesc;
     const t: Record<string, boolean> = {};
     phases.forEach((p) => {
       p.children?.forEach((task, ti) => {
         t[`${p.key}-t${ti}`] = task.done ?? false;
       });
-      p.milestones?.forEach((ms, mi) => {
+      const sortedMs = p.milestones ? sortFn([...p.milestones]) : [];
+      sortedMs.forEach((ms, mi) => {
         ms.children?.forEach((task, ti) => {
           t[`${p.key}-m${mi}-t${ti}`] = task.done ?? false;
         });
@@ -308,29 +312,37 @@ export function TimelineTwoColumn({
     return t;
   });
 
-  // Sync done state when the phases prop identity changes (new dataset, async load, reset).
+  // Sync done state when the phases prop identity or sort order changes.
+  // IMPORTANT: milestone indices must match the render order (sorted), not the original
+  // data order. `localMilestoneDone` and `localTaskDoneMap` are keyed by
+  // `${phaseKey}-${sortedMilestoneIndex}` — the same index `mi` used in buildMilestoneRow.
+  // Using original (unsorted) indices causes done-state inversion whenever the sort
+  // moves done milestones (earlier dates) below not-done milestones (later dates).
   useEffect(() => {
+    const sortFn = sortOrder === 'asc' ? sortMilestonesAsc : sortMilestonesDesc;
     setLocalPhaseDone(Object.fromEntries(phases.map((p) => [String(p.key), p.done ?? false])));
     const m: Record<string, boolean> = {};
-    phases.forEach((p) =>
-      p.milestones?.forEach((ms, i) => {
+    phases.forEach((p) => {
+      const sortedMs = p.milestones ? sortFn([...p.milestones]) : [];
+      sortedMs.forEach((ms, i) => {
         m[`${p.key}-${i}`] = ms.done ?? false;
-      })
-    );
+      });
+    });
     setLocalMilestoneDone(m);
     const t: Record<string, boolean> = {};
     phases.forEach((p) => {
       p.children?.forEach((task, ti) => {
         t[`${p.key}-t${ti}`] = task.done ?? false;
       });
-      p.milestones?.forEach((ms, mi) => {
+      const sortedMs = p.milestones ? sortFn([...p.milestones]) : [];
+      sortedMs.forEach((ms, mi) => {
         ms.children?.forEach((task, ti) => {
           t[`${p.key}-m${mi}-t${ti}`] = task.done ?? false;
         });
       });
     });
     setLocalTaskDoneMap(t);
-  }, [phases]);
+  }, [phases, sortOrder]);
 
   // Toggle-animation counters — incremented on every click so the icon wrapper
   // gets a new `key` and remounts, which restarts the CSS animation cleanly.
