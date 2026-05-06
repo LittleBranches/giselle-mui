@@ -16,11 +16,11 @@ export const roadmapPhases = [
     side: 'left',
     color: 'success',
     done: true,
-    details: [
-      'channelAlpha(channel, alpha) — CSS-variable-safe alpha tint',
-      'hexToChannel(hex) — hex to space-separated RGB channel string',
-      'pxToRem(px) / remToPx(rem) — unit conversion utilities',
-      '22 unit tests, all green',
+    children: [
+      { key: 0, title: 'channelAlpha(channel, alpha) — CSS-variable-safe alpha tint', done: true },
+      { key: 1, title: 'hexToChannel(hex) — hex to space-separated RGB channel string', done: true },
+      { key: 2, title: 'pxToRem(px) / remToPx(rem) — unit conversion utilities', done: true },
+      { key: 3, title: '22 unit tests, all green', done: true },
     ],
   },
   {
@@ -32,11 +32,11 @@ export const roadmapPhases = [
     side: 'left',
     color: 'success',
     done: true,
-    details: [
-      'Primary light: #2E7D32 Deep grove green — WCAG 4.76:1 against white',
-      'Primary dark: #76C442 Lime — readable on dark backgrounds',
-      'Secondary: #F5A623 Mango gold — both modes',
-      'All six MUI palette keys covered',
+    children: [
+      { key: 0, title: 'Primary light: #2E7D32 Deep grove green — WCAG 4.76:1 against white', done: true },
+      { key: 1, title: 'Primary dark: #76C442 Lime — readable on dark backgrounds', done: true },
+      { key: 2, title: 'Secondary: #F5A623 Mango gold — both modes', done: true },
+      { key: 3, title: 'All six MUI palette keys covered', done: true },
     ],
   },
   {
@@ -49,10 +49,10 @@ export const roadmapPhases = [
     color: 'warning',
     active: true,
     activeLabel: 'Next',
-    details: [
-      'Zero-config: <GiselleThemeProvider> just works',
-      'themeOverrides prop for partial token overrides',
-      'theme prop to bypass defaults entirely',
+    children: [
+      { key: 0, title: 'Zero-config: <GiselleThemeProvider> just works' },
+      { key: 1, title: 'themeOverrides prop for partial token overrides' },
+      { key: 2, title: 'theme prop to bypass defaults entirely' },
     ],
   },
   {
@@ -63,11 +63,11 @@ export const roadmapPhases = [
     date: 'Jun 2026',
     side: 'left',
     color: 'info',
-    details: [
-      'useLocalStorage<T> utility',
-      'Storage adapters: localStorage (default), cookie, custom',
-      'Server-safe detectGiselleSettings() helper',
-      'GiselleThemeAndSettingsProvider convenience wrapper',
+    children: [
+      { key: 0, title: 'useLocalStorage<T> utility' },
+      { key: 1, title: 'Storage adapters: localStorage (default), cookie, custom' },
+      { key: 2, title: 'Server-safe detectGiselleSettings() helper' },
+      { key: 3, title: 'GiselleThemeAndSettingsProvider convenience wrapper' },
     ],
   },
   // ── Component phases (side: 'right' → card renders in LEFT column) ────────
@@ -110,9 +110,8 @@ export const roadmapPhases = [
 
 > This file is the source of truth for the giselle-mui library build. It covers theme utilities (Phases A–D), components, and extraction candidates. Summary entries for completed phases bubble up to `alexrebula/docs/roadmap.md` Phase 1.5 (private companion repo — not linkable from here).
 
-<RoadmapTimeline phases={roadmapPhases} />
-
----
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: '2rem', alignItems: 'start' }}>
+<div>
 
 
 ## Current state
@@ -544,3 +543,11 @@ consumer boilerplate.
 | Vitest tests for every Phase H component + utility                                            | Components | ⬜     |
 | README for every Phase H component folder                                                     | Components | ⬜     |
 | Docusaurus page in `giselle-docs` wiring Phase H component docs                               | Docs       | ⬜     |
+
+</div>
+<div style={{ position: 'sticky', top: '80px' }}>
+
+<RoadmapTimeline phases={roadmapPhases} sortOrder="asc" />
+
+</div>
+</div>

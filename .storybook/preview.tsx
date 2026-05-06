@@ -1,5 +1,10 @@
 import type { Preview } from '@storybook/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { addCollection } from '@iconify/react';
+import solarIcons from '@iconify-json/solar/icons.json';
+
+// Register the Solar icon set offline so icons don't flicker due to CDN fetches.
+addCollection(solarIcons as Parameters<typeof addCollection>[0]);
 
 const muiDefaultTheme = createTheme({
   cssVariables: true,
