@@ -184,21 +184,25 @@ inline in `alexrebula/src/sections/`. Examples of patterns that belong here:
 - KPI stats column alongside a timeline
 
 **Decision rule — ask before writing any new JSX in `alexrebula/src/sections/`:**
+
 > Would a second section page (or a different project) want this exact layout structure?
 > If yes → create a named component in `giselle-mui/src/components/layout/` first, then import it.
 
 This was violated when `StoreReadinessSectionInner` and `ReadinessGauge` were written directly
 in `alexrebula/src/sections/store-readiness/view.tsx`. Both belong in giselle-mui:
+
 - `ReadinessGauge` → `src/components/chart/radial-gauge/` (wraps ApexCharts radialBar)
 - The sidebar+timeline layout → `src/components/layout/sidebar-timeline/`
 
 **Backlog items (not yet extracted — add to roadmap when taking these on):**
+
 - `ReadinessGauge` → giselle-mui `chart/radial-gauge/`
 - `SidebarTimelineLayout` → giselle-mui `layout/sidebar-timeline/`
 
 ### Chart/ApexCharts options follow the data-layer convention
 
 When a component uses ApexCharts:
+
 - Chart `options` objects must **not** be defined inline in JSX.
 - Static options → module-level `const` in a `*.styles.ts` file.
 - Options that depend on theme tokens → a factory function in `*.styles.ts` that accepts `theme`.
@@ -491,21 +495,22 @@ Internal sub-components — helpers, local wrappers, private building blocks tha
 
 Every story file must use the correct group path. The `'Components'` group is **abolished** — it is a catch-all that gives no information. The canonical group map is:
 
-| Group | Contents |
-|---|---|
-| `Cards/Stat` | `StatCard` |
-| `Cards/Metric` | `MetricCard` + `MetricCardDecoration` |
-| `Cards/Quote` | `QuoteCard` |
-| `Cards/Selectable` | `SelectableCard` |
-| `Data Display/Icon` | `GiselleIcon` |
-| `Data Display/Action Bar` | `IconActionBar` |
-| `Giselle MUI/Timeline/Two Column` | `TimelineTwoColumn` |
-| `Giselle MUI/Timeline/Dot` | `TimelineDot` |
-| `Navigation/Floating Sub Nav` | `FloatingSubNav` |
-| `Layout/Section Title` | `SectionTitle` |
-| `Layout/Two Column Showcase Row` | `TwoColumnShowcaseRow` |
+| Group                             | Contents                              |
+| --------------------------------- | ------------------------------------- |
+| `Cards/Stat`                      | `StatCard`                            |
+| `Cards/Metric`                    | `MetricCard` + `MetricCardDecoration` |
+| `Cards/Quote`                     | `QuoteCard`                           |
+| `Cards/Selectable`                | `SelectableCard`                      |
+| `Data Display/Icon`               | `GiselleIcon`                         |
+| `Data Display/Action Bar`         | `IconActionBar`                       |
+| `Giselle MUI/Timeline/Two Column` | `TimelineTwoColumn`                   |
+| `Giselle MUI/Timeline/Dot`        | `TimelineDot`                         |
+| `Navigation/Floating Sub Nav`     | `FloatingSubNav`                      |
+| `Layout/Section Title`            | `SectionTitle`                        |
+| `Layout/Two Column Showcase Row`  | `TwoColumnShowcaseRow`                |
 
 **Rules:**
+
 - New card-type components → `Cards/<Name>` (just the noun, no "Card" suffix in the story title)
 - New display/presentational components → `Data Display/<Name>`
 - New complex compositions tied to the Timeline → `Giselle MUI/Timeline/<Name>`
@@ -866,3 +871,18 @@ DOM behaviour that falls outside these targets.
 - No low-resolution raster images. Any raster asset must look sharp at >200 PPI.
 - SVG files must be optimised — no verbose metadata, no inline raster data.
 - If SVGs are added to Storybook or a demo app, run them through `svgo` before committing.
+
+---
+
+## Contributor profiles — code review tone
+
+This repository welcomes contributors at all experience levels. When reviewing any PR:
+
+- **Hold the same quality standard regardless of contributor experience.** Do not lower the bar — explain what needs to change and why, just as you would for any contributor.
+- **Explain the why, not just the what.** Do not say "use `const` here"; say "use `const` here because this value never changes — it signals to anyone reading the code that this was intentional, not a mistake."
+- **One issue per comment.** Do not stack multiple changes into one comment.
+- **Acknowledge what is correct before noting what to improve.**
+- **When something is wrong, show what correct looks like** — not just "this is wrong"; show the fixed version and explain why it is better.
+- **Four sentences max per comment.** Link to MDN or the repo README instead of writing a lecture inline.
+- **No jargon without a definition.** If a term like "idempotent", "side effect", or "type assertion" appears in a comment, define it in the same sentence.
+- **Do not ask for perfection.** If the code is correct, passes the quality gate, and solves the problem — it ships. Encourage, merge, move on.
