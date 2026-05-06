@@ -31,6 +31,9 @@ import {
 
 // ----------------------------------------------------------------------
 
+// Re-export — keeps `import { MilestoneBadgeProps } from './milestone-badge'` working.
+export type { MilestoneBadgeProps } from './types';
+
 /** Minimum readable font size for the milestone date label. Matches `body2`. */
 export const MILESTONE_DATE_FONT_SIZE = '0.875rem';
 

@@ -1,9 +1,6 @@
 import type { PaperProps } from '@mui/material/Paper';
 import type { ReactNode } from 'react';
-import type { Task, TimelineMilestone, HighlightedPaletteKey } from '../types';
-
-// Re-export for convenience — consumers can import from milestone-badge barrel.
-export type { HighlightedPaletteKey, Task, TimelineMilestone };
+import type { TimelineMilestone } from '../types';
 
 export type MilestoneBadgeProps = Omit<PaperProps, 'children'> & {
   /** The milestone data object from the parent phase's `milestones` array. */

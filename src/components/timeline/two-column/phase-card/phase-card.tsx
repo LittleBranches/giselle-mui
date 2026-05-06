@@ -207,7 +207,7 @@ function CardCornerAlertBadge({
     <Box
       ref={innerRef}
       role={onClick ? 'button' : undefined}
-      aria-label={`${alerts.length} issue${alerts.length !== 1 ? 's' : ''}`}
+      aria-label={`${alerts.length} issue${alerts.length === 1 ? '' : 's'}`}
       tabIndex={0}
       onClick={onClick}
       onKeyDown={
@@ -221,7 +221,7 @@ function CardCornerAlertBadge({
           : undefined
       }
       sx={cornerBadgeCircleSx({
-        positionOverride: left !== undefined ? { left } : { right },
+        positionOverride: left === undefined ? { right } : { left },
         transform,
         hasError,
         hasClickHandler: !!onClick,
