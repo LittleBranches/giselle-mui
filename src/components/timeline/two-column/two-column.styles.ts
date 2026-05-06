@@ -26,6 +26,7 @@ export const timelineColumnSx = (
   bottomPadding: number
 ): SxProps<Theme> => ({
   flex: 1,
+  minWidth: 0,
   textAlign: columnSide === 'left' ? 'right' : 'left',
   pr: columnSide === 'left' ? 2 : 0,
   pl: columnSide === 'right' ? 2 : 0,
@@ -60,6 +61,7 @@ export const msRowSx = (topPercent: number): SxProps<Theme> => ({
  */
 export const msColumnBoxSx = (visible: boolean): SxProps<Theme> => ({
   flex: 1,
+  minWidth: 0,
   position: 'relative',
   overflow: 'visible',
   display: { xs: visible ? 'block' : 'none', md: 'block' },
@@ -124,6 +126,8 @@ export const markerPhaseLiSx: SxProps<Theme> = {
 /** Left label Box inside a marker row — right-aligned, flush against the spine. */
 export const markerLeftLabelSx: SxProps<Theme> = {
   flex: 1,
+  minWidth: 0,
+  overflow: 'hidden',
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'center',
@@ -135,12 +139,15 @@ export const markerCenterSx: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  flexShrink: 0,
   position: 'relative',
 };
 
 /** Right label Box inside a marker row — left-aligned, flush against the spine. */
 export const markerRightLabelSx: SxProps<Theme> = {
   flex: 1,
+  minWidth: 0,
+  overflow: 'hidden',
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'center',
@@ -160,6 +167,7 @@ export const phaseRowSx = (blurred: boolean): SxProps<Theme> => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'stretch',
+  minWidth: 0,
   transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease',
   ...(blurred && {
     filter: 'blur(1.5px)',
@@ -231,12 +239,14 @@ export const msCardWrapperSx =
 
 /**
  * Centre column Box — used for both the phase dot column and the milestone dot column.
- * Flex column with centred items; does not constrain width.
+ * Flex column with centred items; `flexShrink: 0` prevents the spine from being squeezed
+ * at narrow viewport widths.
  */
 export const centerColumnSx: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  flexShrink: 0,
 };
 
 // ── Timeline MUI root ─────────────────────────────────────────────────────────
@@ -248,6 +258,7 @@ export const centerColumnSx: SxProps<Theme> = {
 export const timelineRootSx: SxProps<Theme> = {
   p: 0,
   m: 0,
+  overflowX: 'hidden',
   '& .MuiTimelineItem-root:before': { flex: 0, padding: 0 },
 };
 

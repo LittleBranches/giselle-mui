@@ -14,6 +14,8 @@ import {
   markerRightLabelSx,
   phaseRowSx,
   phaseLiSx,
+  centerColumnSx,
+  timelineRootSx,
 } from './two-column.styles';
 
 // ---------------------------------------------------------------------------
@@ -51,6 +53,11 @@ describe('timelineColumnSx — column layout', () => {
     const styles = timelineColumnSx('right', true, 40) as Record<string, unknown>;
     const display = styles['display'] as { xs: string; md: string };
     expect(display['xs']).toBe('block');
+  });
+
+  it('[regression] has minWidth:0 so the flex child can shrink at narrow widths', () => {
+    const styles = timelineColumnSx('left', true, 40) as Record<string, unknown>;
+    expect(styles['minWidth']).toBe(0);
   });
 });
 
@@ -98,6 +105,11 @@ describe('msColumnBoxSx — milestone column box', () => {
     expect(styles['position']).toBe('relative');
     expect(styles['overflow']).toBe('visible');
     expect(styles['flex']).toBe(1);
+  });
+
+  it('[regression] has minWidth:0 so the milestone column can shrink at narrow widths', () => {
+    const styles = msColumnBoxSx(true) as Record<string, unknown>;
+    expect(styles['minWidth']).toBe(0);
   });
 });
 
@@ -185,6 +197,12 @@ describe('markerLeftLabelSx — left label column', () => {
     expect(sx['pr']).toBe(1.5);
     expect(sx['flex']).toBe(1);
   });
+
+  it('[regression] has minWidth:0 and overflow:hidden to clip nowrap labels at narrow widths', () => {
+    const sx = markerLeftLabelSx as Record<string, unknown>;
+    expect(sx['minWidth']).toBe(0);
+    expect(sx['overflow']).toBe('hidden');
+  });
 });
 
 describe('markerRightLabelSx — right label column', () => {
@@ -193,6 +211,12 @@ describe('markerRightLabelSx — right label column', () => {
     expect(sx['justifyContent']).toBe('flex-start');
     expect(sx['pl']).toBe(1.5);
     expect(sx['flex']).toBe(1);
+  });
+
+  it('[regression] has minWidth:0 and overflow:hidden to clip nowrap labels at narrow widths', () => {
+    const sx = markerRightLabelSx as Record<string, unknown>;
+    expect(sx['minWidth']).toBe(0);
+    expect(sx['overflow']).toBe('hidden');
   });
 });
 
@@ -203,6 +227,11 @@ describe('markerCenterSx — centre column', () => {
     expect(sx['flexDirection']).toBe('column');
     expect(sx['alignItems']).toBe('center');
     expect(sx['position']).toBe('relative');
+  });
+
+  it('[regression] has flexShrink:0 so the spine dot is never squeezed', () => {
+    const sx = markerCenterSx as Record<string, unknown>;
+    expect(sx['flexShrink']).toBe(0);
   });
 });
 
@@ -234,6 +263,11 @@ describe('phaseRowSx — phase row', () => {
     const styles = phaseRowSx(false) as Record<string, unknown>;
     expect(styles['filter']).toBeUndefined();
     expect(styles['opacity']).toBeUndefined();
+  });
+
+  it('[regression] has minWidth:0 to prevent the phase row from overflowing its li', () => {
+    const styles = phaseRowSx(false) as Record<string, unknown>;
+    expect(styles['minWidth']).toBe(0);
   });
 });
 
@@ -273,5 +307,47 @@ describe('phaseLiSx — phase li element', () => {
     expect(styles['position']).toBe('relative');
     expect(styles['display']).toBe('flex');
     expect(styles['flexDirection']).toBe('column');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// centerColumnSx
+// ---------------------------------------------------------------------------
+
+describe('centerColumnSx — centre spine column', () => {
+  it('is column flex, centred', () => {
+    const sx = centerColumnSx as Record<string, unknown>;
+    expect(sx['display']).toBe('flex');
+    expect(sx['flexDirection']).toBe('column');
+    expect(sx['alignItems']).toBe('center');
+  });
+
+  it('[regression] has flexShrink:0 so the spine dot is never squeezed at narrow widths', () => {
+    const sx = centerColumnSx as Record<string, unknown>;
+    expect(sx['flexShrink']).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// timelineRootSx
+// ---------------------------------------------------------------------------
+
+describe('timelineRootSx — MUI Timeline root', () => {
+  it('resets MUI default padding and margin', () => {
+    const sx = timelineRootSx as Record<string, unknown>;
+    expect(sx['p']).toBe(0);
+    expect(sx['m']).toBe(0);
+  });
+
+  it('removes MUI pseudo-element before TimelineItem', () => {
+    const sx = timelineRootSx as Record<string, unknown>;
+    const reset = sx['& .MuiTimelineItem-root:before'] as Record<string, unknown>;
+    expect(reset['flex']).toBe(0);
+    expect(reset['padding']).toBe(0);
+  });
+
+  it('[regression] has overflowX:hidden to clip absolutely-positioned milestone cards at narrow widths', () => {
+    const sx = timelineRootSx as Record<string, unknown>;
+    expect(sx['overflowX']).toBe('hidden');
   });
 });
