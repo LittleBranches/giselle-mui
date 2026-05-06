@@ -1,4 +1,5 @@
 import type { SxProps, Theme } from '@mui/material/styles';
+import type { HighlightedPaletteKey } from '../types';
 
 /**
  * Styles for the `MilestoneBadge` component.
@@ -193,3 +194,70 @@ export const taskToggleColorSx = (isDone: boolean): SxProps<Theme> => ({
 export const taskIconColorSx = (isDone: boolean): SxProps<Theme> => ({
   color: isDone ? 'success.main' : 'text.disabled',
 });
+
+// ── Paper root ────────────────────────────────────────────────────────────────
+
+/**
+ * Root Paper sx for `MilestoneBadge`.
+ *
+ * Controls border, background, shadow, opacity, and hover/focus states based on
+ * the current expansion state, column alignment, and done/suppression flags.
+ */
+export const milestonePaperSx =
+  (opts: {
+    isExpanded: boolean;
+    colorKey: HighlightedPaletteKey;
+    rightAlign: boolean;
+    done: boolean;
+    hasDetails: boolean;
+    suppressElevation: boolean;
+  }): SxProps<Theme> =>
+  (theme) => ({
+    p: 2,
+    overflow: 'hidden',
+    borderTop: '3px solid',
+    borderTopColor: opts.isExpanded
+      ? (theme.vars!.palette[opts.colorKey]?.main ?? theme.vars!.palette.primary.main)
+      : 'transparent',
+    bgcolor: opts.isExpanded ? 'background.paper' : 'transparent',
+    boxShadow: opts.isExpanded
+      ? `0 4px 16px rgba(${
+          theme.vars!.palette[opts.colorKey]?.mainChannel ??
+          (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+        } / 0.1)`
+      : 'none',
+    transition:
+      'box-shadow 0.22s, opacity 0.3s, filter 0.3s, background-color 0.22s, border-color 0.22s',
+    ...(opts.rightAlign && { textAlign: 'right' }),
+    ...(opts.done && {
+      opacity: 0.45,
+      filter: 'grayscale(1)',
+      pointerEvents: 'auto',
+    }),
+    ...(!opts.isExpanded && {
+      '&:hover': {
+        bgcolor: 'background.paper',
+        borderTopColor:
+          theme.vars!.palette[opts.colorKey]?.main ?? theme.vars!.palette.primary.main,
+        boxShadow: `0 16px 40px rgba(${
+          theme.vars!.palette[opts.colorKey]?.mainChannel ??
+          (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+        } / 0.22)`,
+        ...(opts.hasDetails && { cursor: 'pointer' }),
+        ...(opts.done && { opacity: 1, filter: 'none' }),
+      },
+    }),
+    ...(opts.hasDetails &&
+      !opts.isExpanded && {
+        '&:focus-visible': {
+          bgcolor: 'background.paper',
+          borderTopColor:
+            theme.vars!.palette[opts.colorKey]?.main ?? theme.vars!.palette.primary.main,
+          outline: '2px solid',
+          outlineColor:
+            theme.vars!.palette[opts.colorKey]?.main ?? theme.vars!.palette.primary.main,
+          outlineOffset: 3,
+        },
+      }),
+    ...(opts.suppressElevation && { boxShadow: 'none' }),
+  });

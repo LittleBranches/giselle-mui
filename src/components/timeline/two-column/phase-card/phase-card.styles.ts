@@ -458,3 +458,40 @@ export function buildDateTypographySx({
     color: isScenario ? `${color ?? 'primary'}.main` : 'text.disabled',
   };
 }
+
+// ── CardDecoration gradient ───────────────────────────────────────────────────
+
+/**
+ * Rotating gradient rectangle that sits in the top-right corner of a PhaseCard.
+ *
+ * @param color - MUI palette key for the gradient colour (already resolved from phase.color).
+ * @param isOverduePending - When true, switches to the error palette and raises opacity.
+ */
+export const buildCardDecorationGradientSx =
+  (color: string, isOverduePending: boolean): SxProps<Theme> =>
+  (theme) => ({
+    top: -40,
+    right: -56,
+    width: 140,
+    height: 140,
+    borderRadius: 4,
+    position: 'absolute',
+    transform: 'rotate(40deg)',
+    pointerEvents: 'none',
+    background: `linear-gradient(to right, ${
+      theme.vars!.palette[isOverduePending ? 'error' : (color as HighlightedPaletteKey)]?.main ??
+      theme.vars!.palette.primary.main
+    }, transparent)`,
+    opacity: isOverduePending ? 0.18 : 0.08,
+  });
+
+// ── Corner alert tooltip ──────────────────────────────────────────────────────
+
+/** Sx for the Tooltip popup in `CardCornerAlertBadge`. */
+export const cornerAlertTooltipSx: SxProps<Theme> = {
+  maxWidth: 320,
+  px: 1.75,
+  py: 1.25,
+  bgcolor: 'grey.900',
+  '& .MuiTooltip-arrow': { color: 'grey.900' },
+};

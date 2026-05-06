@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { DEFAULT_EXPANDABLE_ICON } from '../icons';
 import { GiselleIcon } from '../../../icon/giselle/giselle-icon';
 import {
+  milestonePaperSx,
   milestoneNewBadgeRowSx,
   milestoneNewDotSx,
   milestoneNewLabelSx,
@@ -28,36 +29,21 @@ import {
   taskIconColorSx,
   taskTitleSx,
 } from './milestone-badge.styles';
+import {
+  MILESTONE_DATE_FONT_SIZE,
+  MILESTONE_PILL_ICON_SIZE,
+  MILESTONE_PILL_TEXT_FONT_SIZE,
+  MILESTONE_EYE_ICON_SIZE,
+  MILESTONE_EYE_BUTTON_MIN_SIZE,
+  MILESTONE_TASK_ICON_SIZE,
+} from './milestone-badge.const';
 
 // ----------------------------------------------------------------------
 
 // Re-export — keeps `import { MilestoneBadgeProps } from './milestone-badge'` working.
 export type { MilestoneBadgeProps } from './types';
-
-/** Minimum readable font size for the milestone date label. Matches `body2`. */
-export const MILESTONE_DATE_FONT_SIZE = '0.875rem';
-
-/** Width/height (px) of the subtask icon in the expandable details pill. */
-export const MILESTONE_PILL_ICON_SIZE = 16;
-
-/** Font size for the count label in the expandable details pill. */
-export const MILESTONE_PILL_TEXT_FONT_SIZE = '0.75rem';
-
-/**
- * Size (px) of the viewed eye icon in the milestone title row.
- * Must meet WCAG 1.4.11 — interactive controls must have visible contrast >= 3:1.
- * Never set below 20px.
- */
-export const MILESTONE_EYE_ICON_SIZE = 20;
-
-/**
- * Minimum touch-target size (px) for the milestone eye viewed button.
- * Meets WCAG 2.2 AA 2.5.8 — minimum 24 × 24 CSS pixels for pointer targets.
- */
-export const MILESTONE_EYE_BUTTON_MIN_SIZE = 28;
-
-/** Icon size (px) for task done-toggle icons in the expanded detail list. Meets minimum inline icon rule (16px). */
-export const MILESTONE_TASK_ICON_SIZE = 16;
+// Re-export constants — keeps `import { MILESTONE_DATE_FONT_SIZE, ... } from './milestone-badge'` working.
+export * from './milestone-badge.const';
 
 // ----------------------------------------------------------------------
 
@@ -145,65 +131,7 @@ export function MilestoneBadge({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       sx={[
-        (theme) => ({
-          p: 2,
-          overflow: 'hidden',
-          // Default (collapsed): transparent — no background, border colour set to transparent
-          // so the 3px top border slot is reserved for a smooth colour transition on hover.
-          borderTop: '3px solid',
-          borderTopColor: isExpanded
-            ? (theme.vars!.palette[colorKey]?.main ?? theme.vars!.palette.primary.main)
-            : 'transparent',
-          bgcolor: isExpanded ? 'background.paper' : 'transparent',
-          boxShadow: isExpanded
-            ? `0 4px 16px rgba(${
-                theme.vars!.palette[colorKey]?.mainChannel ??
-                (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
-              } / 0.1)`
-            : 'none',
-          transition:
-            'box-shadow 0.22s, opacity 0.3s, filter 0.3s, background-color 0.22s, border-color 0.22s',
-          ...(rightAlign && { textAlign: 'right' }),
-          ...(done && {
-            opacity: 0.45,
-            filter: 'grayscale(1)',
-            // Override parent msCardWrapperSx pointerEvents:none (applied when another
-            // card is expanded/blurred). Done milestone cards must always be hoverable
-            // so the reader can temporarily restore full colour by hovering.
-            pointerEvents: 'auto',
-          }),
-          // Hover reveals the styled card for ALL milestones (title preview),
-          // but cursor:pointer only for expandable ones.
-          // Done cards also restore full opacity/filter on hover so the opaque
-          // background.paper is fully visible and doesn't bleed through.
-          ...(!isExpanded && {
-            '&:hover': {
-              bgcolor: 'background.paper',
-              borderTopColor:
-                theme.vars!.palette[colorKey]?.main ?? theme.vars!.palette.primary.main,
-              boxShadow: `0 16px 40px rgba(${
-                theme.vars!.palette[colorKey]?.mainChannel ??
-                (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
-              } / 0.22)`,
-              ...(hasDetails && { cursor: 'pointer' }),
-              ...(done && { opacity: 1, filter: 'none' }),
-            },
-          }),
-          ...(hasDetails &&
-            !isExpanded && {
-              '&:focus-visible': {
-                bgcolor: 'background.paper',
-                borderTopColor:
-                  theme.vars!.palette[colorKey]?.main ?? theme.vars!.palette.primary.main,
-                outline: '2px solid',
-                outlineColor:
-                  theme.vars!.palette[colorKey]?.main ?? theme.vars!.palette.primary.main,
-                outlineOffset: 3,
-              },
-            }),
-          // Flatten elevation when another card is expanded
-          ...(suppressElevation && { boxShadow: 'none' }),
-        }),
+        milestonePaperSx({ isExpanded, colorKey, rightAlign, done, hasDetails, suppressElevation }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >

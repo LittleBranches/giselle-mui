@@ -1,45 +1,15 @@
-import type { BoxProps } from '@mui/material/Box';
-import type { Theme, SxProps } from '@mui/material/styles';
+import type { SectionTitleProps } from './types';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { txtGradientSpanSx } from './section-title.styles';
+import { SectionCaption } from './section-caption';
 
-// ----------------------------------------------------------------------
-
-type TextSlotProps = {
-  sx?: SxProps<Theme>;
-};
-
-export type SectionTitleProps = Omit<BoxProps, 'title'> & {
-  /**
-   * Optional gradient accent word appended to `title`.
-   * Rendered with reduced opacity and a horizontal gradient that fades from
-   * `text.primary` to a 20% alpha of the same channel.
-   */
-  txtGradient?: string;
-  /** Main heading text. Rendered as an `h2`. */
-  title: React.ReactNode;
-  /**
-   * Short overline label rendered above the heading.
-   * Styled as `overline` typography in `text.disabled` colour.
-   */
-  caption?: React.ReactNode;
-  /**
-   * Supporting description text rendered below the heading.
-   * Styled as `body1` in `text.secondary` colour.
-   */
-  description?: React.ReactNode;
-  /**
-   * `sx` overrides for individual text slots.
-   */
-  slotProps?: {
-    title?: TextSlotProps;
-    caption?: TextSlotProps;
-    description?: TextSlotProps;
-  };
-};
+// Re-exports — keeps existing `import { SectionCaptionProps } from './section-title'` working.
+export type { SectionTitleProps, SectionCaptionProps } from './types';
+// Re-export SectionCaption — keeps `import { SectionCaption } from './section-title'` working.
+export { SectionCaption } from './section-caption';
 
 /**
  * `SectionTitle` renders a stacked heading group: optional overline caption,
@@ -106,35 +76,6 @@ export function SectionTitle({
           {description}
         </Box>
       )}
-    </Box>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-type SectionCaptionProps = {
-  title: React.ReactNode;
-  sx?: SxProps<Theme>;
-};
-
-/**
- * `SectionCaption` renders the overline label above the section heading.
- * Exported so consumers can use it standalone when they need just the overline.
- */
-export function SectionCaption({ title, sx, ...other }: SectionCaptionProps) {
-  return (
-    <Box
-      component="span"
-      sx={[
-        {
-          typography: 'overline',
-          color: 'text.disabled',
-        },
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
-      {...other}
-    >
-      {title}
     </Box>
   );
 }

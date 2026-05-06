@@ -88,21 +88,27 @@ in the quality gate.
 
 ```
 src/components/<name>/
-  <name>.tsx          — pure JSX composition only (no types, no utility functions)
+  <name>.tsx          — pure JSX composition only (no types, no utility functions, no constants)
+  <name>.const.ts     — named constants (sizes, font sizes, badge sizes, spacing values)
   <name>.styles.ts    — all sx constants (static) and sx factories (dynamic)
   <name>.styles.test.ts — mock-theme assertions for every exported sx function
   <name>.stories.tsx  — Storybook stories — MUST include the component name (Storybook glob: `*.stories.@(ts|tsx)`)
   <name>.test.ts      — Vitest unit tests — MUST end in `.test.ts` (vitest glob: `src/**/*.test.ts`)
+  types.ts            — all TypeScript types
+  utils.ts            — pure logic functions (no JSX)
   index.ts            — barrel: re-exports component and types
   README.md           — why it exists, why it belongs here, design decisions, library safety
+  <sub-component>.tsx — internal sub-components (one file each, flat in folder — NOT in subfolders)
 ```
 
 **Separation rule — non-negotiable for every component:**
 
 - **TypeScript `type` aliases AND `interface` declarations → `types.ts`** (never inside `.tsx`). This applies to every exported and internal type without exception — `Props`, `Item`, `Config`, helper union types, internal-only types. If it is a type, it does not live in a `.tsx` file.
+- **Named constants → `<name>.const.ts`** (never inside `.tsx`). Every exported `const` that represents a size, font size, badge size, minimum touch target, or spacing value belongs in the const file. See `*.const.ts companion files` section below.
 - Pure logic / helper functions (no JSX) → separate `utils.ts` file (not inside `.tsx`)
 - Any `sx={}` with more than ~3 properties → `<name>.styles.ts` (enforced by ESLint)
-- The `.tsx` file is the **composition layer only**: it imports from the above, renders JSX, wires props.
+- **Internal sub-components → own `.tsx` files** (flat in the parent folder). See `Sub-component extraction rule` section below.
+- The `.tsx` file is the **composition layer only**: it imports from all of the above and renders JSX.
 
 **Domain/feature grouping:**
 Related components are grouped under a shared parent folder. The quality gate enforces that
@@ -126,7 +132,7 @@ src/components/
 ### TimelineTwoColumn internal file layout
 
 The `timeline/two-column/` folder is the **reference implementation** for complex components.
-It demonstrates the full types/utils/styles split:
+It demonstrates the full types/utils/styles/const/sub-component split:
 
 ```
 src/components/timeline/two-column/
@@ -602,6 +608,115 @@ describe('paperSx', () => {
 1. Any new `sx={}` with more than ~3 properties → move to the styles file immediately
 2. Any existing inline `sx={}` touched during the edit → extract it at the same time (no mixed state)
 3. After extraction → run the styles test file to confirm the mock-theme assertions still pass
+
+### `*.const.ts` companion files for constants (enforce always)
+
+Every exported `const` that represents a **size, font size, badge size, minimum touch target, or spacing value** must live in a co-located `<component-name>.const.ts` file — never inside `.tsx`.
+
+**Why this rule exists:**
+
+- Constants are the most commonly regression-tested values in a component library. Extracting them lets a test do `import { CORNER_ALERT_BADGE_SIZE } from './phase-card.const'` without pulling in JSX, React, or MUI at all.
+- It makes the contract between components explicit: every size value is named and one import away.
+- Inline magic numbers (e.g. `width={26}`) are invisible to grep and untestable. Named exports are both.
+
+**Pattern — non-negotiable:**
+
+```ts
+// phase-card.const.ts
+
+/** Font size for all status badge labels (Overdue, Now, Date overlap, Scenario). */
+export const STATUS_BADGE_FONT_SIZE = '0.75rem';
+
+/** Size (px) of the corner alert badge circle container. */
+export const CORNER_ALERT_BADGE_SIZE = 26;
+
+/** Icon size (px) inside the corner alert badge circle. */
+export const CORNER_ALERT_ICON_SIZE = 16;
+
+/**
+ * Icon size (px) for the viewed eye button.
+ * Must meet WCAG 1.4.11 — interactive icons must be >= 20px. Never set below 20.
+ */
+export const PHASE_EYE_ICON_SIZE = 20;
+```
+
+Then in the component: `width={PHASE_EYE_ICON_SIZE}` — named, testable, grep-findable.
+
+**File naming:** `<component-name>.const.ts` — plain `.ts`, not `.tsx`. No JSX, no MUI imports.
+
+**Barrel export:** The const file must be added to the folder's `index.ts`:
+```ts
+export * from './phase-card.const';
+```
+
+**Regression tests — mandatory:** The component's `*.test.ts` must include a `describe('readability — minimum size constants', ...)` block that imports each constant and asserts it is at or above its minimum:
+
+```ts
+import {
+  PHASE_EYE_ICON_SIZE,
+  CORNER_ALERT_ICON_SIZE,
+} from './phase-card.const';
+
+describe('readability — minimum size constants', () => {
+  it('[regression] PHASE_EYE_ICON_SIZE >= 20px', () => {
+    expect(PHASE_EYE_ICON_SIZE).toBeGreaterThanOrEqual(20);
+  });
+  it('[regression] CORNER_ALERT_ICON_SIZE >= 16px', () => {
+    expect(CORNER_ALERT_ICON_SIZE).toBeGreaterThanOrEqual(16);
+  });
+});
+```
+
+**Enforcement checklist — run whenever a component file is edited:**
+
+1. Any `export const` in a `.tsx` file that is a size, font size, or touch-target value → move to `*.const.ts` immediately.
+2. Check that the const file is re-exported from `index.ts`.
+3. Check that a regression test exists for every constant with a safety minimum.
+
+### Sub-component extraction rule (enforce always)
+
+Internal sub-components — functions that start with a capital letter and return JSX — must **never** be defined inline inside a parent `.tsx` file. Each sub-component gets its own `.tsx` file, flat in the same folder.
+
+**Rule:**
+
+- One `.tsx` file per component, including internal helpers.
+- The parent `.tsx` imports and uses them — never defines them.
+- Types for each sub-component remain in the folder's `types.ts` (not inside the sub-component file).
+- If the sub-component has constants, they go in the folder's `*.const.ts`.
+- If the sub-component has non-trivial logic, it calls helpers from the folder's `utils.ts`.
+
+**Why:**
+
+- A 600-line `.tsx` mixing 5 components is not maintainable. Finding a bug means searching the entire file.
+- Sub-components defined inline are untestable in isolation. After extraction, each gets its own focused test.
+- Even if a sub-component looks "internal today", it almost always becomes reusable later. Extracting now costs 2 minutes; extracting during a refactor costs much more.
+- The fact that a function is only *used* by one parent does not mean it should *live inside* that parent.
+
+**What belongs in its own file:**
+
+Any function that:
+- starts with a capital letter (React component convention), OR
+- returns JSX (`ReactNode`), OR
+- has its own prop type in `types.ts`
+
+...gets its own `.tsx` file.
+
+**What can stay inline:**
+
+- Anonymous function expressions inside `Array.map()` that return 1–2 JSX elements with no logic.
+- Helper render variables (e.g. `const badge = <GiselleIcon ... />`) that do not have their own props.
+
+**File naming:** Use kebab-case matching the component's PascalCase name:
+- `CardCornerAlertBadge` → `card-corner-alert-badge.tsx`
+- `LabeledIconStrip` → `labeled-icon-strip.tsx`
+
+**Barrel export:** Every sub-component file must be added to the folder's `index.ts`:
+```ts
+export * from './card-corner-alert-badge';
+export * from './labeled-icon-strip';
+```
+
+**Tests — mandatory:** Every sub-component must have at least one test. Add the sub-component tests to the folder's main `*.test.ts` (a new `describe` block) or create a dedicated `<sub-component>.test.ts`.
 
 ### Preferred `.dataset` over `getAttribute` in tests
 

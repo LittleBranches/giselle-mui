@@ -1,9 +1,4 @@
-import type {
-  TimelineTwoColumnProps,
-  Milestone,
-  MilestoneRowCtx,
-  TimelineColumnProps,
-} from './types';
+import type { TimelineTwoColumnProps, Milestone, MilestoneRowCtx } from './types';
 
 import {
   useMemo,
@@ -30,6 +25,7 @@ import { PhaseCard } from './phase-card';
 import { TimelineDot } from './timeline-dot';
 import { MilestoneBadge } from './milestone-badge';
 import { SpineConnector } from './spine-connector';
+import { TimelineColumn } from './timeline-column';
 import {
   detectPhaseOverlaps,
   sortMilestonesAsc,
@@ -46,7 +42,6 @@ import {
   computeSlotHeights,
 } from './utils';
 import {
-  timelineColumnSx,
   msRowSx,
   msColumnBoxSx,
   msDotWrapperSx,
@@ -66,31 +61,6 @@ import {
 } from './two-column.styles';
 
 // ----------------------------------------------------------------------
-
-/**
- * One flex column in the two-column phase row.
- *
- * @remarks
- * The Box is a flex layout child of the phase row — NOT part of PhaseCard.
- * It controls column width (`flex: 1`), text alignment, padding, and
- * responsive visibility. Keep it in the parent, not inside PhaseCard.
- *
- * On mobile (`xs`) the column is hidden when it carries no content for this
- * phase (empty padding would still consume space). On desktop (`md+`) both
- * columns always render.
- *
- * REGRESSION NOTE: This helper was extracted deliberately to prevent the
- * two near-identical column Boxes from drifting out of sync during refactors.
- * Do NOT inline these Boxes back into the render. If you need to change column
- * behaviour, change it here once.
- */
-function TimelineColumn({ columnSide, hasContent, children, bottomPadding }: TimelineColumnProps) {
-  return (
-    <Box data-col={columnSide} sx={timelineColumnSx(columnSide, hasContent, bottomPadding)}>
-      {children}
-    </Box>
-  );
-}
 
 // Stable empty Set — returned when `viewedKeys` prop is undefined so callers
 // always get the same reference and avoid creating a new Set on every render.

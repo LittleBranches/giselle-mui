@@ -34,6 +34,8 @@ import {
   PHASE_PILL_TEXT_FONT_SIZE,
   PHASE_EYE_ICON_SIZE,
   EYE_BUTTON_MIN_SIZE,
+} from './phase-card.const';
+import {
   buildPlatformStripItems,
   derivePlatformEntry,
   resolveCornerBadgeAlign,

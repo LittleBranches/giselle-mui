@@ -1,29 +1,17 @@
-import type { BoxProps } from '@mui/material/Box';
+import type { CardCornerAlert, PhaseCardProps } from './types';
 import type { HighlightedPaletteKey, TimelinePlatformItem } from '../types';
-import type {
-  LabeledIconStripProps,
-  CardDetailBulletsProps,
-  CardCornerAlertBadgeProps,
-  ScenarioBadgeProps,
-  CardStatusBadgeProps,
-  CardDecorationProps,
-  CardCornerAlert,
-  PhaseCardProps,
-} from './types';
 
 import { useState, useRef, useCallback, type ReactNode, type MouseEvent } from 'react';
 import { PhaseWarningPopover } from '../phase-warning-popover';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import Collapse from '@mui/material/Collapse';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
 import { GiselleIcon } from '../../../icon/giselle/giselle-icon';
 import { DEFAULT_EXPANDABLE_ICON } from '../icons';
 import {
-  resolveCornerBadgeAlign,
   resolvePhotoSources,
   isHighlightedVariant,
   resolveTaskChildren,
@@ -34,283 +22,31 @@ import {
 } from './utils';
 import {
   photoImgSx,
-  labeledIconStripLabelSx,
-  detailBulletsContainerSx,
-  tooltipAlertListSx,
-  cornerBadgeCircleSx,
-  scenarioBadgeSx,
   detailCountPillSx,
   logoStripSx,
   clientLogoSx,
   platformStripSx,
   projectLogoSx,
   eyeButtonSx,
-  phaseCardIconBoxSx,
-  taskRowSx,
-  taskToggleButtonSx,
-  taskIconStaticSx,
-  taskToggleColorSx,
-  taskIconColorSx,
-  taskTitleSx,
   buildPaperSx,
   buildDateTypographySx,
 } from './phase-card.styles';
-
-// ----------------------------------------------------------------------
-
-/** Font size for all status badge labels (Overdue, Now, Date overlap, Scenario). */
-export const STATUS_BADGE_FONT_SIZE = '0.75rem';
-
-/** Size (px) of the corner alert badge circle. */
-export const CORNER_ALERT_BADGE_SIZE = 26;
-
-/** Icon size (px) inside the corner alert badge circle. */
-export const CORNER_ALERT_ICON_SIZE = 16;
-
-/** Icon size (px) inside the corner alert Tooltip list. */
-export const CORNER_ALERT_LIST_ICON_SIZE = 16;
-
-/** Icon size (px) for the viewed eye button. */
-export const PHASE_EYE_ICON_SIZE = 20;
-
-/**
- * Minimum touch-target size (px) for the eye viewed button.
- * Meets WCAG 2.2 AA 2.5.8 — minimum 24 × 24 CSS pixels for pointer targets.
- */
-export const EYE_BUTTON_MIN_SIZE = 28;
-
-/** Width and height (px) of the "Now" active pulsing dot. */
-export const ACTIVE_DOT_SIZE = 12;
-
-/** Width (px) of the subtask icon in the phase card's expandable details pill. */
-export const PHASE_PILL_ICON_SIZE = 16;
-
-/** Font size for the count label in the phase card's expandable details pill. */
-export const PHASE_PILL_TEXT_FONT_SIZE = '0.75rem';
-
-/** Icon size (px) for task done-toggle icons in the expanded detail list. Meets minimum inline icon rule (16px). */
-export const PHASE_TASK_ICON_SIZE = 16;
+import {
+  PHASE_EYE_ICON_SIZE,
+  EYE_BUTTON_MIN_SIZE,
+  PHASE_PILL_ICON_SIZE,
+  PHASE_PILL_TEXT_FONT_SIZE,
+} from './phase-card.const';
+import { LabeledIconStrip } from './labeled-icon-strip';
+import { CardDetailBullets } from './card-detail-bullets';
+import { CardCornerAlertBadge } from './card-corner-alert-badge';
+import { CardStatusBadge } from './card-status-badge';
+import { CardDecoration } from './card-decoration';
 
 // Re-exports — keeps `import { PhaseCardProps } from './phase-card'` working.
 export type { PhaseCardProps } from './types';
 // Re-exports — keeps test imports from './phase-card' working.
 export { resolveCornerBadgeAlign, resolvePhotoSources, derivePlatformEntry } from './utils';
-
-// ----------------------------------------------------------------------
-
-/**
- * A labelled group: an optional overline label above any icon/logo strip.
- * Handles the repeated pattern across platforms, clients, and projects.
- */
-function LabeledIconStrip({ label, children }: LabeledIconStripProps) {
-  return (
-    <Box sx={{ mt: 2.5 }}>
-      {label && (
-        <Typography variant="overline" sx={labeledIconStripLabelSx}>
-          {label}
-        </Typography>
-      )}
-      {children}
-    </Box>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-/**
- * Expandable bullet list for phase detail items.
- * Collapses by default; expands when the parent card is toggled.
- */
-function CardDetailBullets({
-  id,
-  details,
-  in: expanded,
-  taskDoneStates,
-  onToggleTask,
-}: CardDetailBulletsProps) {
-  return (
-    <Collapse in={expanded} timeout={50}>
-      <Box id={id} sx={detailBulletsContainerSx}>
-        {details.map((task, i) => {
-          const isDoneTask = taskDoneStates ? (taskDoneStates[i] ?? false) : (task.done ?? false);
-          const toggleLabel = isDoneTask
-            ? `Mark "${task.title}" as not done`
-            : `Mark "${task.title}" as done`;
-          return (
-            <Box key={i} sx={taskRowSx}>
-              <Box
-                component={onToggleTask ? 'button' : 'span'}
-                aria-label={onToggleTask ? toggleLabel : undefined}
-                aria-pressed={onToggleTask ? isDoneTask : undefined}
-                onClick={onToggleTask ? () => onToggleTask(i, !isDoneTask) : undefined}
-                sx={
-                  (onToggleTask
-                    ? [taskToggleButtonSx, taskToggleColorSx(isDoneTask)]
-                    : [taskIconStaticSx, taskIconColorSx(isDoneTask)]) as BoxProps['sx']
-                }
-              >
-                <GiselleIcon
-                  icon={
-                    isDoneTask ? 'solar:check-circle-bold' : 'solar:record-minimalistic-outline'
-                  }
-                  width={PHASE_TASK_ICON_SIZE}
-                />
-              </Box>
-              <Typography variant="body2" sx={taskTitleSx(isDoneTask)}>
-                {task.title}
-              </Typography>
-            </Box>
-          );
-        })}
-      </Box>
-    </Collapse>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-/**
- * Floating corner badge that groups all warning/error alerts behind a single icon.
- * Positioned on the outer wrapper (outside the Paper) so it is never clipped.
- * On hover, a Tooltip lists every active alert.
- */
-function CardCornerAlertBadge({
-  alerts,
-  columnSide = 'right',
-  onClick,
-  innerRef,
-}: CardCornerAlertBadgeProps) {
-  if (alerts.length === 0) return null;
-  const hasError = alerts.some((a) => a.severity === 'error');
-  const { left, right, transform, tooltipPlacement } = resolveCornerBadgeAlign(columnSide);
-  const tooltipContent = (
-    <Box sx={tooltipAlertListSx}>
-      {alerts.map((a, i) => (
-        <Box key={i} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-          <GiselleIcon
-            icon="solar:danger-triangle-bold"
-            width={CORNER_ALERT_LIST_ICON_SIZE}
-            aria-hidden
-            style={{ flexShrink: 0, marginTop: 2 }}
-          />
-          <Typography
-            variant="body2"
-            sx={{ lineHeight: 1.55, fontSize: '0.8rem', fontWeight: 500 }}
-          >
-            {a.message}
-          </Typography>
-        </Box>
-      ))}
-    </Box>
-  );
-  const badgeCircle = (
-    <Box
-      ref={innerRef}
-      role={onClick ? 'button' : undefined}
-      aria-label={`${alerts.length} issue${alerts.length === 1 ? '' : 's'}`}
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={
-        onClick
-          ? (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onClick();
-              }
-            }
-          : undefined
-      }
-      sx={cornerBadgeCircleSx({
-        positionOverride: left === undefined ? { right } : { left },
-        transform,
-        hasError,
-        hasClickHandler: !!onClick,
-        badgeSize: CORNER_ALERT_BADGE_SIZE,
-      })}
-    >
-      <GiselleIcon icon="solar:danger-triangle-bold" width={CORNER_ALERT_ICON_SIZE} aria-hidden />
-    </Box>
-  );
-
-  if (onClick) return badgeCircle;
-
-  return (
-    <Tooltip
-      title={tooltipContent}
-      placement={tooltipPlacement}
-      arrow
-      slotProps={{
-        tooltip: {
-          sx: {
-            maxWidth: 320,
-            px: 1.75,
-            py: 1.25,
-            bgcolor: 'grey.900',
-            '& .MuiTooltip-arrow': { color: 'grey.900' },
-          },
-        },
-      }}
-    >
-      {badgeCircle}
-    </Tooltip>
-  );
-}
-
-function ScenarioBadge({ color, scenarioLabel }: ScenarioBadgeProps) {
-  return (
-    <Typography variant="overline" sx={scenarioBadgeSx(color)}>
-      {scenarioLabel}
-    </Typography>
-  );
-}
-
-/**
- * Status badge rendered at the top of a PhaseCard.
- * Currently only the scenario badge variant is active; active/new badges were
- * removed to stabilise card height and may be reinstated in a future iteration.
- */
-function CardStatusBadge({ color, isScenario, scenarioLabel }: CardStatusBadgeProps) {
-  if (!isScenario || !scenarioLabel) return null;
-  return <ScenarioBadge color={color} scenarioLabel={scenarioLabel} />;
-}
-
-// ----------------------------------------------------------------------
-
-/**
- * Decorative MetricCardDecoration + corner icon for a phase card.
- * Extracted to keep PhaseCard's own complexity below the Sonar limit.
- * Receives pre-computed `isOverduePending` to avoid repeating the `&&` in the parent.
- */
-function CardDecoration({ color, isOverduePending, icon }: CardDecorationProps) {
-  return (
-    <>
-      {/* Gradient decoration rectangle — replicates MetricCardDecoration from giselle-mui */}
-      <Box
-        aria-hidden
-        sx={[
-          (theme) => ({
-            top: -40,
-            right: -56,
-            width: 140,
-            height: 140,
-            borderRadius: 4,
-            position: 'absolute',
-            transform: 'rotate(40deg)',
-            pointerEvents: 'none',
-            background: `linear-gradient(to right, ${
-              theme.vars!.palette[isOverduePending ? 'error' : color]?.main ??
-              theme.vars!.palette.primary.main
-            }, transparent)`,
-            opacity: isOverduePending ? 0.18 : 0.08,
-          }),
-        ]}
-      />
-      <Box aria-hidden="true" sx={phaseCardIconBoxSx(color, isOverduePending)}>
-        {icon}
-      </Box>
-    </>
-  );
-}
 
 // ----------------------------------------------------------------------
 

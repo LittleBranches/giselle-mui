@@ -27,3 +27,17 @@ export type FloatingSubNavProps = {
    */
   sticky?: boolean;
 };
+
+// Internal sub-component types
+
+export type SubNavButtonProps = {
+  item: FloatingSubNavItem;
+  isActive: boolean;
+  onPress: (id: string) => void;
+};
+
+export type NavPillProps = {
+  items: FloatingSubNavItem[];
+  activeId: string;
+  onPress: (id: string) => void;
+};
