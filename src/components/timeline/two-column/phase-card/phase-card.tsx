@@ -1,17 +1,16 @@
-import type { Theme } from '@mui/material/styles';
 import type { BoxProps } from '@mui/material/Box';
-import type { Task, TimelinePhase, HighlightedPaletteKey, TimelinePlatformItem } from '../types';
+import type { HighlightedPaletteKey, TimelinePlatformItem } from '../types';
+import type {
+  LabeledIconStripProps,
+  CardDetailBulletsProps,
+  CardCornerAlertBadgeProps,
+  ScenarioBadgeProps,
+  CardStatusBadgeProps,
+  CardDecorationProps,
+  CardCornerAlert,
+} from './types';
 
-import {
-  useState,
-  useRef,
-  useCallback,
-  type ReactNode,
-  type KeyboardEventHandler,
-  type Dispatch,
-  type SetStateAction,
-  type Ref,
-} from 'react';
+import { useState, useRef, useCallback, type ReactNode } from 'react';
 import { PhaseWarningPopover } from '../phase-warning-popover';
 
 import Box from '@mui/material/Box';
@@ -23,16 +22,21 @@ import Typography from '@mui/material/Typography';
 import { GiselleIcon } from '../../../icon/giselle/giselle-icon';
 import { DEFAULT_EXPANDABLE_ICON } from '../icons';
 import {
+  resolveCornerBadgeAlign,
+  resolvePhotoSources,
+  isHighlightedVariant,
+  resolveTaskChildren,
+  buildCardClickHandler,
+  buildCardKeyDownHandler,
+  resolveCardExpansion,
+  derivePlatformEntry,
+} from './utils';
+import {
   photoImgSx,
   labeledIconStripLabelSx,
   detailBulletsContainerSx,
   tooltipAlertListSx,
   cornerBadgeCircleSx,
-  statusBadgeWrapperSx,
-  newStatusDotSx,
-  newStatusLabelSx,
-  activeDotSx,
-  activeStatusLabelSx,
   scenarioBadgeSx,
   detailCountPillSx,
   logoStripSx,
@@ -47,6 +51,8 @@ import {
   taskToggleColorSx,
   taskIconColorSx,
   taskTitleSx,
+  buildPaperSx,
+  buildDateTypographySx,
 } from './phase-card.styles';
 
 // ----------------------------------------------------------------------
@@ -84,48 +90,10 @@ export const PHASE_PILL_TEXT_FONT_SIZE = '0.75rem';
 /** Icon size (px) for task done-toggle icons in the expanded detail list. Meets minimum inline icon rule (16px). */
 export const PHASE_TASK_ICON_SIZE = 16;
 
-// ----------------------------------------------------------------------
-
-/**
- * Resolves the horizontal position of the corner alert badge depending on which
- * column the card sits in.
- *
- * - Right column (default): badge floats on the **right** top corner so it sits
- *   between the card and the centre spine.
- * - Left column: badge floats on the **left** top corner so it sits between the
- *   card and the centre spine (mirrored).
- *
- * Exported so tests can assert the positioning rule independently.
- */
-export function resolveCornerBadgeAlign(columnSide: 'left' | 'right'): {
-  left?: number;
-  right?: number;
-  transform: string;
-  tooltipPlacement: 'top-start' | 'top-end';
-} {
-  if (columnSide === 'left') {
-    return { left: 0, transform: 'translate(-50%, -50%)', tooltipPlacement: 'top-start' };
-  }
-  return { right: 0, transform: 'translate(50%, -50%)', tooltipPlacement: 'top-end' };
-}
-
-// ----------------------------------------------------------------------
-
-/**
- * Resolves the list of photo entries to render for a phase card.
- *
- * - `photos` wins when both fields are present.
- * - `photo` (singular) is normalised to a single-element array.
- * - Neither present → `null` (no images rendered).
- *
- * @internal Exported for unit tests — not part of the public API.
- */
-export function resolvePhotoSources(phase: {
-  photo?: { src: string; alt: string };
-  photos?: Array<{ src: string; alt: string }>;
-}): Array<{ src: string; alt: string }> | null {
-  return phase.photos ?? (phase.photo ? [phase.photo] : null);
-}
+// Re-exports — keeps `import { PhaseCardProps } from './phase-card'` working.
+export type { PhaseCardProps } from './types';
+// Re-exports — keeps test imports from './phase-card' working.
+export { resolveCornerBadgeAlign, resolvePhotoSources, derivePlatformEntry } from './utils';
 
 // ----------------------------------------------------------------------
 
@@ -133,12 +101,6 @@ export function resolvePhotoSources(phase: {
  * A labelled group: an optional overline label above any icon/logo strip.
  * Handles the repeated pattern across platforms, clients, and projects.
  */
-type LabeledIconStripProps = {
-  /** Optional overline label rendered above the strip. Omitted when undefined. */
-  label?: string;
-  children: ReactNode;
-};
-
 function LabeledIconStrip({ label, children }: LabeledIconStripProps) {
   return (
     <Box sx={{ mt: 2.5 }}>
@@ -158,15 +120,6 @@ function LabeledIconStrip({ label, children }: LabeledIconStripProps) {
  * Expandable bullet list for phase detail items.
  * Collapses by default; expands when the parent card is toggled.
  */
-type CardDetailBulletsProps = {
-  /** Matches `aria-controls` on the parent Paper so screen readers wire the relationship. */
-  id: string;
-  details: Task[];
-  in: boolean;
-  taskDoneStates?: boolean[];
-  onToggleTask?: (taskIndex: number, done: boolean) => void;
-};
-
 function CardDetailBullets({
   id,
   details,
@@ -220,21 +173,12 @@ function CardDetailBullets({
  * Positioned on the outer wrapper (outside the Paper) so it is never clipped.
  * On hover, a Tooltip lists every active alert.
  */
-type CardCornerAlert = { message: string; severity: 'error' | 'warning' };
-
 function CardCornerAlertBadge({
   alerts,
   columnSide = 'right',
   onClick,
   innerRef,
-}: {
-  alerts: CardCornerAlert[];
-  columnSide?: 'left' | 'right';
-  /** When provided, badge is a clickable button that opens the PhaseWarningPopover. */
-  onClick?: () => void;
-  /** Ref forwarded to the badge circle element — used as Popper anchor. */
-  innerRef?: Ref<HTMLElement>;
-}) {
+}: CardCornerAlertBadgeProps) {
   if (alerts.length === 0) return null;
   const hasError = alerts.some((a) => a.severity === 'error');
   const { left, right, transform, tooltipPlacement } = resolveCornerBadgeAlign(columnSide);
@@ -311,40 +255,6 @@ function CardCornerAlertBadge({
   );
 }
 
-type ActiveBadgeProps = { color: string; activeLabel?: string };
-
-/**
- * @deprecated Removed from the collapsed card view to stabilise card height.
- * The pulsing dot may be reinstated in a different position in a future iteration.
- */
-export function _NewBadge() {
-  return (
-    <Box sx={statusBadgeWrapperSx}>
-      <Box sx={newStatusDotSx(ACTIVE_DOT_SIZE)} />
-      <Typography variant="overline" sx={newStatusLabelSx}>
-        New
-      </Typography>
-    </Box>
-  );
-}
-
-/**
- * @deprecated Removed from the collapsed card view to stabilise card height.
- * The pulsing dot and "Now" label may be reinstated in a different position in a future iteration.
- */
-export function _ActiveBadge({ color, activeLabel }: ActiveBadgeProps) {
-  return (
-    <Box sx={statusBadgeWrapperSx}>
-      <Box sx={activeDotSx(color, ACTIVE_DOT_SIZE)} />
-      <Typography variant="overline" sx={activeStatusLabelSx(color)}>
-        {activeLabel ?? 'Now'}
-      </Typography>
-    </Box>
-  );
-}
-
-type ScenarioBadgeProps = { color: string; scenarioLabel: string };
-
 function ScenarioBadge({ color, scenarioLabel }: ScenarioBadgeProps) {
   return (
     <Typography variant="overline" sx={scenarioBadgeSx(color)}>
@@ -354,75 +264,22 @@ function ScenarioBadge({ color, scenarioLabel }: ScenarioBadgeProps) {
 }
 
 /**
- * Status badges rendered at the top of a PhaseCard.
- *
- * Badges stack when multiple conditions apply simultaneously:
- * - A phase that is both active and overdue shows the "Now" dot **and** the "Overdue" chip.
- * - A date-conflict badge stacks on top of any active/overdue badges.
- * - The scenario badge is a fallback — only shown when no other badge applies.
+ * Status badge rendered at the top of a PhaseCard.
+ * Currently only the scenario badge variant is active; active/new badges were
+ * removed to stabilise card height and may be reinstated in a future iteration.
  */
-type CardStatusBadgeProps = {
-  /** Whether this is the current "active" / "Now" phase. */
-  isActive: boolean;
-  /** Whether the phase is already done — suppresses the active badge. */
-  isDone: boolean;
-  /** Optional override for the "Now" label text. @default 'Now' */
-  activeLabel?: string;
-  /** MUI palette key for the active badge colour. */
-  color: string;
-  /** Whether this phase uses the scenario variant. */
-  isScenario: boolean;
-  /** Scenario label text to render. Only shown when `isScenario` is true. */
-  scenarioLabel?: string;
-  /** When true, renders a pulsing green "New" badge — sourced from `phase.new`. */
-  isNew?: boolean;
-};
-
-function CardStatusBadge({
-  isActive,
-  isDone,
-  activeLabel: _activeLabel,
-  color,
-  isScenario,
-  scenarioLabel,
-  isNew: _isNew,
-}: CardStatusBadgeProps) {
-  const showActive = isActive && !isDone;
-  const showScenario = !showActive && isScenario && Boolean(scenarioLabel);
-
-  if (!showScenario) return null;
-
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-      {showScenario && <ScenarioBadge color={color} scenarioLabel={scenarioLabel!} />}
-    </Box>
-  );
+function CardStatusBadge({ color, isScenario, scenarioLabel }: CardStatusBadgeProps) {
+  if (!isScenario || !scenarioLabel) return null;
+  return <ScenarioBadge color={color} scenarioLabel={scenarioLabel} />;
 }
 
 // ----------------------------------------------------------------------
-
-/** True when the phase uses a variant that gets the highlighted card treatment. */
-function isHighlightedVariant(variant?: string): boolean {
-  return variant === 'scenario' || variant === 'life-event';
-}
 
 /**
  * Decorative MetricCardDecoration + corner icon for a phase card.
  * Extracted to keep PhaseCard's own complexity below the Sonar limit.
  * Receives pre-computed `isOverduePending` to avoid repeating the `&&` in the parent.
  */
-type CardDecorationProps = {
-  /** Effective palette key for the decoration colour (already resolved from phase.color). */
-  color: HighlightedPaletteKey;
-  /**
-   * `true` when the phase is both overdue AND not yet done.
-   * Switches the decoration and corner icon to the error (red) palette.
-   */
-  isOverduePending: boolean;
-  /** Phase icon rendered in the corner. Accepts any ReactNode icon slot. */
-  icon: ReactNode;
-};
-
 function CardDecoration({ color, isOverduePending, icon }: CardDecorationProps) {
   return (
     <>
@@ -456,192 +313,6 @@ function CardDecoration({ color, isOverduePending, icon }: CardDecorationProps) 
 
 // ----------------------------------------------------------------------
 
-type PaperSxParams = {
-  hasDetails: boolean;
-  isDone: boolean;
-  color: string;
-  phaseSide: 'left' | 'right';
-  isHighlighted: boolean;
-  isScenario: boolean;
-  isOverdue: boolean;
-  suppressElevation: boolean;
-  textAlign: 'left' | 'right' | undefined;
-};
-
-/** Returns the sx theme callback for the root Paper element of a PhaseCard. */
-function buildPaperSx(p: PaperSxParams) {
-  return (theme: Theme) => ({
-    p: 2.5,
-    position: 'relative' as const,
-    overflow: 'hidden',
-    textAlign: p.textAlign ?? 'left',
-    bgcolor: `rgba(${(theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']} / 0.08)`,
-    // Single composed transition — covers opacity/filter (always) + box-shadow (when interactive).
-    transition: p.hasDetails
-      ? 'box-shadow 0.2s, opacity 0.3s, filter 0.3s'
-      : 'opacity 0.3s, filter 0.3s',
-    ...(p.hasDetails && {
-      cursor: 'pointer',
-      '&:hover': {
-        boxShadow: `0 16px 40px rgba(${
-          theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.mainChannel ??
-          (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
-        } / 0.22)`,
-      },
-      '&:focus-visible': {
-        outline: '2px solid',
-        outlineColor:
-          theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.main ??
-          theme.vars!.palette.primary.main,
-        outlineOffset: 3,
-      },
-    }),
-    ...(p.isDone && {
-      opacity: 0.45,
-      filter: 'grayscale(1)',
-      '&:hover': {
-        opacity: 1,
-        filter: 'none',
-        ...(p.hasDetails && {
-          boxShadow: `0 16px 40px rgba(${
-            theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.mainChannel ??
-            (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
-          } / 0.22)`,
-        }),
-      },
-    }),
-    ...(p.phaseSide === 'left' &&
-      !p.isHighlighted && {
-        bgcolor: 'background.paper',
-        borderTop: '3px solid',
-        borderColor: `${p.color ?? 'primary'}.main`,
-        boxShadow: `0 8px 24px rgba(${
-          theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.mainChannel ??
-          (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
-        } / 0.12)`,
-      }),
-    ...(p.isHighlighted && {
-      borderLeft: '4px solid',
-      borderColor: `${p.color}.main`,
-      bgcolor: `rgba(${
-        theme.vars!.palette[p.color as HighlightedPaletteKey]?.mainChannel ??
-        (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
-      } / ${p.isScenario ? 0.1 : 0.08})`,
-    }),
-    // Overdue last — always overrides side/highlighted borders when active
-    ...(p.isOverdue &&
-      !p.isDone && {
-        border: '2px solid',
-        borderColor: 'error.main',
-        boxShadow: `0 0 0 2px rgba(${theme.vars!.palette.error.mainChannel} / 0.2), 0 8px 32px rgba(${theme.vars!.palette.error.mainChannel} / 0.18)`,
-      }),
-    // Flatten elevation on all sibling cards when another is expanded
-    ...(p.suppressElevation && { boxShadow: 'none' }),
-  });
-}
-
-/**
- * Normalises phase expandable content to `Task[]`.
- *
- * Resolution order:
- *   1. `phase.children` — new structured form (Task tree, any depth).
- *   2. `phase.details` — legacy flat string array, mapped to `{ title }` shims.
- *   3. Empty array — phase has no expandable content.
- */
-function resolveTaskChildren(phase: TimelinePhase): Task[] {
-  if (phase.children?.length) return phase.children;
-  if (phase.details?.length) return phase.details.map((title) => ({ title }));
-  return [];
-}
-
-/** Returns an onClick handler that calls `toggle` only when the card has details. */
-function buildCardClickHandler(hasDetails: boolean, toggle: () => void): () => void {
-  return () => {
-    if (hasDetails) toggle();
-  };
-}
-
-/**
- * Returns an onKeyDown handler that calls `toggle` on Enter or Space
- * when the card has details.
- */
-function buildCardKeyDownHandler(
-  hasDetails: boolean,
-  toggle: () => void
-): KeyboardEventHandler<HTMLDivElement> {
-  return (e) => {
-    if (hasDetails && (e.key === 'Enter' || e.key === ' ')) {
-      e.preventDefault();
-      toggle();
-    }
-  };
-}
-
-/** Resolves expand/toggle for controlled vs uncontrolled card mode. */
-function resolveCardExpansion(
-  onRequestExpand: (() => void) | undefined,
-  isExpanded: boolean | undefined,
-  internalExpanded: boolean,
-  setInternalExpanded: Dispatch<SetStateAction<boolean>>
-): { expanded: boolean; toggle: () => void } {
-  if (onRequestExpand === undefined) {
-    return { expanded: internalExpanded, toggle: () => setInternalExpanded((v) => !v) };
-  }
-  return { expanded: isExpanded ?? false, toggle: onRequestExpand };
-}
-
-// ----------------------------------------------------------------------
-
-type DateTypographySxParams = {
-  isScenario: boolean;
-  isHighlighted: boolean;
-  hideDecoration: boolean | undefined;
-  color: string | undefined;
-};
-
-/** Returns the sx object for the phase date Typography element. */
-function buildDateTypographySx({
-  isScenario,
-  isHighlighted,
-  hideDecoration,
-  color,
-}: DateTypographySxParams) {
-  return {
-    display: 'block',
-    mb: 1.5,
-    pr: !isHighlighted && !hideDecoration ? 6 : 0,
-    fontSize: isScenario ? '0.875rem' : '0.8rem',
-    fontWeight: isScenario ? 800 : undefined,
-    letterSpacing: isScenario ? 0 : undefined,
-    color: isScenario ? `${color ?? 'primary'}.main` : 'text.disabled',
-  };
-}
-
-/**
- * Derives the display `label`, `icon`, and `hasTextFallback` from a single
- * {@link TimelinePlatformItem}.
- *
- * A pure helper — rendering concerns (Tooltip wrapping, Box fallback) live in
- * `buildPlatformStripItems`. Exported so tests can exercise the real production
- * derivation logic without re-implementing it as a mirror.
- *
- * @internal — not part of the public component API; exported for testing only.
- *
- * - `label`           — the Tooltip title and text fallback content.
- * - `icon`            — `null` for string platforms; the ReactNode for object platforms.
- * - `hasTextFallback` — `true` when `icon` is `null` (a `<Box component="span">` is rendered).
- */
-export function derivePlatformEntry(p: TimelinePlatformItem): {
-  label: string;
-  icon: ReactNode;
-  hasTextFallback: boolean;
-} {
-  const isString = typeof p === 'string';
-  const label = isString ? p : p.label;
-  const icon = isString ? null : p.icon;
-  return { label, icon, hasTextFallback: isString };
-}
-
 /**
  * Maps a phase's platform items into icon/chip nodes for inline rendering.
  *
@@ -665,76 +336,6 @@ export function buildPlatformStripItems(platforms: TimelinePlatformItem[]): Reac
 }
 
 // ----------------------------------------------------------------------
-
-export type PhaseCardProps = Omit<BoxProps, 'children'> & {
-  /** The timeline phase data to render. */
-  phase: TimelinePhase;
-  /** Runtime done override from the parent timeline (local toggle state). Defaults to phase.done. */
-  done?: boolean;
-  /** Runtime overdue override from the parent timeline. Adds a red warning border to the card. */
-  overdue?: boolean;
-  /** Set by the parent when this phase's date range overlaps another phase. Shows a ⚠ Date overlap badge. */
-  dateConflict?: boolean;
-  /** Human-readable explanation of the overlap rendered in a Tooltip on the badge. */
-  dateConflictLabel?: string;
-  /**
-   * Controlled expansion state. When provided together with `onRequestExpand`,
-   * the card operates in controlled mode and the parent owns the open/close state.
-   */
-  isExpanded?: boolean;
-  /** Called when the user clicks or keys the card to toggle details. Controlled mode only. */
-  onRequestExpand?: () => void;
-  /** When true, suppresses box-shadow so the card appears flat (used when another card is expanded). */
-  suppressElevation?: boolean;
-  /**
-   * When true, the viewed eye indicator shows as filled (success colour).
-   * Only renders the indicator when `onMarkViewed` is also provided.
-   */
-  isViewed?: boolean;
-  /**
-   * Called when the user clicks the viewed eye button. Provide this to enable the indicator.
-   * The parent is responsible for persisting the viewed state.
-   */
-  onMarkViewed?: () => void;
-  /**
-   * Icon rendered in the expandable-details count badge. Defaults to the bundled inline SVG subtask icon.
-   * Pass `null` to suppress the icon and show only the count number.
-   */
-  expandableIcon?: ReactNode;
-  /**
-   * Which column the card sits in — controls where the corner alert badge is anchored.
-   * - `'right'` (default): badge floats on the right top corner (between card and spine).
-   * - `'left'`: badge floats on the left top corner (mirrored, between spine and card edge).
-   */
-  columnSide?: 'left' | 'right';
-  /**
-   * Forwarded from `TimelineTwoColumn.onPhasesChange`.
-   *
-   * When provided, the corner overlap-warning badge opens a rich `PhaseWarningPopover`
-   * (range sliders + mini Gantt ruler + Apply/Cancel) instead of a plain string tooltip.
-   * The popover calls this with the full updated phases array on "Apply".
-   *
-   * When omitted, the badge is read-only — plain tooltip only.
-   */
-  onPhasesChange?: (updated: TimelinePhase[]) => void;
-  /**
-   * The full `phases` array from `TimelineTwoColumn` — passed down only when
-   * `onPhasesChange` is also provided. Used by `PhaseWarningPopover` to compute
-   * the conflict group and to merge updated dates on Apply.
-   */
-  allPhases?: TimelinePhase[];
-  /**
-   * Done state for each task (sub-item) in this phase, indexed by position.
-   * Provided by `TimelineTwoColumn` when task-level done state is active.
-   * Falls back to `task.done` from the data when absent.
-   */
-  taskDoneStates?: boolean[];
-  /**
-   * Called when the user clicks a task toggle icon.
-   * When provided, task rows are interactive; when absent they are decorative.
-   */
-  onToggleTask?: (taskIndex: number, done: boolean) => void;
-};
 
 /**
  * Expandable card for a single timeline phase.
@@ -765,7 +366,7 @@ export function PhaseCard({
   onToggleTask,
   sx,
   ...other
-}: PhaseCardProps) {
+}: import('./types').PhaseCardProps) {
   const badgeRef = useRef<HTMLElement>(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const handleOpenPopover = useCallback(() => setPopoverOpen(true), []);
@@ -869,15 +470,11 @@ export function PhaseCard({
           />
         )}
 
-        {/* Active / New / Scenario status badges */}
+        {/* Scenario status badge */}
         <CardStatusBadge
-          isActive={Boolean(phase.active)}
-          isDone={isDone}
-          activeLabel={phase.activeLabel}
           color={phase.color ?? 'primary'}
           isScenario={isScenario}
           scenarioLabel={phase.scenarioLabel}
-          isNew={Boolean(phase.new)}
         />
 
         {!phase.hideDate && phase.date && (

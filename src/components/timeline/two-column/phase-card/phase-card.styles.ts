@@ -1,6 +1,8 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
 import { pulseDot } from '../animations';
+import type { HighlightedPaletteKey } from '../types';
+import type { PaperSxParams, DateTypographySxParams } from './types';
 
 /**
  * Styles for the `PhaseCard` component.
@@ -365,3 +367,94 @@ export const taskToggleColorSx = (isDone: boolean): SxProps<Theme> => ({
 export const taskIconColorSx = (isDone: boolean): SxProps<Theme> => ({
   color: isDone ? 'success.main' : 'text.disabled',
 });
+
+// ── Paper root ────────────────────────────────────────────────────────────────
+
+/** Returns the sx theme callback for the root Paper element of a PhaseCard. */
+export function buildPaperSx(p: PaperSxParams) {
+  return (theme: Theme) => ({
+    p: 2.5,
+    position: 'relative' as const,
+    overflow: 'hidden',
+    textAlign: p.textAlign ?? 'left',
+    bgcolor: `rgba(${(theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']} / 0.08)`,
+    transition: p.hasDetails
+      ? 'box-shadow 0.2s, opacity 0.3s, filter 0.3s'
+      : 'opacity 0.3s, filter 0.3s',
+    ...(p.hasDetails && {
+      cursor: 'pointer',
+      '&:hover': {
+        boxShadow: `0 16px 40px rgba(${
+          theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.mainChannel ??
+          (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+        } / 0.22)`,
+      },
+      '&:focus-visible': {
+        outline: '2px solid',
+        outlineColor:
+          theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.main ??
+          theme.vars!.palette.primary.main,
+        outlineOffset: 3,
+      },
+    }),
+    ...(p.isDone && {
+      opacity: 0.45,
+      filter: 'grayscale(1)',
+      '&:hover': {
+        opacity: 1,
+        filter: 'none',
+        ...(p.hasDetails && {
+          boxShadow: `0 16px 40px rgba(${
+            theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.mainChannel ??
+            (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+          } / 0.22)`,
+        }),
+      },
+    }),
+    ...(p.phaseSide === 'left' &&
+      !p.isHighlighted && {
+        bgcolor: 'background.paper',
+        borderTop: '3px solid',
+        borderColor: `${p.color ?? 'primary'}.main`,
+        boxShadow: `0 8px 24px rgba(${
+          theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.mainChannel ??
+          (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+        } / 0.12)`,
+      }),
+    ...(p.isHighlighted && {
+      borderLeft: '4px solid',
+      borderColor: `${p.color}.main`,
+      bgcolor: `rgba(${
+        theme.vars!.palette[p.color as HighlightedPaletteKey]?.mainChannel ??
+        (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+      } / ${p.isScenario ? 0.1 : 0.08})`,
+    }),
+    ...(p.isOverdue &&
+      !p.isDone && {
+        border: '2px solid',
+        borderColor: 'error.main',
+        boxShadow: `0 0 0 2px rgba(${theme.vars!.palette.error.mainChannel} / 0.2), 0 8px 32px rgba(${theme.vars!.palette.error.mainChannel} / 0.18)`,
+      }),
+    ...(p.suppressElevation && { boxShadow: 'none' }),
+  });
+}
+
+// ── Date Typography ───────────────────────────────────────────────────────────
+
+/** Returns the sx object for the phase date Typography element. */
+export function buildDateTypographySx({
+  isScenario,
+  isHighlighted,
+  hideDecoration,
+  color,
+}: DateTypographySxParams) {
+  return {
+    display: 'block',
+    mb: 1.5,
+    pr: !isHighlighted && !hideDecoration ? 6 : 0,
+    fontSize: isScenario ? '0.875rem' : '0.8rem',
+    fontWeight: isScenario ? 800 : undefined,
+    letterSpacing: isScenario ? 0 : undefined,
+    color: isScenario ? `${color ?? 'primary'}.main` : 'text.disabled',
+  };
+}
