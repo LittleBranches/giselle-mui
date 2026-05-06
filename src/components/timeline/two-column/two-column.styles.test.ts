@@ -286,9 +286,17 @@ describe('phaseLiSx — phase li element', () => {
     expect(styles['zIndex']).toBe(2);
   });
 
-  it('sets minHeight when computedMinHeight is provided', () => {
+  it('sets responsive minHeight when computedMinHeight is provided', () => {
     const styles = phaseLiSx({ zIndex: 1, computedMinHeight: 480 }) as Record<string, unknown>;
-    expect(styles['minHeight']).toBe(480);
+    const mh = styles['minHeight'] as { xs: number; md: number };
+    expect(mh.md).toBe(480);
+    expect(mh.xs).toBe(960);
+  });
+
+  it('[regression] xs minHeight is 2× md to prevent milestone-over-phase-card overlap at narrow widths', () => {
+    const styles = phaseLiSx({ zIndex: 1, computedMinHeight: 172 }) as Record<string, unknown>;
+    const mh = styles['minHeight'] as { xs: number; md: number };
+    expect(mh.xs).toBe(mh.md * 2);
   });
 
   it('omits minHeight when computedMinHeight is undefined', () => {
