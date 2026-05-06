@@ -46,7 +46,7 @@ Until the package is on npm, use it from disk — see [Local development](#local
 ## ⚠️ ThemeProvider requirement
 
 These components are built on **MUI v7 CSS variables mode**. They require a
-`CssVarsProvider` (or equivalent MUI theme provider) somewhere above them in the React tree.
+`ThemeProvider` somewhere above them in the React tree.
 
 Without a theme provider, `theme.vars.*` CSS custom properties are not injected, and
 **components will render without meaningful colours or styles** — buttons without borders,
@@ -58,17 +58,17 @@ so it can integrate into any existing MUI theme without conflict.
 **Minimal setup:**
 
 ```tsx
-import { CssVarsProvider, extendTheme } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
-const theme = extendTheme();
+const theme = createTheme({ cssVariables: true });
 
 export function App() {
   return (
-    <CssVarsProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <YourApp />
-    </CssVarsProvider>
+    </ThemeProvider>
   );
 }
 ```
@@ -153,7 +153,7 @@ import {
   QuoteCard,
 } from '@alexrebula/giselle-mui';
 
-// Wrap your app in CssVarsProvider — see docs/theming-react.md for full setup
+// Wrap your app in ThemeProvider — see docs/theming-react.md for full setup
 <MetricCard
   value="20+"
   label="Years"

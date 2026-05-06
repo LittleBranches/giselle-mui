@@ -5,7 +5,7 @@ sidebar_label: 'Theming'
 
 # Theming
 
-`@alexrebula/giselle-mui` uses **MUI v7 CSS variables mode**. Components resolve colours through CSS custom properties injected by `CssVarsProvider` at the root of your app.
+`@alexrebula/giselle-mui` uses **MUI v7 CSS variables mode**. Components resolve colours through CSS custom properties injected by `ThemeProvider` at the root of your app.
 
 Select your setup guide:
 

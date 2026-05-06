@@ -4,7 +4,7 @@
  *
  * All MUI components are mocked to avoid theme-provider requirements —
  * `theme.vars` is not available with the default MUI theme in MUI v7 CSS-vars
- * mode, and sx callbacks that reference it would throw without a CssVarsProvider.
+ * mode, and sx callbacks that reference it would throw without a ThemeProvider.
  * The mocks replace rendering with simple HTML elements so we can assert on
  * structure and content without a full React tree.
  *

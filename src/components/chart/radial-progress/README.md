@@ -50,7 +50,7 @@ as a separate prop if needed.
 
 ApexCharts resolves chart colours in SVG/Canvas, where CSS variable resolution is
 browser-dependent and inconsistent across chart rendering modes. `theme.palette[color].main`
-in MUI v7 with `CssVarsProvider` returns the CSS variable reference string
+in MUI v7 with `ThemeProvider` (CSS variables mode) returns the CSS variable reference string
 (`var(--mui-palette-primary-main)`), which modern browsers do resolve in SVG.
 However, `theme.vars.palette.text.secondary` is used for text colours in the chart
 labels because these do not depend on the SVG renderer — they are rendered as `style`

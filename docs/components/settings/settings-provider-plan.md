@@ -22,7 +22,7 @@ It belongs in `giselle-mui` because:
 ## Why it belongs here rather than `giselle-ui`
 
 `giselle-ui` is framework-agnostic and MUI-free. `GiselleSettingsProvider` is
-MUI-specific: it drives `CssVarsProvider` theme state. It does not belong in a
+MUI-specific: it drives `ThemeProvider` theme state. It does not belong in a
 package that must remain free of MUI.
 
 ---

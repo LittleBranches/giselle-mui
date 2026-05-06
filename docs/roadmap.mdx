@@ -43,7 +43,7 @@ export const roadmapPhases = [
     key: 3,
     title: 'Phase C — GiselleThemeProvider',
     shortTitle: 'Phase C',
-    description: 'A zero-config CssVarsProvider wrapper with the Giselle palette as default. Accepts themeOverrides or a fully custom theme.',
+    description: 'A zero-config ThemeProvider wrapper with the Giselle palette as default. Accepts themeOverrides or a fully custom theme.',
     date: 'May 2026',
     side: 'left',
     color: 'warning',
@@ -110,8 +110,8 @@ export const roadmapPhases = [
 
 > This file is the source of truth for the giselle-mui library build. It covers theme utilities (Phases A–D), components, and extraction candidates. Summary entries for completed phases bubble up to `alexrebula/docs/roadmap.md` Phase 1.5 (private companion repo — not linkable from here).
 
-<div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: '2rem', alignItems: 'start' }}>
-<div>
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', height: 'calc(100vh - 120px)', overflow: 'hidden', marginTop: '1rem' }}>
+<div style={{ overflowY: 'auto', paddingRight: '1rem' }}>
 
 
 ## Current state
@@ -119,7 +119,7 @@ export const roadmapPhases = [
 `@alexrebula/giselle-mui` uses only standard MUI v7 APIs to set up its theme:
 
 ```ts
-import { extendTheme, CssVarsProvider } from '@mui/material/styles';
+import { extendTheme } from '@mui/material/styles';
 ```
 
 There are zero external theme utility imports in this package.
@@ -193,7 +193,7 @@ This is the DX goal:
   <App />
 </GiselleThemeProvider>
 
-// Consumer overrides specific tokens — still wraps in CssVarsProvider correctly
+// Consumer overrides specific tokens — still wraps in ThemeProvider correctly
 <GiselleThemeProvider themeOverrides={{ palette: { primary: { main: '#1976d2' } } }}>
   <App />
 </GiselleThemeProvider>
@@ -214,12 +214,12 @@ immediately without any theme configuration.
 
 ```tsx
 // Internal implementation shape (simplified)
-import { CssVarsProvider, extendTheme } from '@mui/material/styles';
+import { ThemeProvider, extendTheme } from '@mui/material/styles';
 import { giselleTheme } from '../utils/theme-preset';
 
 function GiselleThemeProvider({ children, themeOverrides, theme }: Props) {
   const resolvedTheme = theme ?? extendTheme(merge(giselleTheme, themeOverrides ?? {}));
-  return <CssVarsProvider theme={resolvedTheme}>{children}</CssVarsProvider>;
+  return <ThemeProvider theme={resolvedTheme}>{children}</ThemeProvider>;
 }
 ```
 
@@ -227,7 +227,7 @@ function GiselleThemeProvider({ children, themeOverrides, theme }: Props) {
 | -------------------------------------------------------------------------------------- | ------- | ------ |
 | Complete Phase B (Giselle theme preset) — this prerequisite is already met             | Theming | ✅     |
 | Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ⬜     |
-| Implement `GiselleThemeProvider` wrapping `CssVarsProvider` with merge logic           | Theming | ⬜     |
+| Implement `GiselleThemeProvider` wrapping `ThemeProvider` with merge logic             | Theming | ⬜     |
 | Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | Theming | ⬜     |
 | Add Storybook story: default palette, with overrides, fully custom                     | Theming | ⬜     |
 | Add Vitest test: renders correctly, passes `data-mui-color-scheme` to DOM              | Theming | ⬜     |
@@ -545,7 +545,7 @@ consumer boilerplate.
 | Docusaurus page in `giselle-docs` wiring Phase H component docs                               | Docs       | ⬜     |
 
 </div>
-<div style={{ position: 'sticky', top: '80px' }}>
+<div style={{ overflowY: 'auto' }}>
 
 <RoadmapTimeline phases={roadmapPhases} sortOrder="asc" />
 

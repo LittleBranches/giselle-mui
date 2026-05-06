@@ -158,8 +158,9 @@ src/components/timeline/two-column/
 - Use `React.createElement` (not JSX) — avoids JSX transform requirement in `.ts` files
 - Use `renderToStaticMarkup` for structure/ARIA tests
 - Use `ReactDOM.createRoot` + `act` for interaction/click tests
-- Mock all MUI components that have `theme.vars` in sx callbacks (MUI v7 CSS vars
-  require `CssVarsProvider` which is not available in tests without the full theme setup)
+- Mock all MUI components that have `theme.vars` in sx callbacks (`ThemeProvider` with
+  `cssVariables: true` is required — available in Storybook but not in unit tests without
+  wrapping, so mock the component instead)
 
 ## What Copilot should help build
 
@@ -277,7 +278,7 @@ data files. Define once in giselle-mui, import everywhere.
 ### Next planned work (priority order)
 
 1. **Phase B — finalize** — add `giselleTheme` usage to `docs/theming/nextjs.md`. One docs update to close Phase B. Branch: `feature/giselle-theme-preset`.
-2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C. Blocked until Phase B PR merges.
+2. **Phase C — `GiselleThemeProvider`** — wraps `ThemeProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C. Blocked until Phase B PR merges.
 3. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
 4. **RoadmapTimeline component** — Phase A prerequisite (`channelAlpha`) is now met. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
 
@@ -381,7 +382,7 @@ Checks (in order): Prettier → ESLint → `tsc --noEmit` → Vitest → tsup bu
 
 ### Storybook infrastructure
 
-- Config: `.storybook/main.ts` (react-vite builder) + `.storybook/preview.tsx` (wraps stories in `CssVarsProvider`)
+- Config: `.storybook/main.ts` (react-vite builder) + `.storybook/preview.tsx` (wraps stories in `ThemeProvider` with `cssVariables: true`)
 - Stories live co-located with their component: `src/components/<name>/<name>.stories.tsx`
 - **The filename MUST match `*.stories.tsx`** — Storybook's glob is `src/**/*.stories.@(ts|tsx)`. A file named `stories.tsx` (no component-name prefix) is invisible to Storybook and will never appear in the UI.
 - Every story file must pass `tsc --noEmit`, ESLint, and Prettier — they are in `src/` and covered by all checks

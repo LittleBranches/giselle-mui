@@ -36,9 +36,10 @@ additional setup.
 
 ## The structural blocker: `GiselleThemeProvider`
 
-Without this, a blank Next.js project still has to wire up a MUI `CssVarsProvider` manually
-to get CSS variables mode working. `GiselleThemeProvider` is the one export that makes
-"zero Minimals" actually achievable — it replaces the entire Minimals `ThemeProvider` chain.
+Without this, a blank Next.js project still has to wire up a MUI `ThemeProvider`
+manually to get CSS variables mode working. `GiselleThemeProvider` is the one export
+that makes "zero Minimals" actually achievable — it replaces the entire Minimals
+`ThemeProvider` chain.
 
 See [`roadmap.md`](../roadmap.md) Phases A → B → C for the full spec.
 
