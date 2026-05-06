@@ -1,20 +1,8 @@
-import type { ScenarioBadgeProps, CardStatusBadgeProps } from './types';
+import type { CardStatusBadgeProps } from './types';
 
-import Typography from '@mui/material/Typography';
+import { ScenarioBadge } from './scenario-badge';
 
-import { scenarioBadgeSx } from './phase-card.styles';
-
-/**
- * Pill label for scenario-variant phase cards.
- * Rendered by `CardStatusBadge` — not used directly in `PhaseCard`.
- */
-function ScenarioBadge({ color, scenarioLabel }: ScenarioBadgeProps) {
-  return (
-    <Typography variant="overline" sx={scenarioBadgeSx(color)}>
-      {scenarioLabel}
-    </Typography>
-  );
-}
+// ----------------------------------------------------------------------
 
 /**
  * Status badge rendered at the top of a PhaseCard.

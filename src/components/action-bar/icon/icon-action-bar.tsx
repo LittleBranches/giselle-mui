@@ -1,32 +1,17 @@
 import type { IconButtonProps } from '@mui/material/IconButton';
-import type { IconActionItem, IconActionBarProps } from './types';
+import type { IconActionBarProps } from './types';
 
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 
-import { GiselleIcon } from '../../icon/giselle';
-
 import { iconActionBarRootSx } from './icon-action-bar.styles';
+import { DEFAULT_ICON_ACTIONS } from './icon-action-bar.const';
 
 // Re-exports — keeps `import { IconActionItem, IconActionBarProps } from './icon-action-bar'` working.
 export type { IconActionItem, IconActionBarProps } from './types';
-
-// ----------------------------------------------------------------------
-
-/**
- * Default actions rendered when no `actions` prop is supplied.
- *
- * Uses the same Solar icon set as the source reference (invoice toolbar):
- * Edit, View, Print, Send, Share.
- */
-export const DEFAULT_ICON_ACTIONS: IconActionItem[] = [
-  { tooltip: 'Edit', icon: <GiselleIcon icon="solar:pen-bold" /> },
-  { tooltip: 'View', icon: <GiselleIcon icon="solar:eye-bold" /> },
-  { tooltip: 'Print', icon: <GiselleIcon icon="solar:printer-minimalistic-bold" /> },
-  { tooltip: 'Send', icon: <GiselleIcon icon="mdi:email" /> },
-  { tooltip: 'Share', icon: <GiselleIcon icon="solar:share-bold" /> },
-];
+// Re-export constant — keeps `import { DEFAULT_ICON_ACTIONS } from './icon-action-bar'` working.
+export { DEFAULT_ICON_ACTIONS } from './icon-action-bar.const';
 
 // ----------------------------------------------------------------------
 
