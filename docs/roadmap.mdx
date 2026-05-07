@@ -59,7 +59,7 @@ export const roadmapPhases = [
     key: 4,
     title: 'Phase D — GiselleSettingsProvider',
     shortTitle: 'Phase D',
-    description: 'Framework-agnostic settings persistence: color mode, direction, font size, color presets. Replaces Minimals SettingsProvider.',
+    description: 'Framework-agnostic settings persistence: color mode, direction, font size, color presets.',
     date: 'Jun 2026',
     side: 'left',
     color: 'info',
@@ -103,6 +103,21 @@ export const roadmapPhases = [
     date: 'Jul 2026',
     side: 'right',
     color: 'primary',
+  },
+  {
+    key: 8,
+    title: 'Phase H — Dashboard component suite',
+    shortTitle: 'Phase H',
+    description: 'Full set of data dashboard widgets: chart cards, data tables, activity feeds, budget breakdown, stat rows, hero banners. Enables trip-costs dashboard and any product analytics view.',
+    date: 'Aug 2026',
+    side: 'right',
+    color: 'info',
+    milestones: [
+      { key: 0, date: 'Aug 2026', shortTitle: 'Subpath exports', title: 'Configure /charts and /motion subpath exports in tsup + package.json', description: 'Architecture prerequisite. Unblocks ApexCharts chart cards and framer-motion components without imposing those deps on all consumers.' },
+      { key: 1, date: 'Aug 2026', shortTitle: 'MUI-only widgets', title: 'MUI-only dashboard widgets (16 components)', description: 'Groups 1+3+4+5 + Group 7 main-bundle analytics: StatCardRow, BalanceSummaryCard, CreditCardDisplay, DataTable, ActivityFeedList, NewsFeedList, RelatedItemsList, ProgressStatsList, QuickTransferWidget, ContactsList, BudgetBreakdownCard, HeroBannerCard, FeaturedItemCard, PromoInviteCard, CostClassificationCard, ROIComparisonCard, ScenarioComparisonWidget, AmortizationScheduleTable.' },
+      { key: 2, date: 'Aug 2026', shortTitle: 'Chart cards', title: 'ApexCharts chart card suite (7 components — /charts subpath)', description: 'SparklineBar, DonutChartCard, AreaLineChartCard, GroupedBarChartCard, HorizontalBarChartCard, RadarChartCard, ProjectionChartCard (dual-series costs-vs-returns with break-even annotation).' },
+      { key: 3, date: 'Aug 2026', shortTitle: 'Motion components', title: 'Move FloatingSubNav to /motion subpath + AnimatedTabPanel', description: 'Breaking change for FloatingSubNav consumers — needs re-export shim or minor version bump.' },
+    ],
   },
 ];
 
@@ -246,7 +261,7 @@ no imports from `alexrebula` or any client project.
 
 - Writing authoritative dev.to articles about MUI v7 CSS variables (`GiselleThemeProvider` is the worked example)
 - The premium template (the template's look is the default Giselle palette, consumers override it)
-- Replacing `minimal-shared/utils` in the portfolio's theme setup
+- Removing proprietary theme utility imports from the portfolio's theme setup
 
 ---
 
@@ -262,8 +277,7 @@ for the milestone tracking the removal of `minimal-shared/utils` imports from
 
 **Goal:** Export a framework-agnostic, MIT-safe `GiselleSettingsProvider<TState>` that
 persists user UI preferences (color mode, direction, font size, color presets) with zero
-proprietary dependencies. Enables consumers to migrate off the Minimals `SettingsProvider`
-in a one-import swap.
+proprietary dependencies. Enables a clean-room, drop-in settings context in a one-import swap.
 
 **Prerequisite:** Phase C (GiselleThemeProvider) — the settings system drives the theme.
 
@@ -293,7 +307,7 @@ Full design: [`docs/components/settings-provider-plan.md`](../components/setting
 ### Phase E — Standalone project UI primitives — Components (Medium priority)
 
 **Goal:** Export the layout and section primitives that every portfolio or product site needs,
-so a blank Next.js project can assemble full pages with zero Minimals dependency and zero
+so a blank Next.js project can assemble full pages with zero proprietary dependencies and zero
 reimplementation of recurring patterns.
 
 **Prerequisite:** Phase A (`channelAlpha`) — some primitives use CSS-variable alpha tints.
@@ -305,10 +319,10 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 
 | Task                                                                                              | Label      | Status |
 | ------------------------------------------------------------------------------------------------- | ---------- | ------ |
-| Extract `TwoColumnShowcaseRow` — clean, zero Minimals, ready now                                  | Components | ✅     |
+| Extract `TwoColumnShowcaseRow` — clean, no proprietary deps, ready now                                  | Components | ✅     |
 | Extract `SectionTitle` + `SectionCaption` — section heading group with optional gradient accent   | Components | ✅     |
 | Extract `FloatingSubNav` — sticky/fixed pill nav with framer-motion, `ReactNode` icon slot        | Components | ✅     |
-| Extract `OptionWithBlurb` — tiny wrapper, clean, zero Minimals                                    | Components | ⬜     |
+| Extract `OptionWithBlurb` — tiny wrapper, clean, no proprietary deps                                    | Components | ⬜     |
 | Extract `SectionPendingLoader` — replace internal `Iconify` with `GiselleIcon`                    | Components | ⬜     |
 | Extract `FloatingControlBar` — replace `channelAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | Components | ⬜     |
 
@@ -337,7 +351,7 @@ Full gap analysis: [`docs/components/standalone-gap-analysis.md`](../components/
 ### Phase F — DetailsDrawer — Components (Medium priority)
 
 **Goal:** Export a reusable `<DetailsDrawer>` component — a slide-in panel from the right edge
-of the viewport, styled to MUI theme tokens, with zero Minimals dependency. This is the
+of the viewport, styled to MUI theme tokens, with zero proprietary dependencies. This is the
 universal shell for any detail or edit view in the library: timeline item details, settings,
 preview panels, and any future per-item UI.
 

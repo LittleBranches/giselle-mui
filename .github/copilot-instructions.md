@@ -52,6 +52,10 @@ Ripeness scale: 🟢 green = alpha · 🟡 yellow-green = beta · 🟠 golden = 
    **Additional allowed peer dependencies** section below (`@mui/lab`,
    `framer-motion`, `apexcharts`, `react-apexcharts`).
 
+   **Subpath constraint:** `framer-motion` and `apexcharts`/`react-apexcharts` are allowed
+   **only in their dedicated subpath entries** — never in `src/index.ts` (the main bundle).
+   See **Subpath export architecture** below for the full rule.
+
 2. **`sx` array spread on root element.** Always:
    `sx={[baseStyles, ...(Array.isArray(sx) ? sx : [sx])]}`.
 
@@ -306,12 +310,58 @@ data files. Define once in giselle-mui, import everywhere.
 2. **Phase C — `GiselleThemeProvider`** — wraps `ThemeProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C. Blocked until Phase B PR merges.
 3. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
 4. **RoadmapTimeline component** — Phase A prerequisite (`channelAlpha`) is now met. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
+5. **Phase H — Dashboard component suite** — 23 new components across 7 groups: stat cards, chart cards, data tables, financial widgets, hero cards, motion components, and investment analytics. Subpath exports (`/charts`, `/motion`) wired in tsup + package.json — 7 May 2026. Full spec: `docs/components/dashboard-components-plan.md`.
 
 ### Additional allowed peer dependencies
 
-- `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). Acceptable under the zero-proprietary-dependencies rule.
-- `framer-motion` — used in `FloatingSubNav`. **Always use `motion.div`, never `m.div`.** The `m.*` API requires `LazyMotion` in the consumer's tree — this is an invisible requirement that breaks any app not using lazy motion (including Storybook). `motion.*` works without a provider and is correct for library components.
-- `apexcharts` + `react-apexcharts` — used in `RadialProgressCard` (optional peer deps — declared with `peerDependenciesMeta.optional: true`). Lazy-loaded via `React.lazy + Suspense` so consumers without ApexCharts installed do not pay the bundle cost.
+- `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). Acceptable under the zero-proprietary-dependencies rule. Goes in the **main bundle** (`dist/index.js`).
+- `framer-motion` — allowed **only in the `/motion` subpath entry** (`dist/motion.js`). Never import `framer-motion` from a file that is part of `src/index.ts` — it would impose the dep on every consumer. **Always use `motion.div`, never `m.div`.** The `m.*` API requires `LazyMotion` in the consumer's tree — this is an invisible requirement that breaks any app not using lazy motion (including Storybook). `motion.*` works without a provider and is correct for library components.
+- `apexcharts` + `react-apexcharts` — allowed **only in the `/charts` subpath entry** (`dist/charts.js`). Never import ApexCharts from a file that is part of `src/index.ts`. Components that embed a chart must accept `chart?: ReactNode` and let the consumer supply it — this keeps the component in the main bundle with zero chart dep. Declared with `peerDependenciesMeta.optional: true`.
+
+### Subpath export architecture — non-negotiable
+
+`giselle-mui` uses **tsup subpath exports** to isolate heavy optional dependencies. This is the answer to "can I use framer-motion / ApexCharts here?" — yes, but only in the right entry point.
+
+```
+@alexrebula/giselle-mui          → dist/index.js     MUI-only components + utils ('use client')
+@alexrebula/giselle-mui/utils    → dist/utils.js     Server-safe pure utilities (no 'use client')
+@alexrebula/giselle-mui/charts   → dist/charts.js    ApexCharts chart cards (optional peer dep)
+@alexrebula/giselle-mui/motion   → dist/motion.js    framer-motion components (optional peer dep)
+```
+
+**The rule in one sentence:** if a component imports `framer-motion`, it goes in `src/motion-index.ts` → `dist/motion.js`. If it imports `apexcharts` or `react-apexcharts`, it goes in `src/charts-index.ts` → `dist/charts.js`. Everything else goes in `src/index.ts` → `dist/index.js`.
+
+**Consumer contract:**
+- A project that imports only from `@alexrebula/giselle-mui` never needs ApexCharts or framer-motion installed.
+- A project that imports from `.../charts` must have `apexcharts` + `react-apexcharts` as deps.
+- A project that imports from `.../motion` must have `framer-motion` as a dep.
+
+**Why not a separate repo?** One repo, one `yalc push`, no version drift. The subpath pattern is strictly better at this library's scale.
+
+**tsup config must declare all three entry points:**
+
+```ts
+// tsup.config.ts — required shape
+defineConfig([
+  { entry: { index: 'src/index.ts' },          ... },  // main — MUI only
+  { entry: { utils: 'src/utils-index.ts' },     ... },  // utils — server-safe
+  { entry: { charts: 'src/charts-index.ts' },   ... },  // charts — ApexCharts
+  { entry: { motion: 'src/motion-index.ts' },   ... },  // motion — framer-motion
+]);
+```
+
+**`package.json` exports map must match:**
+
+```json
+"exports": {
+  ".": { "import": "./dist/index.mjs", "require": "./dist/index.js", "types": "./dist/index.d.ts" },
+  "./utils": { "import": "./dist/utils.mjs", "require": "./dist/utils.js", "types": "./dist/utils.d.ts" },
+  "./charts": { "import": "./dist/charts.mjs", "require": "./dist/charts.js", "types": "./dist/charts.d.ts" },
+  "./motion": { "import": "./dist/motion.mjs", "require": "./dist/motion.js", "types": "./dist/motion.d.ts" }
+}
+```
+
+**Status (7 May 2026):** `/utils` exists. `/charts` and `/motion` wired — `src/charts-index.ts`, `src/motion-index.ts`, tsup entries, and `package.json` exports map all in place. Build verified green. Placeholder barrels only — Phase H components will be exported from here.
 
 ### tsup `external` rule — non-negotiable
 
@@ -343,6 +393,10 @@ Current required entries (keep in sync with `package.json`):
 - `@mui/lab`
 - `@emotion/react`, `@emotion/styled`
 - `@iconify/react`
+- `framer-motion` — must be in `external` for the `/motion` entry
+- `apexcharts`, `react-apexcharts` — must be in `external` for the `/charts` entry
+
+**Each tsup entry has its own `external` array.** Do not assume the main entry's `external` covers the subpath entries — check each one.
 
 ---
 

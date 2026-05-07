@@ -23,9 +23,8 @@ It does not belong in a single page's `view.tsx` because:
   (hollow size, track colour via CSS vars, total-centre formatter, value formatter).
 - The legend row pattern (coloured dot + label + percentage) is a repeating UI element
   that must stay consistent across sections.
-- The Minimals analogue (`EcommerceSaleByGender`) cannot be used because it relies on
-  `varAlpha` and `ChartLegends` — proprietary utilities. This component is the
-  independently written, MIT-licensed equivalent.
+- Proprietary alternatives to this pattern rely on non-MIT utilities (`varAlpha`, closed
+  chart legend helpers). This component is the independently written, MIT-licensed equivalent.
 
 ---
 
@@ -40,7 +39,7 @@ to defer the import until the browser is ready.
 
 ### Solid colours — no gradient
 
-`EcommerceSaleByGender` (Minimals) uses `fill.gradient` with `colorStops`. Gradient
+Some radial bar implementations use `fill.gradient` with `colorStops`. Gradient
 fill in ApexCharts requires the `offset` values to match the segment positions, which
 means coupling the factory to the number of segments. Solid colours are simpler,
 visually clear, and still colour-coded by MUI palette key. Gradient can be added later

@@ -18,6 +18,16 @@
       "types": "./dist/utils.d.ts",
       "import": "./dist/utils.js",
       "require": "./dist/utils.cjs"
+    },
+    "./charts": {
+      "types": "./dist/charts.d.ts",
+      "import": "./dist/charts.js",
+      "require": "./dist/charts.cjs"
+    },
+    "./motion": {
+      "types": "./dist/motion.d.ts",
+      "import": "./dist/motion.js",
+      "require": "./dist/motion.cjs"
     }
   },
   "publishConfig": {

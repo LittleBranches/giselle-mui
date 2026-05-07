@@ -1,7 +1,6 @@
 # GiselleSettingsProvider — Implementation Plan
 
-> Replaces the Minimals `SettingsProvider` (which uses `minimal-shared/hooks` and `es-toolkit`)
-> with a fully MIT-safe, framework-agnostic equivalent exported from `@alexrebula/giselle-mui`.
+> A fully MIT-safe, framework-agnostic settings context for MUI projects, exported from `@alexrebula/giselle-mui`.
 
 ---
 
@@ -16,8 +15,7 @@ It belongs in `giselle-mui` because:
 
 - It must integrate with `GiselleThemeProvider` (Phase C prerequisite)
 - Consumers get one coherent import: `@alexrebula/giselle-mui`
-- It is the natural clean-room replacement for the Minimals context — consumers
-  migrating off Minimals change one import, not their whole settings model
+- Consumers can adopt it as a drop-in replacement for any existing settings context — one import change, no consumer component changes
 
 ## Why it belongs here rather than `giselle-ui`
 
@@ -29,14 +27,13 @@ package that must remain free of MUI.
 
 ## Copyright boundary (non-negotiable)
 
-Minimals `SettingsProvider` uses:
+This package must not import:
 
-- `minimal-shared/hooks` — `useCookies`, `useLocalStorage`
-- `minimal-shared/utils` — `getCookie`, `getStorage`
-- `es-toolkit` — `isEqual`
+- `minimal-shared/hooks` or `minimal-shared/utils`
+- `es-toolkit`
+- Any other proprietary or non-MIT dependency
 
-None of these may appear in this package. All three must be replaced by
-clean-room implementations written independently:
+All storage and equality utilities must be written independently:
 
 - `useLocalStorage` → `src/utils/use-local-storage.ts`
 - `getCookieValue` / `setCookieValue` → `src/utils/cookie.ts`
@@ -84,7 +81,7 @@ type StorageAdapter<T> = {
 ```
 
 **Why not `useCookies` as a hook?**
-Cookie hooks (like Minimals' `useCookies`) blur the boundary between storage and
+Cookie hooks blur the boundary between storage and
 React state. The adapter pattern keeps the two concerns separate — the hook manages
 React state, the adapter handles serialisation and transport. This also makes the
 component fully testable with a mock adapter.
@@ -108,7 +105,7 @@ The `detectGiselleSettings()` helper is a convenience export from
 
 ### 4. Drawer state is built in
 
-For parity with Minimals and to make migration a one-import swap, the drawer
+For a smooth drop-in experience, the drawer
 open/close state is included in the context. This avoids forcing consumers to
 add their own drawer state management just to get a settings panel.
 
@@ -121,8 +118,8 @@ This prevents stale settings from breaking the UI after a schema change.
 ### 6. `setField` for single-field updates
 
 `setField<K extends keyof TState>(key: K, value: TState[K])` updates one field
-at a time — typed end-to-end, no stringly-typed keys. This mirrors Minimals'
-`setField` exactly so migrated code needs no changes.
+at a time — typed end-to-end, no stringly-typed keys. Single-field typed updates keep
+consumer code simple and require no changes when adopting this provider.
 
 ### 7. `canReset` uses own `isDeepEqual`
 
@@ -173,7 +170,7 @@ setCookieValue(name: string, value: string, options?: { maxAge?: number; path?: 
 
 ## Context shape
 
-Identical to Minimals `SettingsContextValue` — this is intentional for migration ease:
+The context shape follows established patterns for drop-in adoption:
 
 ```ts
 type GiselleSettingsContextValue<TState> = {
@@ -281,11 +278,11 @@ function SettingsThemeBridge({ children }: { children: ReactNode }) {
 
 ---
 
-## Migration guide from Minimals SettingsProvider
+## Migration guide
 
 This is a one-import swap. The context shape is identical.
 
-| Minimals                                                       | giselle-mui                                                         |
+| Before                                                         | giselle-mui                                                         |
 | -------------------------------------------------------------- | ------------------------------------------------------------------- |
 | `import { SettingsProvider } from 'src/components/settings'`   | `import { GiselleSettingsProvider } from '@alexrebula/giselle-mui'` |
 | `import { useSettingsContext } from 'src/components/settings'` | `import { useGiselleSettings } from '@alexrebula/giselle-mui'`      |

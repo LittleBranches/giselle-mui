@@ -9,11 +9,10 @@ sidebar_label: 'Standalone Project Gap Analysis'
 
 This document answers a specific question: **what does `giselle-mui` need to export so
 that a brand-new Next.js project can use it as a complete design system foundation —
-with zero dependency on the Minimals MUI kit or any other proprietary theme?**
+with zero proprietary theme dependency?**
 
-The analysis is driven by a real audit of `alexrebula`, which uses both giselle-mui and
-Minimals. Every component and utility that alexrebula's own sections depend on has been
-categorised here by its current status.
+The analysis is driven by a real audit of `alexrebula`. Every component and utility that
+alexrebula's own sections depend on has been categorised here by its current status.
 
 ---
 
@@ -38,8 +37,7 @@ additional setup.
 
 Without this, a blank Next.js project still has to wire up a MUI `ThemeProvider`
 manually to get CSS variables mode working. `GiselleThemeProvider` is the one export
-that makes "zero Minimals" actually achievable — it replaces the entire Minimals
-`ThemeProvider` chain.
+that makes this achievable — it replaces any manually wired MUI `ThemeProvider` chain.
 
 See [`roadmap.md`](../roadmap.md) Phases A → B → C for the full spec.
 
@@ -61,14 +59,14 @@ Phase D: UI primitives (see below)
 
 These components do not exist in giselle-mui yet. They are the recurring layout patterns
 in alexrebula's own sections — patterns that any new project would also need, and that
-are currently only available by depending on Minimals (or reimplementing them from scratch).
+are currently only available with a proprietary theme (or reimplementing them from scratch).
 
 ### Ready to extract (minimal changes needed)
 
 | Component              | Source in alexrebula                      | What's needed before extraction           |
 | ---------------------- | ----------------------------------------- | ----------------------------------------- |
-| `TwoColumnShowcaseRow` | `src/components/two-column-showcase-row/` | Nothing — clean, zero Minimals, ready now |
-| `OptionWithBlurb`      | `src/components/option-with-blurb/`       | Nothing — tiny, clean, zero Minimals      |
+| `TwoColumnShowcaseRow` | `src/components/two-column-showcase-row/` | Nothing — no changes needed, ready now    |
+| `OptionWithBlurb`      | `src/components/option-with-blurb/`       | Nothing — tiny, no changes needed         |
 | `SectionPendingLoader` | `src/components/section-pending-loader/`  | Switch internal `Iconify` → `GiselleIcon` |
 
 ### Need cleanup before extraction
@@ -80,25 +78,24 @@ are currently only available by depending on Minimals (or reimplementing them fr
 ### Need to be written from scratch
 
 These patterns appear repeatedly in alexrebula's own sections but are not currently
-extracted into reusable components. They cannot be copied from alexrebula because that
-repo uses the Minimals theme — any code that uses `varAlpha` from `minimal-shared/utils`
-must be rewritten independently.
+extracted into reusable components. They cannot be copied from alexrebula because that repo uses a proprietary theme — any
+code that uses proprietary utilities must be rewritten independently.
 
 | Component                 | Pattern it encodes                                                                                            | Priority                                                                                                                                     |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | `SectionContainer`        | `Container` + consistent vertical padding + optional title/subtitle header. Used on every section.            | High — needed by almost every page                                                                                                           |
 | `HeroSection`             | Full-width hero with headline, subtitle, and CTA buttons. Appears in home, about, services, contact.          | High — every portfolio page has one                                                                                                          |
 | `FAQAccordion`            | MUI `Accordion` with consistent styling and optional icon. Used in home and services.                         | Medium                                                                                                                                       |
-| `GiselleSettingsProvider` | Clean-room equivalent of Minimals `SettingsProvider` — localStorage + cookie adapters, generic state, drawer. | High — prerequisite for migrating off `minimal-shared` hooks entirely. Full plan: [`settings-provider-plan.md`](./settings-provider-plan.md) |
+| `GiselleSettingsProvider` | Framework-agnostic settings context — localStorage + cookie adapters, generic state, drawer. | High — blocks any project wanting a full drop-in settings system. Full plan: [`settings-provider-plan.md`](./settings-provider-plan.md) |
 
 ---
 
 ## What a blank Next.js project actually needs
 
-The minimum `layout.tsx` for a project built entirely on giselle-mui with no Minimals:
+The minimum `layout.tsx` for a project built entirely on giselle-mui:
 
 ```tsx
-// app/layout.tsx — zero Minimals
+// app/layout.tsx
 import { GiselleThemeProvider } from '@alexrebula/giselle-mui'; // Phase C
 import { IconRegistrar } from '@alexrebula/giselle-mui';
 import { createIconRegistrar } from '@alexrebula/giselle-mui';
@@ -117,12 +114,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ```
 
 Compare to alexrebula's current `layout.tsx` which wraps 8 providers — four of which
-(`I18nProvider`, `AuthProvider`, `SettingsProvider`, Minimals `ThemeProvider`) are
-Minimals-dependent and would be replaced by `GiselleThemeProvider` + `GiselleSettingsProvider`.
+(`I18nProvider`, `AuthProvider`, `SettingsProvider`, `ThemeProvider`) are
+proprietary-theme-dependent and would be replaced by `GiselleThemeProvider` + `GiselleSettingsProvider`.
 
 ---
 
-## Complete export checklist for "Minimals-free" standalone projects
+## Complete export checklist for standalone projects
 
 ```
 # Already shipped
