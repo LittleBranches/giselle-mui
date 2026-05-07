@@ -82,6 +82,7 @@ export const roadmapPhases = [
     milestones: [
       { key: 0, date: '5 May 2026', shortTitle: 'StatCard', title: 'StatCard', description: 'Data card with sparkline, six palette variants.', color: 'success', done: true },
       { key: 1, date: '5 May 2026', shortTitle: 'RadialProgressCard', title: 'RadialProgressCard', description: 'Card wrapping an ApexCharts radialBar.', color: 'success', done: true },
+      { key: 4, date: '7 May 2026', shortTitle: 'TimelineCompact', title: 'TimelineCompact', description: 'Single-column accordion renderer for TimelinePhase[]. Mobile companion to TimelineTwoColumn — swap at xs/sm breakpoints with no data-layer changes.', color: 'success', done: true },
       { key: 2, date: 'Jun 2026', shortTitle: 'HeroSection', title: 'HeroSection', description: 'Full-width hero: headline, subtitle, CTA slot.', color: 'secondary' },
       { key: 3, date: 'Jun 2026', shortTitle: 'FAQAccordion', title: 'FAQAccordion', description: 'MUI Accordion with icon slot and accessible expand.', color: 'secondary' },
     ],
@@ -335,6 +336,7 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 | `RadialProgressCard` — Card wrapping an ApexCharts radialBar with configurable progress items and palette keys                                   | Components | ✅     |
 | `resolveMaturityColor(pct)` + `resolveMaturityLabel(pct)` — maps readiness percentages to MUI palette key and mango-stage label                  | Utilities  | ✅     |
 | `assignMilestoneSidesByDone(phases)` — derives milestone column placement from `done` state; exported so consumers don't reimplement the pattern | Utilities  | ✅     |
+| `TimelineCompact` — single-column accordion renderer for `TimelinePhase[]`; mobile companion to `TimelineTwoColumn` — swap at xs/sm breakpoints with no data-layer changes — ✅ Done 7 May 2026 | Components | ✅     |
 | `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha`                                                | Components | ⬜     |
 | `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand                                                       | Components | ⬜     |
 

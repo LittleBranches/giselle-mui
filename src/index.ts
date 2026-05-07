@@ -48,6 +48,16 @@ export type {
   TimelineSectionData,
 } from './components/timeline/two-column';
 
+export { TimelineCompact, resolveCompactColor } from './components/timeline/compact';
+export type { TimelineCompactProps } from './components/timeline/compact';
+export {
+  COMPACT_PHASE_DOT_SIZE,
+  COMPACT_MILESTONE_DOT_SIZE,
+  COMPACT_PHASE_ICON_SIZE,
+  COMPACT_MIN_PHASE_DOT_SIZE,
+  COMPACT_MIN_MILESTONE_DOT_SIZE,
+} from './components/timeline/compact';
+
 export { IconActionBar, DEFAULT_ICON_ACTIONS } from './components/action-bar/icon';
 export type { IconActionBarProps, IconActionItem } from './components/action-bar/icon';
 

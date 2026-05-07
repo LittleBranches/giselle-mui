@@ -192,6 +192,50 @@ Year selector in card header. Accepts `series: ApexAxisChartSeries`, `title`, `s
 
 ---
 
+### `BudgetVsActualChartCard` 🔴 Needs building
+
+**What it is:** Dual-series line chart comparing **planned spend** against **actual spend**
+over a set of time periods. The planned series is fixed at period start (the budget).
+The actual series grows as real spend is recorded. The key visual is the divergence
+gap — the chart fills `error.main` when actual exceeds planned (over budget) and
+`success.main` when actual is below planned (under budget).
+
+Distinct from `AreaLineChartCard` (a general chart with no budget semantics) and from
+`ProjectionChartCard` (which compares cost vs projected return — the break-even model).
+This component encodes the specific "planned vs actual" BI pattern with correct
+variance fill semantics.
+
+**Accepts:**
+
+- `title: string`
+- `plannedSeries: BudgetDataPoint[]` — `{ label: string; value: number }` (static budget)
+- `actualSeries: BudgetDataPoint[]` — `{ label: string; value: number }` (grows over time)
+- `xAxisLabel?: string` — e.g. `'Week'` or `'Month'`
+- `currency?: string` — e.g. `'AUD'`
+- `cumulativeMode?: boolean` — `true` = cumulative totals, `false` = period deltas
+
+**Variance colouring (non-negotiable):**
+
+Area fill between the two series uses `theme.vars.palette.error.mainChannel` when actual
+
+> planned and `theme.vars.palette.success.mainChannel` when actual < planned. Never
+> hardcoded hex or rgba literals.
+
+**Immediate consumers:**
+
+- `alexrebula` trip-costs dashboard — week-by-week planned vs actual spend (AUD)
+- `first-branch` `/admin/payments` — planned payment schedule vs actual payout dates
+
+**Output subpath:** `/charts`.
+
+**Blockers:**
+
+- 📦 `/charts` subpath must be configured first. ✅ Done (7 May 2026).
+- Chart options and variance fill logic must come from `budget-vs-actual-chart-card.styles.ts`.
+- `BudgetDataPoint` type must be defined in `types.ts` before building the component.
+
+---
+
 ### `GroupedBarChartCard` 🔴 Needs building
 
 **What it is:** Grouped or stacked bar chart in a card. Supports multiple series, legend,
@@ -658,6 +702,7 @@ live dashboard in alexrebula (Phase H of the alexrebula roadmap):
 | Task completion progress                                   | `StatCard` (tasks done / total) | ✅                              |
 | Cost classification (CAPEX / OpEx / Investment)            | `CostClassificationCard`        | 🔴                              |
 | Costs vs projected return over time (break-even line)      | `ProjectionChartCard`           | 🔴                              |
+| Planned vs actual spend over time (budget adherence)       | `BudgetVsActualChartCard`       | 🔴                              |
 | Material vs non-material dividends                         | `ROIComparisonCard`             | 🔴                              |
 | Scenario: "what if Žiga does 4 vs 8 tasks?"                | `ScenarioComparisonWidget`      | 🔴                              |
 | Laptop/desk amortization over 24 months                    | `AmortizationScheduleTable`     | 🔴                              |
@@ -673,13 +718,13 @@ add visual richness but are not required for the data to be legible.
 
 ## Component count summary
 
-| Group                    | Count                                | Subpath       | Status     |
-| ------------------------ | ------------------------------------ | ------------- | ---------- |
-| Already shipped          | 2 (`StatCard`, `RadialProgressCard`) | Main + Charts | ✅         |
-| MUI-only (no dep)        | 16                                   | Main bundle   | 🔴 All new |
-| ApexCharts chart cards   | 7 (incl. `ProjectionChartCard`)      | `/charts`     | 🔴 All new |
-| Motion components        | 2 (1 move, 1 new)                    | `/motion`     | 🟡/🔴      |
-| **Total new components** | **23**                               |               |            |
+| Group                    | Count                                                      | Subpath       | Status     |
+| ------------------------ | ---------------------------------------------------------- | ------------- | ---------- |
+| Already shipped          | 2 (`StatCard`, `RadialProgressCard`)                       | Main + Charts | ✅         |
+| MUI-only (no dep)        | 16                                                         | Main bundle   | 🔴 All new |
+| ApexCharts chart cards   | 8 (incl. `ProjectionChartCard`, `BudgetVsActualChartCard`) | `/charts`     | 🔴 All new |
+| Motion components        | 2 (1 move, 1 new)                                          | `/motion`     | 🟡/🔴      |
+| **Total new components** | **24**                                                     |               |            |
 
 ---
 
