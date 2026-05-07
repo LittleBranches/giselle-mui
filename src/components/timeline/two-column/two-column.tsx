@@ -12,8 +12,6 @@ import {
 
 import Box from '@mui/material/Box';
 import Timeline from '@mui/lab/Timeline';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { useTimelineDoneState } from '../use-timeline-done-state';
 import { TimelineCompact } from '../compact/compact';
@@ -331,218 +329,220 @@ export function TimelineTwoColumn({
   // when the `viewedKeys` prop is undefined.
   const effectiveViewedKeys = viewedKeys ?? EMPTY_VIEWED_KEYS;
 
-  // Single hook call at the top level — passed to all row sub-components so they
-  // can shift cards to the right column slot on mobile without each calling the hook.
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  // On xs/sm viewports switch to the compact accordion layout automatically.
-  // Consumers pass phases once — the correct layout for the viewport is selected here,
-  // so no breakpoint wiring is needed at the call site.
-  if (isMobile) {
-    return (
-      <TimelineCompact
-        phases={phases}
-        sx={sx}
-        checklist={checklist}
-        sortOrder={sortOrder}
-        viewedKeys={viewedKeys}
-        onMarkViewed={onMarkViewed}
-        onTogglePhaseDone={onTogglePhaseDone}
-        onToggleMilestoneDone={onToggleMilestoneDone}
-        onToggleTaskDone={onToggleTaskDone}
-        {...other}
-      />
-    );
-  }
-
+  // CSS-only responsive layout switch:
+  //   xs/sm → compact accordion (TimelineCompact, display:block on xs, none on md)
+  //   md+   → full two-column spine (display:none on xs, block on md)
+  // Both trees are always mounted so the browser applies the correct layout
+  // immediately via CSS — no JS media-query round-trip, no hydration flash.
   return (
-    <Box sx={[{ position: 'relative' }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
-      <Timeline sx={timelineRootSx}>
-        {sorted.map((phase, i) => {
-          const { isDone, isOverdue, dotColor, yearLabelValue, phaseMilestones, isLastPhase } =
-            resolvePhaseState(phase, i, sorted, lastKey, checklist, localPhaseDone, today);
+    <>
+      <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+        <TimelineCompact
+          phases={phases}
+          sx={sx}
+          checklist={checklist}
+          sortOrder={sortOrder}
+          viewedKeys={viewedKeys}
+          onMarkViewed={onMarkViewed}
+          onTogglePhaseDone={onTogglePhaseDone}
+          onToggleMilestoneDone={onToggleMilestoneDone}
+          onToggleTaskDone={onToggleTaskDone}
+          {...other}
+        />
+      </Box>
+      <Box
+        sx={[
+          { display: { xs: 'none', md: 'block' }, position: 'relative' },
+          ...(Array.isArray(sx) ? sx : [sx]),
+        ]}
+        {...other}
+      >
+        <Timeline sx={timelineRootSx}>
+          {sorted.map((phase, i) => {
+            const { isDone, isOverdue, dotColor, yearLabelValue, phaseMilestones, isLastPhase } =
+              resolvePhaseState(phase, i, sorted, lastKey, checklist, localPhaseDone, today);
 
-          // ── Marker variant ──────────────────────────────────────────────────
-          // variant='marker': spine-only row — dot + floating label, no card.
-          // Use for single point-in-time events that don't need a full card
-          // (e.g. a certification, a visa grant, a birth date outside any period).
-          // The label floats to whichever side `phase.side` specifies (direct, not inverted).
-          if (phase.variant === 'marker') {
-            return (
-              <MarkerRow
-                key={phase.key}
+            // ── Marker variant ──────────────────────────────────────────────────
+            // variant='marker': spine-only row — dot + floating label, no card.
+            // Use for single point-in-time events that don't need a full card
+            // (e.g. a certification, a visa grant, a birth date outside any period).
+            // The label floats to whichever side `phase.side` specifies (direct, not inverted).
+            if (phase.variant === 'marker') {
+              return (
+                <MarkerRow
+                  key={phase.key}
+                  phase={phase}
+                  isLastPhase={isLastPhase}
+                  dotColor={dotColor}
+                  isDone={isDone}
+                  checklist={checklist}
+                  yearLabelValue={yearLabelValue}
+                  isMobile={false}
+                />
+              );
+            }
+
+            const { dotClickAction, dotKeyDownHandler, dotAriaLabel } = resolvePhaseDotHandlers(
+              phase,
+              isDone,
+              checklist,
+              handleTogglePhase,
+              onPhaseSelect
+            );
+
+            // ── Layout: nested flex rows ──────────────────────────────────────
+            // Each phase renders as ONE <li data-testid="tl-item"> containing:
+            //   Row 0 — phase row:  [card]  | [phase dot + spine↓] | [empty]  (or mirrored)
+            //   Row 1..N — ms rows: [empty] | [ms dot + spine↓]    | [ms card (absolute)]
+            //
+            // Milestone cards are absolutely positioned within their column so card expansion
+            // never shifts the spine dot positions. Accordion: at most one open per phase.
+
+            const expandedMiIdx = expandedMilestoneMap[String(phase.key)] ?? null;
+            const isThisPhaseExpanded = expandedPhaseKey === phase.key;
+
+            const phaseViewKey = `phase-${phase.key}`;
+
+            // Single PhaseCard node — rendered in whichever column matches phase.side.
+            // stopCardPropagation is always active — prevents the document "close all" handler
+            // from racing with this card's own expand/collapse state update on every click.
+            const phaseCardNode = (
+              <div onClick={stopCardPropagation}>
+                <PhaseCard
+                  phase={phase}
+                  columnSide={phase.side}
+                  {...buildPhaseCardTsxProps(
+                    checklist,
+                    isDone,
+                    isOverdue,
+                    overlappingKeys.has(phase.key),
+                    overlappingKeys.get(phase.key),
+                    anyExpanded,
+                    isThisPhaseExpanded,
+                    expandableIcon
+                  )}
+                  isViewed={effectiveViewedKeys.has(phaseViewKey)}
+                  onMarkViewed={onMarkViewed ? () => onMarkViewed(phaseViewKey) : undefined}
+                  onPhasesChange={onPhasesChange}
+                  allPhases={onPhasesChange ? phases : undefined}
+                  isExpanded={isThisPhaseExpanded}
+                  onRequestExpand={() => handleExpandPhaseCard(phase.key)}
+                  taskDoneStates={phase.children?.map(
+                    (task, ti) => localTaskDoneMap[`${phase.key}-t${ti}`] ?? task.done ?? false
+                  )}
+                  onToggleTask={(taskIdx, _done) => handleToggleTask(phase.key, null, taskIdx)}
+                />
+              </div>
+            );
+
+            const milestoneCtx: MilestoneRowCtx = {
+              phaseKey: phase.key,
+              phaseSide: phase.side,
+              checklist,
+              localMilestoneDone,
+              localTaskDoneMap,
+              expandedMiIdx,
+              anyExpanded,
+              dotColor,
+              expandableIcon,
+              viewedKeys: effectiveViewedKeys,
+              onMarkViewed,
+              handleToggleMilestone,
+              handleToggleTask,
+              handleExpandMilestone,
+              onMeasure: (mi: number, el: HTMLDivElement | null) => {
+                // Record the card's collapsed height synchronously during the React
+                // commit phase. useLayoutEffect([sorted]) reads these values after all
+                // ref callbacks have fired and computes the slot heights once.
+                // This callback only fires on mount/unmount — never during
+                // expand/collapse or hover — so msSlotHeights remains stable during
+                // user interaction.
+                if (el) {
+                  const h = el.offsetHeight;
+                  if (h > 0) {
+                    msHeightMapRef.current[`${String(phase.key)}-${mi}`] = h;
+                  }
+                }
+              },
+            };
+
+            const rows: ReactNode[] = [];
+
+            // Pre-compute phase <li> minHeight before JSX so phaseLiSx receives a plain value.
+            //
+            // PHASE_CARD_RESERVE_SLOTS = 2 matches the same constant in milestone-row.tsx.
+            // Those 2 extra slots push the first milestone to (RESERVE+1) × slotHeight from
+            // the <li> top, ensuring it always starts below the phase card — regardless of
+            // viewport width or how many lines the phase card title wraps to.
+            // Without the reserve the first milestone was at 1 × slotHeight, which overlapped
+            // phase cards taller than ~(slotHeight − cardH/2 − 15) px.
+            const PHASE_CARD_RESERVE_SLOTS = 2;
+            const phaseMinHeight =
+              phaseMilestones.length > 0
+                ? (PHASE_CARD_RESERVE_SLOTS + phaseMilestones.length + 1) *
+                  (yearLabelValue !== null
+                    ? Math.max(
+                        msSlotHeights[String(phase.key)] ?? milestoneSlotHeight,
+                        yearLabelMarginBottom + 80
+                      )
+                    : Math.max(milestoneSlotHeight, msSlotHeights[String(phase.key)] ?? 0))
+                : undefined;
+
+            // ── Phase row ──────────────────────────────────────────────────────
+            rows.push(
+              <PhaseRow
+                key="phase-row"
                 phase={phase}
-                isLastPhase={isLastPhase}
+                isSuppressed={anyExpanded && expandedPhaseKey !== phase.key}
+                phaseCardGap={phaseCardGap}
+                phaseCardNode={phaseCardNode}
                 dotColor={dotColor}
                 isDone={isDone}
-                checklist={checklist}
+                isLastPhase={isLastPhase}
                 yearLabelValue={yearLabelValue}
-                isMobile={isMobile}
+                yearLabelMarginBottom={yearLabelMarginBottom}
+                checklist={checklist}
+                dotClickAction={dotClickAction}
+                dotKeyDownHandler={dotKeyDownHandler}
+                dotAriaLabel={dotAriaLabel}
+                phaseToggleCounts={phaseToggleCounts}
+                selectedPhaseKey={selectedPhaseKey}
+                isMobile={false}
               />
             );
-          }
 
-          const { dotClickAction, dotKeyDownHandler, dotAriaLabel } = resolvePhaseDotHandlers(
-            phase,
-            isDone,
-            checklist,
-            handleTogglePhase,
-            onPhaseSelect
-          );
+            // ── Milestone rows ─────────────────────────────────────────────────
+            // Cards are absolutely positioned within their column so expanding one
+            // never displaces the spine dots below it.
+            phaseMilestones.forEach((ms, mi) => {
+              rows.push(
+                <MilestoneRow
+                  key={`ms-row-${mi}`}
+                  ms={ms}
+                  mi={mi}
+                  totalMilestones={phaseMilestones.length}
+                  ctx={milestoneCtx}
+                  isMobile={false}
+                />
+              );
+            });
 
-          // ── Layout: nested flex rows ──────────────────────────────────────
-          // Each phase renders as ONE <li data-testid="tl-item"> containing:
-          //   Row 0 — phase row:  [card]  | [phase dot + spine↓] | [empty]  (or mirrored)
-          //   Row 1..N — ms rows: [empty] | [ms dot + spine↓]    | [ms card (absolute)]
-          //
-          // Milestone cards are absolutely positioned within their column so card expansion
-          // never shifts the spine dot positions. Accordion: at most one open per phase.
-
-          const expandedMiIdx = expandedMilestoneMap[String(phase.key)] ?? null;
-          const isThisPhaseExpanded = expandedPhaseKey === phase.key;
-
-          const phaseViewKey = `phase-${phase.key}`;
-
-          // Single PhaseCard node — rendered in whichever column matches phase.side.
-          // stopCardPropagation is always active — prevents the document "close all" handler
-          // from racing with this card's own expand/collapse state update on every click.
-          const phaseCardNode = (
-            <div onClick={stopCardPropagation}>
-              <PhaseCard
-                phase={phase}
-                columnSide={phase.side}
-                {...buildPhaseCardTsxProps(
-                  checklist,
-                  isDone,
-                  isOverdue,
-                  overlappingKeys.has(phase.key),
-                  overlappingKeys.get(phase.key),
-                  anyExpanded,
-                  isThisPhaseExpanded,
-                  expandableIcon
-                )}
-                isViewed={effectiveViewedKeys.has(phaseViewKey)}
-                onMarkViewed={onMarkViewed ? () => onMarkViewed(phaseViewKey) : undefined}
-                onPhasesChange={onPhasesChange}
-                allPhases={onPhasesChange ? phases : undefined}
-                isExpanded={isThisPhaseExpanded}
-                onRequestExpand={() => handleExpandPhaseCard(phase.key)}
-                taskDoneStates={phase.children?.map(
-                  (task, ti) => localTaskDoneMap[`${phase.key}-t${ti}`] ?? task.done ?? false
-                )}
-                onToggleTask={(taskIdx, _done) => handleToggleTask(phase.key, null, taskIdx)}
-              />
-            </div>
-          );
-
-          const milestoneCtx: MilestoneRowCtx = {
-            phaseKey: phase.key,
-            phaseSide: phase.side,
-            checklist,
-            localMilestoneDone,
-            localTaskDoneMap,
-            expandedMiIdx,
-            anyExpanded,
-            dotColor,
-            expandableIcon,
-            viewedKeys: effectiveViewedKeys,
-            onMarkViewed,
-            handleToggleMilestone,
-            handleToggleTask,
-            handleExpandMilestone,
-            onMeasure: (mi: number, el: HTMLDivElement | null) => {
-              // Record the card's collapsed height synchronously during the React
-              // commit phase. useLayoutEffect([sorted]) reads these values after all
-              // ref callbacks have fired and computes the slot heights once.
-              // This callback only fires on mount/unmount — never during
-              // expand/collapse or hover — so msSlotHeights remains stable during
-              // user interaction.
-              if (el) {
-                const h = el.offsetHeight;
-                if (h > 0) {
-                  msHeightMapRef.current[`${String(phase.key)}-${mi}`] = h;
-                }
-              }
-            },
-          };
-
-          const rows: ReactNode[] = [];
-
-          // Pre-compute phase <li> minHeight before JSX so phaseLiSx receives a plain value.
-          //
-          // PHASE_CARD_RESERVE_SLOTS = 2 matches the same constant in milestone-row.tsx.
-          // Those 2 extra slots push the first milestone to (RESERVE+1) × slotHeight from
-          // the <li> top, ensuring it always starts below the phase card — regardless of
-          // viewport width or how many lines the phase card title wraps to.
-          // Without the reserve the first milestone was at 1 × slotHeight, which overlapped
-          // phase cards taller than ~(slotHeight − cardH/2 − 15) px.
-          const PHASE_CARD_RESERVE_SLOTS = 2;
-          const phaseMinHeight =
-            phaseMilestones.length > 0
-              ? (PHASE_CARD_RESERVE_SLOTS + phaseMilestones.length + 1) *
-                (yearLabelValue !== null
-                  ? Math.max(
-                      msSlotHeights[String(phase.key)] ?? milestoneSlotHeight,
-                      yearLabelMarginBottom + 80
-                    )
-                  : Math.max(milestoneSlotHeight, msSlotHeights[String(phase.key)] ?? 0))
-              : undefined;
-
-          // ── Phase row ──────────────────────────────────────────────────────
-          rows.push(
-            <PhaseRow
-              key="phase-row"
-              phase={phase}
-              isSuppressed={anyExpanded && expandedPhaseKey !== phase.key}
-              phaseCardGap={phaseCardGap}
-              phaseCardNode={phaseCardNode}
-              dotColor={dotColor}
-              isDone={isDone}
-              isLastPhase={isLastPhase}
-              yearLabelValue={yearLabelValue}
-              yearLabelMarginBottom={yearLabelMarginBottom}
-              checklist={checklist}
-              dotClickAction={dotClickAction}
-              dotKeyDownHandler={dotKeyDownHandler}
-              dotAriaLabel={dotAriaLabel}
-              phaseToggleCounts={phaseToggleCounts}
-              selectedPhaseKey={selectedPhaseKey}
-              isMobile={isMobile}
-            />
-          );
-
-          // ── Milestone rows ─────────────────────────────────────────────────
-          // Cards are absolutely positioned within their column so expanding one
-          // never displaces the spine dots below it.
-          phaseMilestones.forEach((ms, mi) => {
-            rows.push(
-              <MilestoneRow
-                key={`ms-row-${mi}`}
-                ms={ms}
-                mi={mi}
-                totalMilestones={phaseMilestones.length}
-                ctx={milestoneCtx}
-                isMobile={isMobile}
-              />
+            return (
+              <Box
+                key={phase.key}
+                component="li"
+                data-testid="tl-item"
+                sx={phaseLiSx({
+                  zIndex: expandedMiIdx === null ? 1 : 2,
+                  computedMinHeight: phaseMinHeight,
+                })}
+              >
+                {rows}
+              </Box>
             );
-          });
-
-          return (
-            <Box
-              key={phase.key}
-              component="li"
-              data-testid="tl-item"
-              sx={phaseLiSx({
-                zIndex: expandedMiIdx === null ? 1 : 2,
-                computedMinHeight: phaseMinHeight,
-              })}
-            >
-              {rows}
-            </Box>
-          );
-        })}
-      </Timeline>
-    </Box>
+          })}
+        </Timeline>
+      </Box>
+    </>
   );
 }

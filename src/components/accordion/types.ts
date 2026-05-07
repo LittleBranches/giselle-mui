@@ -154,6 +154,59 @@ export type AccordionProps = Omit<MuiAccordionProps, 'children' | 'title'> & {
   checkHoverIcon?: ReactNode;
 
   /**
+   * When `true`, the `Checkbox` renders in indeterminate state — used when some
+   * but not all child items are done. Has no effect in icon-button mode
+   * (`checkIcon` provided) or when `checklist` is `false`.
+   *
+   * Wire this from a `useNestedChecklist` result: `indeterminate={indeterminate}`.
+   *
+   * @default false
+   */
+  indeterminate?: boolean;
+
+  /**
+   * Interactive element rendered before the title — replaces `leadingIcon` when
+   * the leading slot must be clickable (e.g. a phase dot in checklist mode).
+   *
+   * Unlike `leadingIcon` (which is wrapped in `aria-hidden`), `leadingAction`
+   * is rendered as-is. The consumer is responsible for accessibility
+   * (`role`, `aria-label`, `onClick`, etc.).
+   *
+   * Cannot be used together with `checklist` — checklist owns the leading slot.
+   * If both are provided, `checklist` takes precedence.
+   *
+   * ```tsx
+   * <Accordion
+   *   leadingAction={
+   *     <PhaseDot color={color} onClick={handleToggle} aria-label="Toggle phase done" />
+   *   }
+   *   trailingContent={<Typography variant="caption">{phase.date}</Typography>}
+   *   title={phase.title}
+   * >
+   *   ...
+   * </Accordion>
+   * ```
+   */
+  leadingAction?: ReactNode;
+
+  /**
+   * Optional content rendered **after** the title inside the summary row
+   * (e.g. a date label, a status badge).
+   *
+   * Rendered inside the same flex row as the title — consumers are responsible
+   * for alignment (`ml: 'auto'`, `flexShrink: 0`, etc.) if needed.
+   *
+   * ```tsx
+   * trailingContent={
+   *   <Typography variant="caption" sx={{ ml: 'auto', flexShrink: 0 }}>
+   *     {phase.date}
+   *   </Typography>
+   * }
+   * ```
+   */
+  trailingContent?: ReactNode;
+
+  /**
    * Optional icon rendered before the title when `checklist` is `false`.
    *
    * Pass a `ReactNode` — typically a `<GiselleIcon icon="solar:..." />`.

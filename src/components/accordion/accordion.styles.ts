@@ -13,6 +13,7 @@ import { ACCORDION_CHECK_ICON_SIZE } from './accordion.const';
 export const summaryRowSx: SxProps<Theme> = {
   display: 'flex',
   alignItems: 'center',
+  gap: 1.5,
 };
 
 /**
@@ -26,12 +27,35 @@ export const checkboxSx: SxProps<Theme> = {
 
 /**
  * Done-toggle icon button (used in icon-button mode when `checkIcon` is
- * provided). Keeps the button at its natural MUI touch-target size and
- * prevents it from shrinking or stretching in the flex row.
+ * provided).
+ *
+ * Uses CSS-only icon switching — no JS hover state — so icons never get
+ * stuck in the wrong state on rapid pointer movement.
+ *
+ * Rules:
+ * - idle (not done)  → `.ci-idle` visible
+ * - done             → `.ci-done` visible  (`aria-pressed="true"` selector)
+ * - hover or :focus-visible → `.ci-hover` visible (overrides both above)
  */
 export const checkIconButtonSx: SxProps<Theme> = {
+  padding: 0,
   flexShrink: 0,
   alignSelf: 'center',
+  // idle — not done
+  '& .ci-idle': { display: 'flex', alignItems: 'center' },
+  '& .ci-done': { display: 'none' },
+  '& .ci-hover': { display: 'none' },
+  // done
+  '&[aria-pressed="true"] .ci-idle': { display: 'none' },
+  '&[aria-pressed="true"] .ci-done': { display: 'flex', alignItems: 'center' },
+  // hover (any done state)
+  '&:hover .ci-idle': { display: 'none' },
+  '&:hover .ci-done': { display: 'none' },
+  '&:hover .ci-hover': { display: 'flex', alignItems: 'center' },
+  // keyboard focus-visible
+  '&:focus-visible .ci-idle': { display: 'none' },
+  '&:focus-visible .ci-done': { display: 'none' },
+  '&:focus-visible .ci-hover': { display: 'flex', alignItems: 'center' },
 };
 
 /**

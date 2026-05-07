@@ -68,6 +68,9 @@ export {
   COMPACT_MIN_MILESTONE_DOT_SIZE,
 } from './components/timeline/compact';
 
+export { useNestedChecklist } from './utils/use-nested-checklist';
+export type { NestedChecklistState } from './utils/use-nested-checklist';
+
 export { IconActionBar, DEFAULT_ICON_ACTIONS } from './components/action-bar/icon';
 export type { IconActionBarProps, IconActionItem } from './components/action-bar/icon';
 

@@ -7,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { TaskList } from '../task-list';
 import type { TimelineMilestone } from '../two-column/types';
@@ -22,12 +23,24 @@ interface MilestoneModalProps {
 }
 
 export function MilestoneModal({ milestone, open, onClose }: MilestoneModalProps) {
+  // Use a plain media query string — no ThemeProvider required.
+  // sm breakpoint = 600 px (MUI default); mirrored here to avoid the
+  // `useMediaQuery(theme => ...)` form that requires a Theme context in tests.
+  const fullScreen = useMediaQuery('(max-width:599.95px)');
+
   if (!milestone) return null;
 
   const tasks = resolveTaskChildren(milestone);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" scroll="paper">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      fullScreen={fullScreen}
+      scroll="paper"
+    >
       <DialogTitle sx={dialogTitleSx}>
         <div>
           <Typography variant="h6" component="span">

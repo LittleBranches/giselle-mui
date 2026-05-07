@@ -14,15 +14,19 @@ import type { SxProps, Theme } from '@mui/material/styles';
  * Column Box inside the `TimelineColumn` layout helper.
  *
  * - Left column: right-aligned text, right padding, always hidden on xs (cards shift to right slot on mobile).
- * - Right column: left-aligned text, left padding, always visible on xs, hidden on md when empty.
+ * - Right column: left-aligned text, left padding, always visible on xs.
+ * - Both columns always `display:block` on md — an empty column must stay in the
+ *   flex row so the centre spine remains equidistant from both edges. Hiding it via
+ *   `display:none` removes the column from flow and shifts the spine off-centre.
  *
  * @param columnSide - `'left'` or `'right'`.
- * @param hasContent - When false, the column is hidden on xs screens.
+ * @param hasContent - Passed through from the parent; content rendering is guarded
+ *   by the caller, but the column box itself is always in the flex row on md.
  * @param bottomPadding - Phase-card gap (px) added via `paddingBottom`.
  */
 export const timelineColumnSx = (
   columnSide: 'left' | 'right',
-  hasContent: boolean,
+  _hasContent: boolean,
   bottomPadding: number
 ): SxProps<Theme> => ({
   flex: 1,
@@ -32,9 +36,11 @@ export const timelineColumnSx = (
   pl: columnSide === 'right' ? 2 : 0,
   pt: 0.75,
   paddingBottom: `${bottomPadding}px`,
+  // xs: left column hidden (all cards move to right slot on mobile).
+  // md: BOTH columns always in layout — keeps the centre spine centred.
   display: {
     xs: columnSide === 'left' ? 'none' : 'block',
-    md: columnSide === 'left' || hasContent ? 'block' : 'none',
+    md: 'block',
   },
 });
 
@@ -59,20 +65,22 @@ export const msRowSx = (topPercent: number): SxProps<Theme> => ({
  * Left or right column Box inside a milestone row.
  *
  * - Left column: always hidden on xs (milestone cards shift to the right slot on mobile).
- * - Right column: always visible on xs (receives all cards on mobile), hidden on md when
- *   `visible` is false.
+ * - Right column: always visible on xs (receives all cards on mobile).
+ * - Both columns always `display:block` on md — same reasoning as `timelineColumnSx`:
+ *   removing a column from flow shifts the centre spine off-centre.
  *
  * @param columnSide - `'left'` or `'right'`.
- * @param visible - When false, the column is hidden on its desktop (md) breakpoint.
+ * @param visible - Content rendering is guarded by the caller; the column box itself
+ *   is always in the flex row on md so the spine stays centred.
  */
-export const msColumnBoxSx = (columnSide: 'left' | 'right', visible: boolean): SxProps<Theme> => ({
+export const msColumnBoxSx = (columnSide: 'left' | 'right', _visible: boolean): SxProps<Theme> => ({
   flex: 1,
   minWidth: 0,
   position: 'relative',
   overflow: 'visible',
   display: {
     xs: columnSide === 'right' ? 'block' : 'none',
-    md: visible ? 'block' : 'none',
+    md: 'block',
   },
 });
 

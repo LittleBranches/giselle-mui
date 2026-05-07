@@ -2,12 +2,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
 
 import type { HighlightedPaletteKey } from '../two-column/types';
 import { channelAlpha } from '../../../utils/theme-utils';
-import {
-  COMPACT_MILESTONE_DOT_SIZE,
-  COMPACT_MILESTONE_ICON_SIZE,
-  COMPACT_PHASE_DOT_SIZE,
-  COMPACT_PHASE_ICON_SIZE,
-} from './compact.const';
+import { COMPACT_MILESTONE_DOT_SIZE, COMPACT_PHASE_DOT_SIZE } from './compact.const';
 
 // ----------------------------------------------------------------------
 // Static sx — created once at module load
@@ -38,6 +33,13 @@ export const accordionDetailsSx: SxProps<Theme> = {
   pt: 0,
   pb: 2,
   px: 2,
+};
+
+export const phaseTitleRowSx: SxProps<Theme> = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 1.5,
+  overflow: 'hidden',
 };
 
 export const phaseTitleSx: SxProps<Theme> = {
@@ -134,8 +136,6 @@ export const phaseDotSx =
     overflow: 'hidden',
     bgcolor: theme.vars?.palette[color].main ?? theme.palette[color].main,
     color: 'common.white',
-    '& span': { display: 'flex', lineHeight: 0 },
-    '& svg': { width: COMPACT_PHASE_ICON_SIZE, height: COMPACT_PHASE_ICON_SIZE },
   });
 
 /**
@@ -154,8 +154,6 @@ export const milestoneDotSx =
     overflow: 'hidden',
     bgcolor: theme.vars?.palette[color].main ?? theme.palette[color].main,
     color: 'common.white',
-    '& span': { display: 'flex', lineHeight: 0 },
-    '& svg': { width: COMPACT_MILESTONE_ICON_SIZE, height: COMPACT_MILESTONE_ICON_SIZE },
   });
 
 /**
@@ -171,7 +169,7 @@ export const milestoneConnectorLineSx: SxProps<Theme> = {
   mt: 0.5,
 };
 
-export const accordionRootSx = (done: boolean): SxProps<Theme> => ({
+export const accordionRootSx = (done: boolean) => ({
   border: 'none',
   borderRadius: 2,
   boxShadow: 'none',

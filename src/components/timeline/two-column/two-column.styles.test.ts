@@ -66,7 +66,9 @@ describe('timelineColumnSx — column layout', () => {
     const styles = timelineColumnSx('right', false, 40) as Record<string, unknown>;
     const display = styles['display'] as { xs: string; md: string };
     expect(display['xs']).toBe('block');
-    expect(display['md']).toBe('none');
+    // Empty column must stay display:block on md — hiding it removes the column from
+    // the flex row and shifts the centre spine off-centre.
+    expect(display['md']).toBe('block');
   });
 
   it('[regression] has minWidth:0 so the flex child can shrink at narrow widths', () => {
@@ -169,7 +171,8 @@ describe('msColumnBoxSx — milestone column box', () => {
     const styles = msColumnBoxSx('right', false) as Record<string, unknown>;
     const display = styles['display'] as { xs: string; md: string };
     expect(display['xs']).toBe('block');
-    expect(display['md']).toBe('none');
+    // Column must stay display:block on md even when no content — keeps spine centred.
+    expect(display['md']).toBe('block');
   });
 
   it('[regression] left column always hidden on xs (milestone cards shift to right slot on mobile)', () => {

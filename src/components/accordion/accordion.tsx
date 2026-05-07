@@ -58,8 +58,11 @@ export function Accordion({
   children,
   checklist = false,
   done = false,
+  indeterminate = false,
   onDoneButtonClick,
   leadingIcon,
+  leadingAction,
+  trailingContent,
   expandIcon,
   checkIcon,
   checkDoneIcon,
@@ -81,7 +84,7 @@ export function Accordion({
     e.stopPropagation();
   };
 
-  const hasLeadingElement = checklist || leadingIcon !== undefined;
+  const hasLeadingElement = checklist || leadingIcon !== undefined || leadingAction !== undefined;
 
   // Compute the leading element (checkbox or icon-button or decorative icon) before the
   // return so the JSX stays flat — ESLint bans nested ternaries inside JSX.
@@ -101,6 +104,7 @@ export function Accordion({
       leadingElement = (
         <Checkbox
           checked={done}
+          indeterminate={indeterminate}
           onChange={handleCheckboxChange}
           onClick={handleCheckboxClick}
           inputProps={{
@@ -111,6 +115,8 @@ export function Accordion({
         />
       );
     }
+  } else if (leadingAction !== undefined) {
+    leadingElement = leadingAction;
   } else {
     leadingElement = (
       <Box aria-hidden="true" sx={leadingIconSx}>
@@ -136,6 +142,7 @@ export function Accordion({
       sx={hasLeadingElement ? summarySx : undefined}
     >
       {summaryContent}
+      {trailingContent}
     </AccordionSummary>
   );
 

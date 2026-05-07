@@ -1,50 +1,24 @@
 // @vitest-environment jsdom
 /**
- * Regression tests for CheckIconButton's pointer-vs-keyboard focus discrimination.
+ * Tests for CheckIconButton.
  *
- * Root cause of bug: browsers fire `focus` on a button immediately after `pointerdown`
- * (before `click`). Without pointer tracking, `handleFocus` sets `isFocused=true` on
- * every mouse click → `isHighlighted=true` → `checkHoverIcon` is shown indefinitely
- * after the click, hiding the `checkDoneIcon` that signals the action succeeded.
- *
- * Fix: track `isPointerDown` via `onPointerDown` / `onPointerUp`. `handleFocus` reads
- * the ref and skips setting `isFocused` when focus came from a pointer click. Only
- * keyboard-originated focus (Tab) triggers `isFocused=true`.
+ * Icon visibility is driven entirely by CSS (`checkIconButtonSx` selectors).
+ * All three icon spans (`.ci-idle`, `.ci-done`, `.ci-hover`) are always present
+ * in the DOM — the browser applies the CSS rules. jsdom does not execute CSS,
+ * so these tests verify the structural contract and `aria-pressed` semantics;
+ * visual switching is covered by the Storybook stories and manual inspection.
  */
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { createElement, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import { act } from 'react-dom/test-utils';
+import { act } from 'react';
 
 import { CheckIconButton } from './check-icon-button';
 
-// ---------------------------------------------------------------------------
-// jsdom polyfill — PointerEvent is not available in all jsdom versions
-// ---------------------------------------------------------------------------
-
-beforeAll(() => {
-  if (typeof global.PointerEvent === 'undefined') {
-    class PointerEventPolyfill extends MouseEvent {
-      constructor(type: string, params: MouseEventInit = {}) {
-        super(type, params);
-      }
-    }
-    Object.defineProperty(global, 'PointerEvent', {
-      value: PointerEventPolyfill,
-      configurable: true,
-      writable: true,
-    });
-  }
-});
-
-// Distinct test icons with data-testid so each can be identified in the DOM.
+// Distinct test icons — identifiable by data-testid.
 const IDLE_ICON = createElement('svg', { 'data-testid': 'idle-icon' });
 const DONE_ICON = createElement('svg', { 'data-testid': 'done-icon' });
 const HOVER_ICON = createElement('svg', { 'data-testid': 'hover-icon' });
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 function setup() {
   const div = document.createElement('div');
@@ -60,103 +34,12 @@ function setup() {
   };
 }
 
-/** Controlled wrapper so `done` prop updates flow from the click handler. */
-function ControlledWrapper() {
-  const [done, setDone] = useState(false);
-  return createElement(CheckIconButton, {
-    done,
-    checkIcon: IDLE_ICON,
-    checkDoneIcon: DONE_ICON,
-    checkHoverIcon: HOVER_ICON,
-    onDoneButtonClick: setDone,
-  });
-}
-
-/**
- * Simulates the event sequence a browser fires on a mouse click:
- * pointerdown → focus (via element.focus()) → click → pointerup.
- */
-async function simulatePointerClick(button: HTMLElement) {
-  await act(async () => {
-    button.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
-    button.focus(); // fires the native focus event — React onFocus captures it
-    button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    button.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
-  });
-}
-
 // ---------------------------------------------------------------------------
-// Regression: pointer click must not trap icon on checkHoverIcon
+// Structure: all three spans always present in the DOM
 // ---------------------------------------------------------------------------
 
-describe('CheckIconButton — pointer-click icon regression', () => {
-  it('[regression] shows idle icon before any interaction', async () => {
-    const { div, root, cleanup } = setup();
-    await act(async () => {
-      root.render(createElement(ControlledWrapper, null));
-    });
-
-    expect(div.querySelector('[data-testid="idle-icon"]')).not.toBeNull();
-    expect(div.querySelector('[data-testid="done-icon"]')).toBeNull();
-    expect(div.querySelector('[data-testid="hover-icon"]')).toBeNull();
-
-    cleanup();
-  });
-
-  it('[regression] shows checkDoneIcon (not checkHoverIcon) after a pointer click', async () => {
-    // Bug: clicking fires onFocus (button gets focus after click) → isFocused=true
-    // → isHighlighted=true → checkHoverIcon shown instead of checkDoneIcon.
-    // The done icon is never visible — icon appears stuck on hover state.
-    // Fix: isPointerDownRef suppresses isFocused when focus came from pointer.
-    const { div, root, cleanup } = setup();
-    await act(async () => {
-      root.render(createElement(ControlledWrapper, null));
-    });
-
-    expect(div.querySelector('[data-testid="idle-icon"]')).not.toBeNull();
-
-    const button = div.querySelector('button')!;
-    await simulatePointerClick(button);
-
-    // After pointer click, done=true and isFocused must be false.
-    // → done icon shown, NOT hover icon.
-    expect(div.querySelector('[data-testid="done-icon"]')).not.toBeNull();
-    expect(div.querySelector('[data-testid="hover-icon"]')).toBeNull();
-    expect(div.querySelector('[data-testid="idle-icon"]')).toBeNull();
-
-    cleanup();
-  });
-
-  it('[regression] shows idle icon after second pointer click (toggle back to undone)', async () => {
-    const { div, root, cleanup } = setup();
-    await act(async () => {
-      root.render(createElement(ControlledWrapper, null));
-    });
-
-    const button = div.querySelector('button')!;
-
-    // First click: undone → done
-    await simulatePointerClick(button);
-    expect(div.querySelector('[data-testid="done-icon"]')).not.toBeNull();
-
-    // Second click: done → undone
-    await simulatePointerClick(button);
-
-    // done=false, isFocused=false (pointer click suppressed) → idle icon
-    expect(div.querySelector('[data-testid="idle-icon"]')).not.toBeNull();
-    expect(div.querySelector('[data-testid="done-icon"]')).toBeNull();
-    expect(div.querySelector('[data-testid="hover-icon"]')).toBeNull();
-
-    cleanup();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Keyboard focus still shows checkHoverIcon (the `:focus-visible` behaviour)
-// ---------------------------------------------------------------------------
-
-describe('CheckIconButton — keyboard focus icon', () => {
-  it('shows checkHoverIcon when focused via keyboard (Tab — no preceding pointerdown)', async () => {
+describe('CheckIconButton — CSS-only icon structure', () => {
+  it('renders all three icon spans in the DOM regardless of done state', async () => {
     const { div, root, cleanup } = setup();
     await act(async () => {
       root.render(
@@ -170,24 +53,165 @@ describe('CheckIconButton — keyboard focus icon', () => {
       );
     });
 
+    // All three spans present — CSS (not JS) controls which is visible.
+    expect(div.querySelector('.ci-idle')).not.toBeNull();
+    expect(div.querySelector('.ci-done')).not.toBeNull();
+    expect(div.querySelector('.ci-hover')).not.toBeNull();
+
+    // Each span contains the correct icon.
+    expect(div.querySelector('.ci-idle [data-testid="idle-icon"]')).not.toBeNull();
+    expect(div.querySelector('.ci-done [data-testid="done-icon"]')).not.toBeNull();
+    expect(div.querySelector('.ci-hover [data-testid="hover-icon"]')).not.toBeNull();
+
+    cleanup();
+  });
+
+  it('renders all three spans when done=true as well', async () => {
+    const { div, root, cleanup } = setup();
+    await act(async () => {
+      root.render(
+        createElement(CheckIconButton, {
+          done: true,
+          checkIcon: IDLE_ICON,
+          checkDoneIcon: DONE_ICON,
+          checkHoverIcon: HOVER_ICON,
+          onDoneButtonClick: undefined,
+        })
+      );
+    });
+
+    expect(div.querySelector('.ci-idle')).not.toBeNull();
+    expect(div.querySelector('.ci-done')).not.toBeNull();
+    expect(div.querySelector('.ci-hover')).not.toBeNull();
+
+    cleanup();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// aria-pressed reflects done state
+// ---------------------------------------------------------------------------
+
+describe('CheckIconButton — aria-pressed semantics', () => {
+  it('sets aria-pressed=false when done=false', async () => {
+    const { div, root, cleanup } = setup();
+    await act(async () => {
+      root.render(
+        createElement(CheckIconButton, {
+          done: false,
+          checkIcon: IDLE_ICON,
+          onDoneButtonClick: undefined,
+        })
+      );
+    });
+
     const button = div.querySelector('button')!;
+    expect(button.getAttribute('aria-pressed')).toBe('false');
 
-    // Keyboard focus: element.focus() without preceding pointerdown
+    cleanup();
+  });
+
+  it('sets aria-pressed=true when done=true', async () => {
+    const { div, root, cleanup } = setup();
     await act(async () => {
-      button.focus();
+      root.render(
+        createElement(CheckIconButton, {
+          done: true,
+          checkIcon: IDLE_ICON,
+          onDoneButtonClick: undefined,
+        })
+      );
     });
 
-    // isFocused=true → isHighlighted=true → hover icon shown
-    expect(div.querySelector('[data-testid="hover-icon"]')).not.toBeNull();
-    expect(div.querySelector('[data-testid="idle-icon"]')).toBeNull();
+    const button = div.querySelector('button')!;
+    expect(button.getAttribute('aria-pressed')).toBe('true');
 
-    // Blur restores idle icon
+    cleanup();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Click calls onDoneButtonClick with the toggled value
+// ---------------------------------------------------------------------------
+
+describe('CheckIconButton — click interaction', () => {
+  it('calls onDoneButtonClick(!done) on click when done=false', async () => {
+    const { div, root, cleanup } = setup();
+    const handler = vi.fn();
+
     await act(async () => {
-      button.blur();
+      root.render(
+        createElement(CheckIconButton, {
+          done: false,
+          checkIcon: IDLE_ICON,
+          onDoneButtonClick: handler,
+        })
+      );
     });
 
-    expect(div.querySelector('[data-testid="idle-icon"]')).not.toBeNull();
-    expect(div.querySelector('[data-testid="hover-icon"]')).toBeNull();
+    const button = div.querySelector('button')!;
+    await act(async () => {
+      button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler).toHaveBeenCalledWith(true);
+
+    cleanup();
+  });
+
+  it('calls onDoneButtonClick(!done) on click when done=true', async () => {
+    const { div, root, cleanup } = setup();
+    const handler = vi.fn();
+
+    await act(async () => {
+      root.render(
+        createElement(CheckIconButton, {
+          done: true,
+          checkIcon: IDLE_ICON,
+          onDoneButtonClick: handler,
+        })
+      );
+    });
+
+    const button = div.querySelector('button')!;
+    await act(async () => {
+      button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
+    expect(handler).toHaveBeenCalledOnce();
+    expect(handler).toHaveBeenCalledWith(false);
+
+    cleanup();
+  });
+
+  it('toggles aria-pressed through a controlled wrapper on two clicks', async () => {
+    function Wrapper() {
+      const [done, setDone] = useState(false);
+      return createElement(CheckIconButton, {
+        done,
+        checkIcon: IDLE_ICON,
+        onDoneButtonClick: setDone,
+      });
+    }
+
+    const { div, root, cleanup } = setup();
+    await act(async () => {
+      root.render(createElement(Wrapper, null));
+    });
+
+    const button = div.querySelector('button')!;
+    expect(button.getAttribute('aria-pressed')).toBe('false');
+
+    await act(async () => {
+      button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+
+    await act(async () => {
+      button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+    expect(button.getAttribute('aria-pressed')).toBe('false');
 
     cleanup();
   });

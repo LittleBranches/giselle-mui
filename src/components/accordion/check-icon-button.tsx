@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
-import type { MouseEvent, ReactNode } from 'react';
+import { useCallback } from 'react';
+import type { MouseEvent } from 'react';
 
 import SvgIcon from '@mui/material/SvgIcon';
 import IconButton from '@mui/material/IconButton';
@@ -75,22 +75,6 @@ export function CheckIconButton({
   checkHoverIcon = DEFAULT_CHECK_HOVER_ICON,
   onDoneButtonClick,
 }: CheckIconButtonProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-
-  const isHighlighted = isHovered || isFocused;
-
-  // Icon selection: hover/focus always wins (regardless of done state),
-  // then done icon, then the idle custom icon.
-  let currentIcon: ReactNode;
-  if (isHighlighted) {
-    currentIcon = checkHoverIcon;
-  } else if (done) {
-    currentIcon = checkDoneIcon;
-  } else {
-    currentIcon = checkIcon;
-  }
-
   const handleClick = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
@@ -99,49 +83,22 @@ export function CheckIconButton({
     [done, onDoneButtonClick]
   );
 
-  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
-  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
-
-  // `:focus-visible` semantics — only show the hover/focus icon when focus came from
-  // keyboard (Tab), NOT from a pointer click. Without this, clicking fires onFocus on
-  // the button, sets isFocused=true, and traps the icon on checkHoverIcon indefinitely
-  // after every click — the done icon is never visible.
-  const isPointerDownRef = useRef(false);
-
-  const handlePointerDown = useCallback(() => {
-    isPointerDownRef.current = true;
-  }, []);
-
-  const handlePointerUp = useCallback(() => {
-    // Safety reset — covers the case where pointerdown fires but focus is suppressed.
-    isPointerDownRef.current = false;
-  }, []);
-
-  const handleFocus = useCallback(() => {
-    const fromPointer = isPointerDownRef.current;
-    isPointerDownRef.current = false; // reset after every focus event
-    if (!fromPointer) {
-      setIsFocused(true);
-    }
-  }, []);
-
-  const handleBlur = useCallback(() => setIsFocused(false), []);
-
+  // Icon visibility is driven entirely by CSS (`checkIconButtonSx` in accordion.styles.ts):
+  // - `.ci-idle`  → visible when not done and not hovered/focused
+  // - `.ci-done`  → visible when aria-pressed="true" and not hovered/focused
+  // - `.ci-hover` → visible on :hover or :focus-visible (always wins)
+  // No JS state for hover — eliminates the "stuck hover" bug on rapid pointer movement.
   return (
     <IconButton
       onClick={handleClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
       aria-pressed={done}
       aria-label={done ? 'Mark as not done' : 'Mark as done'}
       size="small"
       sx={checkIconButtonSx}
     >
-      {currentIcon}
+      <span className="ci-idle">{checkIcon}</span>
+      <span className="ci-done">{checkDoneIcon}</span>
+      <span className="ci-hover">{checkHoverIcon}</span>
     </IconButton>
   );
 }
