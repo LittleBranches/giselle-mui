@@ -84,7 +84,7 @@ export function MilestoneRow({ ms, mi, totalMilestones, ctx }: MilestoneRowProps
   return (
     <Box sx={msRowSx(topPercent)}>
       {/* Left column — milestone card for milestones with effective side='left' */}
-      <Box data-col="left" sx={msColumnBoxSx(effectiveMsSide === 'left')}>
+      <Box data-col="left" sx={msColumnBoxSx('left', effectiveMsSide === 'left')}>
         {effectiveMsSide === 'left' && (
           <Box
             data-ms-card="true"
@@ -147,7 +147,7 @@ export function MilestoneRow({ ms, mi, totalMilestones, ctx }: MilestoneRowProps
       </Box>
 
       {/* Right column — milestone card for milestones with effective side='right' */}
-      <Box data-col="right" sx={msColumnBoxSx(effectiveMsSide === 'right')}>
+      <Box data-col="right" sx={msColumnBoxSx('right', effectiveMsSide === 'right')}>
         {effectiveMsSide === 'right' && (
           <Box
             data-ms-card="true"

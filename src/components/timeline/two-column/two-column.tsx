@@ -14,10 +14,12 @@ import {
 // first paint) and falls back to useEffect on the server (no-op in SSR environments).
 // This prevents the React "useLayoutEffect does nothing on the server" warning for
 // consumers using Next.js or any other server-side renderer.
-const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+const useIsomorphicLayoutEffect = globalThis.window === undefined ? useEffect : useLayoutEffect;
 
 import Box from '@mui/material/Box';
 import Timeline from '@mui/lab/Timeline';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { PhaseCard } from './phase-card';
 import { MilestoneRow } from './milestone-row';
@@ -374,6 +376,11 @@ export function TimelineTwoColumn({
   // when the `viewedKeys` prop is undefined.
   const effectiveViewedKeys = viewedKeys ?? EMPTY_VIEWED_KEYS;
 
+  // Single hook call at the top level — passed to all row sub-components so they
+  // can shift cards to the right column slot on mobile without each calling the hook.
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <Box sx={[{ position: 'relative' }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <Timeline sx={timelineRootSx}>
@@ -396,6 +403,7 @@ export function TimelineTwoColumn({
                 isDone={isDone}
                 checklist={checklist}
                 yearLabelValue={yearLabelValue}
+                isMobile={isMobile}
               />
             );
           }
@@ -525,6 +533,7 @@ export function TimelineTwoColumn({
               dotAriaLabel={dotAriaLabel}
               phaseToggleCounts={phaseToggleCounts}
               selectedPhaseKey={selectedPhaseKey}
+              isMobile={isMobile}
             />
           );
 
@@ -539,6 +548,7 @@ export function TimelineTwoColumn({
                 mi={mi}
                 totalMilestones={phaseMilestones.length}
                 ctx={milestoneCtx}
+                isMobile={isMobile}
               />
             );
           });

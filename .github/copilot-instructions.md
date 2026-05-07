@@ -70,6 +70,25 @@ Never use bare indented code lines — they do not render as code blocks in Mark
 5. **ReactNode slots for icons and decoration.** Components never import an icon
    library internally. Accept `icon?: ReactNode` and let the consumer fill it.
 
+   **Consumer icon registration contract — non-negotiable:**
+   Every consumer app that renders `GiselleIcon` or any component with an icon slot
+   **must pre-register all used icons offline** before the first render. Iconify silently
+   fetches missing icons from `api.iconify.design` — this is a CDN fallback, not acceptable
+   in production or development. Use `createIconRegistrar` (exported from this library) to
+   register inline SVG bodies from `@iconify-json/*` **without importing the full package**:
+
+   ```ts
+   import { createIconRegistrar } from '@alexrebula/giselle-mui';
+   export const registerIcons = createIconRegistrar({
+     solar: { icons: { 'star-bold': { body: '<path ...>' } } },
+     logos: { icons: { 'react': { body: '<path ...>', width: 256, height: 256 } } },
+   });
+   ```
+
+   Never import `@iconify/react` directly in section/data files — it bypasses the
+   offline registration discipline. Always verify with the consumer app's offline
+   coverage test before using a new icon string.
+
 6. **`color` prop follows MUI palette key convention.**
    `'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error'`
    with `@default 'primary'`.

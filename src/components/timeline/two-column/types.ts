@@ -473,6 +473,7 @@ export type TimelineColumnProps = {
 };
 
 /** Props for the `MilestoneRow` internal sub-component. @internal */
+/** Props for the `MilestoneRow` internal sub-component. @internal */
 export type MilestoneRowProps = {
   /** The milestone data to render. */
   ms: Milestone;
@@ -482,6 +483,8 @@ export type MilestoneRowProps = {
   totalMilestones: number;
   /** Shared context derived from the parent phase row. */
   ctx: MilestoneRowCtx;
+  /** Whether the viewport is below the md breakpoint — collapses to single-column layout. */
+  isMobile: boolean;
 };
 
 /** Props for the `MarkerRow` internal sub-component. @internal */
@@ -498,6 +501,8 @@ export type MarkerRowProps = {
   checklist: boolean;
   /** Year boundary value shown on the spine connector, or `null` when no boundary exists. */
   yearLabelValue: string | null;
+  /** Whether the viewport is below the md breakpoint — collapses to single-column layout. */
+  isMobile: boolean;
 };
 
 /** Props for the `PhaseRow` internal sub-component. @internal */
@@ -532,6 +537,8 @@ export type PhaseRowProps = {
   phaseToggleCounts: Record<string, number>;
   /** Controlled selected phase key — drives the active dot state. */
   selectedPhaseKey: number | undefined;
+  /** Whether the viewport is below the md breakpoint — collapses to single-column layout. */
+  isMobile: boolean;
 };
 
 // ----------------------------------------------------------------------

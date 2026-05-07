@@ -44,16 +44,17 @@ export function PhaseRow({
   dotAriaLabel,
   phaseToggleCounts,
   selectedPhaseKey,
+  isMobile,
 }: PhaseRowProps) {
   return (
     <Box sx={phaseRowSx(isSuppressed)}>
-      {/* Left column — shows cards for phases with side === 'left' */}
+      {/* Left column — desktop only; card hidden on mobile (shifts to right slot) */}
       <TimelineColumn
         columnSide="left"
         hasContent={phase.side === 'left'}
         bottomPadding={phaseCardGap}
       >
-        {phase.side === 'left' && phaseCardNode}
+        {!isMobile && phase.side === 'left' && phaseCardNode}
       </TimelineColumn>
 
       {/* Centre: phase dot + spine */}
@@ -99,13 +100,13 @@ export function PhaseRow({
         )}
       </Box>
 
-      {/* Right column — shows cards for phases with side === 'right' */}
+      {/* Right column — always shown on mobile; receives all cards when isMobile=true */}
       <TimelineColumn
         columnSide="right"
         hasContent={phase.side === 'right'}
         bottomPadding={phaseCardGap}
       >
-        {phase.side === 'right' && phaseCardNode}
+        {(phase.side === 'right' || isMobile) && phaseCardNode}
       </TimelineColumn>
     </Box>
   );

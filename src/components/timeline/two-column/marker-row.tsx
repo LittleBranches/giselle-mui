@@ -34,6 +34,7 @@ export function MarkerRow({
   isDone,
   checklist,
   yearLabelValue,
+  isMobile,
 }: MarkerRowProps) {
   // Use resolvePhaseTooltip so the marker tooltip is consistent with all other
   // phase dots: description preview → shortTitle + date → title fallback.
@@ -66,9 +67,9 @@ export function MarkerRow({
           {!isLastPhase && <SpineConnector dotColor={dotColor} yearMilestone={yearLabelValue} />}
         </Box>
 
-        {/* Right label — shown when side !== 'left' */}
+        {/* Right label — always visible on mobile; receives all labels when isMobile=true */}
         <Box sx={markerRightLabelSx}>
-          {phase.side !== 'left' && (
+          {(phase.side !== 'left' || isMobile) && (
             <Typography variant="caption" sx={markerCaptionSx}>
               {phase.shortTitle ?? phase.title}
               {phase.date && (

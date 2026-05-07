@@ -42,8 +42,15 @@ describe('timelineColumnSx — column layout', () => {
     expect(styles['paddingBottom']).toBe('48px');
   });
 
-  it('hides on xs when hasContent=false, shows on md', () => {
+  it('[regression] left column always hidden on xs (cards move to right slot on mobile)', () => {
     const styles = timelineColumnSx('left', false, 40) as Record<string, unknown>;
+    const display = styles['display'] as { xs: string; md: string };
+    expect(display['xs']).toBe('none');
+    expect(display['md']).toBe('block');
+  });
+
+  it('[regression] left column hidden on xs even when hasContent=true', () => {
+    const styles = timelineColumnSx('left', true, 40) as Record<string, unknown>;
     const display = styles['display'] as { xs: string; md: string };
     expect(display['xs']).toBe('none');
     expect(display['md']).toBe('block');
@@ -53,6 +60,13 @@ describe('timelineColumnSx — column layout', () => {
     const styles = timelineColumnSx('right', true, 40) as Record<string, unknown>;
     const display = styles['display'] as { xs: string; md: string };
     expect(display['xs']).toBe('block');
+  });
+
+  it('[regression] right column always visible on xs even when hasContent=false (receives all cards on mobile)', () => {
+    const styles = timelineColumnSx('right', false, 40) as Record<string, unknown>;
+    const display = styles['display'] as { xs: string; md: string };
+    expect(display['xs']).toBe('block');
+    expect(display['md']).toBe('none');
   });
 
   it('[regression] has minWidth:0 so the flex child can shrink at narrow widths', () => {
@@ -144,29 +158,36 @@ describe('msRowSx — milestone row wrapper', () => {
 // ---------------------------------------------------------------------------
 
 describe('msColumnBoxSx — milestone column box', () => {
-  it('shows on xs when visible=true', () => {
-    const styles = msColumnBoxSx(true) as Record<string, unknown>;
+  it('[regression] right column always visible on xs (receives all milestone cards on mobile)', () => {
+    const styles = msColumnBoxSx('right', true) as Record<string, unknown>;
     const display = styles['display'] as { xs: string; md: string };
     expect(display['xs']).toBe('block');
     expect(display['md']).toBe('block');
   });
 
-  it('hides on xs when visible=false', () => {
-    const styles = msColumnBoxSx(false) as Record<string, unknown>;
+  it('[regression] right column visible on xs even when visible=false', () => {
+    const styles = msColumnBoxSx('right', false) as Record<string, unknown>;
+    const display = styles['display'] as { xs: string; md: string };
+    expect(display['xs']).toBe('block');
+    expect(display['md']).toBe('none');
+  });
+
+  it('[regression] left column always hidden on xs (milestone cards shift to right slot on mobile)', () => {
+    const styles = msColumnBoxSx('left', true) as Record<string, unknown>;
     const display = styles['display'] as { xs: string; md: string };
     expect(display['xs']).toBe('none');
     expect(display['md']).toBe('block');
   });
 
   it('is relatively positioned with overflow:visible', () => {
-    const styles = msColumnBoxSx(true) as Record<string, unknown>;
+    const styles = msColumnBoxSx('right', true) as Record<string, unknown>;
     expect(styles['position']).toBe('relative');
     expect(styles['overflow']).toBe('visible');
     expect(styles['flex']).toBe(1);
   });
 
   it('[regression] has minWidth:0 so the milestone column can shrink at narrow widths', () => {
-    const styles = msColumnBoxSx(true) as Record<string, unknown>;
+    const styles = msColumnBoxSx('right', true) as Record<string, unknown>;
     expect(styles['minWidth']).toBe(0);
   });
 });
@@ -260,6 +281,13 @@ describe('markerLeftLabelSx — left label column', () => {
     const sx = markerLeftLabelSx as Record<string, unknown>;
     expect(sx['minWidth']).toBe(0);
     expect(sx['overflow']).toBe('hidden');
+  });
+
+  it('[regression: markerLeftLabelSx hidden xs] left label hidden so left-side labels move to the right slot on mobile', () => {
+    const sx = markerLeftLabelSx as Record<string, unknown>;
+    const display = sx['display'] as { xs: string; md: string };
+    expect(display['xs']).toBe('none');
+    expect(display['md']).toBe('flex');
   });
 });
 

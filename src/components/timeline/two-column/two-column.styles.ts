@@ -55,16 +55,22 @@ export const msRowSx = (topPercent: number): SxProps<Theme> => ({
 /**
  * Left or right column Box inside a milestone row.
  *
- * Hidden on mobile when its `visible` condition is false (prevents phantom padding).
+ * - Left column: always hidden on xs (milestone cards shift to the right slot on mobile).
+ * - Right column: always visible on xs (receives all cards on mobile), hidden on md when
+ *   `visible` is false.
  *
- * @param visible - When false, the column is hidden on xs screens.
+ * @param columnSide - `'left'` or `'right'`.
+ * @param visible - When false, the column is hidden on its desktop (md) breakpoint.
  */
-export const msColumnBoxSx = (visible: boolean): SxProps<Theme> => ({
+export const msColumnBoxSx = (columnSide: 'left' | 'right', visible: boolean): SxProps<Theme> => ({
   flex: 1,
   minWidth: 0,
   position: 'relative',
   overflow: 'visible',
-  display: { xs: visible ? 'block' : 'none', md: 'block' },
+  display: {
+    xs: columnSide === 'right' ? 'block' : 'none',
+    md: visible ? 'block' : 'none',
+  },
 });
 
 /**
