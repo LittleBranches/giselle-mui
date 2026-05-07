@@ -10,6 +10,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 
+import { CheckIconButton } from './check-icon-button';
 import type { AccordionProps } from './types';
 import { checkboxSx, leadingIconSx, summarySx, summaryRowSx } from './accordion.styles';
 
@@ -60,6 +61,9 @@ export function Accordion({
   onDoneButtonClick,
   leadingIcon,
   expandIcon,
+  checkIcon,
+  checkDoneIcon,
+  checkHoverIcon,
   sx,
   ...other
 }: AccordionProps) {
@@ -78,6 +82,42 @@ export function Accordion({
   };
 
   const hasLeadingElement = checklist || leadingIcon !== undefined;
+
+  // Compute the leading element (checkbox or icon-button or decorative icon) before the
+  // return so the JSX stays flat — ESLint bans nested ternaries inside JSX.
+  let leadingElement: React.ReactNode = null;
+  if (checklist) {
+    if (checkIcon !== undefined) {
+      leadingElement = (
+        <CheckIconButton
+          done={done}
+          checkIcon={checkIcon}
+          checkDoneIcon={checkDoneIcon}
+          checkHoverIcon={checkHoverIcon}
+          onDoneButtonClick={onDoneButtonClick}
+        />
+      );
+    } else {
+      leadingElement = (
+        <Checkbox
+          checked={done}
+          onChange={handleCheckboxChange}
+          onClick={handleCheckboxClick}
+          inputProps={{
+            'aria-label': done ? 'Mark as not done' : 'Mark as done',
+          }}
+          size="small"
+          sx={checkboxSx}
+        />
+      );
+    }
+  } else {
+    leadingElement = (
+      <Box aria-hidden="true" sx={leadingIconSx}>
+        {leadingIcon}
+      </Box>
+    );
+  }
 
   const summaryContent =
     typeof title === 'string' ? (
@@ -103,22 +143,7 @@ export function Accordion({
     <MuiAccordion sx={[...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       {hasLeadingElement ? (
         <Box sx={summaryRowSx}>
-          {checklist ? (
-            <Checkbox
-              checked={done}
-              onChange={handleCheckboxChange}
-              onClick={handleCheckboxClick}
-              inputProps={{
-                'aria-label': done ? 'Mark as not done' : 'Mark as done',
-              }}
-              size="small"
-              sx={checkboxSx}
-            />
-          ) : (
-            <Box aria-hidden="true" sx={leadingIconSx}>
-              {leadingIcon}
-            </Box>
-          )}
+          {leadingElement}
           {accordionSummary}
         </Box>
       ) : (

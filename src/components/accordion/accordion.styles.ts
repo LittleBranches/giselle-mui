@@ -1,5 +1,7 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import { ACCORDION_CHECK_ICON_SIZE } from './accordion.const';
+
 // ----------------------------------------------------------------------
 
 /**
@@ -20,6 +22,29 @@ export const summaryRowSx: SxProps<Theme> = {
 export const checkboxSx: SxProps<Theme> = {
   flexShrink: 0,
   alignSelf: 'center',
+};
+
+/**
+ * Done-toggle icon button (used in icon-button mode when `checkIcon` is
+ * provided). Keeps the button at its natural MUI touch-target size and
+ * prevents it from shrinking or stretching in the flex row.
+ */
+export const checkIconButtonSx: SxProps<Theme> = {
+  flexShrink: 0,
+  alignSelf: 'center',
+};
+
+/**
+ * `SxProps` applied to the default built-in check SVG icons
+ * (`FilledCheckCircleIcon` and `OutlinedCheckCircleIcon`).
+ *
+ * - `color: 'success.main'` — green colour via MUI CSS variables palette.
+ * - `fontSize: ACCORDION_CHECK_ICON_SIZE` — controls `SvgIcon` width/height
+ *   via its internal `width: 1em; height: 1em` sizing.
+ */
+export const defaultCheckIconSvgSx: SxProps<Theme> = {
+  color: 'success.main',
+  fontSize: ACCORDION_CHECK_ICON_SIZE,
 };
 
 /**

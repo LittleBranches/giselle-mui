@@ -4,6 +4,36 @@ import type { AccordionProps as MuiAccordionProps } from '@mui/material/Accordio
 // ----------------------------------------------------------------------
 
 /**
+ * Props for the internal {@link CheckIconButton} sub-component.
+ * Not exported from the package barrel — consumers interact with the parent
+ * `Accordion` props (`checkIcon`, `checkDoneIcon`, `checkHoverIcon`) instead.
+ */
+export type CheckIconButtonProps = {
+  /** Current done state — determines which icon is shown at idle. */
+  done: boolean;
+  /**
+   * Icon for the idle undone state (the consumer's custom icon).
+   * Required — `CheckIconButton` is only rendered when this is defined.
+   */
+  checkIcon: ReactNode;
+  /**
+   * Icon shown when the item is done and not hovered/focused.
+   * Default: built-in filled green check circle SVG.
+   */
+  checkDoneIcon?: ReactNode;
+  /**
+   * Icon shown on hover or keyboard focus regardless of done state.
+   * Default: built-in outlined green check circle SVG.
+   * Signals "click/press to toggle" to the user.
+   */
+  checkHoverIcon?: ReactNode;
+  /** Called with the NEXT done state when the button is activated. */
+  onDoneButtonClick?: (nextDone: boolean) => void;
+};
+
+// ----------------------------------------------------------------------
+
+/**
  * Props for the {@link Accordion} component.
  *
  * Extends MUI `AccordionProps` — all expand/collapse controls (`expanded`,
@@ -20,13 +50,13 @@ export type AccordionProps = Omit<MuiAccordionProps, 'children' | 'title'> & {
   /**
    * Enables checklist mode.
    *
-   * When `true`, a MUI `Checkbox` appears before the title. The checkbox is
-   * **independent** from the expand/collapse trigger — clicking it toggles the
+   * When `true`, a done-toggle control appears before the title. The control is
+   * **independent** from the expand/collapse trigger — activating it toggles the
    * `done` state without opening or closing the accordion.
    *
-   * The checkbox carries `aria-label` describing its current state and uses
-   * `role="checkbox"` (via the native `<input type="checkbox">`), making it
-   * fully WCAG 2.2 AA accessible with proper keyboard support.
+   * - Without `checkIcon`: renders a MUI `Checkbox` (default).
+   * - With `checkIcon`: renders an `IconButton` with 3-state icon feedback
+   *   (idle / hover+focus / done). See `checkIcon` prop for details.
    *
    * @default false
    */
@@ -35,8 +65,8 @@ export type AccordionProps = Omit<MuiAccordionProps, 'children' | 'title'> & {
   /**
    * Controlled done state for the checklist toggle.
    *
-   * - `true` → checkbox is checked (task done)
-   * - `false` → checkbox is unchecked (task pending)
+   * - `true` → done
+   * - `false` → pending
    *
    * Has no effect when `checklist` is `false`.
    *
@@ -45,10 +75,10 @@ export type AccordionProps = Omit<MuiAccordionProps, 'children' | 'title'> & {
   done?: boolean;
 
   /**
-   * Called when the done-toggle checkbox is clicked.
+   * Called when the done-toggle is activated.
    *
-   * Receives the **next** done state — the value the checkbox will transition
-   * **to** after the click, i.e. the opposite of the current `done` prop.
+   * Receives the **next** done state — the value the control will transition
+   * **to** after the interaction (the opposite of the current `done` prop).
    *
    * Has no effect when `checklist` is `false`.
    *
@@ -66,12 +96,70 @@ export type AccordionProps = Omit<MuiAccordionProps, 'children' | 'title'> & {
   onDoneButtonClick?: (nextDone: boolean) => void;
 
   /**
+   * Custom icon for the **idle undone** state of the checklist toggle.
+   *
+   * When provided, the MUI `Checkbox` is replaced by an `IconButton` that
+   * displays three different icons depending on interaction state:
+   *
+   * | State                       | Icon shown                  |
+   * | --------------------------- | --------------------------- |
+   * | Undone + idle               | `checkIcon` (this prop)     |
+   * | Hover **or** keyboard focus | `checkHoverIcon` (outlined green check) |
+   * | Done + idle                 | `checkDoneIcon` (filled green check)    |
+   * | Done + hover/focus          | `checkHoverIcon` (outlined check → signals "click to undo") |
+   *
+   * Keyboard behaviour: Tab focuses the button (showing the outlined check),
+   * Space / Enter toggles the done state.
+   *
+   * Both hover and focus icons can be overridden via `checkHoverIcon`.
+   * The done icon can be overridden via `checkDoneIcon`.
+   *
+   * Ignored when `checklist` is `false`.
+   *
+   * ```tsx
+   * // Circle icon as the "not done yet" state
+   * <Accordion
+   *   checklist
+   *   checkIcon={<svg width={20} height={20}><circle cx={12} cy={12} r={9} /></svg>}
+   *   done={task.done}
+   *   onDoneButtonClick={(isDone) => updateTask(task.id, { done: isDone })}
+   *   title={task.title}
+   * >
+   *   ...
+   * </Accordion>
+   * ```
+   */
+  checkIcon?: ReactNode;
+
+  /**
+   * Icon shown when the item is done and the button is **not** hovered/focused.
+   *
+   * Default: built-in filled green check circle SVG.
+   * Override with your own `ReactNode` to use a different done indicator.
+   *
+   * Only used in icon-button mode (when `checkIcon` is provided).
+   */
+  checkDoneIcon?: ReactNode;
+
+  /**
+   * Icon shown when the button is **hovered or keyboard-focused**, regardless of
+   * done state.
+   *
+   * Default: built-in outlined green check circle SVG.
+   * Provides visual feedback that the button is interactive and hints at the
+   * "toggle" action. When the item is done, this icon also signals "click to undo".
+   *
+   * Only used in icon-button mode (when `checkIcon` is provided).
+   */
+  checkHoverIcon?: ReactNode;
+
+  /**
    * Optional icon rendered before the title when `checklist` is `false`.
    *
    * Pass a `ReactNode` — typically a `<GiselleIcon icon="solar:..." />`.
    * The wrapper is `aria-hidden` because the icon is decorative.
    *
-   * Ignored when `checklist` is `true` (the done-toggle checkbox replaces it).
+   * Ignored when `checklist` is `true` (the done-toggle control replaces it).
    */
   leadingIcon?: ReactNode;
 

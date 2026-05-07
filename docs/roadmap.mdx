@@ -127,6 +127,49 @@ export const roadmapPhases = [
     ],
   },
   {
+    key: 10,
+    title: 'Phase J — Headless CMS / Sitecore JSS developer experience',
+    shortTitle: 'Phase J',
+    description: 'Make giselle-mui a natural fit for Sitecore JSS / Next.js teams. Slot-first APIs, compound component patterns, and MUI JSDoc inheritance — so developers write less boilerplate and no redundant documentation.',
+    date: 'Oct 2026',
+    side: 'right',
+    color: 'secondary',
+    milestones: [
+      {
+        key: 0,
+        date: 'Oct 2026',
+        shortTitle: 'Slot-first API guide',
+        title: 'Slot-first API design guide — Sitecore / CMS compatibility',
+        description: 'Documents the pattern: every composite component exposes named ReactNode slots instead of data arrays. Maps directly to Sitecore placeholder mechanics — the layout engine renders into children or named slots; the component provides structure and styling only. Includes a migration guide from data-prop APIs to slot APIs.',
+        color: 'secondary',
+      },
+      {
+        key: 1,
+        date: 'Oct 2026',
+        shortTitle: 'CompositeCard',
+        title: 'CompositeCard — canonical slot-first component',
+        description: 'A card component with named ReactNode slots: header, media, body, footer, actions. No required props. Each slot is independently wirable from a Sitecore placeholder. The reference implementation for the slot-first pattern — other components follow this shape.',
+        color: 'secondary',
+      },
+      {
+        key: 2,
+        date: 'Nov 2026',
+        shortTitle: 'Compound component guide',
+        title: 'Compound component pattern — parent + exported sub-components sharing context',
+        description: 'Pattern guide and reference implementation: a parent component that exposes React context, with named sub-components (Component.Header, Component.Body, Component.Footer) that consume it. Avoids prop drilling when Sitecore wires each placeholder independently. Each sub-component can be placed in a separate Sitecore placeholder without the parent needing to know the structure.',
+        color: 'secondary',
+      },
+      {
+        key: 3,
+        date: 'Nov 2026',
+        shortTitle: 'MUI JSDoc inheritance guide',
+        title: 'MUI JSDoc inheritance — write docs only for new props',
+        description: 'A documented principle and Storybook story that demonstrates: extending CardProps, ButtonProps, etc. means MUI\'s own JSDoc for elevation, variant, sx, aria-*, and all base props appears in the IDE and Storybook autodoc with zero authoring. Only props that giselle-mui adds need documentation. This is the productivity multiplier for large Sitecore teams.',
+        color: 'secondary',
+      },
+    ],
+  },
+  {
     key: 9,
     title: 'Phase I — Home section extraction (/motion subpath)',
     shortTitle: 'Phase I',
@@ -535,6 +578,98 @@ inside a `DetailsDrawer`.
 
 ---
 
+### Phase J — Headless CMS / Sitecore JSS developer experience — Oct–Nov 2026
+
+**Goal:** Make `giselle-mui` a natural fit for developers building with Sitecore JSS or any headless CMS + Next.js stack — where content is decoupled from component structure and the layout engine, not the callsite JSX, decides what renders inside a component.
+
+**The key insight — why CMS components are rarely prop-heavy:**
+
+In a Sitecore JSS project, a component receives `fields` (content from the CMS API) and `rendering` (layout data). Child components are not passed as props — they are wired by the Sitecore layout service through `<Placeholder>` slots. This means:
+
+- A component cannot accept `items={[...]}` and render them as children. The CMS renders the children.
+- Every zone where CMS-managed content appears must be a named `ReactNode` slot or `children`.
+- Props should be optional wherever the CMS drives the content — forcing required props breaks CMS rendering.
+- `data-*` attributes are attached by the Sitecore Experience Editor for in-context editing — they must flow through to the root element without configuration.
+
+**The four patterns this phase documents and implements:**
+
+**1 — Slot-first API design**
+
+`ReactNode` named slots instead of data arrays. The component owns structure and styling; the consumer (or the CMS) fills each slot with whatever is appropriate.
+
+```tsx
+// ❌ prop-heavy — the component controls content shape
+<FeatureCard
+  title="My Title"
+  description="Some text"
+  ctaLabel="Learn more"
+  ctaHref="/page"
+/>
+
+// ✅ slot-first — the CMS or callsite fills each zone independently
+<CompositeCard
+  header={<SitecoreText field={fields.title} />}
+  body={<SitecoreRichText field={fields.body} />}
+  actions={<Placeholder name="card-cta" rendering={rendering} />}
+/>
+```
+
+**2 — Compound component pattern**
+
+A parent component exposes React context. Named sub-components (`CompositeCard.Header`, `CompositeCard.Body`, `CompositeCard.Footer`) consume that context without prop drilling. Each sub-component can be placed in a separate Sitecore placeholder independently — the parent does not need to know the structure in advance.
+
+```tsx
+// Parent + sub-components sharing context via React.createContext
+<CompositeCard color="primary">
+  <CompositeCard.Header>          {/* reads color from context */}
+    <SitecoreText field={fields.title} />
+  </CompositeCard.Header>
+  <Placeholder name="card-body" rendering={rendering} />   {/* CMS-wired */}
+  <CompositeCard.Footer>
+    <Placeholder name="card-actions" rendering={rendering} />
+  </CompositeCard.Footer>
+</CompositeCard>
+```
+
+**3 — MUI JSDoc inheritance — write docs only for new props**
+
+When a giselle-mui component interface extends a MUI interface (`CardProps`, `ButtonBaseProps`, etc.), TypeScript inheritance carries MUI's full JSDoc into the IDE and into Storybook autodoc — with zero authoring. Only props that `giselle-mui` adds need documentation.
+
+```ts
+// MUI's JSDoc for elevation, variant, sx, aria-*, ref, etc. appears automatically.
+// Only document what giselle-mui adds.
+export interface CompositeCardProps extends PaperProps {
+  /** Named slot for the card header region. Rendered above the body. */
+  header?: ReactNode;
+  /** Named slot for the card footer region. Rendered below the body. */
+  footer?: ReactNode;
+  /** Named slot for action buttons. Rendered at the bottom right. */
+  actions?: ReactNode;
+}
+```
+
+This is the productivity multiplier for large Sitecore teams: one import, full IDE documentation, no maintenance burden on the library author.
+
+**4 — `...other` spread on root — non-negotiable for CMS compatibility**
+
+The Sitecore Experience Editor attaches `data-*` attributes to every component for in-context editing. These must flow through to the DOM root element without configuration. The `...other` spread on the root element (already a rule in this library) is the mechanism. Every component that ships without it is broken in Sitecore editing mode.
+
+**Prerequisite:** Phase E — `SectionContainer` and `HeroSection` must be reviewed for slot-API compliance before Phase J ships.
+
+| Task | Label | Status |
+| ---- | ----- | ------ |
+| Write slot-first API design guide — with Sitecore placeholder examples | Docs | ⬜ |
+| Audit all shipped components for slot-API compliance (`...other` spread, `ReactNode` slots, no required content props) | Docs | ⬜ |
+| Implement `CompositeCard` — `header?`, `media?`, `body?`, `footer?`, `actions?` all `ReactNode` slots, no required props | Components | ⬜ |
+| Export `CompositeCard` sub-components: `CompositeCard.Header`, `CompositeCard.Body`, `CompositeCard.Footer`, `CompositeCard.Actions` | Components | ⬜ |
+| Write compound component pattern guide with React context wiring example | Docs | ⬜ |
+| Write MUI JSDoc inheritance guide — Storybook story demonstrating autodoc from extended MUI interfaces | Docs | ⬜ |
+| Add Storybook story: `CompositeCard` with all slots filled, minimal (no optionals), Sitecore placeholder simulation | Components | ⬜ |
+| Vitest tests: renders with all slots, renders with no optional slots, `data-*` attributes flow to DOM root | Components | ⬜ |
+| README: why this exists, Sitecore use case, compound component pattern, slot-first API, JSDoc inheritance | Docs | ⬜ |
+
+---
+
 ### Phase H — Dashboard component suite — Aug 2026
 
 **Goal:** Build a complete vocabulary of data dashboard widgets. 24 new components across 7 groups. Enables the trip-costs dashboard in `alexrebula` and any future product analytics view.
@@ -556,7 +691,7 @@ Full spec: [`components/dashboard-components-plan.md`](./components/dashboard-co
 | 6 — Motion (migrate) | Move `FloatingSubNav` → `/motion` (re-export shim needed), add `AnimatedTabPanel` | `/motion` | 🟡/⬜ |
 | 7 — Investment analytics | `CostClassificationCard`, `ROIComparisonCard`, `ScenarioComparisonWidget`, `AmortizationScheduleTable` | Main | ⬜ |
 
-> **Note — superseded plan:** An earlier Phase H plan covered application shell components (`AppTopBar`, `AppLayout`, `LoginCard`, `AuthPageLayout`). That work has been moved to a future Phase J — not scheduled. It depends on Phase D (`GiselleSettingsProvider`) being mature first.
+> **Note — superseded plan:** An earlier Phase H plan covered application shell components (`AppTopBar`, `AppLayout`, `LoginCard`, `AuthPageLayout`). That work is unscheduled — it depends on Phase D (`GiselleSettingsProvider`) being mature first and has no assigned phase label.
 
 ---
 

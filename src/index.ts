@@ -19,7 +19,11 @@ export type { GiselleIconProps } from './components/icon/giselle';
 
 export { Accordion } from './components/accordion';
 export type { AccordionProps } from './components/accordion';
-export { ACCORDION_DONE_MIN_TOUCH_TARGET } from './components/accordion';
+export {
+  ACCORDION_DONE_MIN_TOUCH_TARGET,
+  ACCORDION_CHECK_ICON_SIZE,
+  ACCORDION_ICON_BUTTON_MIN_SIZE,
+} from './components/accordion';
 
 export { MetricCard, MetricCardDecoration } from './components/card/metric';
 export type {

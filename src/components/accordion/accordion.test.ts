@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import ReactDOM from 'react-dom/client';
 import { act } from 'react';
 
-import { ACCORDION_DONE_MIN_TOUCH_TARGET } from './accordion.const';
+import { ACCORDION_DONE_MIN_TOUCH_TARGET, ACCORDION_CHECK_ICON_SIZE } from './accordion.const';
 import { Accordion } from './accordion';
 
 // ----------------------------------------------------------------------
@@ -247,5 +247,149 @@ describe('Accordion — checklist interaction', () => {
 describe('readability — minimum size constants', () => {
   it('[regression] ACCORDION_DONE_MIN_TOUCH_TARGET >= 24px (WCAG 2.5.8)', () => {
     expect(ACCORDION_DONE_MIN_TOUCH_TARGET).toBeGreaterThanOrEqual(24);
+  });
+
+  it('[regression] ACCORDION_CHECK_ICON_SIZE >= 20px (WCAG 1.4.11 interactive icons)', () => {
+    expect(ACCORDION_CHECK_ICON_SIZE).toBeGreaterThanOrEqual(20);
+  });
+});
+
+// ----------------------------------------------------------------------
+
+describe('Accordion — icon-button mode (checkIcon provided)', () => {
+  const CIRCLE_ICON = React.createElement(
+    'svg',
+    { 'data-testid': 'custom-check-icon', width: 20, height: 20 },
+    React.createElement('circle', { cx: 12, cy: 12, r: 9 })
+  );
+
+  it('renders an icon button instead of a checkbox when checkIcon is provided', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(
+        Accordion,
+        { title: 'Task', checklist: true, checkIcon: CIRCLE_ICON },
+        DETAILS
+      )
+    );
+    expect(html).not.toContain('<input');
+    expect(html).toContain('aria-pressed');
+  });
+
+  it('renders aria-pressed="false" when done is false', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(
+        Accordion,
+        { title: 'Task', checklist: true, done: false, checkIcon: CIRCLE_ICON },
+        DETAILS
+      )
+    );
+    expect(html).toContain('aria-pressed="false"');
+  });
+
+  it('renders aria-pressed="true" when done is true', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(
+        Accordion,
+        { title: 'Task', checklist: true, done: true, checkIcon: CIRCLE_ICON },
+        DETAILS
+      )
+    );
+    expect(html).toContain('aria-pressed="true"');
+  });
+
+  it('aria-label says "Mark as done" when done is false', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(
+        Accordion,
+        { title: 'Task', checklist: true, done: false, checkIcon: CIRCLE_ICON },
+        DETAILS
+      )
+    );
+    expect(html).toContain('Mark as done');
+  });
+
+  it('aria-label says "Mark as not done" when done is true', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(
+        Accordion,
+        { title: 'Task', checklist: true, done: true, checkIcon: CIRCLE_ICON },
+        DETAILS
+      )
+    );
+    expect(html).toContain('Mark as not done');
+  });
+
+  it('renders the custom idle icon in the initial (not hovered/focused) state', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(
+        Accordion,
+        { title: 'Task', checklist: true, done: false, checkIcon: CIRCLE_ICON },
+        DETAILS
+      )
+    );
+    expect(html).toContain('data-testid="custom-check-icon"');
+  });
+
+  it('calls onDoneButtonClick(true) when the icon button is clicked (done=false)', () => {
+    const handler = vi.fn();
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    act(() => {
+      ReactDOM.createRoot(container).render(
+        React.createElement(
+          Accordion,
+          {
+            title: 'Task',
+            checklist: true,
+            done: false,
+            checkIcon: CIRCLE_ICON,
+            onDoneButtonClick: handler,
+          },
+          DETAILS
+        )
+      );
+    });
+
+    const button = container.querySelector('button[aria-pressed]');
+    expect(button).not.toBeNull();
+
+    act(() => {
+      (button as HTMLButtonElement).click();
+    });
+
+    expect(handler).toHaveBeenCalledWith(true);
+    document.body.removeChild(container);
+  });
+
+  it('calls onDoneButtonClick(false) when the icon button is clicked (done=true)', () => {
+    const handler = vi.fn();
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+
+    act(() => {
+      ReactDOM.createRoot(container).render(
+        React.createElement(
+          Accordion,
+          {
+            title: 'Task',
+            checklist: true,
+            done: true,
+            checkIcon: CIRCLE_ICON,
+            onDoneButtonClick: handler,
+          },
+          DETAILS
+        )
+      );
+    });
+
+    const button = container.querySelector('button[aria-pressed]');
+
+    act(() => {
+      (button as HTMLButtonElement).click();
+    });
+
+    expect(handler).toHaveBeenCalledWith(false);
+    document.body.removeChild(container);
   });
 });

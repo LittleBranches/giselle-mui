@@ -1,0 +1,147 @@
+'use client';
+
+import { useState, useCallback, useRef } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
+
+import SvgIcon from '@mui/material/SvgIcon';
+import IconButton from '@mui/material/IconButton';
+
+import type { CheckIconButtonProps } from './types';
+import { checkIconButtonSx, defaultCheckIconSvgSx } from './accordion.styles';
+
+// ----------------------------------------------------------------------
+// Built-in default icons — module-level components created once, never
+// re-instantiated on render. Consumers override via checkDoneIcon /
+// checkHoverIcon props when a different icon set is preferred.
+// ----------------------------------------------------------------------
+
+/**
+ * Default done-state icon: filled green check circle.
+ * SVG path: Material Design `check_circle` (24 × 24 viewBox).
+ */
+function FilledCheckCircleIcon() {
+  return (
+    <SvgIcon sx={defaultCheckIconSvgSx} viewBox="0 0 24 24">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+    </SvgIcon>
+  );
+}
+
+/**
+ * Default hover/focus-state icon: outlined green check circle.
+ * SVG path: Material Design `check_circle_outline` (24 × 24 viewBox).
+ * Signals "click to mark as done" (undone state) or "click to undo" (done state).
+ */
+function OutlinedCheckCircleIcon() {
+  return (
+    <SvgIcon sx={defaultCheckIconSvgSx} viewBox="0 0 24 24">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8-1.41-1.42z" />
+    </SvgIcon>
+  );
+}
+
+// JSX element constants — created once at module load, never recreated.
+const DEFAULT_CHECK_DONE_ICON = <FilledCheckCircleIcon />;
+const DEFAULT_CHECK_HOVER_ICON = <OutlinedCheckCircleIcon />;
+
+// ----------------------------------------------------------------------
+
+/**
+ * Icon-button done toggle for the {@link Accordion} checklist mode.
+ *
+ * Replaces the native `Checkbox` when the consumer passes a `checkIcon` prop
+ * to `Accordion`. The displayed icon transitions between three states:
+ *
+ * | Interaction state             | Icon shown                          |
+ * | ----------------------------- | ----------------------------------- |
+ * | Undone + idle                 | `checkIcon` (consumer's custom icon)|
+ * | Hover **or** keyboard focus   | `checkHoverIcon` (outlined green ✓) |
+ * | Done + idle                   | `checkDoneIcon` (filled green ✓)    |
+ * | Done + hover / keyboard focus | `checkHoverIcon` (outlined green ✓, signals "undo") |
+ *
+ * **Keyboard:** Tab to focus (shows `checkHoverIcon`), Space / Enter to toggle.
+ * MUI `IconButton` natively handles Space / Enter as click events.
+ *
+ * **WCAG 2.2 AA:**
+ * - `aria-pressed` communicates the binary done / not-done state.
+ * - `aria-label` describes the current action in plain language.
+ * - `size="small"` on `IconButton` produces a ≥ 30 px touch target
+ *   (exceeds the 24 px WCAG 2.5.8 minimum).
+ */
+export function CheckIconButton({
+  done,
+  checkIcon,
+  checkDoneIcon = DEFAULT_CHECK_DONE_ICON,
+  checkHoverIcon = DEFAULT_CHECK_HOVER_ICON,
+  onDoneButtonClick,
+}: CheckIconButtonProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const isHighlighted = isHovered || isFocused;
+
+  // Icon selection: hover/focus always wins (regardless of done state),
+  // then done icon, then the idle custom icon.
+  let currentIcon: ReactNode;
+  if (isHighlighted) {
+    currentIcon = checkHoverIcon;
+  } else if (done) {
+    currentIcon = checkDoneIcon;
+  } else {
+    currentIcon = checkIcon;
+  }
+
+  const handleClick = useCallback(
+    (e: MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      onDoneButtonClick?.(!done);
+    },
+    [done, onDoneButtonClick]
+  );
+
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+
+  // `:focus-visible` semantics — only show the hover/focus icon when focus came from
+  // keyboard (Tab), NOT from a pointer click. Without this, clicking fires onFocus on
+  // the button, sets isFocused=true, and traps the icon on checkHoverIcon indefinitely
+  // after every click — the done icon is never visible.
+  const isPointerDownRef = useRef(false);
+
+  const handlePointerDown = useCallback(() => {
+    isPointerDownRef.current = true;
+  }, []);
+
+  const handlePointerUp = useCallback(() => {
+    // Safety reset — covers the case where pointerdown fires but focus is suppressed.
+    isPointerDownRef.current = false;
+  }, []);
+
+  const handleFocus = useCallback(() => {
+    const fromPointer = isPointerDownRef.current;
+    isPointerDownRef.current = false; // reset after every focus event
+    if (!fromPointer) {
+      setIsFocused(true);
+    }
+  }, []);
+
+  const handleBlur = useCallback(() => setIsFocused(false), []);
+
+  return (
+    <IconButton
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      aria-pressed={done}
+      aria-label={done ? 'Mark as not done' : 'Mark as done'}
+      size="small"
+      sx={checkIconButtonSx}
+    >
+      {currentIcon}
+    </IconButton>
+  );
+}
