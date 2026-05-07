@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { Theme } from '@mui/material/styles';
 
 import { COMPACT_MILESTONE_DOT_SIZE, COMPACT_PHASE_DOT_SIZE } from './compact.const';
-import { accordionRootSx, doneFadeSx, milestoneDotSx, phaseDotSx } from './compact.styles';
+import { accordionRootSx, milestoneDotSx, phaseDotSx } from './compact.styles';
 
 // Narrow type used to call theme-function sx values in tests.
 type SxFn = (theme: Theme) => Record<string, unknown>;
@@ -20,6 +20,7 @@ const mockTheme = {
       error: { main: 'var(--mui-palette-error-main)' },
       secondary: { main: 'var(--mui-palette-secondary-main)' },
       info: { main: 'var(--mui-palette-info-main)' },
+      grey: { '500Channel': '145 158 171' },
     },
   },
   palette: {
@@ -29,6 +30,9 @@ const mockTheme = {
     error: { main: '#d32f2f' },
     secondary: { main: '#F5A623' },
     info: { main: '#0288d1' },
+  },
+  transitions: {
+    create: () => 'opacity 200ms, background-color 200ms',
   },
 } as unknown as Theme;
 
@@ -77,31 +81,23 @@ describe('milestoneDotSx', () => {
 
 describe('accordionRootSx', () => {
   it('returns opacity 0.65 when done=true', () => {
-    expect((accordionRootSx(true) as Record<string, unknown>).opacity).toBe(0.65);
+    const styles = accordionRootSx(true) as Record<string, unknown>;
+    expect(styles['opacity']).toBe(0.65);
   });
 
   it('returns opacity 1 when done=false', () => {
-    expect((accordionRootSx(false) as Record<string, unknown>).opacity).toBe(1);
+    const styles = accordionRootSx(false) as Record<string, unknown>;
+    expect(styles['opacity']).toBe(1);
   });
 
-  it('includes border: 1px solid', () => {
-    expect((accordionRootSx(false) as Record<string, unknown>).border).toBe('1px solid');
+  it('has no border (FAQ-style)', () => {
+    const styles = accordionRootSx(false) as Record<string, unknown>;
+    expect(styles['border']).toBe('none');
   });
 
   it('sets boxShadow to none', () => {
-    expect((accordionRootSx(false) as Record<string, unknown>).boxShadow).toBe('none');
-  });
-});
-
-// ----------------------------------------------------------------------
-
-describe('doneFadeSx', () => {
-  it('returns opacity 0.65 when done=true', () => {
-    expect((doneFadeSx(true) as { opacity: number }).opacity).toBe(0.65);
-  });
-
-  it('returns opacity 1 when done=false', () => {
-    expect((doneFadeSx(false) as { opacity: number }).opacity).toBe(1);
+    const styles = accordionRootSx(false) as Record<string, unknown>;
+    expect(styles['boxShadow']).toBe('none');
   });
 });
 
@@ -112,7 +108,7 @@ describe('readability — minimum dot size constants (regression)', () => {
     expect(COMPACT_PHASE_DOT_SIZE).toBeGreaterThanOrEqual(12);
   });
 
-  it('[regression] COMPACT_MILESTONE_DOT_SIZE >= 8px', () => {
-    expect(COMPACT_MILESTONE_DOT_SIZE).toBeGreaterThanOrEqual(8);
+  it('[regression] COMPACT_MILESTONE_DOT_SIZE >= 18px', () => {
+    expect(COMPACT_MILESTONE_DOT_SIZE).toBeGreaterThanOrEqual(18);
   });
 });

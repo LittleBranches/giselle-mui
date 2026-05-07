@@ -2,6 +2,8 @@ import type { TimelineDotProps } from '@mui/lab/TimelineDot';
 
 import type { HighlightedPaletteKey } from '../two-column/types';
 
+export { resolveTaskChildren } from '../two-column/utils';
+
 // ----------------------------------------------------------------------
 
 /**

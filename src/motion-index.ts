@@ -9,7 +9,7 @@
 // that explicitly import from '/motion' need framer-motion installed.
 //
 // Consumer contract:
-//   import { AnimatedTabPanel } from '@alexrebula/giselle-mui/motion';
+//   import { FaqAccordion } from '@alexrebula/giselle-mui/motion';
 //   // requires: framer-motion in the consumer's own deps
 //
 // Important: always use motion.div, never m.div.
@@ -18,5 +18,7 @@
 //
 // Phase H: FloatingSubNav will move here from src/index.ts (breaking change — re-export
 // shim or minor version bump required for existing consumers).
-// Phase H components will be exported from here. Placeholder only.
-export {};
+// Phase H components will be exported from here.
+
+export { FaqAccordion } from './components/faq/accordion';
+export type { FaqAccordionProps, FaqItem } from './components/faq/accordion';

@@ -10,17 +10,13 @@ import {
   type ReactNode,
 } from 'react';
 
-// SSR-safe layout effect — runs as useLayoutEffect on the client (synchronous, before
-// first paint) and falls back to useEffect on the server (no-op in SSR environments).
-// This prevents the React "useLayoutEffect does nothing on the server" warning for
-// consumers using Next.js or any other server-side renderer.
-const useIsomorphicLayoutEffect = globalThis.window === undefined ? useEffect : useLayoutEffect;
-
 import Box from '@mui/material/Box';
 import Timeline from '@mui/lab/Timeline';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
+import { useTimelineDoneState } from '../use-timeline-done-state';
+import { TimelineCompact } from '../compact/compact';
 import { PhaseCard } from './phase-card';
 import { MilestoneRow } from './milestone-row';
 import { MarkerRow } from './marker-row';
@@ -36,6 +32,12 @@ import {
   computeSlotHeights,
 } from './utils';
 import { phaseLiSx, timelineRootSx } from './two-column.styles';
+
+// SSR-safe layout effect — runs as useLayoutEffect on the client (synchronous, before
+// first paint) and falls back to useEffect on the server (no-op in SSR environments).
+// This prevents the React "useLayoutEffect does nothing on the server" warning for
+// consumers using Next.js or any other server-side renderer.
+const useIsomorphicLayoutEffect = globalThis.window === undefined ? useEffect : useLayoutEffect;
 
 // ----------------------------------------------------------------------
 
@@ -80,74 +82,15 @@ export function TimelineTwoColumn({
   sx,
   ...other
 }: TimelineTwoColumnProps) {
-  // Internal done-state overlay — initialised from data, toggled by dot clicks.
-  // Re-synced whenever `phases` changes (e.g. async load, external reset).
-  const [localPhaseDone, setLocalPhaseDone] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(phases.map((p) => [String(p.key), p.done ?? false]))
-  );
-  const [localMilestoneDone, setLocalMilestoneDone] = useState<Record<string, boolean>>(() => {
-    const sortFn = sortOrder === 'asc' ? sortMilestonesAsc : sortMilestonesDesc;
-    const m: Record<string, boolean> = {};
-    phases.forEach((p) => {
-      const sortedMs = p.milestones ? sortFn([...p.milestones]) : [];
-      sortedMs.forEach((ms, i) => {
-        m[`${p.key}-${i}`] = ms.done ?? false;
-      });
-    });
-    return m;
-  });
-
-  // Task-level done state — always active (not gated on checklist mode).
-  // Key format: `${phaseKey}-m${milestoneIdx}-t${taskIdx}` for milestone tasks,
-  //             `${phaseKey}-t${taskIdx}` for phase-level tasks.
-  const [localTaskDoneMap, setLocalTaskDoneMap] = useState<Record<string, boolean>>(() => {
-    const sortFn = sortOrder === 'asc' ? sortMilestonesAsc : sortMilestonesDesc;
-    const t: Record<string, boolean> = {};
-    phases.forEach((p) => {
-      p.children?.forEach((task, ti) => {
-        t[`${p.key}-t${ti}`] = task.done ?? false;
-      });
-      const sortedMs = p.milestones ? sortFn([...p.milestones]) : [];
-      sortedMs.forEach((ms, mi) => {
-        ms.children?.forEach((task, ti) => {
-          t[`${p.key}-m${mi}-t${ti}`] = task.done ?? false;
-        });
-      });
-    });
-    return t;
-  });
-
-  // Sync done state when the phases prop identity or sort order changes.
-  // IMPORTANT: milestone indices must match the render order (sorted), not the original
-  // data order. `localMilestoneDone` and `localTaskDoneMap` are keyed by
-  // `${phaseKey}-${sortedMilestoneIndex}` — the same index `mi` used in buildMilestoneRow.
-  // Using original (unsorted) indices causes done-state inversion whenever the sort
-  // moves done milestones (earlier dates) below not-done milestones (later dates).
-  useEffect(() => {
-    const sortFn = sortOrder === 'asc' ? sortMilestonesAsc : sortMilestonesDesc;
-    setLocalPhaseDone(Object.fromEntries(phases.map((p) => [String(p.key), p.done ?? false])));
-    const m: Record<string, boolean> = {};
-    phases.forEach((p) => {
-      const sortedMs = p.milestones ? sortFn([...p.milestones]) : [];
-      sortedMs.forEach((ms, i) => {
-        m[`${p.key}-${i}`] = ms.done ?? false;
-      });
-    });
-    setLocalMilestoneDone(m);
-    const t: Record<string, boolean> = {};
-    phases.forEach((p) => {
-      p.children?.forEach((task, ti) => {
-        t[`${p.key}-t${ti}`] = task.done ?? false;
-      });
-      const sortedMs = p.milestones ? sortFn([...p.milestones]) : [];
-      sortedMs.forEach((ms, mi) => {
-        ms.children?.forEach((task, ti) => {
-          t[`${p.key}-m${mi}-t${ti}`] = task.done ?? false;
-        });
-      });
-    });
-    setLocalTaskDoneMap(t);
-  }, [phases, sortOrder]);
+  // Local done-state records — initialised from data, re-synced when phases/sortOrder change.
+  const {
+    localPhaseDone,
+    setLocalPhaseDone,
+    localMilestoneDone,
+    setLocalMilestoneDone,
+    localTaskDoneMap,
+    setLocalTaskDoneMap,
+  } = useTimelineDoneState(phases, sortOrder);
 
   // Toggle-animation counters — incremented on every click so the icon wrapper
   // gets a new `key` and remounts, which restarts the CSS animation cleanly.
@@ -200,7 +143,7 @@ export function TimelineTwoColumn({
       setLocalPhaseDone((prev) => ({ ...prev, [String(key)]: next }));
       onTogglePhaseDone?.(key, next);
     },
-    [localPhaseDone, onTogglePhaseDone]
+    [localPhaseDone, onTogglePhaseDone, setLocalPhaseDone, setPhaseToggleCounts]
   );
 
   const handleToggleMilestone = useCallback(
@@ -229,7 +172,16 @@ export function TimelineTwoColumn({
         }
       }
     },
-    [localMilestoneDone, phases, localPhaseDone, onToggleMilestoneDone, onTogglePhaseDone]
+    [
+      localMilestoneDone,
+      phases,
+      localPhaseDone,
+      onToggleMilestoneDone,
+      onTogglePhaseDone,
+      setLocalMilestoneDone,
+      setLocalPhaseDone,
+      setPhaseToggleCounts,
+    ]
   );
 
   const handleToggleTask = useCallback(
@@ -281,12 +233,15 @@ export function TimelineTwoColumn({
     },
     [
       localTaskDoneMap,
-      localMilestoneDone,
-      localPhaseDone,
-      phases,
-      checklist,
+      setLocalTaskDoneMap,
       onToggleTaskDone,
+      checklist,
+      phases,
+      localMilestoneDone,
+      setLocalMilestoneDone,
       onToggleMilestoneDone,
+      localPhaseDone,
+      setLocalPhaseDone,
       onTogglePhaseDone,
     ]
   );
@@ -381,6 +336,26 @@ export function TimelineTwoColumn({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  // On xs/sm viewports switch to the compact accordion layout automatically.
+  // Consumers pass phases once — the correct layout for the viewport is selected here,
+  // so no breakpoint wiring is needed at the call site.
+  if (isMobile) {
+    return (
+      <TimelineCompact
+        phases={phases}
+        sx={sx}
+        checklist={checklist}
+        sortOrder={sortOrder}
+        viewedKeys={viewedKeys}
+        onMarkViewed={onMarkViewed}
+        onTogglePhaseDone={onTogglePhaseDone}
+        onToggleMilestoneDone={onToggleMilestoneDone}
+        onToggleTaskDone={onToggleTaskDone}
+        {...other}
+      />
+    );
+  }
+
   return (
     <Box sx={[{ position: 'relative' }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <Timeline sx={timelineRootSx}>
@@ -433,7 +408,7 @@ export function TimelineTwoColumn({
           // stopCardPropagation is always active — prevents the document "close all" handler
           // from racing with this card's own expand/collapse state update on every click.
           const phaseCardNode = (
-            <Box onClick={stopCardPropagation}>
+            <div onClick={stopCardPropagation}>
               <PhaseCard
                 phase={phase}
                 columnSide={phase.side}
@@ -458,7 +433,7 @@ export function TimelineTwoColumn({
                 )}
                 onToggleTask={(taskIdx, _done) => handleToggleTask(phase.key, null, taskIdx)}
               />
-            </Box>
+            </div>
           );
 
           const milestoneCtx: MilestoneRowCtx = {

@@ -17,6 +17,10 @@ export {
 export { GiselleIcon } from './components/icon/giselle';
 export type { GiselleIconProps } from './components/icon/giselle';
 
+export { Accordion } from './components/accordion';
+export type { AccordionProps } from './components/accordion';
+export { ACCORDION_DONE_MIN_TOUCH_TARGET } from './components/accordion';
+
 export { MetricCard, MetricCardDecoration } from './components/card/metric';
 export type {
   MetricCardProps,
@@ -50,6 +54,8 @@ export type {
 
 export { TimelineCompact, resolveCompactColor } from './components/timeline/compact';
 export type { TimelineCompactProps } from './components/timeline/compact';
+export { TaskList } from './components/timeline/task-list';
+export type { TaskListProps } from './components/timeline/task-list';
 export {
   COMPACT_PHASE_DOT_SIZE,
   COMPACT_MILESTONE_DOT_SIZE,

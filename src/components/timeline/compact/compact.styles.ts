@@ -1,8 +1,10 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
 import type { HighlightedPaletteKey } from '../two-column/types';
+import { channelAlpha } from '../../../utils/theme-utils';
 import {
   COMPACT_MILESTONE_DOT_SIZE,
+  COMPACT_MILESTONE_ICON_SIZE,
   COMPACT_PHASE_DOT_SIZE,
   COMPACT_PHASE_ICON_SIZE,
 } from './compact.const';
@@ -10,44 +12,32 @@ import {
 // ----------------------------------------------------------------------
 // Static sx — created once at module load
 
-export const accordionSx: SxProps<Theme> = {
-  border: '1px solid',
-  borderColor: 'divider',
-  borderRadius: 1,
-  boxShadow: 'none',
-  '&:before': { display: 'none' },
-  '&.Mui-expanded': { margin: 0, mt: 1 },
-  '&.Mui-expanded:first-of-type': { mt: 0 },
-};
-
 export const accordionSummarySx: SxProps<Theme> = {
-  minHeight: 48,
-  px: 1.5,
-  '&.Mui-expanded': { minHeight: 48 },
+  minHeight: 56,
+  py: 1,
+  px: 2,
+  display: 'flex',
+  alignItems: 'center',
+  '&.Mui-expanded': { minHeight: 56 },
   '& .MuiAccordionSummary-content': {
     display: 'flex',
     alignItems: 'center',
-    gap: 1,
-    my: 1,
+    gap: 1.5,
+    my: 0,
     overflow: 'hidden',
   },
   '& .MuiAccordionSummary-expandIconWrapper': {
     color: 'text.secondary',
+    display: 'flex',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
 };
 
 export const accordionDetailsSx: SxProps<Theme> = {
   pt: 0,
-  pb: 1.5,
-  px: 1.5,
-};
-
-export const phaseIconWrapperSx: SxProps<Theme> = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  '& svg': { width: COMPACT_PHASE_ICON_SIZE, height: COMPACT_PHASE_ICON_SIZE },
-  color: 'common.white',
+  pb: 2,
+  px: 2,
 };
 
 export const phaseTitleSx: SxProps<Theme> = {
@@ -65,20 +55,62 @@ export const dateSx: SxProps<Theme> = {
 
 export const descriptionSx: SxProps<Theme> = {
   color: 'text.secondary',
+  mb: 1.5,
 };
 
 export const milestonesListSx: SxProps<Theme> = {
-  mt: 1.5,
-  pl: 1.5,
-  borderLeft: '2px solid',
-  borderColor: 'divider',
+  m: 0,
+  p: 0,
+  mt: 1,
+  listStyle: 'none',
 };
 
-export const milestoneRowSx: SxProps<Theme> = {
+export const milestoneItemSx: SxProps<Theme> = {
   display: 'flex',
+  alignItems: 'flex-start',
+  gap: 1.5,
+  cursor: 'pointer',
+  '&:hover': {
+    bgcolor: channelAlpha('var(--mui-palette-grey-500Channel)', 0.06),
+    borderRadius: 1,
+  },
+  transition: 'background-color 150ms',
+  py: 1,
+  px: 0.5,
+};
+
+export const milestoneDotColumnSx: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'column',
   alignItems: 'center',
-  gap: 1,
-  py: 0.5,
+  flexShrink: 0,
+  width: COMPACT_MILESTONE_DOT_SIZE,
+};
+
+export const milestoneContentSx: SxProps<Theme> = {
+  flexGrow: 1,
+  overflow: 'hidden',
+  pb: 0.5,
+};
+
+export const milestoneTitleSx: SxProps<Theme> = {
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+};
+
+export const milestoneDescriptionPreviewSx: SxProps<Theme> = {
+  color: 'text.secondary',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  mt: 0.25,
+};
+
+export const milestoneDateSx: SxProps<Theme> = {
+  color: 'text.secondary',
+  flexShrink: 0,
+  mt: 0.25,
 };
 
 // ----------------------------------------------------------------------
@@ -99,11 +131,15 @@ export const phaseDotSx =
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
     bgcolor: theme.vars?.palette[color].main ?? theme.palette[color].main,
+    color: 'common.white',
+    '& span': { display: 'flex', lineHeight: 0 },
+    '& svg': { width: COMPACT_PHASE_ICON_SIZE, height: COMPACT_PHASE_ICON_SIZE },
   });
 
 /**
- * Background color for each milestone dot row.
+ * Milestone dot — coloured circle with icon centered inside.
  */
 export const milestoneDotSx =
   (color: HighlightedPaletteKey): SxProps<Theme> =>
@@ -112,31 +148,38 @@ export const milestoneDotSx =
     height: COMPACT_MILESTONE_DOT_SIZE,
     borderRadius: '50%',
     flexShrink: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
     bgcolor: theme.vars?.palette[color].main ?? theme.palette[color].main,
+    color: 'common.white',
+    '& span': { display: 'flex', lineHeight: 0 },
+    '& svg': { width: COMPACT_MILESTONE_ICON_SIZE, height: COMPACT_MILESTONE_ICON_SIZE },
   });
 
 /**
- * Reduced opacity on the accordion root when the phase is `done`.
- * Communicates completed state while preserving readability.
+ * Accordion root sx factory — no border, hover background, done-fade opacity.
+ * SSR-safe: uses CSS custom property string directly (no theme callback).
  */
-export const doneFadeSx = (done: boolean): SxProps<Theme> => ({
-  opacity: done ? 0.65 : 1,
-  transition: 'opacity 200ms',
-});
+/** Vertical connector line between milestone dots. */
+export const milestoneConnectorLineSx: SxProps<Theme> = {
+  width: 2,
+  flexGrow: 1,
+  minHeight: 16,
+  bgcolor: 'divider',
+  mt: 0.5,
+};
 
-/**
- * Combined accordion root sx factory — merges static base styles with done-fade.
- * Returns a single `SxProps` object (not an array) so the value is compatible
- * with both `@mui/material` and `@mui/lab` component `sx` prop types.
- */
 export const accordionRootSx = (done: boolean): SxProps<Theme> => ({
-  border: '1px solid',
-  borderColor: 'divider',
-  borderRadius: 1,
+  border: 'none',
+  borderRadius: 2,
   boxShadow: 'none',
   '&:before': { display: 'none' },
-  '&.Mui-expanded': { margin: 0, mt: 1 },
-  '&.Mui-expanded:first-of-type': { mt: 0 },
+  '&.Mui-expanded': { margin: 0 },
+  '&:hover': {
+    bgcolor: channelAlpha('var(--mui-palette-grey-500Channel)', 0.08),
+  },
   opacity: done ? 0.65 : 1,
-  transition: 'opacity 200ms',
+  transition: 'opacity 300ms, background-color 300ms',
 });

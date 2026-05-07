@@ -1,0 +1,43 @@
+import type { ReactNode } from 'react';
+import type { BoxProps } from '@mui/material/Box';
+import type { SxProps, Theme } from '@mui/material/styles';
+
+// ----------------------------------------------------------------------
+
+/** A single FAQ entry. */
+export type FaqItem = {
+  /** The question text, also used as the accordion panel key. */
+  question: string;
+  /** The answer content — any valid React node. */
+  answer: ReactNode;
+};
+
+/** Props for the {@link FaqAccordion} component. */
+export type FaqAccordionProps = Omit<BoxProps, 'children'> & {
+  /** Overline caption above the heading. @default 'FAQs' */
+  caption?: string;
+  /** Main `h2` heading. @default 'Frequently Asked' */
+  title?: string;
+  /** Gradient-accent word appended after `title`. @default 'Questions' */
+  txtGradient?: string;
+  /** FAQ items rendered as animated accordions. */
+  faqs: FaqItem[];
+  /** Heading in the contact footer. @default 'Still have questions?' */
+  contactTitle?: string;
+  /** Body text below the contact heading. */
+  contactDescription?: string;
+  /**
+   * `href` for the contact button.
+   * When omitted, the entire contact footer section is hidden.
+   */
+  contactHref?: string;
+  /** Label for the contact button. @default 'Contact us' */
+  contactLabel?: string;
+  /**
+   * Icon for the contact button.
+   * - `string` → rendered via `GiselleIcon` (e.g. `'solar:letter-bold'`).
+   * - `ReactNode` → rendered as-is.
+   */
+  contactIcon?: ReactNode | string;
+  sx?: SxProps<Theme>;
+};
