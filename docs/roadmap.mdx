@@ -85,6 +85,12 @@ export const roadmapPhases = [
       { key: 4, date: '7 May 2026', shortTitle: 'TimelineCompact', title: 'TimelineCompact', description: 'Single-column accordion renderer for TimelinePhase[]. Mobile companion to TimelineTwoColumn — swap at xs/sm breakpoints with no data-layer changes.', color: 'success', done: true },
       { key: 2, date: 'Jun 2026', shortTitle: 'HeroSection', title: 'HeroSection', description: 'Full-width hero: headline, subtitle, CTA slot.', color: 'secondary' },
       { key: 3, date: 'Jun 2026', shortTitle: 'FAQAccordion', title: 'FAQAccordion', description: 'MUI Accordion with icon slot and accessible expand.', color: 'secondary' },
+      { key: 5, shortTitle: 'TwoColumnShowcaseRow', title: 'TwoColumnShowcaseRow', description: 'Two-column grid for a showcase item and descriptive text. Extracted from alexrebula — zero proprietary deps.', color: 'success', done: true },
+      { key: 6, shortTitle: 'SectionContainer', title: 'SectionContainer', description: 'Container + consistent vertical padding + optional title/subtitle slot. Required by every portfolio page.', color: 'success', done: true },
+      { key: 7, shortTitle: 'SectionTitle + SectionCaption', title: 'SectionTitle + SectionCaption', description: 'Section heading group with optional gradient accent text.', color: 'success', done: true },
+      { key: 8, date: 'Jun 2026', shortTitle: 'OptionWithBlurb', title: 'OptionWithBlurb', description: 'Small option card with descriptive text.', color: 'secondary' },
+      { key: 9, date: 'Jun 2026', shortTitle: 'SectionPendingLoader', title: 'SectionPendingLoader', description: 'Loading placeholder for async section data. Requires internal Iconify → GiselleIcon swap.', color: 'secondary' },
+      { key: 10, date: 'Jun 2026', shortTitle: 'FloatingControlBar', title: 'FloatingControlBar', description: 'Floating toolbar variant. Requires internal Iconify → GiselleIcon swap.', color: 'secondary' },
     ],
   },
   {
@@ -115,9 +121,26 @@ export const roadmapPhases = [
     color: 'info',
     milestones: [
       { key: 0, date: 'Aug 2026', shortTitle: 'Subpath exports', title: 'Configure /charts and /motion subpath exports in tsup + package.json', description: 'Architecture prerequisite. Unblocks ApexCharts chart cards and framer-motion components without imposing those deps on all consumers.' },
-      { key: 1, date: 'Aug 2026', shortTitle: 'MUI-only widgets', title: 'MUI-only dashboard widgets (16 components)', description: 'Groups 1+3+4+5 + Group 7 main-bundle analytics: StatCardRow, BalanceSummaryCard, CreditCardDisplay, DataTable, ActivityFeedList, NewsFeedList, RelatedItemsList, ProgressStatsList, QuickTransferWidget, ContactsList, BudgetBreakdownCard, HeroBannerCard, FeaturedItemCard, PromoInviteCard, CostClassificationCard, ROIComparisonCard, ScenarioComparisonWidget, AmortizationScheduleTable.' },
-      { key: 2, date: 'Aug 2026', shortTitle: 'Chart cards', title: 'ApexCharts chart card suite (7 components — /charts subpath)', description: 'SparklineBar, DonutChartCard, AreaLineChartCard, GroupedBarChartCard, HorizontalBarChartCard, RadarChartCard, ProjectionChartCard (dual-series costs-vs-returns with break-even annotation).' },
+      { key: 1, date: 'Aug 2026', shortTitle: 'MUI-only widgets', title: 'MUI-only dashboard widgets (18 components)', description: 'Groups 1+3+4+5 + Group 7 main-bundle analytics: StatCardRow, BalanceSummaryCard, CreditCardDisplay, DataTable, ActivityFeedList, NewsFeedList, RelatedItemsList, ProgressStatsList, QuickTransferWidget, ContactsList, BudgetBreakdownCard, HeroBannerCard, FeaturedItemCard, PromoInviteCard, CostClassificationCard, ROIComparisonCard, ScenarioComparisonWidget, AmortizationScheduleTable.' },
+      { key: 2, date: 'Aug 2026', shortTitle: 'Chart cards', title: 'ApexCharts chart card suite (8 components — /charts subpath)', description: 'SparklineBar, DonutChartCard, AreaLineChartCard, BudgetVsActualChartCard, GroupedBarChartCard, HorizontalBarChartCard, RadarChartCard, ProjectionChartCard (dual-series costs-vs-returns with break-even annotation).' },
       { key: 3, date: 'Aug 2026', shortTitle: 'Motion components', title: 'Move FloatingSubNav to /motion subpath + AnimatedTabPanel', description: 'Breaking change for FloatingSubNav consumers — needs re-export shim or minor version bump.' },
+    ],
+  },
+  {
+    key: 9,
+    title: 'Phase I — Home section extraction (/motion subpath)',
+    shortTitle: 'Phase I',
+    description: 'Extract seven animation-dependent components from alexrebula into the /motion subpath. Replaces all Minimals animate utilities with standalone MIT-safe motion variant factories.',
+    date: 'Sep 2026',
+    side: 'left',
+    color: 'info',
+    milestones: [
+      { key: 0, date: 'Sep 2026', shortTitle: 'Motion variants', title: 'varFade, varScale, varZoom — motion variant factories', description: 'Standalone framer-motion Variants factories. MIT-safe replacement for Minimals varFade/varSlide/varScale. Exported from /motion subpath. Unblocks all animation-dependent components in this phase.' },
+      { key: 1, date: 'Sep 2026', shortTitle: 'SectionTitle animated', title: 'SectionTitle + SectionCaption — animated /motion variants', description: 'Animated wrappers using varFade stagger on each text slot. The static base components are already shipped in Phase E; these are the entrance-animated /motion versions.' },
+      { key: 2, date: 'Sep 2026', shortTitle: 'FloatingSideNav', title: 'FloatingSideNav — vertically stacked left-side pill nav', description: 'Props-only API: isVisible, activeId, onSelect. Distinct from FloatingSubNav (bottom-anchored pill) — different component, different placement, different use case.' },
+      { key: 3, date: 'Sep 2026', shortTitle: 'HeroBackground', title: 'HeroBackground — radial gradient backdrop + animated SVG grid', description: 'Full-width animated hero background. Internal SVG primitives (FloatLine, FloatTriangle, FloatDot) not exported. Replaces Minimals bgGradient mixin with theme.vars.palette.* CSS variables.' },
+      { key: 4, date: 'Oct 2026', shortTitle: 'FloatingIconCloud', title: 'FloatingIconCloud — floating icon images with seeded positioning', description: 'Consumer supplies items[]. No alexrebula-specific presets.' },
+      { key: 5, date: 'Oct 2026', shortTitle: 'InteractiveHeroLogo', title: 'InteractiveHeroLogo', description: 'Most valuable single component in this phase. Requires useImagePreloader utility to be moved from alexrebula utils to giselle-mui utils before extraction.' },
     ],
   },
 ];
@@ -512,53 +535,48 @@ inside a `DetailsDrawer`.
 
 ---
 
-## Phase H — Portfolio Layout & Application Shell Extraction
+### Phase H — Dashboard component suite — Aug 2026
 
-**Goal:** Extract every reusable layout and shell pattern from the `alexrebula` portfolio
-into `giselle-mui` as independently usable, MIT-licensed components. This covers page-level
-section layout composites, navigation components, authentication section shells, and the
-application shell itself. All components are written from scratch — no code is copied from
-the private `alexrebula` repo.
+**Goal:** Build a complete vocabulary of data dashboard widgets. 24 new components across 7 groups. Enables the trip-costs dashboard in `alexrebula` and any future product analytics view.
 
-**Scope:**
+Full spec: [`components/dashboard-components-plan.md`](./components/dashboard-components-plan.md)
 
-- **Section layout composites** — page templates that combine multiple primitives into a
-  named reusable layout. For example, `TrackerSectionLayout` (full-width heading + stat-card
-  grid + sidebar with radial chart + checklist timeline), `HeroSectionLayout`, etc.
-- **Navigation components** — top app bar, sidebar navigation drawer, floating sub-nav, and
-  any breadcrumb or tab-bar pattern used across sections.
-- **Auth / login section** — login card shell, optional social-login row, forgot-password link
-  layout. No backend — structural only.
-- **Application shell** — `AppLayout` wrapper that composes `AppHeader` + `AppSidebar` +
-  main content area. Accepts slot props for header actions, sidebar items, and footer.
-- **Additional chart widgets** — any chart card beyond `RadialProgressCard` that proves
-  reusable across more than one section (e.g., area-sparkline card, donut summary card).
+**Architecture prerequisites — ✅ both wired (7 May 2026):**
 
-**Copyright rule — non-negotiable:**
-Every component in Phase H is written independently from scratch. No JSX, logic, or styling
-is copied or adapted from `alexrebula/src/`. The public MIT boundary must not be crossed.
+- `/charts` subpath in tsup + package.json — unblocks all ApexCharts chart cards
+- `/motion` subpath in tsup + package.json — unblocks `FloatingSubNav` migration and `AnimatedTabPanel`
 
-**Blocked on:** Phases C + D (GiselleThemeProvider + GiselleSettingsProvider) — application
-shell components depend on a theme context and settings context being available without
-consumer boilerplate.
+| Group | Components | Subpath | Status |
+| ----- | ---------- | ------- | ------ |
+| 1 — Stat / metric cards | `StatCardRow`, `BalanceSummaryCard`, `CreditCardDisplay` | Main | ⬜ |
+| 2 — Chart cards (8) | `SparklineBar`, `DonutChartCard`, `AreaLineChartCard`, `BudgetVsActualChartCard`, `GroupedBarChartCard`, `HorizontalBarChartCard`, `RadarChartCard`, `ProjectionChartCard` | `/charts` | ⬜ |
+| 3 — Data lists + tables | `DataTable`, `ActivityFeedList`, `NewsFeedList`, `RelatedItemsList` | Main | ⬜ |
+| 4 — Financial / action widgets | `ProgressStatsList`, `QuickTransferWidget`, `ContactsList`, `BudgetBreakdownCard` | Main | ⬜ |
+| 5 — Hero / marketing cards | `HeroBannerCard`, `FeaturedItemCard`, `PromoInviteCard` | Main | ⬜ |
+| 6 — Motion (migrate) | Move `FloatingSubNav` → `/motion` (re-export shim needed), add `AnimatedTabPanel` | `/motion` | 🟡/⬜ |
+| 7 — Investment analytics | `CostClassificationCard`, `ROIComparisonCard`, `ScenarioComparisonWidget`, `AmortizationScheduleTable` | Main | ⬜ |
 
-| Task                                                                                          | Label      | Status |
-| --------------------------------------------------------------------------------------------- | ---------- | ------ |
-| Define `TrackerSectionLayout` component — heading + stat grid + sidebar/timeline split        | Components | ⬜     |
-| Extract `SidebarTimelineLayout` — generic 1/3 sticky sidebar + 2/3 scrolling main             | Layout     | ⬜     |
-| Navigation: `AppTopBar` — responsive header with title, nav links, icon-action slots          | Navigation | ⬜     |
-| Navigation: `AppSidebarDrawer` — collapsible nav drawer with icon + label items               | Navigation | ⬜     |
-| Navigation: `FloatingSubNav` — anchored in-page section navigator (already in library, audit) | Navigation | ⬜     |
-| `AppLayout` — application shell: composes `AppTopBar` + `AppSidebarDrawer` + main slot        | Layout     | ⬜     |
-| Auth: `LoginCard` — email + password fields + submit button (structural, no backend)          | Auth       | ⬜     |
-| Auth: `AuthPageLayout` — full-screen split or centred shell that wraps `LoginCard`            | Auth       | ⬜     |
-| Chart: `DonutSummaryCard` — Card wrapping a donut chart with centred total label + legend     | Chart      | ⬜     |
-| Chart: `AreaSparklineCard` — Card with a full-bleed area chart and overlaid stat              | Chart      | ⬜     |
-| Export all Phase H symbols from `src/index.ts`                                                | Core       | ⬜     |
-| Storybook stories for every Phase H component                                                 | Components | ⬜     |
-| Vitest tests for every Phase H component + utility                                            | Components | ⬜     |
-| README for every Phase H component folder                                                     | Components | ⬜     |
-| Docusaurus page in `giselle-docs` wiring Phase H component docs                               | Docs       | ⬜     |
+> **Note — superseded plan:** An earlier Phase H plan covered application shell components (`AppTopBar`, `AppLayout`, `LoginCard`, `AuthPageLayout`). That work has been moved to a future Phase J — not scheduled. It depends on Phase D (`GiselleSettingsProvider`) being mature first.
+
+---
+
+### Phase I — Home section extraction (`/motion` subpath) — Sep 2026
+
+**Goal:** Extract seven animation-dependent components from `alexrebula/src/sections/home/components/` into the `/motion` subpath. All require `framer-motion`. All must be rewritten from scratch — no Minimals utilities, no code copied from the private repo.
+
+Full spec: [`components/home-components-extraction-plan.md`](./components/home-components-extraction-plan.md)
+
+**Prerequisite:** `/motion` subpath — ✅ wired (7 May 2026).
+
+| Phase | Component | Blocker | Status |
+| ----- | --------- | ------- | ------ |
+| I-1 | `varFade`, `varScale`, `varZoom` motion variant factories | None — start here | ⬜ |
+| I-2 | `SectionTitle` + `SectionCaption` — animated `/motion` variants | Phase I-1 (`varFade`) | ⬜ |
+| I-3 | `FloatingSideNav` — vertically stacked left-side pill nav | Phase I-1 (`varFade`) | ⬜ |
+| I-4 | SVG animation primitives — `FloatLine`, `FloatTriangle`, `FloatDot` (internal, not exported) | Phase I-1 | ⬜ |
+| I-5 | `HeroBackground` — radial gradient backdrop + animated SVG grid | Phases I-1, I-4 | ⬜ |
+| I-6 | `FloatingIconCloud` — floating icon images with seeded pseudo-random positioning | None | ⬜ |
+| I-7 | `InteractiveHeroLogo` | Move `useImagePreloader` from alexrebula → giselle-mui utils | ⬜ |
 
 </div>
 <div style={{ overflowY: 'auto' }}>
