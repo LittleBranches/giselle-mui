@@ -904,14 +904,14 @@ export const Responsive: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       {BREAKPOINTS.map(({ label, width }) => (
-        <Box key={width}>
+        <div key={width}>
           <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
             {label}
           </Typography>
           <Box sx={storyResponsiveBoxSx(width)}>
             <TimelineTwoColumn phases={CAREER_PHASES} />
           </Box>
-        </Box>
+        </div>
       ))}
     </Box>
   ),

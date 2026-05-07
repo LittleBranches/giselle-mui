@@ -361,15 +361,101 @@ export const Responsive: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       {CARD_COLUMN_WIDTHS.map(({ label, width }) => (
-        <Box key={width}>
+        <div key={width}>
           <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
             {label}
           </Typography>
           <Box sx={{ width, border: '1px dashed', borderColor: 'divider' }}>
             <PhaseCard phase={BASE_PHASE} />
           </Box>
-        </Box>
+        </div>
       ))}
+    </Box>
+  ),
+};
+
+// ----------------------------------------------------------------------
+
+/**
+ * **StatusBadgeVariants** — all three status badges rendered side-by-side.
+ *
+ * ### The three mutually exclusive status badges
+ *
+ * | Badge | Trigger | Visual |
+ * |---|---|---|
+ * | **"Now"** | `active: true` on the phase | Pulsing yellow chip — "currently in progress" |
+ * | **Overdue** | `overdue=true` on `PhaseCard` | Red corner badge + warning tooltip |
+ * | **Scenario** | `variant: 'scenario'` + `scenarioLabel` | Outlined label badge — planning option |
+ *
+ * These are the only three cases where a badge renders on a `PhaseCard`.
+ * They are mutually exclusive — active + overdue together is not a supported state.
+ */
+export const StatusBadgeVariants: Story = {
+  parameters: { layout: 'padded' },
+  render: () => (
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, alignItems: 'flex-start' }}>
+      <Box sx={{ width: 280 }}>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          Active — "Now" pulsing badge
+        </Typography>
+        <PhaseCard
+          phase={{
+            ...BASE_PHASE,
+            active: true,
+            title: 'In-Flight: Observability Layer',
+            shortTitle: 'Observability',
+          }}
+        />
+      </Box>
+      <Box sx={{ width: 280, pt: 1 }}>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          Overdue — red corner badge
+        </Typography>
+        <PhaseCard
+          phase={{
+            ...BASE_PHASE,
+            title: 'Overdue: Legacy Migration',
+            shortTitle: 'Legacy Migration',
+            color: 'error',
+          }}
+          overdue
+        />
+      </Box>
+      <Box sx={{ width: 280 }}>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          Scenario — planning option badge
+        </Typography>
+        <PhaseCard phase={SCENARIO_PHASE} />
+      </Box>
+    </Box>
+  ),
+};
+
+/**
+ * **WithAndWithoutDetails** — same card data with and without the `children` array.
+ *
+ * Use this story to verify that:
+ * - A card **with** `children` shows the expandable detail count pill; click expands bullets.
+ * - A card **without** `children` shows no count pill and does not respond to click-to-expand.
+ *
+ * Both cards should have identical visual height at rest — the pill does not push content down.
+ */
+export const WithAndWithoutDetails: Story = {
+  parameters: { layout: 'padded' },
+  render: () => (
+    <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+      <Box sx={{ width: 320 }}>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          With details (4 tasks)
+        </Typography>
+        <PhaseCard phase={BASE_PHASE} />
+      </Box>
+      <Box sx={{ width: 320 }}>
+        <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          Without details — no count pill
+        </Typography>
+        <PhaseCard phase={SIMPLE_PHASE} />
+      </Box>
     </Box>
   ),
 };

@@ -97,7 +97,7 @@ export const Responsive: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       {BREAKPOINTS_GRID.map(({ label, width, cols }) => (
-        <Box key={width}>
+        <div key={width}>
           <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
             {label}
           </Typography>
@@ -124,7 +124,7 @@ export const Responsive: Story = {
               />
             ))}
           </Box>
-        </Box>
+        </div>
       ))}
     </Box>
   ),

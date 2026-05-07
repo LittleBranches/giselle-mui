@@ -96,14 +96,14 @@ export const Responsive: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       {BREAKPOINTS.map(({ label, width }) => (
-        <Box key={width}>
+        <div key={width}>
           <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
             {label}
           </Typography>
           <Box sx={{ width, border: '1px dashed', borderColor: 'divider', p: 1 }}>
             <QuoteCard quote={SAMPLE_QUOTE} author="Jane Smith" source="Platform Team" />
           </Box>
-        </Box>
+        </div>
       ))}
     </Box>
   ),

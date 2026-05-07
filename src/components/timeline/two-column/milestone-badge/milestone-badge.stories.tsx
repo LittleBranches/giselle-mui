@@ -251,7 +251,7 @@ function ResponsiveDemo() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       {CARD_COLUMN_WIDTHS.map(({ label, width }) => (
-        <Box key={width}>
+        <div key={width}>
           <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
             {label}
           </Typography>
@@ -263,7 +263,7 @@ function ResponsiveDemo() {
               stableId={`responsive-${width}`}
             />
           </Box>
-        </Box>
+        </div>
       ))}
     </Box>
   );
