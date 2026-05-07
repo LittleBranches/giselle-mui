@@ -3,8 +3,7 @@ import type { TimelineDotComponentProps } from './types';
 
 import Box from '@mui/material/Box';
 
-import { pulseRing } from '../animations';
-import { timelineDotInnerSx } from './timeline-dot.styles';
+import { timelineDotInnerSx, pulseRingAfterSx } from './timeline-dot.styles';
 import { getDotSize, getIconSize, normaliseSx, resolveEffectiveColor } from './utils';
 import { DotInner } from './dot-inner';
 
@@ -87,29 +86,15 @@ export function TimelineDot({
             }),
             ...(tabIndex !== undefined && {
               '&:focus-visible': {
-                outline: '2px solid',
-                outlineColor:
-                  theme.vars!.palette[effectiveColor]?.main ?? theme.vars!.palette.primary.main,
-                outlineOffset: 3,
+                outline: 'none',
+                boxShadow: `0 0 0 3px ${
+                  theme.vars!.palette[effectiveColor]?.main ?? theme.vars!.palette.primary.main
+                }`,
               },
             }),
           }),
           // Pulsing halo — phase dots only, active state, not done.
-          ...(active && !isMilestone && !done
-            ? [
-                {
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    inset: -5,
-                    borderRadius: '50%',
-                    border: '2px solid',
-                    borderColor: `${effectiveColor}.main`,
-                    animation: `${pulseRing} 1.5s ease-in-out infinite`,
-                  },
-                },
-              ]
-            : []),
+          ...(active && !isMilestone && !done ? [pulseRingAfterSx(effectiveColor)] : []),
           ...normaliseSx(sx),
         ] as SxProps<Theme>
       }
