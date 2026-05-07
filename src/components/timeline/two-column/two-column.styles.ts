@@ -13,8 +13,8 @@ import type { SxProps, Theme } from '@mui/material/styles';
 /**
  * Column Box inside the `TimelineColumn` layout helper.
  *
- * - Left column: right-aligned text, right padding, hidden on mobile when empty.
- * - Right column: left-aligned text, left padding, hidden on mobile when empty.
+ * - Left column: right-aligned text, right padding, always hidden on xs (cards shift to right slot on mobile).
+ * - Right column: left-aligned text, left padding, always visible on xs, hidden on md when empty.
  *
  * @param columnSide - `'left'` or `'right'`.
  * @param hasContent - When false, the column is hidden on xs screens.
@@ -32,7 +32,10 @@ export const timelineColumnSx = (
   pl: columnSide === 'right' ? 2 : 0,
   pt: 0.75,
   paddingBottom: `${bottomPadding}px`,
-  display: { xs: hasContent ? 'block' : 'none', md: 'block' },
+  display: {
+    xs: columnSide === 'left' ? 'none' : 'block',
+    md: columnSide === 'left' || hasContent ? 'block' : 'none',
+  },
 });
 
 // ── Milestone row ─────────────────────────────────────────────────────────────
@@ -129,12 +132,12 @@ export const markerPhaseLiSx: SxProps<Theme> = {
   minHeight: 40,
 };
 
-/** Left label Box inside a marker row — right-aligned, flush against the spine. */
+/** Left label Box inside a marker row — right-aligned, flush against the spine. Hidden on mobile so labels shift to the right slot. */
 export const markerLeftLabelSx: SxProps<Theme> = {
   flex: 1,
   minWidth: 0,
   overflow: 'hidden',
-  display: 'flex',
+  display: { xs: 'none', md: 'flex' },
   justifyContent: 'flex-end',
   alignItems: 'center',
   pr: 1.5,
