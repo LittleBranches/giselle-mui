@@ -7,7 +7,6 @@ export default defineConfig([
     format: ['esm', 'cjs'],
     dts: true,
     sourcemap: true,
-    clean: true,
     banner: { js: "'use client';" },
     external: [
       'react',
