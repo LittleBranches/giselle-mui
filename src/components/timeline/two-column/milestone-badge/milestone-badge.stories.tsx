@@ -15,6 +15,7 @@ const icon = (name: string) => <GiselleIcon icon={name} width={16} />;
 
 /** Default milestone with three expandable tasks. */
 const BASE_MILESTONE: TimelineMilestone = {
+  key: 'v2-published',
   date: 'Mar 2022',
   title: 'v2.0 Published to npm',
   shortTitle: 'v2.0 Published',
@@ -23,14 +24,15 @@ const BASE_MILESTONE: TimelineMilestone = {
   icon: icon('solar:upload-bold'),
   color: 'success',
   children: [
-    { title: 'Migration guide written and reviewed', done: true },
-    { title: 'Peer review sign-off from Platform Team' },
-    { title: 'npm registry health check passed', done: true },
+    { key: 'migration-guide', title: 'Migration guide written and reviewed', done: true },
+    { key: 'peer-review', title: 'Peer review sign-off from Platform Team' },
+    { key: 'registry-health', title: 'npm registry health check passed', done: true },
   ],
 };
 
 /** Minimal milestone — no children, not expandable. Used for colour matrix. */
 const SIMPLE_MILESTONE: TimelineMilestone = {
+  key: 'mit-license',
   date: 'Jun 2020',
   title: 'Open Sourced under MIT',
   shortTitle: 'MIT Licensed',

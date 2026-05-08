@@ -84,7 +84,10 @@ export function MilestoneBadge({
    */
   const taskChildren: Task[] = m.children?.length
     ? m.children
-    : (m.details?.map((title: string) => ({ title })) ?? []);
+    : (m.details?.map((title: string, index: number) => ({
+        key: `detail-${index}`,
+        title,
+      })) ?? []);
 
   const hasDetails = taskChildren.length > 0;
   const colorKey = (m.color ?? 'primary') as HighlightedPaletteKey;
