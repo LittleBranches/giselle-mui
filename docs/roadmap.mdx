@@ -84,21 +84,21 @@ export const roadmapPhases = [
     side: 'right',
     icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 11h8V3H4v8Zm0 10h8v-8H4v8Zm10 0h8v-8h-8v8Zm0-18v8h8V3h-8Z" /></svg>,
     color: 'secondary',
-    milestones: [
-      { key: 0, date: '5 May 2026', shortTitle: 'StatCard', title: 'StatCard', description: 'Data card with sparkline, six palette variants.', color: 'success', done: true },
-      { key: 1, date: '5 May 2026', shortTitle: 'RadialProgressCard', title: 'RadialProgressCard', description: 'Card wrapping an ApexCharts radialBar.', color: 'success', done: true },
-      { key: 4, date: '7 May 2026', shortTitle: 'TimelineCompact', title: 'TimelineCompact', description: 'Single-column accordion renderer for TimelinePhase[]. Mobile companion to TimelineTwoColumn — swap at xs/sm breakpoints with no data-layer changes.', color: 'success', done: true },
-      { key: 11, date: '8 May 2026', shortTitle: 'Accordion', title: 'Accordion', description: 'Generic WCAG 2.2 AA accordion with done-toggle, checklist mode, CheckIconButton custom-icon variant, leading icon/action slots. Solves the nested-interactive-element problem once.', color: 'success', done: true },
-      { key: 12, date: '8 May 2026', shortTitle: 'TaskList', title: 'TaskList', description: 'Flat done/pending list. Shares the same done/onDoneButtonClick API as Accordion.', color: 'success', done: true },
-      { key: 13, date: '8 May 2026', shortTitle: 'FaqAccordion (/motion)', title: 'FaqAccordion', description: 'FAQ section with framer-motion scroll animation, decorative SVGs, contact footer. /motion subpath only — consumers without framer-motion pay zero bundle cost.', color: 'success', done: true },
-      { key: 2, date: 'Jun 2026', shortTitle: 'HeroSection', title: 'HeroSection', description: 'Full-width hero: headline, subtitle, CTA slot.', color: 'secondary' },
-      { key: 3, date: 'Jun 2026', shortTitle: 'FAQAccordion', title: 'FAQAccordion', description: 'MUI Accordion with icon slot and accessible expand.', color: 'secondary' },
-      { key: 5, shortTitle: 'TwoColumnShowcaseRow', title: 'TwoColumnShowcaseRow', description: 'Two-column grid for a showcase item and descriptive text. Extracted from alexrebula — zero proprietary deps.', color: 'success', done: true },
-      { key: 6, shortTitle: 'SectionContainer', title: 'SectionContainer', description: 'Container + consistent vertical padding + optional title/subtitle slot. Required by every portfolio page.', color: 'success', done: true },
-      { key: 7, shortTitle: 'SectionTitle + SectionCaption', title: 'SectionTitle + SectionCaption', description: 'Section heading group with optional gradient accent text.', color: 'success', done: true },
-      { key: 8, date: 'Jun 2026', shortTitle: 'OptionWithBlurb', title: 'OptionWithBlurb', description: 'Small option card with descriptive text.', color: 'secondary' },
-      { key: 9, date: 'Jun 2026', shortTitle: 'SectionPendingLoader', title: 'SectionPendingLoader', description: 'Loading placeholder for async section data. Requires internal Iconify → GiselleIcon swap.', color: 'secondary' },
-      { key: 10, date: 'Jun 2026', shortTitle: 'FloatingControlBar', title: 'FloatingControlBar', description: 'Floating toolbar variant. Requires internal Iconify → GiselleIcon swap.', color: 'secondary' },
+    children: [
+      { key: 0, date: '5 May 2026', shortTitle: 'StatCard', title: 'StatCard', description: 'Data card with sparkline, six palette variants.', details: { content: 'Shipped as one of the first standalone dashboard-ready cards in giselle-mui.' }, color: 'success', done: true },
+      { key: 1, date: '5 May 2026', shortTitle: 'RadialProgressCard', title: 'RadialProgressCard', description: 'Card wrapping an ApexCharts radialBar.', details: { content: 'Established the chart-card pattern for the optional /charts subpath work.' }, color: 'success', done: true },
+      { key: 4, date: '7 May 2026', shortTitle: 'TimelineCompact', title: 'TimelineCompact', description: 'Single-column accordion renderer for TimelinePhase[]. Mobile companion to TimelineTwoColumn — swap at xs/sm breakpoints with no data-layer changes.', details: { content: 'This is the compact/mobile renderer used in constrained widths such as docs pages and small breakpoints.' }, color: 'success', done: true },
+      { key: 11, date: '8 May 2026', shortTitle: 'Accordion', title: 'Accordion', description: 'Generic WCAG 2.2 AA accordion with done-toggle, checklist mode, CheckIconButton custom-icon variant, leading icon/action slots. Solves the nested-interactive-element problem once.', details: { content: 'This is the reusable primitive the compact timeline now builds on instead of baking milestone-specific logic into the accordion itself.' }, color: 'success', done: true },
+      { key: 12, date: '8 May 2026', shortTitle: 'TaskList', title: 'TaskList', description: 'Flat done/pending list. Shares the same done/onDoneButtonClick API as Accordion.', details: { content: 'Acts as the flat checklist companion to Accordion and now also renders nested task details inside compact timeline modals.' }, color: 'success', done: true },
+      { key: 13, date: '8 May 2026', shortTitle: 'FaqAccordion (/motion)', title: 'FaqAccordion', description: 'FAQ section with framer-motion scroll animation, decorative SVGs, contact footer. /motion subpath only — consumers without framer-motion pay zero bundle cost.', details: { content: 'Lives in the optional /motion entry so non-motion consumers do not inherit framer-motion as a hard dependency.' }, color: 'success', done: true },
+      { key: 2, date: 'Jun 2026', shortTitle: 'HeroSection', title: 'HeroSection', description: 'Full-width hero: headline, subtitle, CTA slot.', details: { content: 'Planned as a reusable layout shell rather than an app-specific landing-page implementation.' }, color: 'secondary' },
+      { key: 3, date: 'Jun 2026', shortTitle: 'FAQAccordion', title: 'FAQAccordion', description: 'MUI Accordion with icon slot and accessible expand.', details: { content: 'A simpler non-motion FAQ primitive for consumers that only need the structural accordion behaviour.' }, color: 'secondary' },
+      { key: 5, shortTitle: 'TwoColumnShowcaseRow', title: 'TwoColumnShowcaseRow', description: 'Two-column grid for a showcase item and descriptive text. Extracted from alexrebula — zero proprietary deps.', details: { content: 'Already extracted and available as a reusable layout row instead of living only in the private portfolio.' }, color: 'success', done: true },
+      { key: 6, shortTitle: 'SectionContainer', title: 'SectionContainer', description: 'Container + consistent vertical padding + optional title/subtitle slot. Required by every portfolio page.', details: { content: 'Provides the baseline spacing shell that section-level components can share instead of re-implementing paddings page by page.' }, color: 'success', done: true },
+      { key: 7, shortTitle: 'SectionTitle + SectionCaption', title: 'SectionTitle + SectionCaption', description: 'Section heading group with optional gradient accent text.', details: { content: 'Forms the standard title/caption pair for section headers across marketing and portfolio-style layouts.' }, color: 'success', done: true },
+      { key: 8, date: 'Jun 2026', shortTitle: 'OptionWithBlurb', title: 'OptionWithBlurb', description: 'Small option card with descriptive text.', details: { content: 'Planned as a lightweight selection primitive for settings, comparisons, and feature choices.' }, color: 'secondary' },
+      { key: 9, date: 'Jun 2026', shortTitle: 'SectionPendingLoader', title: 'SectionPendingLoader', description: 'Loading placeholder for async section data. Requires internal Iconify → GiselleIcon swap.', details: { content: 'Still blocked on replacing the private icon dependency path with the public GiselleIcon contract.' }, color: 'secondary' },
+      { key: 10, date: 'Jun 2026', shortTitle: 'FloatingControlBar', title: 'FloatingControlBar', description: 'Floating toolbar variant. Requires internal Iconify → GiselleIcon swap.', details: { content: 'Another extraction candidate waiting on the same icon boundary cleanup before it can ship publicly.' }, color: 'secondary' },
     ],
   },
   {
@@ -130,11 +130,11 @@ export const roadmapPhases = [
     side: 'right',
     icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 11h8V3H4v8Zm0 10h8v-8H4v8Zm10 0h8v-8h-8v8Zm0-18v8h8V3h-8Z" /></svg>,
     color: 'info',
-    milestones: [
-      { key: 0, date: '7 May 2026', shortTitle: 'Subpath exports', title: 'Configure /charts and /motion subpath exports in tsup + package.json', description: 'Architecture prerequisite. Unblocks ApexCharts chart cards and framer-motion components without imposing those deps on all consumers.', color: 'success', done: true },
-      { key: 1, date: 'Aug 2026', shortTitle: 'MUI-only widgets', title: 'MUI-only dashboard widgets (18 components)', description: 'Groups 1+3+4+5 + Group 7 main-bundle analytics: StatCardRow, BalanceSummaryCard, CreditCardDisplay, DataTable, ActivityFeedList, NewsFeedList, RelatedItemsList, ProgressStatsList, QuickTransferWidget, ContactsList, BudgetBreakdownCard, HeroBannerCard, FeaturedItemCard, PromoInviteCard, CostClassificationCard, ROIComparisonCard, ScenarioComparisonWidget, AmortizationScheduleTable.' },
-      { key: 2, date: 'Aug 2026', shortTitle: 'Chart cards', title: 'ApexCharts chart card suite (8 components — /charts subpath)', description: 'SparklineBar, DonutChartCard, AreaLineChartCard, BudgetVsActualChartCard, GroupedBarChartCard, HorizontalBarChartCard, RadarChartCard, ProjectionChartCard (dual-series costs-vs-returns with break-even annotation).' },
-      { key: 3, date: 'Aug 2026', shortTitle: 'Motion components', title: 'Move FloatingSubNav to /motion subpath + AnimatedTabPanel', description: 'Breaking change for FloatingSubNav consumers — needs re-export shim or minor version bump.' },
+    children: [
+      { key: 0, date: '7 May 2026', shortTitle: 'Subpath exports', title: 'Configure /charts and /motion subpath exports in tsup + package.json', description: 'Architecture prerequisite. Unblocks ApexCharts chart cards and framer-motion components without imposing those deps on all consumers.', details: { content: 'Completed prerequisite: the package can now isolate heavy optional dependencies behind explicit import paths.' }, color: 'success', done: true },
+      { key: 1, date: 'Aug 2026', shortTitle: 'MUI-only widgets', title: 'MUI-only dashboard widgets (18 components)', description: 'Groups 1+3+4+5 + Group 7 main-bundle analytics: StatCardRow, BalanceSummaryCard, CreditCardDisplay, DataTable, ActivityFeedList, NewsFeedList, RelatedItemsList, ProgressStatsList, QuickTransferWidget, ContactsList, BudgetBreakdownCard, HeroBannerCard, FeaturedItemCard, PromoInviteCard, CostClassificationCard, ROIComparisonCard, ScenarioComparisonWidget, AmortizationScheduleTable.', details: { content: 'These are the main-bundle widgets that stay available to every consumer without bringing in charting or motion packages.' } },
+      { key: 2, date: 'Aug 2026', shortTitle: 'Chart cards', title: 'ApexCharts chart card suite (8 components — /charts subpath)', description: 'SparklineBar, DonutChartCard, AreaLineChartCard, BudgetVsActualChartCard, GroupedBarChartCard, HorizontalBarChartCard, RadarChartCard, ProjectionChartCard (dual-series costs-vs-returns with break-even annotation).', details: { content: 'All chart-heavy cards stay behind the /charts entry so the main bundle remains MUI-only.' } },
+      { key: 3, date: 'Aug 2026', shortTitle: 'Motion components', title: 'Move FloatingSubNav to /motion subpath + AnimatedTabPanel', description: 'Breaking change for FloatingSubNav consumers — needs re-export shim or minor version bump.', details: { content: 'This milestone is mainly about package-boundary hygiene so motion remains opt-in instead of leaking into the default entry.' } },
     ],
   },
   {
@@ -146,13 +146,14 @@ export const roadmapPhases = [
     side: 'right',
     icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.14 7.14 0 0 0-1.63-.94l-.36-2.54a.49.49 0 0 0-.49-.42h-3.84a.49.49 0 0 0-.49.42l-.36 2.54c-.58.22-1.12.52-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.51.41 1.05.73 1.63.94l.36 2.54c.05.24.25.42.49.42h3.84c.24 0 .44-.18.49-.42l.36-2.54c.58-.22 1.12-.53 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z" /></svg>,
     color: 'secondary',
-    milestones: [
+    children: [
       {
         key: 0,
         date: 'Oct 2026',
         shortTitle: 'Slot-first API guide',
         title: 'Slot-first API design guide — Sitecore / CMS compatibility',
         description: 'Documents the pattern: every composite component exposes named ReactNode slots instead of data arrays. Maps directly to Sitecore placeholder mechanics — the layout engine renders into children or named slots; the component provides structure and styling only. Includes a migration guide from data-prop APIs to slot APIs.',
+        details: { content: 'This guide explains the architectural contract for CMS-first teams: the CMS owns content composition, the component owns structure, styling, and accessibility.' },
         color: 'secondary',
       },
       {
@@ -161,6 +162,7 @@ export const roadmapPhases = [
         shortTitle: 'CompositeCard',
         title: 'CompositeCard — canonical slot-first component',
         description: 'A card component with named ReactNode slots: header, media, body, footer, actions. No required props. Each slot is independently wirable from a Sitecore placeholder. The reference implementation for the slot-first pattern — other components follow this shape.',
+        details: { content: 'CompositeCard becomes the concrete example teams can copy when converting from data-driven props to slot-driven composition.' },
         color: 'secondary',
       },
       {
@@ -169,6 +171,7 @@ export const roadmapPhases = [
         shortTitle: 'Compound component guide',
         title: 'Compound component pattern — parent + exported sub-components sharing context',
         description: 'Pattern guide and reference implementation: a parent component that exposes React context, with named sub-components (Component.Header, Component.Body, Component.Footer) that consume it. Avoids prop drilling when Sitecore wires each placeholder independently. Each sub-component can be placed in a separate Sitecore placeholder without the parent needing to know the structure.',
+        details: { content: 'This is the context-sharing companion to the slot-first pattern: flexible composition without passing every prop through every level.' },
         color: 'secondary',
       },
       {
@@ -177,6 +180,7 @@ export const roadmapPhases = [
         shortTitle: 'MUI JSDoc inheritance guide',
         title: 'MUI JSDoc inheritance — write docs only for new props',
         description: 'A documented principle and Storybook story that demonstrates: extending CardProps, ButtonProps, etc. means MUI\'s own JSDoc for elevation, variant, sx, aria-*, and all base props appears in the IDE and Storybook autodoc with zero authoring. Only props that giselle-mui adds need documentation. This is the productivity multiplier for large Sitecore teams.',
+        details: { content: 'The point is to cut duplicate documentation work: teams document only the new contract they add, not the entire inherited MUI surface.' },
         color: 'secondary',
       },
     ],
@@ -190,13 +194,13 @@ export const roadmapPhases = [
     side: 'left',
     icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm4-14h10v2H11V4Zm0 8h10v2H11v-2Zm0 8h10v2H11v-2Z" /></svg>,
     color: 'info',
-    milestones: [
-      { key: 0, date: 'Sep 2026', shortTitle: 'Motion variants', title: 'varFade, varScale, varZoom — motion variant factories', description: 'Standalone framer-motion Variants factories. MIT-safe replacement for Minimals varFade/varSlide/varScale. Exported from /motion subpath. Unblocks all animation-dependent components in this phase.' },
-      { key: 1, date: 'Sep 2026', shortTitle: 'SectionTitle animated', title: 'SectionTitle + SectionCaption — animated /motion variants', description: 'Animated wrappers using varFade stagger on each text slot. The static base components are already shipped in Phase E; these are the entrance-animated /motion versions.' },
-      { key: 2, date: 'Sep 2026', shortTitle: 'FloatingSideNav', title: 'FloatingSideNav — vertically stacked left-side pill nav', description: 'Props-only API: isVisible, activeId, onSelect. Distinct from FloatingSubNav (bottom-anchored pill) — different component, different placement, different use case.' },
-      { key: 3, date: 'Sep 2026', shortTitle: 'HeroBackground', title: 'HeroBackground — radial gradient backdrop + animated SVG grid', description: 'Full-width animated hero background. Internal SVG primitives (FloatLine, FloatTriangle, FloatDot) not exported. Replaces Minimals bgGradient mixin with theme.vars.palette.* CSS variables.' },
-      { key: 4, date: 'Oct 2026', shortTitle: 'FloatingIconCloud', title: 'FloatingIconCloud — floating icon images with seeded positioning', description: 'Consumer supplies items[]. No alexrebula-specific presets.' },
-      { key: 5, date: 'Oct 2026', shortTitle: 'InteractiveHeroLogo', title: 'InteractiveHeroLogo', description: 'Most valuable single component in this phase. Requires useImagePreloader utility to be moved from alexrebula utils to giselle-mui utils before extraction.' },
+    children: [
+      { key: 0, date: 'Sep 2026', shortTitle: 'Motion variants', title: 'varFade, varScale, varZoom — motion variant factories', description: 'Standalone framer-motion Variants factories. MIT-safe replacement for Minimals varFade/varSlide/varScale. Exported from /motion subpath. Unblocks all animation-dependent components in this phase.', details: { content: 'This is the legal and architectural prerequisite for any future extraction that currently depends on private motion helpers.' } },
+      { key: 1, date: 'Sep 2026', shortTitle: 'SectionTitle animated', title: 'SectionTitle + SectionCaption — animated /motion variants', description: 'Animated wrappers using varFade stagger on each text slot. The static base components are already shipped in Phase E; these are the entrance-animated /motion versions.', details: { content: 'The static primitives already exist; this milestone adds the optional animated entry path without contaminating the main bundle.' } },
+      { key: 2, date: 'Sep 2026', shortTitle: 'FloatingSideNav', title: 'FloatingSideNav — vertically stacked left-side pill nav', description: 'Props-only API: isVisible, activeId, onSelect. Distinct from FloatingSubNav (bottom-anchored pill) — different component, different placement, different use case.', details: { content: 'The interaction model and placement are different enough that this remains a separate component, not a variant of FloatingSubNav.' } },
+      { key: 3, date: 'Sep 2026', shortTitle: 'HeroBackground', title: 'HeroBackground — radial gradient backdrop + animated SVG grid', description: 'Full-width animated hero background. Internal SVG primitives (FloatLine, FloatTriangle, FloatDot) not exported. Replaces Minimals bgGradient mixin with theme.vars.palette.* CSS variables.', details: { content: 'The key requirement is a clean-room animated background built entirely on theme vars and MIT-safe motion utilities.' } },
+      { key: 4, date: 'Oct 2026', shortTitle: 'FloatingIconCloud', title: 'FloatingIconCloud — floating icon images with seeded positioning', description: 'Consumer supplies items[]. No alexrebula-specific presets.', details: { content: 'This extraction only ships once the component is fully data-driven and detached from portfolio-specific icon presets.' } },
+      { key: 5, date: 'Oct 2026', shortTitle: 'InteractiveHeroLogo', title: 'InteractiveHeroLogo', description: 'Most valuable single component in this phase. Requires useImagePreloader utility to be moved from alexrebula utils to giselle-mui utils before extraction.', details: { content: 'Blocked on moving the supporting preloader utility across the private/public boundary first.' } },
     ],
   },
   {
@@ -208,12 +212,13 @@ export const roadmapPhases = [
     side: 'right',
     icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm4-14h10v2H11V4Zm0 8h10v2H11v-2Zm0 8h10v2H11v-2Z" /></svg>,
     color: 'secondary',
-    milestones: [
+    children: [
       {
         key: 0,
         shortTitle: 'Library classification',
         title: 'Decide: giselle-mui or dedicated smart-components package?',
         description: 'The branch layout algorithm (column widths, re-convergence detection, row alignment across arms) is complex enough that it may warrant its own package — e.g. @alexrebula/giselle-smart-components — rather than bundling into giselle-mui. This decision gates all other milestones.',
+        details: { content: 'This is the gating architectural decision because the implementation may exceed the scope of a small MUI wrapper library.' },
         color: 'warning',
       },
       {
@@ -221,6 +226,7 @@ export const roadmapPhases = [
         shortTitle: 'Data model',
         title: 'Define BranchedTimelineNode, BranchedTimelineScenario, BranchedTimelineData',
         description: 'Recursive typed data structure: trunk nodes (linear phases), branch-point nodes (condition string + scenario arms), and re-convergence nodes. Each scenario arm contains its own BranchedTimelineNode[] — branches can nest.',
+        details: { content: 'The recursive model is the core prerequisite for representing alternative futures without flattening them into a misleading linear sequence.' },
         color: 'secondary',
       },
       {
@@ -228,6 +234,7 @@ export const roadmapPhases = [
         shortTitle: 'Layout algorithm',
         title: 'Branch layout engine — column widths, re-convergence, row alignment',
         description: 'Pure utility (no JSX): given a BranchedTimelineData tree, compute per-arm column widths, detect re-convergence nodes, and produce a flat render grid that aligns sibling-arm phases by date or sequence index. This is the hardest part and should be independently unit-testable.',
+        details: { content: 'This milestone is intentionally algorithm-first: layout correctness needs to be solved in pure data before any visual component is attempted.' },
         color: 'secondary',
       },
       {
@@ -235,6 +242,7 @@ export const roadmapPhases = [
         shortTitle: 'BranchedTimeline component',
         title: 'BranchedTimeline — trunk + arms + fork indicators + re-convergence',
         description: 'Renders the trunk timeline, splits into parallel arm columns at fork points (labelled with condition text and palette-keyed colour bands), and re-merges where all arms converge to a shared outcome. Reuses TimelinePhase, MilestoneBadge, and SpineConnector from TimelineTwoColumn internals.',
+        details: { content: 'The render layer comes last, after the package boundary and layout algorithm are settled.' },
         color: 'secondary',
       },
     ],
