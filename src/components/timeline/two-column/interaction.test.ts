@@ -182,6 +182,7 @@ function makePhase(key: number, side: 'left' | 'right', milestoneCount: number):
     icon: null,
     side,
     milestones: Array.from({ length: milestoneCount }, (_, i) => ({
+      key: `ms-${i}`,
       title: `M${i}`,
       date: '',
       icon: null,
