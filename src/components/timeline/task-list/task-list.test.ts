@@ -11,9 +11,9 @@ import type { Task } from '../two-column/types';
 // ----------------------------------------------------------------------
 
 const tasks: Task[] = [
-  { title: 'Write tests', done: false },
-  { title: 'Ship component', done: true },
-  { title: 'Update docs' },
+  { key: 'write-tests', title: 'Write tests', done: false },
+  { key: 'ship-component', title: 'Ship component', done: true },
+  { key: 'update-docs', title: 'Update docs' },
 ];
 
 describe('TaskList — read-only mode', () => {
@@ -78,7 +78,7 @@ describe('TaskList — checklist mode', () => {
       (checkboxes[1] as HTMLInputElement).click();
     });
     expect(onTaskToggle).toHaveBeenCalledWith(1);
-    document.body.removeChild(container);
+    container.remove();
   });
 });
 

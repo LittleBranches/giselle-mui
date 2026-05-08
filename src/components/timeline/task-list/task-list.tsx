@@ -50,19 +50,10 @@ export function TaskList({
                 checked={isDone}
                 onChange={() => onTaskToggle?.(i)}
                 sx={taskCheckboxSx}
-                inputProps={{ 'aria-label': task.title }}
+                slotProps={{ input: { 'aria-label': task.title } }}
               />
             )}
-            {!checklist && (
-              <Typography
-                component="span"
-                variant="body2"
-                sx={{ color: 'text.disabled', mr: 0.75, flexShrink: 0 }}
-              >
-                ›
-              </Typography>
-            )}
-            <Typography variant="body2" sx={taskCaptionSx(isDone)}>
+            <Typography variant="caption" sx={taskCaptionSx(isDone)}>
               {task.title}
             </Typography>
           </Box>
