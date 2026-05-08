@@ -73,7 +73,7 @@ vi.mock('@mui/material/Box', () => ({
     children?: React.ReactNode;
     sx?: unknown;
     [key: string]: unknown;
-  }) => React.createElement(component as string, props, children ?? null),
+  }) => React.createElement(component, props, children ?? null),
 }));
 
 vi.mock('@mui/material/Typography', () => ({
@@ -91,10 +91,25 @@ vi.mock('@mui/material/Typography', () => ({
     sx?: unknown;
     noWrap?: boolean;
     [key: string]: unknown;
-  }) => React.createElement(component as string, props, children ?? null),
+  }) => React.createElement(component, props, children ?? null),
 }));
 
 import { MetricCard, MetricCardDecoration } from './metric-card';
+import { METRIC_CARD_ICON_BOX_SIZE, METRIC_CARD_DECORATION_SIZE } from './metric-card.const';
+
+// ---------------------------------------------------------------------------
+// Readability — minimum size constants
+// ---------------------------------------------------------------------------
+
+describe('readability — minimum size constants', () => {
+  it('[regression] METRIC_CARD_ICON_BOX_SIZE >= 24px', () => {
+    expect(METRIC_CARD_ICON_BOX_SIZE).toBeGreaterThanOrEqual(24);
+  });
+
+  it('[regression] METRIC_CARD_DECORATION_SIZE >= 80px', () => {
+    expect(METRIC_CARD_DECORATION_SIZE).toBeGreaterThanOrEqual(80);
+  });
+});
 
 // ---------------------------------------------------------------------------
 // MetricCard — content rendering

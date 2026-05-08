@@ -1,5 +1,7 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import { METRIC_CARD_ICON_BOX_SIZE, METRIC_CARD_DECORATION_SIZE } from './metric-card.const';
+
 // ----------------------------------------------------------------------
 
 /** Paper root for `MetricCard` — padding, positioning, overflow clipping. */
@@ -22,6 +24,13 @@ export const decorationOverlaySx: SxProps<Theme> = {
   pointerEvents: 'none',
 };
 
+/** Content wrapper Box in `MetricCard` — sits above the decoration overlay. */
+export const metricCardContentSx: SxProps<Theme> = {
+  position: 'relative',
+  zIndex: 1,
+  flexGrow: 1,
+};
+
 /**
  * Absolutely-positioned icon Box in the top-right corner of `MetricCard`.
  *
@@ -32,8 +41,8 @@ export const metricCardIconBoxSx =
   (theme) => ({
     top: 24,
     right: 20,
-    width: 36,
-    height: 36,
+    width: METRIC_CARD_ICON_BOX_SIZE,
+    height: METRIC_CARD_ICON_BOX_SIZE,
     position: 'absolute',
     zIndex: 1,
     display: 'flex',
@@ -54,8 +63,8 @@ export const metricCardDecorationSx =
   (theme) => ({
     top: -40,
     right: -56,
-    width: 140,
-    height: 140,
+    width: METRIC_CARD_DECORATION_SIZE,
+    height: METRIC_CARD_DECORATION_SIZE,
     opacity: 0.1,
     borderRadius: 4,
     position: 'absolute',

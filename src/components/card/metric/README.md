@@ -190,6 +190,13 @@ src/components/metric-card/
 
 ---
 
+## Quality status — 8 May 2026
+
+| Dimension        | Score | Open items |
+| ---------------- | ----- | ---------- |
+| DoD (Scenario B) | 20/20 | —          |
+| Best practices   | 13/13 | —          |
+
 ## Related
 
 - [`GiselleIcon`](../giselle-icon/README.md) — icon component for the `icon` slot

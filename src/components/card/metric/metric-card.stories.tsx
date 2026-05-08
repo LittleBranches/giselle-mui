@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 
 import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { MetricCard, MetricCardDecoration } from './metric-card';
-import type { MetricCardColor } from './metric-card';
+import type { MetricCardColor } from './types';
 
 // ----------------------------------------------------------------------
 
