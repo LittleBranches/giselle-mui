@@ -1,4 +1,5 @@
 export { TimelineCompact } from './compact';
+export { TaskDetailsRenderer } from './task-details-renderer';
 export type { TimelineCompactProps } from './types';
 export { resolveCompactColor } from './utils';
 export {
