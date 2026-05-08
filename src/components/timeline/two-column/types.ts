@@ -487,6 +487,14 @@ export type MilestoneRowProps = {
   isMobile: boolean;
 };
 
+/** Props for the `MarkerLabel` internal sub-component. @internal */
+export type MarkerLabelProps = {
+  /** Display text — pass `phase.shortTitle ?? phase.title`. */
+  title: string;
+  /** Optional date string appended inline after a middle-dot separator. */
+  date?: string;
+};
+
 /** Props for the `MarkerRow` internal sub-component. @internal */
 export type MarkerRowProps = {
   /** The phase data for this marker. `variant` must be `'marker'`. */
@@ -501,9 +509,16 @@ export type MarkerRowProps = {
   checklist: boolean;
   /** Year boundary value shown on the spine connector, or `null` when no boundary exists. */
   yearLabelValue: string | null;
-  /** Whether the viewport is below the md breakpoint — collapses to single-column layout. */
+  /**
+   * Whether the viewport is below the md breakpoint.
+   *
+   * When `true`, the left label slot is hidden via CSS (`markerLeftLabelSx display.xs='none'`)
+   * and the right slot also renders the label for `side='left'` phases — mirroring the
+   * column-collapse behaviour of full phase cards on mobile. This ensures the label is
+   * always visible regardless of viewport width.
+   */
   isMobile: boolean;
-};
+} & React.HTMLAttributes<HTMLLIElement>;
 
 /** Props for the `PhaseRow` internal sub-component. @internal */
 export type PhaseRowProps = {

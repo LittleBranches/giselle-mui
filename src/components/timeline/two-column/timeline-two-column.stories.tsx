@@ -1209,3 +1209,157 @@ export const PhotosArraySlot: Story = {
     sx: { control: false },
   },
 };
+
+// ----------------------------------------------------------------------
+
+/**
+ * **Marker label side — direct placement (not inverted like phase cards)**
+ *
+ * ---
+ *
+ * ### The rule
+ *
+ * For `variant='marker'`, `phase.side` controls which side the floating label appears on
+ * — **directly**: `side='left'` places the label on the left; `side='right'` on the right.
+ *
+ * ### Why this is a decision-doc story
+ *
+ * Full phase cards use `side` *inversely*: a `side='right'` phase card renders in the LEFT
+ * column. Markers have no card — the label floats directly to the named side. These are
+ * opposite conventions for the same prop within the same component. Without a story that
+ * makes the difference visually verifiable, this distinction only lives in JSDoc comments
+ * and is easy to get wrong when adding new marker entries.
+ *
+ * ### What to verify in the canvas
+ *
+ * - Top marker (`side: 'left'`): label appears to the **left** of the spine dot
+ * - Bottom marker (`side: 'right'`): label appears to the **right** of the spine dot
+ * - Neither marker has a card
+ */
+export const MarkerLabelSidePlacement: Story = {
+  render: () => (
+    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+      <Box sx={{ display: 'flex', gap: 4, mb: 3 }}>
+        <Box sx={storyColumnIndicatorSx('info.main')}>
+          <Typography variant="caption" color="info.main" fontWeight={700}>
+            LEFT — label floats left when side=&#x27;left&#x27;
+          </Typography>
+        </Box>
+        <Box sx={storyColumnIndicatorSx('success.main')}>
+          <Typography variant="caption" color="success.main" fontWeight={700}>
+            RIGHT — label floats right when side=&#x27;right&#x27;
+          </Typography>
+        </Box>
+      </Box>
+      <TimelineTwoColumn
+        phases={[
+          {
+            key: 0,
+            title: 'Left-side marker',
+            shortTitle: 'Left label',
+            date: 'Jan 2020',
+            color: 'info',
+            side: 'left',
+            variant: 'marker',
+            icon: icon('solar:star-bold'),
+            description: 'side="left" — label floats to the left of the spine (direct placement).',
+          },
+          {
+            key: 1,
+            title: 'Right-side marker',
+            shortTitle: 'Right label',
+            date: 'Jun 2020',
+            color: 'success',
+            side: 'right',
+            variant: 'marker',
+            icon: icon('solar:star-bold'),
+            description:
+              'side="right" — label floats to the right of the spine (direct placement).',
+          },
+        ]}
+      />
+    </Box>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Verify that `side="left"` places the label on the **left** and `side="right"` places it on the **right**. Contrast with `ColumnPlacementInvariant` where `side="right"` phase cards render in the LEFT column — these are opposite conventions in the same component.',
+      },
+    },
+  },
+  argTypes: { phases: { control: false }, sx: { control: false } },
+};
+
+// ----------------------------------------------------------------------
+
+/**
+ * **Marker mobile collapse — `isMobile` forces all labels to the right slot**
+ *
+ * ---
+ *
+ * ### The rule
+ *
+ * When the viewport drops below the `md` breakpoint, `isMobile=true` is computed
+ * internally (via `useMediaQuery`). For marker rows this triggers:
+ *
+ * - Left label slot hidden via CSS (`markerLeftLabelSx` sets `display: { xs: 'none', md: 'flex' }`)
+ * - Right slot renders the label **regardless of `phase.side`** (`shouldShowRightLabel = side !== 'left' || isMobile`)
+ *
+ * ### Why CSS-toggle rather than conditional render?
+ *
+ * A conditional render removes the element from the DOM on resize — React reconciles,
+ * causing a flash of content. CSS show/hide is instantaneous. The label is always present
+ * in the DOM; only visibility changes. A `side='left'` marker therefore has its label in
+ * **both** slots in the DOM — the left slot is invisible on mobile, the right slot visible.
+ *
+ * ### What to verify
+ *
+ * Resize the browser below 900 px — both marker labels should shift to the right of the
+ * spine, regardless of their `side` value. Above 900 px, `side='left'` renders left and
+ * `side='right'` renders right.
+ */
+export const MarkerMobileCollapse: Story = {
+  render: () => (
+    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+      <Typography variant="caption" sx={{ display: 'block', mb: 2, color: 'text.secondary' }}>
+        Resize below 900 px — both labels shift to the right of the spine.
+      </Typography>
+      <TimelineTwoColumn
+        phases={[
+          {
+            key: 0,
+            title: 'Left-side marker',
+            shortTitle: 'Left marker',
+            date: 'Jan 2020',
+            color: 'primary',
+            side: 'left',
+            variant: 'marker',
+            icon: icon('solar:star-bold'),
+            description: 'Desktop: label left. Mobile: label right (CSS column collapse).',
+          },
+          {
+            key: 1,
+            title: 'Right-side marker',
+            shortTitle: 'Right marker',
+            date: 'Jun 2020',
+            color: 'secondary',
+            side: 'right',
+            variant: 'marker',
+            icon: icon('solar:star-bold'),
+            description: 'Desktop: label right. Mobile: also label right.',
+          },
+        ]}
+      />
+    </Box>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Resize to below 900 px to verify that both `side="left"` and `side="right"` markers show their label on the **right** of the spine. The left slot is hidden via CSS at xs; the right slot receives all labels on mobile.',
+      },
+    },
+  },
+  argTypes: { phases: { control: false }, sx: { control: false } },
+};

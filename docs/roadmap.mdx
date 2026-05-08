@@ -186,6 +186,45 @@ export const roadmapPhases = [
       { key: 5, date: 'Oct 2026', shortTitle: 'InteractiveHeroLogo', title: 'InteractiveHeroLogo', description: 'Most valuable single component in this phase. Requires useImagePreloader utility to be moved from alexrebula utils to giselle-mui utils before extraction.' },
     ],
   },
+  {
+    key: 11,
+    title: 'Phase K — BranchedTimeline (Scenario Tree)',
+    shortTitle: 'Phase K',
+    description: 'Good to have — library classification open. A branched timeline where scenarios fork the main spine into parallel arms, each with its own phases and milestones. Solves the flat-timeline limitation for plans with multiple parallel futures. May belong in a dedicated smart-components package rather than giselle-mui.',
+    date: 'TBD',
+    side: 'right',
+    color: 'secondary',
+    milestones: [
+      {
+        key: 0,
+        shortTitle: 'Library classification',
+        title: 'Decide: giselle-mui or dedicated smart-components package?',
+        description: 'The branch layout algorithm (column widths, re-convergence detection, row alignment across arms) is complex enough that it may warrant its own package — e.g. @alexrebula/giselle-smart-components — rather than bundling into giselle-mui. This decision gates all other milestones.',
+        color: 'warning',
+      },
+      {
+        key: 1,
+        shortTitle: 'Data model',
+        title: 'Define BranchedTimelineNode, BranchedTimelineScenario, BranchedTimelineData',
+        description: 'Recursive typed data structure: trunk nodes (linear phases), branch-point nodes (condition string + scenario arms), and re-convergence nodes. Each scenario arm contains its own BranchedTimelineNode[] — branches can nest.',
+        color: 'secondary',
+      },
+      {
+        key: 2,
+        shortTitle: 'Layout algorithm',
+        title: 'Branch layout engine — column widths, re-convergence, row alignment',
+        description: 'Pure utility (no JSX): given a BranchedTimelineData tree, compute per-arm column widths, detect re-convergence nodes, and produce a flat render grid that aligns sibling-arm phases by date or sequence index. This is the hardest part and should be independently unit-testable.',
+        color: 'secondary',
+      },
+      {
+        key: 3,
+        shortTitle: 'BranchedTimeline component',
+        title: 'BranchedTimeline — trunk + arms + fork indicators + re-convergence',
+        description: 'Renders the trunk timeline, splits into parallel arm columns at fork points (labelled with condition text and palette-keyed colour bands), and re-merges where all arms converge to a shared outcome. Reuses TimelinePhase, MilestoneBadge, and SpineConnector from TimelineTwoColumn internals.',
+        color: 'secondary',
+      },
+    ],
+  },
 ];
 
 # @alexrebula/giselle-mui — Roadmap
@@ -712,6 +751,70 @@ Full spec: [`components/home-components-extraction-plan.md`](./components/home-c
 | I-5 | `HeroBackground` — radial gradient backdrop + animated SVG grid | Phases I-1, I-4 | ⬜ |
 | I-6 | `FloatingIconCloud` — floating icon images with seeded pseudo-random positioning | None | ⬜ |
 | I-7 | `InteractiveHeroLogo` | Move `useImagePreloader` from alexrebula → giselle-mui utils | ⬜ |
+
+---
+
+### Phase K — BranchedTimeline (Scenario Tree) — TBD ⚪ Good to have
+
+> **Library classification open.** This component sits at the boundary of what a pure UI library should own. The branch layout algorithm is complex enough that it may warrant a dedicated package (e.g. `@alexrebula/giselle-smart-components`) rather than bundling into `giselle-mui`. The classification decision must happen before any implementation work begins.
+
+**The problem it solves:**
+
+`TimelineTwoColumn` and `TimelineCompact` are flat — they render a single ordered sequence of phases. When a roadmap or plan has branching futures (e.g. "if we ship in May → Scenario A plays out; if we delay to July → Scenario B plays out"), there is no way to represent both paths without duplicating data or collapsing branches into description text.
+
+**What `BranchedTimeline` does:**
+
+A timeline where the main spine can split into N parallel arms at a fork point. Each arm is its own mini-timeline with phases and milestones. Arms can re-converge to the main spine if all scenarios lead to the same outcome. Fork points carry a `condition` string ("Scenario A — Early launch") and a palette-keyed colour band that threads through the arm.
+
+**Data model (proposed):**
+
+```ts
+type BranchedTimelineNode =
+  | { type: 'phase'; data: TimelinePhase }                          // linear segment
+  | { type: 'branch'; condition: string; arms: BranchedTimelineArm[] }; // fork point
+
+interface BranchedTimelineArm {
+  id: string;
+  label: string;          // "Scenario A — Early launch"
+  color?: PaletteKey;
+  nodes: BranchedTimelineNode[];  // recursive — arms can contain further forks
+}
+
+interface BranchedTimelineData {
+  title?: string;
+  trunk: BranchedTimelineNode[];  // main spine before and after any fork points
+}
+```
+
+This data shape maps directly to the `cleanup-workflow.md` document structure: each phase is a node, each scenario block is a fork, and the converging "Definition of done" section is a re-convergence node.
+
+**Why the layout is the hard part:**
+
+A flat timeline renders a single column of cards. A branched timeline must compute, per fork:
+
+- How many parallel arm columns are needed
+- How wide each column should be (proportional to arm complexity or fixed)
+- Whether sibling-arm phases should align by date or by sequence index
+- Whether arms re-converge (and where) — a re-convergence node must span all arm columns
+
+This layout computation is a pure function with no React dependency — it belongs in a `utils.ts` and should be independently unit-tested before any JSX is written.
+
+**Reuse of existing components:**
+
+Phase cards and milestone badges inside each arm are existing `TimelineTwoColumn` internals (`PhaseCard`, `MilestoneBadge`, `SpineConnector`). The new work is the branch/re-convergence layout shell, not the per-item rendering.
+
+| Task | Label | Status |
+| ---- | ----- | ------ |
+| **Decide library classification** — giselle-mui main bundle vs. dedicated smart-components package | Architecture | ⬜ |
+| Define `BranchedTimelineNode`, `BranchedTimelineArm`, `BranchedTimelineData` in `types.ts` | Components | ⬜ |
+| Implement branch layout algorithm in `utils.ts` — column widths, re-convergence detection, row alignment grid | Utilities | ⬜ |
+| Unit-test layout algorithm — fork with 2 arms, 3 arms, nested forks, re-convergence nodes | Utilities | ⬜ |
+| Implement `BranchedTimeline` — trunk spine, fork split, arm columns, re-convergence merge | Components | ⬜ |
+| Fork indicator: condition label, palette colour band threading through arm column | Components | ⬜ |
+| Re-convergence node: full-width card spanning all arm columns | Components | ⬜ |
+| Storybook story: two-arm fork, three-arm fork, nested fork, fork with re-convergence | Components | ⬜ |
+| Storybook story: `cleanup-workflow.md` data structure as the canonical real-world example | Components | ⬜ |
+| README: problem statement, data model, layout algorithm summary, library-classification rationale | Docs | ⬜ |
 
 </div>
 <div style={{ overflowY: 'auto' }}>
