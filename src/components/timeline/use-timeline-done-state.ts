@@ -37,13 +37,12 @@ function buildTaskDoneRecord(
 ): Record<string, boolean> {
   const t: Record<string, boolean> = {};
   phases.forEach((p) => {
-    resolveTaskChildren(p).forEach((task, ti) => {
-      t[`${p.key}-t${ti}`] = task.done ?? false;
-    });
-    const sorted = p.milestones ? sortFn([...p.milestones]) : [];
-    sorted.forEach((ms, mi) => {
-      resolveTaskChildren(ms).forEach((task, ti) => {
-        t[`${p.key}-m${mi}-t${ti}`] = task.done ?? false;
+    const sortedMilestones = p.milestones ? sortFn([...p.milestones]) : [];
+    const childTasks = p.children && p.children.length > 0 ? p.children : sortedMilestones;
+
+    childTasks.forEach((task, childIndex) => {
+      resolveTaskChildren(task).forEach((nestedTask, taskIndex) => {
+        t[`${p.key}-c${childIndex}-t${taskIndex}`] = nestedTask.done ?? false;
       });
     });
   });
