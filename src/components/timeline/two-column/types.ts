@@ -1,5 +1,6 @@
 import type * as React from 'react';
-import type { ReactNode } from 'react';
+
+type ReactNode = React.ReactNode;
 import type { BoxProps } from '@mui/material/Box';
 import type { TimelineDotProps } from '@mui/lab/TimelineDot';
 
@@ -10,6 +11,18 @@ export type HighlightedPaletteKey = Exclude<
   NonNullable<TimelineDotProps['color']>,
   'inherit' | 'grey'
 >;
+
+// ----------------------------------------------------------------------
+
+/** Structured rich content rendered inside a task details modal or drawer. */
+export interface TaskDetails {
+  /** Optional short summary rendered above the main content. */
+  summary?: ReactNode;
+  /** Arbitrary rich content for modal/drawer presentation. */
+  content?: ReactNode;
+  /** Optional nested tasks shown inside the details surface. */
+  tasks?: Task[];
+}
 
 // ----------------------------------------------------------------------
 
@@ -24,17 +37,31 @@ export type HighlightedPaletteKey = Exclude<
  * - Nesting is unbounded: a `Task` child can itself have `children`.
  *
  * ```
- * TimelinePhase  (extends Task)
- *   └─ milestones: TimelineMilestone[]  (each extends Task)
+ * TimelinePhase (extends Task)
+ *   └─ children / milestones: Task[]
  *        └─ children: Task[]
  *             └─ children: Task[]   ← infinite depth
  * ```
  */
 export type Task = {
+  /** Stable identifier for this work item. */
+  key: number | string;
   /** Display text for this work item. */
   title: string;
+  /** Short label for collapsed display. Falls back to `title` when omitted. */
+  shortTitle?: string;
+  /** Optional summary shown inline when the parent accordion row expands. */
+  description?: string;
+  /** Human-readable date label. */
+  date?: string;
   /** Whether this task is complete. */
   done?: boolean;
+  /** Optional icon slot rendered in the leading dot. */
+  icon?: ReactNode;
+  /** Optional palette key for the leading dot. */
+  color?: TimelineDotProps['color'];
+  /** Optional rich details rendered in a modal or drawer. */
+  details?: TaskDetails;
   /**
    * Nested sub-tasks. Can be nested to any depth.
    *

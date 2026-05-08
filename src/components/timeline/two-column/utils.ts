@@ -10,6 +10,7 @@ import type {
   PhaseDotHandlers,
   MilestoneDotHandlers,
   Task,
+  TaskDetails,
 } from './types';
 
 // ----------------------------------------------------------------------
@@ -660,8 +661,22 @@ export function computeSlotHeights(
  *
  * @internal — exported for unit tests only. Not part of the public API.
  */
-export function resolveTaskChildren(item: { children?: Task[]; details?: string[] }): Task[] {
+function isTaskDetails(details: string[] | TaskDetails | undefined): details is TaskDetails {
+  return Boolean(details) && !Array.isArray(details);
+}
+
+export function resolveTaskChildren(item: {
+  children?: Task[];
+  details?: string[] | TaskDetails;
+  milestones?: Task[];
+}): Task[] {
   if (item.children && item.children.length > 0) return item.children;
-  if (item.details && item.details.length > 0) return item.details.map((title) => ({ title }));
+  if (item.milestones && item.milestones.length > 0) return item.milestones;
+  if (isTaskDetails(item.details) && item.details.tasks && item.details.tasks.length > 0) {
+    return item.details.tasks;
+  }
+  if (Array.isArray(item.details) && item.details.length > 0) {
+    return item.details.map((title, index) => ({ key: `detail-${index}`, title }));
+  }
   return [];
 }
