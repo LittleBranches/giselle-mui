@@ -8,3 +8,17 @@ export const dialogTitleSx: SxProps<Theme> = {
   gap: 1,
   pr: 1,
 };
+
+export const dialogDateSx: SxProps<Theme> = {
+  color: 'text.secondary',
+  mt: 0.25,
+};
+
+export const dialogSummarySx = (hasTasks: boolean): SxProps<Theme> => ({
+  color: 'text.secondary',
+  mb: hasTasks ? 2 : 0,
+});
+
+export const dialogEmptyStateSx: SxProps<Theme> = {
+  color: 'text.disabled',
+};
