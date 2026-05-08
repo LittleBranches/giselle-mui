@@ -33,14 +33,12 @@ export function TimelineCompact({
   const { localTaskDoneMap, setLocalTaskDoneMap } = useTimelineDoneState(phases, sortOrder);
 
   const handleTaskToggle = useCallback(
-    (phaseKey: number, milestoneIdx: number | null, taskIdx: number) => {
+    (phaseKey: number, childIdx: number | null, taskIdx: number) => {
       const k =
-        milestoneIdx === null
-          ? `${phaseKey}-t${taskIdx}`
-          : `${phaseKey}-m${milestoneIdx}-t${taskIdx}`;
+        childIdx === null ? `${phaseKey}-t${taskIdx}` : `${phaseKey}-c${childIdx}-t${taskIdx}`;
       const next = !(localTaskDoneMap[k] ?? false);
       setLocalTaskDoneMap((prev) => ({ ...prev, [k]: next }));
-      onToggleTaskDone?.(phaseKey, milestoneIdx, taskIdx, next);
+      onToggleTaskDone?.(phaseKey, childIdx, taskIdx, next);
     },
     [localTaskDoneMap, onToggleTaskDone, setLocalTaskDoneMap]
   );

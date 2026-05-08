@@ -30,8 +30,29 @@ const MOCK_PHASES: TimelinePhase[] = [
     icon: MOCK_ICON,
     color: 'primary',
     side: 'left',
+    children: [
+      {
+        key: 'launch-task',
+        title: 'Launch checklist',
+        shortTitle: 'Checklist',
+        description: 'Release prep tasks and verification.',
+        date: 'Jan 2025',
+        color: 'success',
+      },
+    ],
+  },
+  {
+    key: 2,
+    title: 'Release hardening',
+    shortTitle: 'Hardening',
+    description: 'Post-launch fixes and deployment safeguards.',
+    date: 'Feb 2025',
+    icon: MOCK_ICON,
+    color: 'info',
+    side: 'right',
     milestones: [
       {
+        key: 'ci-live',
         date: 'Feb 2025',
         title: 'CI pipeline live',
         shortTitle: 'CI',
@@ -42,7 +63,7 @@ const MOCK_PHASES: TimelinePhase[] = [
     ],
   },
   {
-    key: 2,
+    key: 3,
     title: 'API Integration',
     date: 'Mar 2025',
     icon: MOCK_ICON,
@@ -74,6 +95,14 @@ describe('TimelineCompact — rendering', () => {
       React.createElement(TimelineCompact, { phases: MOCK_PHASES })
     );
     expect(html).toContain('CI');
+  });
+
+  it('renders child tasks from phase children with the structured child-row path', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(TimelineCompact, { phases: MOCK_PHASES })
+    );
+    expect(html).toContain('Checklist');
+    expect(html).toContain('Release prep tasks and verification.');
   });
 
   it('renders a milestone date', () => {
@@ -123,7 +152,7 @@ describe('TimelineCompact — interaction (click to expand)', () => {
     expect(container.textContent).toContain('Initial platform deployment');
 
     root.unmount();
-    document.body.removeChild(container);
+    container.remove();
   });
 });
 
