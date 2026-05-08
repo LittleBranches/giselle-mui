@@ -298,7 +298,7 @@ export function PhaseAccordionRow({
                           {ms.shortTitle ?? ms.title}
                         </Typography>
                         {ms.description && (
-                          <Typography variant="caption" sx={milestoneDescriptionPreviewSx}>
+                          <Typography variant="body2" sx={milestoneDescriptionPreviewSx}>
                             {ms.description}
                           </Typography>
                         )}
