@@ -180,6 +180,27 @@ export const markerCenterSx: SxProps<Theme> = {
   position: 'relative',
 };
 
+/** Inner flex row for a `variant='marker'` phase — horizontal, centred. */
+export const markerRowInnerSx: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+};
+
+/** Caption `Typography` for the left/right floating label in a marker row. */
+export const markerCaptionSx: SxProps<Theme> = {
+  color: 'text.secondary',
+  fontWeight: 600,
+  whiteSpace: 'nowrap',
+};
+
+/** Inline date `Box` span appended to a marker label. */
+export const markerDateSpanSx: SxProps<Theme> = {
+  ml: 0.75,
+  fontWeight: 400,
+  opacity: 0.7,
+};
+
 // ── Phase row ─────────────────────────────────────────────────────────────────
 
 /**
@@ -288,28 +309,7 @@ export const timelineRootSx: SxProps<Theme> = {
   '& .MuiTimelineItem-root:before': { flex: 0, padding: 0 },
 };
 
-// ── Marker row inner ──────────────────────────────────────────────────────────
-
-/** Inner flex row for a `variant='marker'` phase — horizontal, centred. */
-export const markerRowInnerSx: SxProps<Theme> = {
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-};
-
-/** Caption `Typography` for the left/right floating label in a marker row. */
-export const markerCaptionSx: SxProps<Theme> = {
-  color: 'text.secondary',
-  fontWeight: 600,
-  whiteSpace: 'nowrap',
-};
-
-/** Inline date `Box` span appended to a marker label. */
-export const markerDateSpanSx: SxProps<Theme> = {
-  ml: 0.75,
-  fontWeight: 400,
-  opacity: 0.7,
-};
+// ── Phase dot ─────────────────────────────────────────────────────────────────
 
 /**
  * Wrapper around the phase dot and its floating date pill.

@@ -263,15 +263,24 @@ library as its own thing. When updating or writing docs:
 - The one-liner `channelAlpha` helper is a standard MUI v7 pattern; it does not need
   to be attributed to any theme kit every time it appears.
 
+## Session shorthand commands
+
+| Command | Meaning |
+| ------- | ------- |
+| `cleanup component <Name>` | Read `docs/components/cleanup-workflow.md` and execute the full cleanup workflow on the named component. No further explanation needed. |
+
+---
+
 ## Session bootstrap: where Copilot should look first
 
 At the start of every new Copilot session in this package, read these files:
 
-| File                                                                      | Purpose                                                                                                        |
-| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [`docs/roadmap.md`](../docs/roadmap.md)                                   | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
-| [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md) | Full plan for `RoadmapTimeline` — next component to build                                                      |
-| [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                     | How to wire this library into a Next.js app                                                                    |
+| File                                                                                    | Purpose                                                                                                        |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [`docs/roadmap.md`](../docs/roadmap.md)                                                 | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
+| [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md)               | Full plan for `RoadmapTimeline` — next component to build                                                      |
+| [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                                   | How to wire this library into a Next.js app                                                                    |
+| [`docs/components/cleanup-workflow.md`](../docs/components/cleanup-workflow.md)         | Step-by-step playbook for creating or cleaning up any component — Definitions of Done for Scenario A and B    |
 
 ### Current components (shipped)
 
@@ -681,6 +690,8 @@ describe('paperSx', () => {
 1. Any new `sx={}` with more than ~3 properties → move to the styles file immediately
 2. Any existing inline `sx={}` touched during the edit → extract it at the same time (no mixed state)
 3. After extraction → run the styles test file to confirm the mock-theme assertions still pass
+4. **Name by structural role, not by child content.** A Box that positions a label is a *slot* — name it `*SlotSx` or `*WrapperSx`, not `*LabelSx`. The name describes what the element *is* structurally; naming it after what currently lives inside it becomes wrong the moment the child changes. Full rule: `docs/components/cleanup-workflow.md` Step 3.
+5. **Merge parallel variants into a factory.** Two constants that share the same structure and differ only by one argument (e.g. `side: 'left' | 'right'`) must be a single factory — never two separate exports. Separate constants diverge silently under refactoring. Canonical examples: `timelineColumnSx`, `msColumnBoxSx`, `markerLabelSlotSx`. Full rule: `docs/components/cleanup-workflow.md` Step 3.
 
 ### `*.const.ts` companion files for constants (enforce always)
 
@@ -940,6 +951,47 @@ All `isViewed` / `onMarkViewed` eye buttons in this component family must meet W
 - Milestone: inline in the title row (`<Box display="flex" alignItems="center">`), before the title when `columnSide='left'` (right-aligned column), after the title when `columnSide='right'` (left-aligned column). Constant: `MILESTONE_EYE_ICON_SIZE = 20`.
 
 **Regression test locations:** `phase-card.test.ts` — `eye button — WCAG accessibility regression`; `milestone-badge.test.ts` — `eye button — WCAG accessibility regression`.
+
+---
+
+### Component cleanup — definition of done
+
+Use `cleanup component <Name>` to trigger the full workflow (`docs/components/cleanup-workflow.md`). The checklists below are the acceptance criteria — every PR that touches a component file is reviewed against these.
+
+**Scenario A — Sub-component (flat inside a parent folder):**
+
+- [ ] No `type`/`interface` in `.tsx` — all in parent `types.ts`
+- [ ] No sx with more than ~3 properties inline — all in parent `*.styles.ts`
+- [ ] No duplicated JSX blocks — extracted to helper or util
+- [ ] All inline conditional logic that produces a derived value is in `utils.ts`
+- [ ] JSDoc covers all props including behaviour flags
+- [ ] At least one test `describe` block exists for this sub-component
+- [ ] Exported from parent `index.ts`
+- [ ] SonarQube: zero violations
+- [ ] `npm run check:verify` exits 0
+
+**Scenario B — Standalone component (own subfolder):**
+
+- [ ] Own subfolder created with all companion files present
+- [ ] No `type`/`interface` in `.tsx` — all in `types.ts`
+- [ ] No sx with more than ~3 properties inline — all in `<name>.styles.ts`
+- [ ] `<name>.styles.test.ts` covers every exported factory
+- [ ] No named constants for sizes inline — all in `<name>.const.ts`
+- [ ] Regression tests for every size constant with a safety minimum
+- [ ] No pure logic functions in `.tsx` — all in `utils.ts`
+- [ ] No capital-letter helper components inside `.tsx` — each in its own flat `.tsx`
+- [ ] No `React.FC`, no `any`, no bare `<Box>` without props
+- [ ] `sx` array spread on root element
+- [ ] `...other` spread on root element
+- [ ] All internal sub-components exported from `index.ts`
+- [ ] `src/index.ts` exports the component
+- [ ] `README.md` complete
+- [ ] SonarQube: zero violations
+- [ ] All six palette keys shown in stories where colour variants exist
+- [ ] `Responsive` story present
+- [ ] `npm run check:verify` exits 0
+- [ ] `npm run build` exits 0
+- [ ] `yalc push` + consuming app validated
 
 ---
 
