@@ -174,7 +174,10 @@ export const accordionRootSx = (done: boolean) => ({
   borderRadius: 2,
   boxShadow: 'none',
   '&:before': { display: 'none' },
-  '&.Mui-expanded': { margin: 0 },
+  '&.Mui-expanded': {
+    margin: 0,
+    bgcolor: channelAlpha('var(--mui-palette-grey-500Channel)', 0.08),
+  },
   '&:hover': {
     bgcolor: channelAlpha('var(--mui-palette-grey-500Channel)', 0.08),
   },
