@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { Accordion } from './accordion';
+import type { AccordionProps } from './types';
 
 // ----------------------------------------------------------------------
 
@@ -121,26 +122,32 @@ export const ChecklistPending: Story = {
 
 // ----------------------------------------------------------------------
 
+function ChecklistDoneDemo(args: Story['args']) {
+  const [done, setDone] = useState(true);
+  const accordionArgs = args as AccordionProps;
+
+  return (
+    <Accordion {...accordionArgs} done={done} onDoneButtonClick={setDone}>
+      <Typography>Component published via yalc and consumed in the portfolio app.</Typography>
+    </Accordion>
+  );
+}
+
 export const ChecklistDone: Story = {
   parameters: {
     docs: {
       description: {
         story:
-          'Checklist mode with `done=true`. The checkbox is checked. The `aria-label` on the checkbox reads "Mark as not done" in this state.',
+          'Checklist mode starting with `done=true`. This demo is controlled, so clicking the checkbox toggles it back to unchecked and updates the `aria-label` accordingly.',
       },
     },
   },
   args: {
     title: 'Ship initial component build',
     checklist: true,
-    done: true,
     expandIcon: EXPAND_ICON,
   },
-  render: (args) => (
-    <Accordion {...args}>
-      <Typography>Component published via yalc and consumed in the portfolio app.</Typography>
-    </Accordion>
-  ),
+  render: (args) => <ChecklistDoneDemo {...args} />,
 };
 
 // ----------------------------------------------------------------------
