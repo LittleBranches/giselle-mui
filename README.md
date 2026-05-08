@@ -19,6 +19,63 @@ Ripeness scale: 🟢 alpha → 🟡 beta → 🟠 stable → 🟤 LTS.
 
 ---
 
+## What problems this solves
+
+MUI gives you building blocks. giselle-mui gives you decisions.
+
+Every component in this library captures a design decision that MUI intentionally leaves
+to the consumer — accessibility patterns, CSS variables mode conventions, icon registration
+discipline, and composable data shapes. The table below names the specific decision each
+component encodes and why packaging it once is worth it.
+
+| Component / utility                   | Decision left to the consumer by MUI                                                                                                                                                               | What this library decides for you                                                                                                                                      |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SelectableCard`                      | `<Paper onClick={...}>` is not keyboard accessible — `Tab` will not focus it and `Enter`/`Space` will not trigger it                                                                               | `ButtonBase` as the root element — keyboard and pointer are identical, zero consumer code required                                                                     |
+| `Accordion`                           | Adding a checkbox to the heading creates `<button><button>` — invalid HTML and an ARIA violation. The common workaround is `pointer-events: none` hacks that break keyboard                        | `CheckIconButton` is a fully independent interactive element; expand/collapse and done-toggle never share a trigger                                                    |
+| `channelAlpha`                        | In MUI v7 CSS variables mode `theme.palette.primary.main` does not respond to the active color scheme. The correct `rgba(var(--channel) / alpha)` pattern is underdocumented and easy to get wrong | One function, correct in light AND dark mode, works wherever `theme.vars.palette.*Channel` is available                                                                |
+| `GiselleIcon` + `createIconRegistrar` | `@iconify/react` silently fetches from `api.iconify.design` when an icon string is not pre-registered — a production CDN dependency and a render flash                                             | Pre-registration is enforced at test time; a missing icon is a test failure, not a runtime surprise                                                                    |
+| `TimelineTwoColumn`                   | MUI Lab has a basic `Timeline`. Nothing provides alternating columns, phase cards, milestone badges, expandable rows, or a `done` state API                                                        | Full feature set, accessible eye-button interactions (WCAG 2.2 AA compliant where used), column-side invariants regression-tested, single `TimelinePhase[]` data shape |
+| `TimelineCompact`                     | The two-column layout does not fit mobile widths. The usual fix is a separate data shape or complex responsive logic in the data layer                                                             | Same `TimelinePhase[]` data shape — swap `TimelineTwoColumn` for `TimelineCompact` at `xs`/`sm`, one line of code, no data changes                                     |
+| Root MUI wrappers (`sx` spread)       | Most third-party MUI wrappers accept `sx` as a single value. Passing an array silently drops every entry after the first — which is the MUI-recommended way to extend styles                       | Components that expose root MUI styling props spread `sx` correctly: `sx={[base, ...(Array.isArray(sx) ? sx : [sx])]}`                                                 |
+| `/charts`, `/motion` subpaths         | A library that bundles ApexCharts or framer-motion forces those dependencies on every consumer, even those who use neither                                                                         | Separate tsup entries — `@alexrebula/giselle-mui` has zero chart or animation deps; opt in with `@alexrebula/giselle-mui/charts` or `.../motion`                       |
+| `useNestedChecklist`                  | No MUI equivalent for parent/child done-state cascade (mark a phase done → all its milestones become done; all milestones done → phase auto-completes)                                             | Framework-agnostic hook, reusable across any nested tree structure                                                                                                     |
+| `MetricCard`, `StatCard`              | Color-tinted cards that work in both light and dark mode usually require `useColorScheme()` re-renders or hardcoded hex pairs for each mode                                                        | `theme.vars.palette[color].mainChannel` — the CSS custom property flips automatically with the color scheme                                                            |
+
+---
+
+## API consistency contract
+
+Short version (plain language): if a component looks like a normal MUI wrapper, it should act like one.
+
+That means 3 things every time:
+
+1. It accepts normal MUI props for its root (`BoxProps`, `CardProps`, etc.).
+2. It merges `sx` safely, including `sx` arrays.
+3. It forwards extra props (`id`, `data-*`, `aria-*`, `className`) with `...other`.
+
+Technical rule we enforce:
+
+- Props type extends/omits from the matching MUI root type.
+- Root `sx` is array-safe: `sx={[base, ...(Array.isArray(sx) ? sx : [sx])]}`.
+- Root DOM passthrough uses `...other`.
+
+If a component is intentionally different (opinionated API), that exception must be clearly written in both `types.ts` and the component `README.md`.
+
+The detailed cleanup checklist lives in [docs/components/cleanup-workflow.md](./docs/components/cleanup-workflow.md).
+
+## Known defects and UX decisions
+
+Open defects and design decisions are tracked in [docs/defects.md](./docs/defects.md).
+
+Current high-priority timeline items include:
+
+- Eye icon toggle behavior defects
+- Eye icon placement/styling decision
+- Per-mode requirement decision for viewed controls
+- "NEW" label UX decision
+
+---
+
 ## Status
 
 > **Beta — active development. Not yet published to npm.**
@@ -259,15 +316,15 @@ Full workflow, publishing steps, and the reasoning behind yalc:
 
 ## Roadmap
 
-| Phase                    | Status     | Description                                                                                                                          |
-| ------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Core components          | ✅ Done    | `GiselleIcon`, `MetricCard`, `SelectableCard`, `QuoteCard`, `TimelineTwoColumn` — all with unit tests + READMEs                      |
-| Storybook stories        | ✅ Done    | Stories shipped for all components. Deployed locally; public hosting planned.                                                        |
+| Phase                    | Status     | Description                                                                                                                           |
+| ------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Core components          | ✅ Done    | `GiselleIcon`, `MetricCard`, `SelectableCard`, `QuoteCard`, `TimelineTwoColumn` — all with unit tests + READMEs                       |
+| Storybook stories        | ✅ Done    | Stories shipped for all components. Deployed locally; public hosting planned.                                                         |
 | Phase A theme utilities  | ✅ Done    | `channelAlpha`, `hexToChannel`, `pxToRem`/`remToPx` — see [`docs/roadmap.md`](./docs/roadmap.mdx)                                     |
 | Phase B brand theme      | ✅ Done    | `giselleTheme` preset + palette constants — import from `@alexrebula/giselle-mui/utils` — see [`docs/roadmap.md`](./docs/roadmap.mdx) |
-| npm publish              | ⬜ Planned | Alongside portfolio launch, May/June 2026                                                                                            |
-| Additional components    | ⬜ Planned | Components extracted from portfolio patterns as they meet the extraction checklist                                                   |
-| Storybook public hosting | ⬜ Planned | Chromatic or self-hosted, cross-linked from Docusaurus                                                                               |
+| npm publish              | ⬜ Planned | Alongside portfolio launch, May/June 2026                                                                                             |
+| Additional components    | ⬜ Planned | Components extracted from portfolio patterns as they meet the extraction checklist                                                    |
+| Storybook public hosting | ⬜ Planned | Chromatic or self-hosted, cross-linked from Docusaurus                                                                                |
 
 Full detail: [`docs/roadmap.md`](./docs/roadmap.mdx)
 
