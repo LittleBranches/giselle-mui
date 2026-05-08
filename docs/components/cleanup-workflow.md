@@ -115,6 +115,16 @@ The `.tsx` file is the **composition layer only** after the above steps. Verify:
 - [ ] `sx` array spread on root: `sx={[baseStyles, ...(Array.isArray(sx) ? sx : [sx])]}`
 - [ ] `...other` spread on root element
 
+### Step 6b — API surface consistency (required)
+
+For any standalone component exported from `src/index.ts`, verify its public prop surface is intentionally consistent.
+
+- [ ] If the component is a MUI-root wrapper, its props type extends/omits from the matching MUI root props (`BoxProps`, `PaperProps`, `CardProps`, etc.)
+- [ ] If the component exposes `sx`, root merge is array-safe: `sx={[base, ...(Array.isArray(sx) ? sx : [sx])]}`
+- [ ] Root passthrough props are forwarded with `...other`
+- [ ] Any intentional exception (opinionated/non-wrapper API) is documented in both `types.ts` JSDoc and component `README.md`
+- [ ] Existing README claims about API behavior are accurate for this component (no global claims copied without verification)
+
 ### Step 7 — Tests
 
 Review the full `*.test.ts` file:
@@ -134,6 +144,7 @@ Review or create `<component-name>.stories.tsx`:
 
 - [ ] Storybook group matches the canonical map in `copilot-instructions.md` (never `'Components'`)
 - [ ] `argTypes: { control: false }` on all `ReactNode` and `SxProps` slots
+- [ ] Story controls prioritize decision props. Use Storybook-level excludes for inherited noise props and per-story `argTypes` for any additional pruning.
 - [ ] All six palette keys shown where colour variants exist: `primary`, `secondary`, `info`, `success`, `warning`, `error`
 - [ ] A `Responsive` story rendering the component at xs/sm/md/lg breakpoint widths
 - [ ] Decision-doc stories added for every non-obvious design or accessibility rule in this component
