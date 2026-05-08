@@ -60,7 +60,9 @@ export function isHighlightedVariant(variant?: string): boolean {
  */
 export function resolveTaskChildren(phase: TimelinePhase): Task[] {
   if (phase.children?.length) return phase.children;
-  if (phase.details?.length) return phase.details.map((title) => ({ title }));
+  if (phase.details?.length) {
+    return phase.details.map((title, index) => ({ key: `detail-${index}`, title }));
+  }
   return [];
 }
 

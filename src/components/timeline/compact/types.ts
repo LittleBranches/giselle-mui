@@ -1,6 +1,8 @@
 import type { BoxProps } from '@mui/material/Box';
 
-import type { TimelinePhase } from '../two-column/types';
+import type { ReactNode } from 'react';
+
+import type { Task, TimelineMilestone, TimelinePhase } from '../two-column/types';
 
 // ----------------------------------------------------------------------
 
@@ -80,4 +82,34 @@ export interface TimelineCompactProps extends BoxProps {
     taskIndex: number,
     done: boolean
   ) => void;
+}
+
+export interface PhaseAccordionRowProps {
+  phase: TimelinePhase;
+  sortedMilestones: TimelineMilestone[];
+  checklist: boolean;
+  taskDoneMap: Record<string, boolean>;
+  onTaskToggle: (phaseKey: number, milestoneIndex: number | null, taskIndex: number) => void;
+  onMarkViewed?: TimelineCompactProps['onMarkViewed'];
+  onTogglePhaseDone?: TimelineCompactProps['onTogglePhaseDone'];
+  onToggleMilestoneDone?: TimelineCompactProps['onToggleMilestoneDone'];
+  expandedPhaseKey: number | null;
+  onToggleExpanded: (key: number) => void;
+}
+
+export interface TaskDetailsModalProps {
+  task: Task | null;
+  open: boolean;
+  onClose: () => void;
+  checklist?: boolean;
+  taskDoneState?: boolean[];
+  onTaskToggle?: (taskIdx: number) => void;
+}
+
+export interface TaskDetailsRendererProps extends BoxProps {
+  task: Task;
+  checklist?: boolean;
+  taskDoneState?: boolean[];
+  onTaskToggle?: (taskIdx: number) => void;
+  emptyState?: ReactNode;
 }
