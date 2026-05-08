@@ -17,6 +17,18 @@ const themes: Record<string, typeof muiDefaultTheme> = {
   'mui-default': muiDefaultTheme,
 };
 
+// Hide low-signal inherited args globally so controls focus on design decisions.
+// Stories can still override this with local `parameters.controls.exclude`.
+const STORYBOOK_GLOBAL_CONTROLS_EXCLUDE = [
+  /^classes$/,
+  /^slotProps$/,
+  /^slots$/,
+  /^ownerState$/,
+  /^theme$/,
+  /^as$/,
+  /^ref$/,
+];
+
 /**
  * Toolbar dropdown — switch between registered themes in the Storybook canvas.
  * Each `value` must match a key in the `themes` registry above.
@@ -52,7 +64,17 @@ const preview: Preview = {
   ],
   parameters: {
     layout: 'centered',
-    controls: { expanded: true },
+    controls: {
+      expanded: true,
+      sort: 'requiredFirst',
+      exclude: STORYBOOK_GLOBAL_CONTROLS_EXCLUDE,
+    },
+    docs: {
+      controls: {
+        sort: 'requiredFirst',
+        exclude: STORYBOOK_GLOBAL_CONTROLS_EXCLUDE,
+      },
+    },
   },
 };
 
