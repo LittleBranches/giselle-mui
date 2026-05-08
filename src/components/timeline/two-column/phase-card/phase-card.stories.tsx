@@ -25,10 +25,10 @@ const BASE_PHASE: TimelinePhase = {
   color: 'primary',
   icon: icon('solar:code-bold'),
   children: [
-    { title: 'REST adapter layer with typed response mappers', done: true },
-    { title: 'Rate-limit middleware (token bucket, configurable)' },
-    { title: 'Automated retry with exponential backoff' },
-    { title: 'p99 latency regression tests wired to CI' },
+    { key: 'rest-adapter', title: 'REST adapter layer with typed response mappers', done: true },
+    { key: 'rate-limit', title: 'Rate-limit middleware (token bucket, configurable)' },
+    { key: 'retry-backoff', title: 'Automated retry with exponential backoff' },
+    { key: 'latency-ci', title: 'p99 latency regression tests wired to CI' },
   ],
 };
 
@@ -61,9 +61,9 @@ const SCENARIO_PHASE: TimelinePhase = {
   variant: 'scenario',
   scenarioLabel: 'Option B',
   children: [
-    { title: 'Legal review of data residency requirements', done: true },
-    { title: 'Infrastructure cost estimate approved' },
-    { title: 'Migration runbook drafted' },
+    { key: 'legal-review', title: 'Legal review of data residency requirements', done: true },
+    { key: 'cost-estimate', title: 'Infrastructure cost estimate approved' },
+    { key: 'migration-runbook', title: 'Migration runbook drafted' },
   ],
 };
 

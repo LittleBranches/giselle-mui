@@ -95,6 +95,7 @@ const CAREER_PHASES: TimelinePhase[] = [
     ],
     milestones: [
       {
+        key: 'first-solo-deploy',
         date: 'Mar 2009',
         shortTitle: 'First solo deploy',
         title: 'First solo production deploy',
@@ -137,6 +138,7 @@ const CAREER_PHASES: TimelinePhase[] = [
     ],
     milestones: [
       {
+        key: 'realtime-dashboard',
         date: 'Jan 2013',
         shortTitle: 'Real-time dashboard',
         title: 'Real-time analytics dashboard shipped',
@@ -147,6 +149,7 @@ const CAREER_PHASES: TimelinePhase[] = [
         done: true,
       },
       {
+        key: 'ts-migration',
         date: 'Nov 2013',
         shortTitle: 'TypeScript migration',
         title: 'TypeScript migration complete',
@@ -181,6 +184,7 @@ const CAREER_PHASES: TimelinePhase[] = [
     ],
     milestones: [
       {
+        key: 'patient-portal-v2',
         date: 'Jan 2015',
         shortTitle: 'Patient portal v2',
         title: 'Patient portal v2 launched',
@@ -190,6 +194,7 @@ const CAREER_PHASES: TimelinePhase[] = [
         color: 'success',
       },
       {
+        key: 'design-system-oss',
         date: 'Aug 2016',
         shortTitle: 'Design system open-sourced',
         title: 'Internal design system open-sourced',
@@ -216,6 +221,7 @@ const CHECKLIST_PHASES: TimelinePhase[] = [
     icon: icon('solar:telescope-bold-duotone'),
     milestones: [
       {
+        key: 'user-interviews',
         date: 'Jan 2024',
         shortTitle: '12 user interviews',
         title: '12 user interviews conducted',
@@ -226,6 +232,7 @@ const CHECKLIST_PHASES: TimelinePhase[] = [
         done: true,
       },
       {
+        key: 'competitive-audit',
         date: 'Feb 2024',
         shortTitle: 'Competitive audit',
         title: 'Competitive audit report',
@@ -249,6 +256,7 @@ const CHECKLIST_PHASES: TimelinePhase[] = [
     icon: icon('solar:pen-new-round-bold-duotone'),
     milestones: [
       {
+        key: 'wireframes-approved',
         date: 'Mar 2024',
         shortTitle: 'Wireframes approved',
         title: 'Wireframes approved by stakeholders',
@@ -271,6 +279,7 @@ const CHECKLIST_PHASES: TimelinePhase[] = [
     icon: icon('solar:rocket-bold-duotone'),
     milestones: [
       {
+        key: 'beta-launch',
         date: 'Jun 2024',
         shortTitle: 'Beta launch',
         title: 'Beta launch to 500 users',
@@ -444,6 +453,7 @@ export const MarkerVariant: Story = {
             icon: icon('solar:code-square-bold'),
             milestones: [
               {
+                key: 'first-solo-deploy-alt',
                 date: 'Mar 2009',
                 shortTitle: 'First solo deploy',
                 title: 'First solo production deploy',
@@ -479,6 +489,7 @@ export const MarkerVariant: Story = {
             icon: icon('solar:chart-bold-duotone'),
             milestones: [
               {
+                key: 'ts-migration-alt',
                 date: 'Nov 2013',
                 shortTitle: 'TypeScript migration',
                 title: 'TypeScript migration complete',
@@ -565,6 +576,7 @@ export const LifeEventVsMarker: Story = {
             icon: icon('solar:code-square-bold'),
             milestones: [
               {
+                key: 'first-production-deploy',
                 date: 'Dec 2009',
                 shortTitle: 'First production deploy',
                 title: 'First production deploy',
@@ -624,6 +636,7 @@ export const LifeEventVsMarker: Story = {
             icon: icon('solar:chart-bold-duotone'),
             milestones: [
               {
+                key: 'ts-migration-life-story',
                 date: 'Nov 2013',
                 shortTitle: 'TypeScript migration',
                 title: 'TypeScript migration complete',
@@ -702,6 +715,7 @@ export const ScenarioVariant: Story = {
             icon: icon('solar:chart-bold-duotone'),
             milestones: [
               {
+                key: 'ts-migration-scenario-story',
                 date: 'Nov 2013',
                 shortTitle: 'TypeScript migration',
                 title: 'TypeScript migration complete',
