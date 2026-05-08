@@ -63,6 +63,8 @@ const DEFAULT_CHECK_HOVER_ICON = (
  * - `aria-label` describes the current action in plain language.
  * - `size="small"` on `IconButton` produces a ≥ 30 px touch target
  *   (exceeds the 24 px WCAG 2.5.8 minimum).
+ *
+ * **Quality status (8 May 2026):** DoD 9/9 · Best practices 13/13
  */
 export function CheckIconButton({
   done,

@@ -63,6 +63,7 @@ Answer these in order. Stop at the first yes.
 ### Step 2 — Constants
 
 - Move every exported `const` that represents a **size, font size, badge size, minimum touch target, or spacing value** out of `.tsx` files and into `<component-name>.const.ts`.
+- **Scope:** primitive values only — numbers, strings, booleans. If the constant contains JSX (e.g. a default actions array with `<GiselleIcon />` elements), it belongs in `<component-name>.defaults.tsx` instead — never `.const.ts`. Never contort JSX into `createElement` calls to satisfy the `.ts` extension.
 - Add a `describe('readability — minimum size constants', ...)` block to the component's `*.test.ts` that imports each constant and asserts it meets its minimum value (e.g. `toBeGreaterThanOrEqual(20)` for interactive icons).
 - Add the const file to the folder's `index.ts` barrel.
 
@@ -239,7 +240,8 @@ src/components/<name>/
   utils.ts                — pure logic functions (no JSX)
   <name>.styles.ts        — sx constants (static) and sx factories (dynamic)
   <name>.styles.test.ts   — mock-theme assertions for every exported sx function
-  <name>.const.ts         — named constants (sizes, font sizes, spacing)
+  <name>.const.ts         — named constants (sizes, font sizes, spacing) — primitive values only, no JSX
+  <name>.defaults.tsx     — default value arrays/objects that contain JSX (optional, only when needed)
   <name>.test.ts          — Vitest unit tests
   <name>.stories.tsx      — Storybook stories
   index.ts                — barrel: re-exports everything

@@ -127,7 +127,7 @@ src/components/<name>/
 **Separation rule — non-negotiable for every component:**
 
 - **TypeScript `type` aliases AND `interface` declarations → `types.ts`** (never inside `.tsx`). This applies to every exported and internal type without exception — `Props`, `Item`, `Config`, helper union types, internal-only types. If it is a type, it does not live in a `.tsx` file.
-- **Named constants → `<name>.const.ts`** (never inside `.tsx`). Every exported `const` that represents a size, font size, badge size, minimum touch target, or spacing value belongs in the const file. See `*.const.ts companion files` section below.
+- **Named constants → `<name>.const.ts`** (never inside `.tsx`). Every exported `const` that represents a size, font size, badge size, minimum touch target, or spacing value belongs in the const file. **Primitive values only — no JSX.** If a constant contains JSX (e.g. a default actions array with `<GiselleIcon />` elements), it belongs in `<name>.defaults.tsx` instead. See `*.const.ts companion files` section below.
 - Pure logic / helper functions (no JSX) → separate `utils.ts` file (not inside `.tsx`)
 - Any `sx={}` with more than ~3 properties → `<name>.styles.ts` (enforced by ESLint)
 - **Internal sub-components → own `.tsx` files** (flat in the parent folder). See `Sub-component extraction rule` section below.
@@ -728,6 +728,8 @@ Then in the component: `width={PHASE_EYE_ICON_SIZE}` — named, testable, grep-f
 
 **File naming:** `<component-name>.const.ts` — plain `.ts`, not `.tsx`. No JSX, no MUI imports.
 
+> **Scope of this rule:** `*.const.ts` is for **primitive constants only** — numbers, strings, booleans. Things like `ICON_SIZE = 20`, `FONT_SIZE = '0.75rem'`, `MIN_TOUCH_TARGET = 24`. Default value arrays that contain JSX (e.g. `DEFAULT_ICON_ACTIONS`) are **not** primitive constants — they belong in a separate `<component-name>.defaults.tsx` file instead. Never contort JSX into `createElement` calls just to satisfy a `.ts` extension.
+
 **Barrel export:** The const file must be added to the folder's `index.ts`:
 ```ts
 export * from './phase-card.const';
@@ -754,8 +756,9 @@ describe('readability — minimum size constants', () => {
 **Enforcement checklist — run whenever a component file is edited:**
 
 1. Any `export const` in a `.tsx` file that is a size, font size, or touch-target value → move to `*.const.ts` immediately.
-2. Check that the const file is re-exported from `index.ts`.
-3. Check that a regression test exists for every constant with a safety minimum.
+2. Any `export const` that contains JSX (e.g. default action arrays, default icon elements) → move to `*.defaults.tsx` — never `.const.ts`.
+3. Check that the const file is re-exported from `index.ts`.
+4. Check that a regression test exists for every constant with a safety minimum.
 
 ### Sub-component extraction rule (enforce always)
 
