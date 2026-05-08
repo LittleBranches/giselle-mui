@@ -15,34 +15,30 @@ import { checkIconButtonSx, defaultCheckIconSvgSx } from './accordion.styles';
 // checkHoverIcon props when a different icon set is preferred.
 // ----------------------------------------------------------------------
 
+// JSX element constants — created once at module load, never recreated.
+// Inline JSX (zero-prop helpers) rather than named function components — they
+// have no props and serve as render variables, not independent sub-components.
+
 /**
  * Default done-state icon: filled green check circle.
  * SVG path: Material Design `check_circle` (24 × 24 viewBox).
  */
-function FilledCheckCircleIcon() {
-  return (
-    <SvgIcon sx={defaultCheckIconSvgSx} viewBox="0 0 24 24">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-    </SvgIcon>
-  );
-}
+const DEFAULT_CHECK_DONE_ICON = (
+  <SvgIcon sx={defaultCheckIconSvgSx} viewBox="0 0 24 24">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+  </SvgIcon>
+);
 
 /**
  * Default hover/focus-state icon: outlined green check circle.
  * SVG path: Material Design `check_circle_outline` (24 × 24 viewBox).
  * Signals "click to mark as done" (undone state) or "click to undo" (done state).
  */
-function OutlinedCheckCircleIcon() {
-  return (
-    <SvgIcon sx={defaultCheckIconSvgSx} viewBox="0 0 24 24">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8-1.41-1.42z" />
-    </SvgIcon>
-  );
-}
-
-// JSX element constants — created once at module load, never recreated.
-const DEFAULT_CHECK_DONE_ICON = <FilledCheckCircleIcon />;
-const DEFAULT_CHECK_HOVER_ICON = <OutlinedCheckCircleIcon />;
+const DEFAULT_CHECK_HOVER_ICON = (
+  <SvgIcon sx={defaultCheckIconSvgSx} viewBox="0 0 24 24">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8-1.41-1.42z" />
+  </SvgIcon>
+);
 
 // ----------------------------------------------------------------------
 

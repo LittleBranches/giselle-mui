@@ -9,9 +9,8 @@
  * visual switching is covered by the Storybook stories and manual inspection.
  */
 import { describe, it, expect, vi } from 'vitest';
-import { createElement, useState } from 'react';
+import { createElement, useState, act } from 'react';
 import ReactDOM from 'react-dom/client';
-import { act } from 'react';
 
 import { CheckIconButton } from './check-icon-button';
 
@@ -19,6 +18,16 @@ import { CheckIconButton } from './check-icon-button';
 const IDLE_ICON = createElement('svg', { 'data-testid': 'idle-icon' });
 const DONE_ICON = createElement('svg', { 'data-testid': 'done-icon' });
 const HOVER_ICON = createElement('svg', { 'data-testid': 'hover-icon' });
+
+// Controlled wrapper used in the two-click toggle test.
+function ToggleWrapper() {
+  const [done, setDone] = useState(false);
+  return createElement(CheckIconButton, {
+    done,
+    checkIcon: IDLE_ICON,
+    onDoneButtonClick: setDone,
+  });
+}
 
 function setup() {
   const div = document.createElement('div');
@@ -186,18 +195,9 @@ describe('CheckIconButton — click interaction', () => {
   });
 
   it('toggles aria-pressed through a controlled wrapper on two clicks', async () => {
-    function Wrapper() {
-      const [done, setDone] = useState(false);
-      return createElement(CheckIconButton, {
-        done,
-        checkIcon: IDLE_ICON,
-        onDoneButtonClick: setDone,
-      });
-    }
-
     const { div, root, cleanup } = setup();
     await act(async () => {
-      root.render(createElement(Wrapper, null));
+      root.render(createElement(ToggleWrapper, null));
     });
 
     const button = div.querySelector('button')!;

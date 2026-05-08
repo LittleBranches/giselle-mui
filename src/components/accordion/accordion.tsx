@@ -90,7 +90,23 @@ export function Accordion({
   // return so the JSX stays flat — ESLint bans nested ternaries inside JSX.
   let leadingElement: React.ReactNode = null;
   if (checklist) {
-    if (checkIcon !== undefined) {
+    if (checkIcon === undefined) {
+      leadingElement = (
+        <Checkbox
+          checked={done}
+          indeterminate={indeterminate}
+          onChange={handleCheckboxChange}
+          onClick={handleCheckboxClick}
+          slotProps={{
+            input: {
+              'aria-label': done ? 'Mark as not done' : 'Mark as done',
+            },
+          }}
+          size="small"
+          sx={checkboxSx}
+        />
+      );
+    } else {
       leadingElement = (
         <CheckIconButton
           done={done}
@@ -100,29 +116,15 @@ export function Accordion({
           onDoneButtonClick={onDoneButtonClick}
         />
       );
-    } else {
-      leadingElement = (
-        <Checkbox
-          checked={done}
-          indeterminate={indeterminate}
-          onChange={handleCheckboxChange}
-          onClick={handleCheckboxClick}
-          inputProps={{
-            'aria-label': done ? 'Mark as not done' : 'Mark as done',
-          }}
-          size="small"
-          sx={checkboxSx}
-        />
-      );
     }
-  } else if (leadingAction !== undefined) {
-    leadingElement = leadingAction;
-  } else {
+  } else if (leadingAction === undefined) {
     leadingElement = (
       <Box aria-hidden="true" sx={leadingIconSx}>
         {leadingIcon}
       </Box>
     );
+  } else {
+    leadingElement = leadingAction;
   }
 
   const summaryContent =

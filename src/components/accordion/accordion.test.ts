@@ -1,11 +1,14 @@
 // @vitest-environment jsdom
-import React from 'react';
+import React, { act } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ReactDOM from 'react-dom/client';
-import { act } from 'react';
 
-import { ACCORDION_DONE_MIN_TOUCH_TARGET, ACCORDION_CHECK_ICON_SIZE } from './accordion.const';
+import {
+  ACCORDION_DONE_MIN_TOUCH_TARGET,
+  ACCORDION_CHECK_ICON_SIZE,
+  ACCORDION_ICON_BUTTON_MIN_SIZE,
+} from './accordion.const';
 import { Accordion } from './accordion';
 
 // ----------------------------------------------------------------------
@@ -63,13 +66,13 @@ describe('Accordion — ARIA attributes', () => {
       React.createElement(Accordion, { title: 'ARIA test' }, DETAILS)
     );
     // Extract the accordion-summary id
-    const summaryIdMatch = html.match(/id="(accordion-summary-[^"]+)"/);
+    const summaryIdMatch = /id="(accordion-summary-[^"]+)"/.exec(html);
     expect(summaryIdMatch).not.toBeNull();
     const summaryId = summaryIdMatch?.[1] ?? '';
     expect(summaryId).not.toBe('');
 
     // aria-controls on the summary button should point to the details panel
-    const ariaControlsMatch = html.match(/aria-controls="(accordion-details-[^"]+)"/);
+    const ariaControlsMatch = /aria-controls="(accordion-details-[^"]+)"/.exec(html);
     expect(ariaControlsMatch).not.toBeNull();
     const detailsId = ariaControlsMatch?.[1] ?? '';
     expect(detailsId).not.toBe('');
@@ -192,7 +195,7 @@ describe('Accordion — checklist interaction', () => {
     });
 
     expect(handler).toHaveBeenCalledWith(true);
-    document.body.removeChild(container);
+    container.remove();
   });
 
   it('calls onDoneButtonClick(false) when checked checkbox is clicked', () => {
@@ -216,7 +219,7 @@ describe('Accordion — checklist interaction', () => {
     });
 
     expect(handler).toHaveBeenCalledWith(false);
-    document.body.removeChild(container);
+    container.remove();
   });
 
   it('does not call onDoneButtonClick when checklist is false', () => {
@@ -238,7 +241,7 @@ describe('Accordion — checklist interaction', () => {
     const checkbox = container.querySelector('input[type="checkbox"]');
     expect(checkbox).toBeNull();
     expect(handler).not.toHaveBeenCalled();
-    document.body.removeChild(container);
+    container.remove();
   });
 });
 
@@ -251,6 +254,10 @@ describe('readability — minimum size constants', () => {
 
   it('[regression] ACCORDION_CHECK_ICON_SIZE >= 20px (WCAG 1.4.11 interactive icons)', () => {
     expect(ACCORDION_CHECK_ICON_SIZE).toBeGreaterThanOrEqual(20);
+  });
+
+  it('[regression] ACCORDION_ICON_BUTTON_MIN_SIZE >= 24px (WCAG 2.5.8 interactive target)', () => {
+    expect(ACCORDION_ICON_BUTTON_MIN_SIZE).toBeGreaterThanOrEqual(24);
   });
 });
 
@@ -359,7 +366,7 @@ describe('Accordion — icon-button mode (checkIcon provided)', () => {
     });
 
     expect(handler).toHaveBeenCalledWith(true);
-    document.body.removeChild(container);
+    container.remove();
   });
 
   it('calls onDoneButtonClick(false) when the icon button is clicked (done=true)', () => {
@@ -390,6 +397,6 @@ describe('Accordion — icon-button mode (checkIcon provided)', () => {
     });
 
     expect(handler).toHaveBeenCalledWith(false);
-    document.body.removeChild(container);
+    container.remove();
   });
 });
