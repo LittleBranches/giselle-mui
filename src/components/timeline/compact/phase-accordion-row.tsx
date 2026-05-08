@@ -9,9 +9,8 @@ import Typography from '@mui/material/Typography';
 import { Accordion } from '../../accordion';
 import { CheckIconButton } from '../../accordion/check-icon-button';
 import { useNestedChecklist } from '../../../utils/use-nested-checklist';
-import { TaskList } from '../task-list';
 import { ChevronDownIcon } from './chevron-down-icon';
-import { MilestoneModal } from './milestone-modal';
+import { TaskDetailsModal } from './milestone-modal';
 import {
   accordionDetailsSx,
   accordionRootSx,
@@ -35,9 +34,9 @@ import {
   COMPACT_MILESTONE_DOT_SIZE,
   COMPACT_MILESTONE_ICON_SIZE,
 } from './compact.const';
-import type { TimelineCompactProps } from './types';
+import type { PhaseAccordionRowProps } from './types';
 import { resolveCompactColor, resolveTaskChildren } from './utils';
-import type { TimelineMilestone, TimelinePhase } from '../two-column/types';
+import type { Task } from '../two-column/types';
 
 // ----------------------------------------------------------------------
 
@@ -109,24 +108,6 @@ const accordionSummaryOverrideSx = {
 
 // ----------------------------------------------------------------------
 
-export interface PhaseAccordionRowProps {
-  phase: TimelinePhase;
-  /** Milestones already sorted by the parent (`sortMilestones` applied). */
-  sortedMilestones: TimelineMilestone[];
-  checklist: boolean;
-  taskDoneMap: Record<string, boolean>;
-  onTaskToggle: (phaseKey: number, milestoneIdx: number | null, taskIdx: number) => void;
-  onMarkViewed?: TimelineCompactProps['onMarkViewed'];
-  onTogglePhaseDone?: TimelineCompactProps['onTogglePhaseDone'];
-  onToggleMilestoneDone?: TimelineCompactProps['onToggleMilestoneDone'];
-  /** Which phase key is currently expanded (from parent — exclusive accordion). */
-  expandedPhaseKey: number | null;
-  /** Notify parent to toggle this phase's expansion. */
-  onToggleExpanded: (key: number) => void;
-}
-
-// ----------------------------------------------------------------------
-
 /**
  * One accordion row inside `TimelineCompact`.
  *
@@ -155,17 +136,13 @@ export function PhaseAccordionRow({
     sortedMilestones.map((ms) => ms.done ?? false)
   );
 
-  // Store the milestone AND its index so the modal can compute the correct
-  // taskDoneMap slice and dispatch the right onTaskToggle key.
-  const [modalMilestone, setModalMilestone] = useState<{
-    ms: TimelineMilestone;
-    idx: number;
-  } | null>(null);
+  const [modalTask, setModalTask] = useState<{ task: Task; idx: number } | null>(null);
 
   const effectiveColor = resolveCompactColor(phase.color, parentDone);
-  const taskChildren = resolveTaskChildren(phase);
-  const hasDetails =
-    Boolean(phase.description) || taskChildren.length > 0 || sortedMilestones.length > 0;
+  const childTasks =
+    phase.children && phase.children.length > 0 ? phase.children : sortedMilestones;
+  const usesMilestoneChildren = !(phase.children && phase.children.length > 0);
+  const hasDetails = Boolean(phase.description) || childTasks.length > 0;
 
   const handleToggleParent = useCallback(() => {
     toggleParent();
@@ -189,6 +166,11 @@ export function PhaseAccordionRow({
     </Box>
   );
 
+  const leadingAction = checklist ? undefined : phaseDot;
+  const checkIcon = checklist ? phaseDot : undefined;
+  const checkDoneIcon = checklist ? CHECK_DONE_DOT : undefined;
+  const checkHoverIcon = checklist ? CHECK_HOVER_DOT : undefined;
+
   const titleContent = (
     <Typography variant="subtitle2" sx={phaseTitleSx}>
       {phase.shortTitle ?? phase.title}
@@ -201,25 +183,30 @@ export function PhaseAccordionRow({
     </Typography>
   ) : null;
 
+  const isExpanded = expandedPhaseKey === phase.key;
+
   return (
     <>
       <Accordion
         disableGutters
         elevation={0}
         checklist={checklist}
-        checkIcon={checklist ? phaseDot : undefined}
-        checkDoneIcon={checklist ? CHECK_DONE_DOT : undefined}
-        checkHoverIcon={checklist ? CHECK_HOVER_DOT : undefined}
-        leadingAction={!checklist ? phaseDot : undefined}
+        checkIcon={checkIcon}
+        checkDoneIcon={checkDoneIcon}
+        checkHoverIcon={checkHoverIcon}
+        leadingAction={leadingAction}
         done={parentDone}
         indeterminate={indeterminate}
         onDoneButtonClick={handleToggleParent}
         trailingContent={dateLabel}
         expandIcon={hasDetails ? <ChevronDownIcon /> : null}
         title={titleContent}
-        expanded={expandedPhaseKey === phase.key}
+        expanded={isExpanded}
         onChange={handleAccordionChange}
-        sx={[accordionRootSx(parentDone), accordionSummaryOverrideSx]}
+        sx={[
+          accordionRootSx(parentDone, Boolean(phase.active), isExpanded, effectiveColor),
+          accordionSummaryOverrideSx,
+        ]}
       >
         {hasDetails && (
           <Box sx={accordionDetailsSx}>
@@ -229,56 +216,52 @@ export function PhaseAccordionRow({
               </Typography>
             )}
 
-            {taskChildren.length > 0 && sortedMilestones.length === 0 && (
-              <TaskList
-                tasks={taskChildren}
-                checklist={checklist}
-                taskDoneState={taskChildren.map(
-                  (task, i) => taskDoneMap[`${phase.key}-t${i}`] ?? task.done ?? false
-                )}
-                onTaskToggle={(i) => onTaskToggle(phase.key, null, i)}
-              />
-            )}
-
-            {sortedMilestones.length > 0 && (
+            {childTasks.length > 0 && (
               <Box component="ul" sx={milestonesListSx}>
-                {sortedMilestones.map((ms, idx) => {
-                  const isMsDone = childrenDone[idx] ?? false;
-                  // In non-checklist mode: use the original ms.color (never force success).
-                  // resolveCompactColor with done=false maps the raw color to HighlightedPaletteKey
-                  // without ever returning 'success' — the idle dot keeps the phase's own colour.
-                  const idleDotColor = resolveCompactColor(ms.color, false);
-                  const isLast = idx === sortedMilestones.length - 1;
-
-                  // Idle milestone dot: original color, original icon, smaller than phase dot.
-                  const msDotIdle = (
+                {childTasks.map((task, idx) => {
+                  const isDone = usesMilestoneChildren
+                    ? (childrenDone[idx] ?? false)
+                    : (task.done ?? false);
+                  const idleDotColor = resolveCompactColor(task.color ?? phase.color, isDone);
+                  const isLast = idx === childTasks.length - 1;
+                  const nestedTasks = resolveTaskChildren(task);
+                  const canOpen =
+                    Boolean(task.description) ||
+                    Boolean(task.details?.summary) ||
+                    Boolean(task.details?.content) ||
+                    nestedTasks.length > 0;
+                  const dotNode = (
                     <Box sx={milestoneDotSx(idleDotColor)} aria-hidden="true">
-                      {ms.icon}
+                      {task.icon}
                     </Box>
                   );
+                  const rowButtonProps = canOpen
+                    ? {
+                        onClick: () => setModalTask({ task, idx }),
+                        role: 'button' as const,
+                        tabIndex: 0,
+                        'aria-label': `View details: ${task.title}`,
+                        onKeyDown: (e: React.KeyboardEvent<HTMLLIElement>) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setModalTask({ task, idx });
+                          }
+                        },
+                      }
+                    : {};
 
                   return (
                     <Box
                       component="li"
-                      key={`${phase.key}-ms-${idx}`}
-                      sx={milestoneItemSx}
-                      onClick={() => setModalMilestone({ ms, idx })}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`View details: ${ms.title}`}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          setModalMilestone({ ms, idx });
-                        }
-                      }}
+                      key={`${phase.key}-child-${task.key}`}
+                      sx={milestoneItemSx(canOpen, isDone)}
+                      {...rowButtonProps}
                     >
-                      {/* Dot column: circle (or 3-state CheckIconButton) + vertical connector */}
                       <Box sx={milestoneDotColumnSx}>
-                        {checklist ? (
+                        {checklist && usesMilestoneChildren ? (
                           <CheckIconButton
-                            done={isMsDone}
-                            checkIcon={msDotIdle}
+                            done={isDone}
+                            checkIcon={dotNode}
                             checkDoneIcon={MS_CHECK_DONE_DOT}
                             checkHoverIcon={MS_CHECK_HOVER_DOT}
                             onDoneButtonClick={(newDone) => {
@@ -287,27 +270,25 @@ export function PhaseAccordionRow({
                             }}
                           />
                         ) : (
-                          msDotIdle
+                          dotNode
                         )}
                         {!isLast && <Box aria-hidden="true" sx={milestoneConnectorLineSx} />}
                       </Box>
 
-                      {/* Text content */}
                       <Box sx={milestoneContentSx}>
                         <Typography variant="subtitle2" sx={milestoneTitleSx}>
-                          {ms.shortTitle ?? ms.title}
+                          {task.shortTitle ?? task.title}
                         </Typography>
-                        {ms.description && (
+                        {task.description && (
                           <Typography variant="body2" sx={milestoneDescriptionPreviewSx}>
-                            {ms.description}
+                            {task.description}
                           </Typography>
                         )}
                       </Box>
 
-                      {/* Date */}
-                      {ms.date && (
+                      {task.date && (
                         <Typography variant="caption" sx={milestoneDateSx}>
-                          {ms.date}
+                          {task.date}
                         </Typography>
                       )}
                     </Box>
@@ -319,22 +300,20 @@ export function PhaseAccordionRow({
         )}
       </Accordion>
 
-      <MilestoneModal
-        milestone={modalMilestone?.ms ?? null}
-        open={modalMilestone !== null}
-        onClose={() => setModalMilestone(null)}
+      <TaskDetailsModal
+        task={modalTask?.task ?? null}
+        open={modalTask !== null}
+        onClose={() => setModalTask(null)}
         checklist={checklist}
         taskDoneState={
-          modalMilestone
-            ? resolveTaskChildren(modalMilestone.ms).map(
-                (t, i) =>
-                  taskDoneMap[`${phase.key}-m${modalMilestone.idx}-t${i}`] ?? t.done ?? false
+          modalTask
+            ? resolveTaskChildren(modalTask.task).map(
+                (task, i) =>
+                  taskDoneMap[`${phase.key}-c${modalTask.idx}-t${i}`] ?? task.done ?? false
               )
             : undefined
         }
-        onTaskToggle={
-          modalMilestone ? (i) => onTaskToggle(phase.key, modalMilestone.idx, i) : undefined
-        }
+        onTaskToggle={modalTask ? (i) => onTaskToggle(phase.key, modalTask.idx, i) : undefined}
       />
     </>
   );
