@@ -53,7 +53,16 @@ export function TaskList({
                 inputProps={{ 'aria-label': task.title }}
               />
             )}
-            <Typography variant="caption" sx={taskCaptionSx(isDone)}>
+            {!checklist && (
+              <Typography
+                component="span"
+                variant="body2"
+                sx={{ color: 'text.disabled', mr: 0.75, flexShrink: 0 }}
+              >
+                ›
+              </Typography>
+            )}
+            <Typography variant="body2" sx={taskCaptionSx(isDone)}>
               {task.title}
             </Typography>
           </Box>
