@@ -102,8 +102,8 @@ describe('accordionRootSx', () => {
 
   it('uses a color-tinted background for active rows', () => {
     const styles = (accordionRootSx(false, true, true, 'warning') as SxFn)(mockTheme);
-    expect(styles['backgroundColor']).toBe('rgba(245 166 35 / 0.12)');
-    expect(styles['border']).toBe('1px solid rgba(245 166 35 / 0.24)');
+    expect(styles['backgroundColor']).toBe('rgba(245, 166, 35, 0.12)');
+    expect(styles['border']).toBe('1px solid rgba(245, 166, 35, 0.24)');
   });
 
   it('keeps non-expanded active rows uncolored', () => {

@@ -1,7 +1,7 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import { alpha, type SxProps, type Theme } from '@mui/material/styles';
 
+import { channelAlpha } from '../../../utils/theme-utils';
 import type { HighlightedPaletteKey } from '../two-column/types';
-import { channelAlpha, hexToChannel } from '../../../utils/theme-utils';
 import { COMPACT_MILESTONE_DOT_SIZE, COMPACT_PHASE_DOT_SIZE } from './compact.const';
 
 // ----------------------------------------------------------------------
@@ -177,12 +177,12 @@ export const milestoneConnectorLineSx: SxProps<Theme> = {
 export const accordionRootSx =
   (done: boolean, active = false, expanded = false, color: HighlightedPaletteKey = 'primary') =>
   (theme: Theme) => {
-    const neutralChannel = theme.vars?.palette.grey['500Channel'] ?? '145 158 171';
-    const activeChannel =
-      theme.vars?.palette[color].mainChannel ?? hexToChannel(theme.palette[color].main);
-    const neutralBg = channelAlpha(neutralChannel, 0.08);
-    const activeBg = channelAlpha(activeChannel, 0.12);
-    const activeBorder = channelAlpha(activeChannel, 0.24);
+    const neutralColor =
+      typeof theme.palette.grey?.[500] === 'string' ? theme.palette.grey[500] : '#919eab';
+    const activeColor = theme.palette[color].main;
+    const neutralBg = alpha(neutralColor, 0.08);
+    const activeBg = alpha(activeColor, 0.12);
+    const activeBorder = alpha(activeColor, 0.24);
     const isActiveExpanded = active && expanded;
     const transitionDuration = theme.transitions?.duration?.shorter ?? 250;
     const colorTransition = theme.transitions?.create
