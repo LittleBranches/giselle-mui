@@ -155,7 +155,12 @@ export function PhaseAccordionRow({
     sortedMilestones.map((ms) => ms.done ?? false)
   );
 
-  const [modalMilestone, setModalMilestone] = useState<TimelineMilestone | null>(null);
+  // Store the milestone AND its index so the modal can compute the correct
+  // taskDoneMap slice and dispatch the right onTaskToggle key.
+  const [modalMilestone, setModalMilestone] = useState<{
+    ms: TimelineMilestone;
+    idx: number;
+  } | null>(null);
 
   const effectiveColor = resolveCompactColor(phase.color, parentDone);
   const taskChildren = resolveTaskChildren(phase);
@@ -257,14 +262,14 @@ export function PhaseAccordionRow({
                       component="li"
                       key={`${phase.key}-ms-${idx}`}
                       sx={milestoneItemSx}
-                      onClick={() => setModalMilestone(ms)}
+                      onClick={() => setModalMilestone({ ms, idx })}
                       role="button"
                       tabIndex={0}
                       aria-label={`View details: ${ms.title}`}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
-                          setModalMilestone(ms);
+                          setModalMilestone({ ms, idx });
                         }
                       }}
                     >
@@ -315,9 +320,21 @@ export function PhaseAccordionRow({
       </Accordion>
 
       <MilestoneModal
-        milestone={modalMilestone}
+        milestone={modalMilestone?.ms ?? null}
         open={modalMilestone !== null}
         onClose={() => setModalMilestone(null)}
+        checklist={checklist}
+        taskDoneState={
+          modalMilestone
+            ? resolveTaskChildren(modalMilestone.ms).map(
+                (t, i) =>
+                  taskDoneMap[`${phase.key}-m${modalMilestone.idx}-t${i}`] ?? t.done ?? false
+              )
+            : undefined
+        }
+        onTaskToggle={
+          modalMilestone ? (i) => onTaskToggle(phase.key, modalMilestone.idx, i) : undefined
+        }
       />
     </>
   );

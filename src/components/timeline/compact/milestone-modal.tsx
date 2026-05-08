@@ -1,6 +1,5 @@
 'use client';
 
-import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -20,9 +19,22 @@ interface MilestoneModalProps {
   milestone: TimelineMilestone | null;
   open: boolean;
   onClose: () => void;
+  /** Whether to render checkboxes — mirrors the parent phase's checklist mode. */
+  checklist?: boolean;
+  /** Controlled done-state for each task in the milestone, parallel to `tasks`. */
+  taskDoneState?: boolean[];
+  /** Called with the task index when the user toggles a task checkbox. */
+  onTaskToggle?: (taskIdx: number) => void;
 }
 
-export function MilestoneModal({ milestone, open, onClose }: MilestoneModalProps) {
+export function MilestoneModal({
+  milestone,
+  open,
+  onClose,
+  checklist = false,
+  taskDoneState,
+  onTaskToggle,
+}: MilestoneModalProps) {
   // Use a plain media query string — no ThemeProvider required.
   // sm breakpoint = 600 px (MUI default); mirrored here to avoid the
   // `useMediaQuery(theme => ...)` form that requires a Theme context in tests.
@@ -83,15 +95,13 @@ export function MilestoneModal({ milestone, open, onClose }: MilestoneModalProps
         )}
 
         {tasks.length > 0 && (
-          <Box>
-            <Typography
-              variant="overline"
-              sx={{ color: 'text.disabled', display: 'block', mb: 0.5 }}
-            >
-              Tasks
-            </Typography>
-            <TaskList tasks={tasks} />
-          </Box>
+          <TaskList
+            tasks={tasks}
+            checklist={checklist}
+            taskDoneState={taskDoneState}
+            onTaskToggle={onTaskToggle}
+            indent="milestone"
+          />
         )}
 
         {!milestone.description && tasks.length === 0 && (
