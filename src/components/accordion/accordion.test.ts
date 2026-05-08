@@ -400,3 +400,60 @@ describe('Accordion — icon-button mode (checkIcon provided)', () => {
     container.remove();
   });
 });
+
+// ----------------------------------------------------------------------
+
+describe('Accordion — leadingAction mode', () => {
+  const LEADING_ACTION = React.createElement('button', { 'data-testid': 'leading-action' }, '◎');
+
+  it('renders the leadingAction element when provided', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(Accordion, { title: 'Test', leadingAction: LEADING_ACTION }, DETAILS)
+    );
+    expect(html).toContain('data-testid="leading-action"');
+  });
+
+  it('does not wrap leadingAction in an aria-hidden container', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(Accordion, { title: 'Test', leadingAction: LEADING_ACTION }, DETAILS)
+    );
+    // leadingAction is interactive — it must NOT be aria-hidden
+    expect(html).not.toContain('aria-hidden="true"');
+  });
+
+  it('does not render a checkbox when leadingAction is provided and checklist is false', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(Accordion, { title: 'Test', leadingAction: LEADING_ACTION }, DETAILS)
+    );
+    expect(html).not.toContain('<input');
+  });
+
+  it('checklist takes precedence over leadingAction when both are provided', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(
+        Accordion,
+        { title: 'Task', checklist: true, leadingAction: LEADING_ACTION },
+        DETAILS
+      )
+    );
+    // Checkbox wins — leadingAction is ignored
+    expect(html).toContain('<input');
+    expect(html).not.toContain('data-testid="leading-action"');
+  });
+});
+
+// ----------------------------------------------------------------------
+
+describe('Accordion — sx prop forwarding', () => {
+  it('accepts sx as an array without throwing', () => {
+    // Covers the Array.isArray(sx) === true branch on the root MuiAccordion element.
+    const arraySx = [{ opacity: 1 }, { color: 'inherit' }];
+    let html = '';
+    expect(() => {
+      html = renderToStaticMarkup(
+        React.createElement(Accordion, { title: 'Test', sx: arraySx }, DETAILS)
+      );
+    }).not.toThrow();
+    expect(html).toContain('Test');
+  });
+});

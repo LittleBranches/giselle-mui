@@ -1,5 +1,6 @@
 export { Accordion } from './accordion';
-export type { AccordionProps } from './types';
+export { CheckIconButton } from './check-icon-button';
+export * from './types';
 export {
   ACCORDION_DONE_MIN_TOUCH_TARGET,
   ACCORDION_CHECK_ICON_SIZE,

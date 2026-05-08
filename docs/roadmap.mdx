@@ -83,6 +83,9 @@ export const roadmapPhases = [
       { key: 0, date: '5 May 2026', shortTitle: 'StatCard', title: 'StatCard', description: 'Data card with sparkline, six palette variants.', color: 'success', done: true },
       { key: 1, date: '5 May 2026', shortTitle: 'RadialProgressCard', title: 'RadialProgressCard', description: 'Card wrapping an ApexCharts radialBar.', color: 'success', done: true },
       { key: 4, date: '7 May 2026', shortTitle: 'TimelineCompact', title: 'TimelineCompact', description: 'Single-column accordion renderer for TimelinePhase[]. Mobile companion to TimelineTwoColumn — swap at xs/sm breakpoints with no data-layer changes.', color: 'success', done: true },
+      { key: 11, date: '8 May 2026', shortTitle: 'Accordion', title: 'Accordion', description: 'Generic WCAG 2.2 AA accordion with done-toggle, checklist mode, CheckIconButton custom-icon variant, leading icon/action slots. Solves the nested-interactive-element problem once.', color: 'success', done: true },
+      { key: 12, date: '8 May 2026', shortTitle: 'TaskList', title: 'TaskList', description: 'Flat done/pending list. Shares the same done/onDoneButtonClick API as Accordion.', color: 'success', done: true },
+      { key: 13, date: '8 May 2026', shortTitle: 'FaqAccordion (/motion)', title: 'FaqAccordion', description: 'FAQ section with framer-motion scroll animation, decorative SVGs, contact footer. /motion subpath only — consumers without framer-motion pay zero bundle cost.', color: 'success', done: true },
       { key: 2, date: 'Jun 2026', shortTitle: 'HeroSection', title: 'HeroSection', description: 'Full-width hero: headline, subtitle, CTA slot.', color: 'secondary' },
       { key: 3, date: 'Jun 2026', shortTitle: 'FAQAccordion', title: 'FAQAccordion', description: 'MUI Accordion with icon slot and accessible expand.', color: 'secondary' },
       { key: 5, shortTitle: 'TwoColumnShowcaseRow', title: 'TwoColumnShowcaseRow', description: 'Two-column grid for a showcase item and descriptive text. Extracted from alexrebula — zero proprietary deps.', color: 'success', done: true },
@@ -120,7 +123,7 @@ export const roadmapPhases = [
     side: 'right',
     color: 'info',
     milestones: [
-      { key: 0, date: 'Aug 2026', shortTitle: 'Subpath exports', title: 'Configure /charts and /motion subpath exports in tsup + package.json', description: 'Architecture prerequisite. Unblocks ApexCharts chart cards and framer-motion components without imposing those deps on all consumers.' },
+      { key: 0, date: '7 May 2026', shortTitle: 'Subpath exports', title: 'Configure /charts and /motion subpath exports in tsup + package.json', description: 'Architecture prerequisite. Unblocks ApexCharts chart cards and framer-motion components without imposing those deps on all consumers.', color: 'success', done: true },
       { key: 1, date: 'Aug 2026', shortTitle: 'MUI-only widgets', title: 'MUI-only dashboard widgets (18 components)', description: 'Groups 1+3+4+5 + Group 7 main-bundle analytics: StatCardRow, BalanceSummaryCard, CreditCardDisplay, DataTable, ActivityFeedList, NewsFeedList, RelatedItemsList, ProgressStatsList, QuickTransferWidget, ContactsList, BudgetBreakdownCard, HeroBannerCard, FeaturedItemCard, PromoInviteCard, CostClassificationCard, ROIComparisonCard, ScenarioComparisonWidget, AmortizationScheduleTable.' },
       { key: 2, date: 'Aug 2026', shortTitle: 'Chart cards', title: 'ApexCharts chart card suite (8 components — /charts subpath)', description: 'SparklineBar, DonutChartCard, AreaLineChartCard, BudgetVsActualChartCard, GroupedBarChartCard, HorizontalBarChartCard, RadarChartCard, ProjectionChartCard (dual-series costs-vs-returns with break-even annotation).' },
       { key: 3, date: 'Aug 2026', shortTitle: 'Motion components', title: 'Move FloatingSubNav to /motion subpath + AnimatedTabPanel', description: 'Breaking change for FloatingSubNav consumers — needs re-export shim or minor version bump.' },
@@ -225,9 +228,25 @@ export const roadmapPhases = [
       },
     ],
   },
+  {
+    key: 12,
+    title: 'Phase L — Quality infrastructure',
+    shortTitle: 'Phase L',
+    description: 'Component cleanup playbook, per-component quality scoring, and Copilot tooling that make the library maintainable at scale.',
+    date: '8 May 2026',
+    side: 'left',
+    color: 'success',
+    done: true,
+    children: [
+      { key: 0, title: '14-step cleanup-workflow.md playbook (Scenario A + B DoD checklists)', done: true },
+      { key: 1, title: 'Session shorthand: `cleanup component <Name>` — zero-context fresh sessions', done: true },
+      { key: 2, title: 'Scoped .instructions.md — VS Code auto-loads on any component file open', done: true },
+      { key: 3, title: 'DoD checklists inlined in copilot-instructions.md — GitHub PR reviewer coverage', done: true },
+      { key: 4, title: 'Per-component quality scoring: DoD n/20 · Best practices n/13 in JSDoc + README', done: true },
+      { key: 5, title: 'component-inventory.md quality status table with last-audited date', done: true },
+    ],
+  },
 ];
-
-# @alexrebula/giselle-mui — Roadmap
 
 > This file is the source of truth for the giselle-mui library build. It covers theme utilities (Phases A–D), components, and extraction candidates. Summary entries for completed phases bubble up to `alexrebula/docs/roadmap.md` Phase 1.5 (private companion repo — not linkable from here).
 

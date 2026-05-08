@@ -396,6 +396,145 @@ export const CheckIconTaskList: Story = {
 
 // ----------------------------------------------------------------------
 
+/**
+ * ## Decision doc — `leadingAction` vs `leadingIcon`
+ *
+ * The `leadingAction` prop accepts an interactive `ReactNode` (a button, a
+ * clickable phase dot, etc.) and renders it **as-is** before the title.
+ *
+ * The key difference from `leadingIcon`:
+ *
+ * - `leadingIcon` wraps its content in an `aria-hidden="true"` Box because it
+ *   is always decorative — the title text is the accessible label.
+ * - `leadingAction` is rendered directly because the consumer's element is
+ *   interactive. The consumer is responsible for `role`, `aria-label`, and
+ *   event handling on their element.
+ *
+ * **Rule:** If the leading slot must be clickable, use `leadingAction`.
+ * If it is purely decorative, use `leadingIcon`.
+ */
+export const WithLeadingAction: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+The \`leadingAction\` slot renders an **interactive** element before the title.
+Unlike \`leadingIcon\` (which is \`aria-hidden\`), \`leadingAction\` is rendered
+as-is — the consumer is responsible for accessibility on their element.
+
+**Use this when** the leading slot must be clickable (e.g. a phase-status dot,
+a priority flag button). **Use \`leadingIcon\`** when it is purely decorative.
+
+Both the leading action and the accordion expand/collapse are independently
+keyboard-accessible.
+        `.trim(),
+      },
+    },
+  },
+  render: () => (
+    <Accordion
+      title="Phase 1 — API design"
+      expandIcon={EXPAND_ICON}
+      leadingAction={
+        <button
+          type="button"
+          aria-label="Mark phase as done"
+          style={{
+            width: 20,
+            height: 20,
+            borderRadius: '50%',
+            border: '2px solid currentColor',
+            background: 'transparent',
+            cursor: 'pointer',
+            flexShrink: 0,
+          }}
+        />
+      }
+    >
+      <Typography>
+        Accordion with an interactive leading action — a phase status dot that the consumer can
+        click independently from the expand/collapse trigger.
+      </Typography>
+    </Accordion>
+  ),
+};
+
+// ----------------------------------------------------------------------
+
+/**
+ * ## Decision doc — WCAG 2.2 AA: checkbox outside `AccordionSummary`
+ *
+ * MUI `AccordionSummary` renders as a `<button>`. Placing a `<input
+ * type="checkbox">` inside a `<button>` violates the ARIA spec (interactive
+ * element nested inside another interactive element) and breaks keyboard
+ * behaviour in most browsers.
+ *
+ * **The fix:** render the `Checkbox` and `AccordionSummary` as **siblings**
+ * inside a flex `Box`. The Box sits between `<Accordion>` and
+ * `<AccordionSummary>` in the DOM. MUI v7 communicates between those two via
+ * React context — not via direct-child CSS selectors — so the wrapper is
+ * transparent to MUI's internal expand/collapse logic.
+ *
+ * **What to verify in the canvas:**
+ *
+ * 1. Click the **checkbox** only → done state toggles, accordion stays closed.
+ * 2. Click the **title area** only → accordion opens/closes, done state stays.
+ * 3. Tab to the **checkbox** → focus ring appears on the checkbox, not the title.
+ * 4. Tab again → focus moves to the **title button** as a separate tab stop.
+ *
+ * This four-point check confirms that both elements are independently
+ * keyboard-accessible and neither is nested inside the other.
+ */
+function CheckboxOutsideSummaryDemo() {
+  const [done, setDone] = useState(false);
+  return (
+    <Stack spacing={1}>
+      <Typography variant="caption" color="text.secondary">
+        Checkbox done: {done ? 'true' : 'false'} — toggle it without opening the accordion
+      </Typography>
+      <Accordion
+        title="Verify WCAG checkbox independence"
+        checklist
+        done={done}
+        onDoneButtonClick={setDone}
+        expandIcon={EXPAND_ICON}
+      >
+        <Typography>
+          This content is only visible when you click the title area (not the checkbox).
+        </Typography>
+      </Accordion>
+    </Stack>
+  );
+}
+
+export const CheckboxOutsideSummary: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: `
+**WCAG 2.2 AA compliance: checkbox and summary are siblings, never nested.**
+
+MUI \`AccordionSummary\` is a \`<button>\`. Nesting a \`<input type="checkbox">\`
+inside it violates the ARIA spec and breaks keyboard navigation.
+
+This component renders the \`Checkbox\` and \`AccordionSummary\` as siblings in a
+flex row. MUI communicates expand state via React context, not DOM structure, so
+the wrapper Box is invisible to MUI's internal logic.
+
+**Verify in the canvas:**
+1. Click the checkbox → done toggles, accordion stays closed.
+2. Click the title area → accordion opens, done stays unchanged.
+3. Tab from outside → checkbox gets focus first (its own tab stop).
+4. Tab again → title button gets focus (second independent tab stop).
+        `.trim(),
+      },
+    },
+  },
+  render: () => <CheckboxOutsideSummaryDemo />,
+};
+
+// ----------------------------------------------------------------------
+
 function ResponsiveDemo() {
   return (
     <Stack spacing={3}>
