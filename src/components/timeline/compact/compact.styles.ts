@@ -1,7 +1,7 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
 import type { HighlightedPaletteKey } from '../two-column/types';
-import { channelAlpha } from '../../../utils/theme-utils';
+import { channelAlpha, hexToChannel } from '../../../utils/theme-utils';
 import { COMPACT_MILESTONE_DOT_SIZE, COMPACT_PHASE_DOT_SIZE } from './compact.const';
 
 // ----------------------------------------------------------------------
@@ -175,32 +175,39 @@ export const milestoneConnectorLineSx: SxProps<Theme> = {
 };
 
 export const accordionRootSx =
-  (done: boolean, active = false, color: HighlightedPaletteKey = 'primary') =>
+  (done: boolean, active = false, expanded = false, color: HighlightedPaletteKey = 'primary') =>
   (theme: Theme) => {
-    const neutralBg = channelAlpha('var(--mui-palette-grey-500Channel)', 0.08);
-    const activeBg = channelAlpha(
-      theme.vars?.palette[color].mainChannel ?? 'var(--mui-palette-primary-mainChannel)',
-      0.12
-    );
-    const activeBorder = channelAlpha(
-      theme.vars?.palette[color].mainChannel ?? 'var(--mui-palette-primary-mainChannel)',
-      0.24
-    );
+    const neutralChannel = theme.vars?.palette.grey['500Channel'] ?? '145 158 171';
+    const activeChannel =
+      theme.vars?.palette[color].mainChannel ?? hexToChannel(theme.palette[color].main);
+    const neutralBg = channelAlpha(neutralChannel, 0.08);
+    const activeBg = channelAlpha(activeChannel, 0.12);
+    const activeBorder = channelAlpha(activeChannel, 0.24);
+    const isActiveExpanded = active && expanded;
+    const transitionDuration = theme.transitions?.duration?.shorter ?? 250;
+    const colorTransition = theme.transitions?.create
+      ? theme.transitions.create(['background-color', 'border-color'], {
+          duration: transitionDuration,
+        })
+      : 'background-color 250ms, border-color 250ms';
 
     return {
-      border: active ? `1px solid ${activeBorder}` : 'none',
+      py: 1,
+      px: 2.5,
+      border: isActiveExpanded ? `1px solid ${activeBorder}` : 'none',
       borderRadius: 2,
       boxShadow: 'none',
-      backgroundColor: active ? activeBg : 'transparent',
+      backgroundColor: isActiveExpanded ? activeBg : 'transparent',
       '&:before': { display: 'none' },
       '&.Mui-expanded': {
         margin: 0,
-        bgcolor: active ? activeBg : neutralBg,
+        bgcolor: isActiveExpanded ? activeBg : neutralBg,
+        border: isActiveExpanded ? `1px solid ${activeBorder}` : 'none',
       },
       '&:hover': {
-        bgcolor: active ? activeBg : neutralBg,
+        bgcolor: neutralBg,
       },
       opacity: done ? 0.65 : 1,
-      transition: 'opacity 300ms, background-color 300ms, border-color 300ms',
+      transition: `${colorTransition}, opacity 300ms`,
     };
   };
