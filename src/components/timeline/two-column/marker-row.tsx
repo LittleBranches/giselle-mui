@@ -10,9 +10,10 @@ import { resolvePhaseTooltip } from './utils';
 import {
   markerPhaseLiSx,
   markerRowInnerSx,
-  markerLeftLabelSx,
+  // markerLabelSlotSx is a factory (not two separate constants) — see two-column.styles.ts
+  // for the naming decision: *SlotSx (structural container) not *LabelSx (child content).
+  markerLabelSlotSx,
   markerCenterSx,
-  markerRightLabelSx,
 } from './two-column.styles';
 
 // ----------------------------------------------------------------------
@@ -51,7 +52,7 @@ export function MarkerRow({
     <Box component="li" data-testid="tl-item" sx={markerPhaseLiSx} {...other}>
       <Box sx={markerRowInnerSx}>
         {/* Left label — shown when side === 'left'; hidden at xs via CSS */}
-        <Box sx={markerLeftLabelSx}>
+        <Box sx={markerLabelSlotSx('left')}>
           {phase.side === 'left' && (
             <MarkerLabel title={phase.shortTitle ?? phase.title} date={phase.date} />
           )}
@@ -68,7 +69,7 @@ export function MarkerRow({
         </Box>
 
         {/* Right label — receives all labels on mobile (shouldShowRightLabel=true when isMobile) */}
-        <Box sx={markerRightLabelSx}>
+        <Box sx={markerLabelSlotSx('right')}>
           {shouldShowRightLabel && (
             <MarkerLabel title={phase.shortTitle ?? phase.title} date={phase.date} />
           )}

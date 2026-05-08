@@ -1303,7 +1303,7 @@ export const MarkerLabelSidePlacement: Story = {
  * When the viewport drops below the `md` breakpoint, `isMobile=true` is computed
  * internally (via `useMediaQuery`). For marker rows this triggers:
  *
- * - Left label slot hidden via CSS (`markerLeftLabelSx` sets `display: { xs: 'none', md: 'flex' }`)
+ * - Left label slot hidden via CSS (`markerLabelSlotSx('left')` sets `display: { xs: 'none', md: 'flex' }`)
  * - Right slot renders the label **regardless of `phase.side`** (`shouldShowRightLabel = side !== 'left' || isMobile`)
  *
  * ### Why CSS-toggle rather than conditional render?

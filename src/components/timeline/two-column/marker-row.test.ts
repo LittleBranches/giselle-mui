@@ -100,7 +100,7 @@ describe('MarkerRow — label slot visibility', () => {
   it('[regression: mobile] renders label in both slots when isMobile=true and side="left"', () => {
     // Left slot always renders when side='left'. Right slot renders when (side !== 'left' || isMobile).
     // When isMobile=true: right slot also renders for side='left' phases so the label is
-    // visible at xs — the left slot is hidden by CSS (markerLeftLabelSx display.xs='none')
+    // visible at xs — the left slot is hidden by CSS (markerLabelSlotSx('left') display.xs='none')
     // and the right slot provides the visible text on mobile.
     const phase: TimelinePhase = { ...basePhase, side: 'left' };
     const html = renderToStaticMarkup(

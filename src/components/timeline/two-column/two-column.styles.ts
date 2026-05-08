@@ -140,16 +140,36 @@ export const markerPhaseLiSx: SxProps<Theme> = {
   minHeight: 40,
 };
 
-/** Left label Box inside a marker row — right-aligned, flush against the spine. Hidden on mobile so labels shift to the right slot. */
-export const markerLeftLabelSx: SxProps<Theme> = {
+/**
+ * Flex slot (layout container) that positions the left or right floating label
+ * in a marker row.
+ *
+ * **Named `*SlotSx`, not `*LabelSx`:** this is a structural container, not the label
+ * itself. The label (`MarkerLabel`, styled via `markerCaptionSx`) is the child content —
+ * the slot only positions it against the spine. Naming by structural role (slot) rather
+ * than by current child content (label) prevents the name from becoming misleading if the
+ * slot ever holds a different child.
+ *
+ * **Unified into a factory:** the left and right variants differ only in alignment and
+ * padding — identical in structure. Two static constants would duplicate that structure
+ * and diverge silently during refactors. This follows the same pattern as `timelineColumnSx`
+ * and `msColumnBoxSx` already in this file: every left/right pair is a single factory
+ * taking a `side` argument.
+ *
+ * @param side - `'left'` or `'right'`.
+ */
+export const markerLabelSlotSx = (side: 'left' | 'right'): SxProps<Theme> => ({
   flex: 1,
   minWidth: 0,
   overflow: 'hidden',
-  display: { xs: 'none', md: 'flex' },
-  justifyContent: 'flex-end',
+  // xs: left slot hidden — label shifts to the right slot on mobile.
+  // Right slot is always visible.
+  display: side === 'left' ? { xs: 'none', md: 'flex' } : 'flex',
+  justifyContent: side === 'left' ? 'flex-end' : 'flex-start',
   alignItems: 'center',
-  pr: 1.5,
-};
+  pr: side === 'left' ? 1.5 : 0,
+  pl: side === 'right' ? 1.5 : 0,
+});
 
 /** Centre Box in a marker row — contains the dot and spine connector. */
 export const markerCenterSx: SxProps<Theme> = {
@@ -158,17 +178,6 @@ export const markerCenterSx: SxProps<Theme> = {
   alignItems: 'center',
   flexShrink: 0,
   position: 'relative',
-};
-
-/** Right label Box inside a marker row — left-aligned, flush against the spine. */
-export const markerRightLabelSx: SxProps<Theme> = {
-  flex: 1,
-  minWidth: 0,
-  overflow: 'hidden',
-  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  pl: 1.5,
 };
 
 // ── Phase row ─────────────────────────────────────────────────────────────────

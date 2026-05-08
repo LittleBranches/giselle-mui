@@ -9,9 +9,8 @@ import {
   msDotWrapperSx,
   floatingDatePillSx,
   markerPhaseLiSx,
-  markerLeftLabelSx,
+  markerLabelSlotSx,
   markerCenterSx,
-  markerRightLabelSx,
   markerRowInnerSx,
   markerCaptionSx,
   markerDateSpanSx,
@@ -272,43 +271,52 @@ describe('markerPhaseLiSx — marker phase li', () => {
 });
 
 // ---------------------------------------------------------------------------
-// markerLeftLabelSx / markerRightLabelSx / markerCenterSx
+// markerLabelSlotSx (unified factory — replaces separate markerLeftLabelSx / markerRightLabelSx)
+// Named *SlotSx not *LabelSx: the Box is a structural container (slot), not the label itself.
+// Unified into a factory to avoid duplicating identical structure for left/right variants.
 // ---------------------------------------------------------------------------
 
-describe('markerLeftLabelSx — left label column', () => {
+describe('markerLabelSlotSx("left") — left label slot', () => {
   it('right-aligns content with right padding', () => {
-    const sx = markerLeftLabelSx as Record<string, unknown>;
+    const sx = markerLabelSlotSx('left') as Record<string, unknown>;
     expect(sx['justifyContent']).toBe('flex-end');
     expect(sx['pr']).toBe(1.5);
+    expect(sx['pl']).toBe(0);
     expect(sx['flex']).toBe(1);
   });
 
   it('[regression] has minWidth:0 and overflow:hidden to clip nowrap labels at narrow widths', () => {
-    const sx = markerLeftLabelSx as Record<string, unknown>;
+    const sx = markerLabelSlotSx('left') as Record<string, unknown>;
     expect(sx['minWidth']).toBe(0);
     expect(sx['overflow']).toBe('hidden');
   });
 
-  it('[regression: markerLeftLabelSx hidden xs] left label hidden so left-side labels move to the right slot on mobile', () => {
-    const sx = markerLeftLabelSx as Record<string, unknown>;
+  it('[regression: left slot hidden xs] left slot hidden so left-side labels shift to the right slot on mobile', () => {
+    const sx = markerLabelSlotSx('left') as Record<string, unknown>;
     const display = sx['display'] as { xs: string; md: string };
     expect(display['xs']).toBe('none');
     expect(display['md']).toBe('flex');
   });
 });
 
-describe('markerRightLabelSx — right label column', () => {
+describe('markerLabelSlotSx("right") — right label slot', () => {
   it('left-aligns content with left padding', () => {
-    const sx = markerRightLabelSx as Record<string, unknown>;
+    const sx = markerLabelSlotSx('right') as Record<string, unknown>;
     expect(sx['justifyContent']).toBe('flex-start');
     expect(sx['pl']).toBe(1.5);
+    expect(sx['pr']).toBe(0);
     expect(sx['flex']).toBe(1);
   });
 
   it('[regression] has minWidth:0 and overflow:hidden to clip nowrap labels at narrow widths', () => {
-    const sx = markerRightLabelSx as Record<string, unknown>;
+    const sx = markerLabelSlotSx('right') as Record<string, unknown>;
     expect(sx['minWidth']).toBe(0);
     expect(sx['overflow']).toBe('hidden');
+  });
+
+  it('[regression: right slot always visible] right slot visible on all breakpoints', () => {
+    const sx = markerLabelSlotSx('right') as Record<string, unknown>;
+    expect(sx['display']).toBe('flex');
   });
 });
 

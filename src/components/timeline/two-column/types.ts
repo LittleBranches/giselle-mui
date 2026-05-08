@@ -512,7 +512,7 @@ export type MarkerRowProps = {
   /**
    * Whether the viewport is below the md breakpoint.
    *
-   * When `true`, the left label slot is hidden via CSS (`markerLeftLabelSx display.xs='none'`)
+   * When `true`, the left label slot is hidden via CSS (`markerLabelSlotSx('left') display.xs='none'`)
    * and the right slot also renders the label for `side='left'` phases — mirroring the
    * column-collapse behaviour of full phase cards on mobile. This ensures the label is
    * always visible regardless of viewport width.

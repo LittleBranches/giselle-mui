@@ -73,6 +73,19 @@ Answer these in order. Stop at the first yes.
 - Dynamic sx that depends on props → factory function `(prop: T): SxProps<Theme> => (theme) => ({...})`.
 - Create or update `<component-name>.styles.test.ts`: call each exported factory with a minimal mock theme, assert the returned object values.
 
+**Naming precision rule — name by structural role, not by current child content.**
+A Box that wraps a label is a _slot_ — it positions whatever child is placed inside it. A Box that _is_ a label has its own distinct role. Name accordingly:
+
+- Container/layout Boxes → `*SlotSx`, `*WrapperSx`, `*ColumnSx` (structural role)
+- The rendered content inside → `*CaptionSx`, `*TitleSx`, `*LabelSx` (content role)
+
+Conflating the two makes names misleading the moment the child content changes. `markerLeftLabelSx` implied the Box _was_ the label; renaming to `markerLabelSlotSx` makes the structural role explicit.
+
+**Factory unification rule — merge parallel left/right (or similar) constants into a single factory.**
+When two style constants are structurally identical except for one varying argument (e.g. `side: 'left' | 'right'`, `blurred: boolean`), they should be a single factory, not two separate exports. Two static constants will diverge silently during refactors — one gets updated, the other doesn't. A factory makes the relationship explicit in the type signature and keeps the structure in one place.
+
+Check every `*.styles.ts` file for sibling pairs. If they share the same shape and differ only by one dimension, merge them. See `timelineColumnSx`, `msColumnBoxSx`, and `markerLabelSlotSx` in `two-column.styles.ts` as canonical examples.
+
 ### Step 4 — Utils
 
 - Move every pure logic function (nothing that returns JSX) out of `.tsx` files and into `utils.ts`.
