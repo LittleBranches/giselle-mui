@@ -111,6 +111,7 @@ function makePhase(side: 'left' | 'right', msSide?: 'left' | 'right'): TimelineP
     side,
     milestones: [
       {
+        key: 'ms-1',
         date: 'Mar 2020',
         title: 'A Milestone',
         icon: stubIcon,
