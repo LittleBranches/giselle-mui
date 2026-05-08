@@ -42,6 +42,23 @@ This file tracks active defects and unresolved UX decisions that affect shipped 
 - Question: Keep, remove, or redesign the "NEW" label; define trigger conditions and visual hierarchy relative to done/viewed states.
 - Needed output: One rule for display conditions plus one canonical style treatment.
 
+## Workspace-wide API deprecations
+
+### DEF-WS-001 — `inputProps` deprecated on MUI v7 `Checkbox` and form components
+
+- Status: Open — needs workspace-wide sweep
+- Severity: Medium (deprecation warning in dev; may break in a future MUI major)
+- Scope: All files across `giselle-mui`, `alexrebula`, `first-branch` that pass `inputProps` to any MUI component
+- Root cause: MUI v7 replaced `inputProps` with `slotProps.htmlInput` on all input-bearing components (`Checkbox`, `TextField`, `Input`, `Select`, etc.)
+- Fix: Replace every occurrence of `inputProps={{ ... }}` with `slotProps={{ htmlInput: { ... } }}`
+- First found: `giselle-mui/src/components/timeline/task-list/task-list.tsx` — `<Checkbox inputProps={{ 'aria-label': task.title }}>`
+- Action: grep entire workspace for `inputProps=` and fix each site before next MUI major upgrade
+
+```bash
+# Find all occurrences across the workspace:
+grep -rn "inputProps=" src/ --include="*.tsx" --include="*.ts"
+```
+
 ## Documentation policy
 
 - If a defect changes behavior expectations, update component README and story docs in the same PR.
