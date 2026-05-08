@@ -79,15 +79,24 @@ control over typography.
 ```
 src/components/accordion/
   accordion.tsx             — JSX composition only
-  accordion.const.ts        — WCAG minimum touch target constant
+  accordion.const.ts        — WCAG minimum touch target constants
   accordion.styles.ts       — static sx constants
   accordion.styles.test.ts  — assertions for every sx constant
-  accordion.test.ts         — render, ARIA, and interaction tests
-  accordion.stories.tsx     — Storybook: Default, Checklist, TaskList, Responsive
+  accordion.test.ts         — render, ARIA, interaction, and branch coverage tests
+  accordion.stories.tsx     — Storybook: Default, Checklist, TaskList, CheckboxOutsideSummary (WCAG doc), Responsive
+  check-icon-button.tsx     — internal icon-button done toggle sub-component
+  check-icon-button.test.ts — structure, ARIA, and click tests for CheckIconButton
   index.ts                  — barrel export
-  types.ts                  — AccordionProps
+  types.ts                  — AccordionProps, CheckIconButtonProps
   README.md                 — this file
 ```
+
+## Quality status — 8 May 2026
+
+| Dimension        | Score | Open items |
+| ---------------- | ----- | ---------- |
+| DoD (Scenario B) | 20/20 | —          |
+| Best practices   | 13/13 | —          |
 
 ## Related
 

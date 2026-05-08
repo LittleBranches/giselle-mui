@@ -102,6 +102,13 @@ src/components/timeline-two-column/
   README.md                                  — this file
 ```
 
+## Quality status — 8 May 2026
+
+| Dimension        | Score | Open items                                                                           |
+| ---------------- | ----- | ------------------------------------------------------------------------------------ |
+| DoD (Scenario B) | 18/20 | SonarQube not yet run · root-level const.ts absent (N/A — no size constants at root) |
+| Best practices   | 12/13 | Full JSDoc prop coverage not yet verified                                            |
+
 ## Related
 
 - `GiselleIcon` — use for `icon` and `platforms[].icon` slots

@@ -191,6 +191,43 @@ npm run dev
 
 Confirm the component renders correctly in the consuming app before closing the task.
 
+### Step 14 — Record quality status
+
+After all other DoD items are checked, record the final score in two places.
+
+**1. Component `.tsx` file** — add one line inside the existing JSDoc block, just above the closing `*/`:
+
+```tsx
+/**
+ * Existing description...
+ *
+ * **Quality status (DD Mon YYYY):** DoD n/20 · Best practices n/13
+ */
+export function MyComponent(...) {}
+```
+
+- `n/20` = number of Scenario B DoD checklist items met (use `n/9` for Scenario A sub-components)
+- `n/13` = number of best-practices items met
+- The date is the date the cleanup was completed — update it when the component is significantly changed
+
+Keep the label **generic** — "best practices" is the correct public-facing term. The private mapping to specific compliance targets lives only in private planning docs, never in this library's source files.
+
+**2. Component `README.md`** — add a `## Quality status` section above `## Related`:
+
+```md
+## Quality status — DD Mon YYYY
+
+| Dimension        | Score | Open items                           |
+| ---------------- | ----- | ------------------------------------ |
+| DoD (Scenario B) | n/20  | SonarQube not yet run · …            |
+| Best practices   | n/13  | JSDoc prop coverage not verified · … |
+```
+
+Use `DoD (Scenario A)` and `n/9` for sub-components.
+
+> Scores reflect the state at the cleanup date. Update the date and re-run SonarQube
+> whenever the component is significantly changed.
+
 ---
 
 ## Quick reference — files per component folder
@@ -268,6 +305,7 @@ Use this checklist when Phase 0 confirms the component lives flat and belongs to
 - [ ] Exported from parent `index.ts`
 - [ ] SonarQube: zero violations
 - [ ] `npm run check:verify` exits 0
+- [ ] Quality status added to JSDoc (one line) — Step 14
 
 ---
 
@@ -344,3 +382,4 @@ Complete this before starting any implementation steps. The goal is a clean move
 - [ ] `npm run check:verify` exits 0
 - [ ] `npm run build` exits 0
 - [ ] `yalc push` + consuming app validated
+- [ ] Quality status added to component JSDoc and `README.md` — Step 14

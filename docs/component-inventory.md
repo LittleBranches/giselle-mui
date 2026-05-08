@@ -35,6 +35,37 @@ sidebar_label: 'Component Inventory'
 
 **Shipped count: 16 exports (13 components + 5 utilities)**
 
+> Note: `Accordion`, `TimelineTwoColumn` (+ sub-exports), `TaskList`, and `useNestedChecklist` are also shipped but not yet listed in this table. Add them in the next inventory refresh.
+
+---
+
+## Quality status — shipped components
+
+> **Terminology note:** "Best practices" score maps to a set of 13 requirements tracked in private planning docs. The label used here is intentionally generic — this inventory is part of a public open-source package.
+>
+> Scores reflect the date of the last cleanup audit. Re-run SonarQube and update after any significant change.
+
+| Component                                                            | DoD   | Best practices | Last audited |
+| -------------------------------------------------------------------- | ----- | -------------- | ------------ |
+| `Accordion`                                                          | 19/20 | 12/13          | 8 May 2026   |
+| `TimelineTwoColumn` (+ `PhaseCard`, `TimelineDot`, `MilestoneBadge`) | 18/20 | 12/13          | 8 May 2026   |
+| `GiselleIcon`                                                        | ⬜    | ⬜             | —            |
+| `MetricCard` + `MetricCardDecoration`                                | ⬜    | ⬜             | —            |
+| `SelectableCard`                                                     | ⬜    | ⬜             | —            |
+| `QuoteCard`                                                          | ⬜    | ⬜             | —            |
+| `StatCard`                                                           | ⬜    | ⬜             | —            |
+| `RadialProgressCard`                                                 | ⬜    | ⬜             | —            |
+| `TimelineCompact`                                                    | ⬜    | ⬜             | —            |
+| `FloatingSubNav`                                                     | ⬜    | ⬜             | —            |
+| `TwoColumnShowcaseRow`                                               | ⬜    | ⬜             | —            |
+| `SectionTitle` + `SectionCaption`                                    | ⬜    | ⬜             | —            |
+| `SectionContainer`                                                   | ⬜    | ⬜             | —            |
+| `IconActionBar`                                                      | ⬜    | ⬜             | —            |
+| `TaskList`                                                           | ⬜    | ⬜             | —            |
+
+**DoD scale:** Scenario B = n/20 items · Scenario A (sub-component) = n/10 items  
+**Best practices scale:** 13 items — see `docs/components/cleanup-workflow.md` Step 14 for the rubric
+
 ---
 
 ## Phase C — `GiselleThemeProvider`

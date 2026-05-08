@@ -969,6 +969,7 @@ Use `cleanup component <Name>` to trigger the full workflow (`docs/components/cl
 - [ ] Exported from parent `index.ts`
 - [ ] SonarQube: zero violations
 - [ ] `npm run check:verify` exits 0
+- [ ] Quality status added to JSDoc (one line) — Step 14
 
 **Scenario B — Standalone component (own subfolder):**
 
@@ -992,6 +993,7 @@ Use `cleanup component <Name>` to trigger the full workflow (`docs/components/cl
 - [ ] `npm run check:verify` exits 0
 - [ ] `npm run build` exits 0
 - [ ] `yalc push` + consuming app validated
+- [ ] Quality status added to component JSDoc and `README.md` — Step 14
 
 ---
 
