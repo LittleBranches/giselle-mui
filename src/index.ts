@@ -44,6 +44,7 @@ export type { StatCardProps, StatCardColor, StatCardItem } from './components/ca
 export { PhaseCard, TimelineDot, TimelineTwoColumn } from './components/timeline/two-column';
 export type {
   PhaseCardProps,
+  TaskDetails,
   TimelineDotComponentProps,
   TimelineTwoColumnProps,
   Task,
@@ -56,7 +57,11 @@ export type {
   TimelineSectionData,
 } from './components/timeline/two-column';
 
-export { TimelineCompact, resolveCompactColor } from './components/timeline/compact';
+export {
+  TimelineCompact,
+  TaskDetailsRenderer,
+  resolveCompactColor,
+} from './components/timeline/compact';
 export type { TimelineCompactProps } from './components/timeline/compact';
 export { TaskList } from './components/timeline/task-list';
 export type { TaskListProps } from './components/timeline/task-list';

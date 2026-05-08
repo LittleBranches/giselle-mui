@@ -135,18 +135,21 @@ function makePhaseWithMilestones(): TimelinePhase {
     side: 'right',
     milestones: [
       {
+        key: 'earliest',
         date: 'Mar 2020',
         title: 'Earliest',
         icon: stubIcon,
         color: 'primary' as const,
       },
       {
+        key: 'middle',
         date: 'Aug 2021',
         title: 'Middle',
         icon: stubIcon,
         color: 'info' as const,
       },
       {
+        key: 'latest',
         date: 'Nov 2022',
         title: 'Latest',
         icon: stubIcon,
