@@ -1,3 +1,18 @@
+---
+sidebar_label: "PR24 - Giselle theme preset"
+---
+
+**[Merged](https://github.com/AlexRebula/giselle-mui/pull/24)** — [`feature/giselle-theme-preset`](https://github.com/AlexRebula/giselle-mui/tree/feature/giselle-theme-preset) — 5 May – 5 May 2026
+
+
+# PR 24 — feature/giselle-theme-preset
+
+This folder contains the message documents for PR 24.
+
+---
+
+## Additional Context: pr-24-feature-phase-b-statcard-radial-progress.md
+
 # fix: Copilot review fixes from PR #23 — palette tokens, legend dot size, sx extraction, README
 
 ## Branch
@@ -113,3 +128,26 @@ No new components. No tests removed.
 - [x] `.github/copilot-instructions.md` peer deps rule consistent with `package.json`
 - [x] `README.md` updated (components, roadmap, license note, formatting)
 - [x] `npm run check:verify` passes (Prettier → ESLint → tsc → 629 tests → tsup build → Storybook build)
+
+---
+
+## Additional Context: pr-24-fix-documentation-and-styling-issues-from-copilot-review.md
+
+# PR #24: Fix documentation and styling issues from Copilot review
+
+## Branch
+
+`feature/giselle-theme-preset` → `main`
+
+## Date
+
+5 May 2026
+
+## Context
+
+Historical PR record preserved for completeness in the PR messages index.
+
+## Notes
+
+- Title from GitHub: Fix documentation and styling issues from Copilot review
+- Closed PR document added so the PR history stays complete and easy to compare against local branch work.

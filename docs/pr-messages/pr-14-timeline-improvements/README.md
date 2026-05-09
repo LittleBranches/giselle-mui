@@ -1,3 +1,41 @@
+---
+sidebar_label: "PR14 - Timeline improvements"
+---
+
+**[Merged](https://github.com/AlexRebula/giselle-mui/pull/14)** — [`feature/timeline-improvements`](https://github.com/AlexRebula/giselle-mui/tree/feature/timeline-improvements) — 2 May – 3 May 2026
+
+
+# PR 14 — feature/timeline-improvements
+
+This folder contains the message documents for PR 14.
+
+---
+
+## Additional Context: pr-14-enhance-timeline-components-with-tooltips-sorting-and-layout-improvements.md
+
+# PR #14: Enhance timeline components with tooltips, sorting, and layout improvements
+
+## Branch
+
+`feature/timeline-improvements` → `main`
+
+## Date
+
+3 May 2026
+
+## Context
+
+Historical PR record preserved for completeness in the PR messages index.
+
+## Notes
+
+- Title from GitHub: Enhance timeline components with tooltips, sorting, and layout improvements
+- Closed PR document added so the PR history stays complete and easy to compare against local branch work.
+
+---
+
+## Additional Context: pr-14-feature-timeline-improvements.md
+
 # feat: TimelineTwoColumn improvements — tooltips, marker variant, footer slot, height measurement
 
 ## Summary
