@@ -5,3 +5,6 @@ storybook-static/
 .DS_Store
 .vercel
 .env*.local
+
+# Vitest coverage output
+coverage/

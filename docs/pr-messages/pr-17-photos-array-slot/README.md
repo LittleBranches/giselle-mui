@@ -1,3 +1,41 @@
+---
+sidebar_label: "PR17 - Photos array slot"
+---
+
+**[Merged](https://github.com/AlexRebula/giselle-mui/pull/17)** — [`feature/photos-array-slot`](https://github.com/AlexRebula/giselle-mui/tree/feature/photos-array-slot) — 4 May – 4 May 2026
+
+
+# PR 17 — feature/photos-array-slot
+
+This folder contains the message documents for PR 17.
+
+---
+
+## Additional Context: pr-17-add-photos-support-to-timelinephase-and-update-documentation.md
+
+# PR #17: Add photos support to TimelinePhase and update documentation
+
+## Branch
+
+`feature/photos-array-slot` → `main`
+
+## Date
+
+4 May 2026
+
+## Context
+
+Historical PR record preserved for completeness in the PR messages index.
+
+## Notes
+
+- Title from GitHub: Add photos support to TimelinePhase and update documentation
+- Closed PR document added so the PR history stays complete and easy to compare against local branch work.
+
+---
+
+## Additional Context: pr-17-feature-photos-array-slot.md
+
 # feat(timeline): add `photos` array slot to `TimelinePhase`
 
 ## Summary

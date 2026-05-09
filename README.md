@@ -77,6 +77,7 @@ Full integration guides:
 
 - [React — Vite / CRA](./docs/theming/react.md)
 - [Next.js — App Router + Pages Router](./docs/theming/nextjs.md)
+- [PR message docs index](./docs/pr-messages/README.md)
 
 ---
 

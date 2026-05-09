@@ -1,3 +1,18 @@
+---
+sidebar_label: "PR12 - Timeline enhancements"
+---
+
+**[Merged](https://github.com/AlexRebula/giselle-mui/pull/12)** — [`feature/timeline-enhancements`](https://github.com/AlexRebula/giselle-mui/tree/feature/timeline-enhancements) — 1 May – 1 May 2026
+
+
+# PR 12 — feature/timeline-enhancements
+
+This folder contains the message documents for PR 12.
+
+---
+
+## Additional Context: pr-12-feature-timeline-enhancements.md
+
 # feat: TimelineTwoColumn enhancements, IconActionBar, yalc build pipeline
 
 ## Summary
@@ -215,3 +230,26 @@ All six quality gate checks pass: Prettier → ESLint → `tsc --noEmit` → Vit
 | Docs | `README.md`, `docs/local-development.md`, `docs/theming/roadmap.md`, `docs/components/` |
 | Instructions | `.github/copilot-instructions.md` |
 | Barrel | `src/index.ts` |
+
+---
+
+## Additional Context: pr-12-timelinetwocolumn-enhancements-iconactionbar-yalc-build-pipeline.md
+
+# PR #12: TimelineTwoColumn enhancements, IconActionBar, yalc build pipeline
+
+## Branch
+
+`feature/timeline-enhancements` → `main`
+
+## Date
+
+2 May 2026
+
+## Context
+
+Historical PR record preserved for completeness in the PR messages index.
+
+## Notes
+
+- Title from GitHub: TimelineTwoColumn enhancements, IconActionBar, yalc build pipeline
+- Closed PR document added so the PR history stays complete and easy to compare against local branch work.

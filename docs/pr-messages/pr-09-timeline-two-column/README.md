@@ -1,3 +1,18 @@
+---
+sidebar_label: "PR09 - TimelineTwoColumn"
+---
+
+**[Merged](https://github.com/AlexRebula/giselle-mui/pull/9)** — [`feature/timeline-two-column`](https://github.com/AlexRebula/giselle-mui/tree/feature/timeline-two-column) — 29 Apr – 29 Apr 2026
+
+
+# PR 9 — feature/timeline-two-column
+
+This folder contains the message documents for PR 9.
+
+---
+
+## Additional Context: pr-9-feature-timeline-two-column.md
+
 # feat: TimelineTwoColumn component, Storybook infrastructure, CI/CD pipeline
 
 ## Summary
@@ -141,3 +156,26 @@ This opts giselle-mui's source files out of strict ESM mode. It is a targeted on
 - [x] `TimelineTwoColumn` renders correctly in `alexrebula` dev server (runtime error resolved)
 - [x] ESM pitfall documented in `docs/local-development.md`
 - [x] Vercel deploy pipeline configured and secrets set
+
+---
+
+## Additional Context: pr-9-timelinetwocolumn-component-storybook-infrastructure-ci-cd-pipeline.md
+
+# PR #9: TimelineTwoColumn component, Storybook infrastructure, CI/CD pipeline
+
+## Branch
+
+`feature/timeline-two-column` → `main`
+
+## Date
+
+29 Apr 2026
+
+## Context
+
+Historical PR record preserved for completeness in the PR messages index.
+
+## Notes
+
+- Title from GitHub: TimelineTwoColumn component, Storybook infrastructure, CI/CD pipeline
+- Closed PR document added so the PR history stays complete and easy to compare against local branch work.
