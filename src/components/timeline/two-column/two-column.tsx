@@ -28,6 +28,7 @@ import {
   resolvePhaseDotHandlers,
   buildPhaseCardTsxProps,
   computeSlotHeights,
+  resolveTaskChildren,
 } from './utils';
 import { phaseLiSx, timelineRootSx } from './two-column.styles';
 
@@ -44,6 +45,10 @@ const useIsomorphicLayoutEffect = globalThis.window === undefined ? useEffect : 
 const EMPTY_VIEWED_KEYS = new Set<string>();
 
 // ----------------------------------------------------------------------
+
+function makeTaskStateKey(phaseKey: number, childIdx: number | null, taskIdx: number): string {
+  return childIdx === null ? `${phaseKey}-t${taskIdx}` : `${phaseKey}-c${childIdx}-t${taskIdx}`;
+}
 
 /**
  * Two-column alternating timeline.
@@ -103,6 +108,9 @@ export function TimelineTwoColumn({
   // Which phase card (by key) is currently expanded. null = all collapsed.
   const [expandedPhaseKey, setExpandedPhaseKey] = useState<number | null>(null);
 
+  // Milestone sort strategy for the current render cycle.
+  const sortMilestones = sortOrder === 'asc' ? sortMilestonesAsc : sortMilestonesDesc;
+
   const handleExpandMilestone = useCallback((phaseKey: number, milestoneIndex: number) => {
     const k = String(phaseKey);
     // Collapse any open phase card when a milestone opens.
@@ -157,8 +165,9 @@ export function TimelineTwoColumn({
       //   Any milestone undone → parent phase automatically becomes not-done.
       // Both directions fire regardless of whether the phase was manually toggled.
       const phase = phases.find((p) => p.key === phaseKey);
-      if (phase?.milestones?.length) {
-        const allDone = phase.milestones.every((_, i) => updated[`${phaseKey}-${i}`] ?? false);
+      const sortedMilestones = phase?.milestones ? sortMilestones([...phase.milestones]) : [];
+      if (sortedMilestones.length > 0) {
+        const allDone = sortedMilestones.every((_, i) => updated[`${phaseKey}-${i}`] ?? false);
         const currentPhaseDone = localPhaseDone[String(phaseKey)] ?? false;
         if (allDone !== currentPhaseDone) {
           setPhaseToggleCounts((prev) => ({
@@ -173,6 +182,7 @@ export function TimelineTwoColumn({
     [
       localMilestoneDone,
       phases,
+      sortMilestones,
       localPhaseDone,
       onToggleMilestoneDone,
       onTogglePhaseDone,
@@ -183,36 +193,36 @@ export function TimelineTwoColumn({
   );
 
   const handleToggleTask = useCallback(
-    (phaseKey: number, milestoneIdx: number | null, taskIdx: number) => {
-      const k =
-        milestoneIdx !== null
-          ? `${phaseKey}-m${milestoneIdx}-t${taskIdx}`
-          : `${phaseKey}-t${taskIdx}`;
+    (phaseKey: number, childIdx: number | null, taskIdx: number) => {
+      const k = makeTaskStateKey(phaseKey, childIdx, taskIdx);
       const next = !(localTaskDoneMap[k] ?? false);
       const updated = { ...localTaskDoneMap, [k]: next };
       setLocalTaskDoneMap(updated);
-      onToggleTaskDone?.(phaseKey, milestoneIdx, taskIdx, next);
+      onToggleTaskDone?.(phaseKey, childIdx, taskIdx, next);
 
       // Bidirectional sync: when all tasks for a milestone are done → auto-mark milestone done.
       // Only fires in checklist mode (milestone dots need to be checkable for this to make sense).
-      if (milestoneIdx !== null && checklist) {
+      if (childIdx !== null && checklist) {
         const phase = phases.find((p) => p.key === phaseKey);
-        const ms = phase?.milestones?.[milestoneIdx];
-        if (ms?.children?.length) {
-          const allTasksDone = ms.children.every(
-            (_, ti) => updated[`${phaseKey}-m${milestoneIdx}-t${ti}`] ?? false
+        const sortedMilestones = phase?.milestones ? sortMilestones([...phase.milestones]) : [];
+        const milestone = sortedMilestones[childIdx];
+        const milestoneTasks = milestone ? resolveTaskChildren(milestone) : [];
+
+        if (milestoneTasks.length > 0) {
+          const allTasksDone = milestoneTasks.every(
+            (_, ti) => updated[makeTaskStateKey(phaseKey, childIdx, ti)] ?? false
           );
-          const currentMsDone = localMilestoneDone[`${phaseKey}-${milestoneIdx}`] ?? false;
+          const currentMsDone = localMilestoneDone[`${phaseKey}-${childIdx}`] ?? false;
           if (allTasksDone !== currentMsDone) {
             const msUpdated = {
               ...localMilestoneDone,
-              [`${phaseKey}-${milestoneIdx}`]: allTasksDone,
+              [`${phaseKey}-${childIdx}`]: allTasksDone,
             };
             setLocalMilestoneDone(msUpdated);
-            onToggleMilestoneDone?.(phaseKey, milestoneIdx, allTasksDone);
+            onToggleMilestoneDone?.(phaseKey, childIdx, allTasksDone);
             // Cascade to phase if all milestones are now done.
-            if (phase?.milestones?.length) {
-              const allMsDone = phase.milestones.every(
+            if (sortedMilestones.length > 0) {
+              const allMsDone = sortedMilestones.every(
                 (_, i) => msUpdated[`${phaseKey}-${i}`] ?? false
               );
               const currentPhaseDone = localPhaseDone[String(phaseKey)] ?? false;
@@ -235,6 +245,7 @@ export function TimelineTwoColumn({
       onToggleTaskDone,
       checklist,
       phases,
+      sortMilestones,
       localMilestoneDone,
       setLocalMilestoneDone,
       onToggleMilestoneDone,
@@ -254,7 +265,6 @@ export function TimelineTwoColumn({
   // Sort phases by date, then sort milestones within each phase.
   // Career timelines use 'desc' → milestones latest-first (matches the top-to-bottom newest-first flow).
   // Roadmap timelines use 'asc' → milestones earliest-first.
-  const sortMilestones = sortOrder === 'asc' ? sortMilestonesAsc : sortMilestonesDesc;
   const sorted = useMemo(
     () =>
       sortPhasesByDate(phases, sortOrder).map((phase) => ({
@@ -427,8 +437,9 @@ export function TimelineTwoColumn({
                   allPhases={onPhasesChange ? phases : undefined}
                   isExpanded={isThisPhaseExpanded}
                   onRequestExpand={() => handleExpandPhaseCard(phase.key)}
-                  taskDoneStates={phase.children?.map(
-                    (task, ti) => localTaskDoneMap[`${phase.key}-t${ti}`] ?? task.done ?? false
+                  taskDoneStates={resolveTaskChildren(phase).map(
+                    (task, ti) =>
+                      localTaskDoneMap[makeTaskStateKey(phase.key, null, ti)] ?? task.done ?? false
                   )}
                   onToggleTask={(taskIdx, _done) => handleToggleTask(phase.key, null, taskIdx)}
                 />

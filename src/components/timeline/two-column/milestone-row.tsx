@@ -11,6 +11,7 @@ import {
   resolveMilestoneState,
   resolveMilestoneDotHandlers,
   resolveMilestoneTooltip,
+  resolveTaskChildren,
 } from './utils';
 import {
   msRowSx,
@@ -104,9 +105,9 @@ export function MilestoneRow({ ms, mi, totalMilestones, ctx }: MilestoneRowProps
               onMarkViewed={
                 ctx.onMarkViewed ? () => ctx.onMarkViewed!(`ms-${ctx.phaseKey}-${mi}`) : undefined
               }
-              taskDoneStates={ms.children?.map(
+              taskDoneStates={resolveTaskChildren(ms).map(
                 (task, ti) =>
-                  ctx.localTaskDoneMap[`${ctx.phaseKey}-m${mi}-t${ti}`] ?? task.done ?? false
+                  ctx.localTaskDoneMap[`${ctx.phaseKey}-c${mi}-t${ti}`] ?? task.done ?? false
               )}
               onToggleTask={(taskIdx, _done) => ctx.handleToggleTask(ctx.phaseKey, mi, taskIdx)}
               onRequestExpand={() => ctx.handleExpandMilestone(ctx.phaseKey, mi)}
@@ -166,9 +167,9 @@ export function MilestoneRow({ ms, mi, totalMilestones, ctx }: MilestoneRowProps
               onMarkViewed={
                 ctx.onMarkViewed ? () => ctx.onMarkViewed!(`ms-${ctx.phaseKey}-${mi}`) : undefined
               }
-              taskDoneStates={ms.children?.map(
+              taskDoneStates={resolveTaskChildren(ms).map(
                 (task, ti) =>
-                  ctx.localTaskDoneMap[`${ctx.phaseKey}-m${mi}-t${ti}`] ?? task.done ?? false
+                  ctx.localTaskDoneMap[`${ctx.phaseKey}-c${mi}-t${ti}`] ?? task.done ?? false
               )}
               onToggleTask={(taskIdx, _done) => ctx.handleToggleTask(ctx.phaseKey, mi, taskIdx)}
               onRequestExpand={() => ctx.handleExpandMilestone(ctx.phaseKey, mi)}

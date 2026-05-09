@@ -1,5 +1,6 @@
 import type { BoxProps } from '@mui/material/Box';
 import type { CardDetailBulletsProps } from './types';
+import type { MouseEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
@@ -43,9 +44,17 @@ export function CardDetailBullets({
             <Box key={i} sx={taskRowSx}>
               <Box
                 component={onToggleTask ? 'button' : 'span'}
+                type={onToggleTask ? 'button' : undefined}
                 aria-label={onToggleTask ? toggleLabel : undefined}
                 aria-pressed={onToggleTask ? isDoneTask : undefined}
-                onClick={onToggleTask ? () => onToggleTask(i, !isDoneTask) : undefined}
+                onClick={
+                  onToggleTask
+                    ? (e: MouseEvent<HTMLButtonElement>) => {
+                        e.stopPropagation();
+                        onToggleTask(i, !isDoneTask);
+                      }
+                    : undefined
+                }
                 sx={
                   (onToggleTask
                     ? [taskToggleButtonSx, taskToggleColorSx(isDoneTask)]

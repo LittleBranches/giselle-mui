@@ -1,18 +1,15 @@
 /**
- * PersonProfile — data model for a person in a cross-border family dispute.
+ * PersonProfile — generic data model for a person in a case or workflow.
  *
- * Designed for use in the Parents Across Borders (PAB) module and any
- * case-documentation page that needs to display the parties involved in a
- * family law / international custody situation.
- *
- * Contains no personal data — that lives in the consumer's data layer.
- * This file defines only the shape.
+ * This type is intentionally domain-agnostic and contains only structural
+ * fields. Concrete personal data and business rules belong in the consumer's
+ * data layer.
  */
 
 // ─── Role ─────────────────────────────────────────────────────────────────────
 
 /**
- * The role of this person in the case.
+ * The role of this person in the consumer-defined context.
  *
  * - `'applicant'`     — the person seeking the court order / requesting the visit
  * - `'respondent'`    — the person responding to the application
@@ -24,8 +21,7 @@ export type PersonRole = 'applicant' | 'respondent' | 'primary-carer' | 'non-res
 // ─── Behavioral pattern ───────────────────────────────────────────────────────
 
 /**
- * A documented behavioral pattern observed in a parent's conduct.
- * Used to build a profile for strategic communication planning.
+ * A documented behavioral pattern observed for this profile.
  */
 export type BehavioralPattern = {
   /** Short machine-readable identifier, e.g. `'incremental-obstruction'` */
@@ -41,7 +37,7 @@ export type BehavioralPattern = {
 // ─── Legal record ────────────────────────────────────────────────────────────
 
 /**
- * A prior legal event relevant to the case (court hearing, ruling, settlement).
+ * A prior event relevant to the profile context.
  */
 export type LegalRecord = {
   /** Date of the ruling / hearing, e.g. `'Feb 2026'` */
@@ -50,14 +46,14 @@ export type LegalRecord = {
   description: string;
   /** What the judge decided */
   outcome: string;
-  /** Approximate legal cost to the applicant, e.g. `'~€2,000'` */
+  /** Optional cost/value context, e.g. `'~$2,000'` */
   costToApplicant?: string;
 };
 
 // ─── Communication note ───────────────────────────────────────────────────────
 
 /**
- * A note about how to communicate with this parent — what works, what to avoid.
+ * A note about communication with this person.
  */
 export type CommunicationNote = {
   /** Short label, e.g. `'Always in writing'` */
@@ -69,26 +65,22 @@ export type CommunicationNote = {
 // ─── PersonProfile ───────────────────────────────────────────────────────────
 
 /**
- * Full profile of one person in a cross-border family dispute.
- *
- * Used by the Parents Across Borders (PAB) module to display the parties
- * involved, document behavioral patterns, and guide communication strategy.
+ * Full profile of one person in a consumer-defined domain.
  *
  * @example
  * ```ts
- * const respondentProfile: PersonProfile = {
- *   id: 'respondent',
- *   displayName: '[Mother]',
+ * const person: PersonProfile = {
+ *   id: 'person-1',
+ *   displayName: 'Jane Smith',
  *   role: 'respondent',
- *   location: 'Country A',
- *   language: 'Slovenian',
- *   custodyStatus: 'sole physical custody',
+ *   location: 'Region A',
+ *   language: 'English',
+ *   custodyStatus: 'primary contact',
  *   behavioralPatterns: [
  *     {
- *       id: 'asymmetric-rule-enforcement',
- *       label: 'Asymmetric rule enforcement',
- *       description:
- *         'Enforces rules on the other parent that she does not follow herself.',
+ *       id: 'pattern-1',
+ *       label: 'Escalation under deadline pressure',
+ *       description: 'Escalates communication frequency near hard deadlines.',
  *       evidenceCount: 3,
  *     },
  *   ],
@@ -108,7 +100,7 @@ export type PersonProfile = {
    */
   displayName: string;
 
-  /** The role this person plays in the dispute. */
+  /** The role this person plays in the relevant context. */
   role: PersonRole;
 
   /** City and/or country of residence, e.g. `'Melbourne, Australia'`. */
@@ -117,28 +109,24 @@ export type PersonProfile = {
   /** Primary language for written communication. */
   language: string;
 
-  /** Custody status description, e.g. `'sole physical custody'`. */
+  /** Optional status description for the profile context. */
   custodyStatus?: string;
 
   /**
-   * Documented behavioral patterns. Used for strategic communication planning.
-   * Each pattern should have at least one recorded evidence instance before
-   * being added here.
+   * Documented behavioral patterns.
    */
   behavioralPatterns?: BehavioralPattern[];
 
   /**
-   * Prior legal events relevant to the case.
-   * Document outcomes and costs — the record matters.
+   * Prior events relevant to this profile.
    */
   legalHistory?: LegalRecord[];
 
   /**
-   * Practical communication guidance for this parent.
-   * What works. What to avoid. What triggers escalation.
+   * Practical communication guidance for this person.
    */
   communicationNotes?: CommunicationNote[];
 
-  /** Free-form strategic notes — internal use only, never displayed publicly. */
+  /** Free-form notes for consumer use. */
   notes?: string[];
 };

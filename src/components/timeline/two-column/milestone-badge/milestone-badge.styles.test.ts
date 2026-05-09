@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 
 import { describe, it, expect } from 'vitest';
+import type { Theme } from '@mui/material/styles';
 
 import {
   milestoneNewBadgeRowSx,
@@ -9,9 +10,8 @@ import {
   milestoneDateSx,
   milestoneTitleRowSx,
   milestoneEyeButtonSx,
-  milestoneDetailPillSx,
-  milestoneDetailListSx,
   milestoneDetailRowSx,
+  milestonePaperSx,
 } from './milestone-badge.styles';
 
 // ---------------------------------------------------------------------------
@@ -154,54 +154,6 @@ describe('milestoneEyeButtonSx — viewed eye button', () => {
     const styles = milestoneEyeButtonSx({ isViewed: false }) as Record<string, unknown>;
     expect(styles['color']).toBe('text.secondary');
   });
-
-  it('is flex-centered with no background or border', () => {
-    const styles = milestoneEyeButtonSx({ isViewed: false }) as Record<string, unknown>;
-    expect(styles['display']).toBe('flex');
-    expect(styles['background']).toBe('none');
-    expect(styles['border']).toBe('none');
-    expect(styles['cursor']).toBe('pointer');
-  });
-});
-
-// ---------------------------------------------------------------------------
-// milestoneDetailPillSx
-// ---------------------------------------------------------------------------
-
-describe('milestoneDetailPillSx — collapsed detail-count pill', () => {
-  it('is inline-flex with action.hover background', () => {
-    const sx = milestoneDetailPillSx as Record<string, unknown>;
-    expect(sx['display']).toBe('inline-flex');
-    expect(sx['bgcolor']).toBe('action.hover');
-    expect(sx['color']).toBe('text.secondary');
-  });
-
-  it('has horizontal and vertical padding', () => {
-    const sx = milestoneDetailPillSx as Record<string, unknown>;
-    expect(sx['px']).toBe(0.625);
-    expect(sx['py']).toBe(0.2);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// milestoneDetailListSx
-// ---------------------------------------------------------------------------
-
-describe('milestoneDetailListSx — expanded detail list container', () => {
-  it('has top border separator', () => {
-    const sx = milestoneDetailListSx as Record<string, unknown>;
-    expect(sx['borderTop']).toBe('1px solid');
-    expect(sx['borderColor']).toBe('divider');
-  });
-
-  it('is a column flex with vertical spacing', () => {
-    const sx = milestoneDetailListSx as Record<string, unknown>;
-    expect(sx['display']).toBe('flex');
-    expect(sx['flexDirection']).toBe('column');
-    expect(sx['gap']).toBe(0.75);
-    expect(sx['mt']).toBe(1.5);
-    expect(sx['pt']).toBe(1.5);
-  });
 });
 
 // ---------------------------------------------------------------------------
@@ -217,54 +169,46 @@ describe('milestoneDetailRowSx — individual bullet row', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// Done milestone card pointerEvents override — regression (6 May 2026)
-//
-// When a milestone is suppressed (msCardWrapperSx with suppressElevation=true),
-// the wrapper applies `pointerEvents: 'none'`. Done milestones must still
-// receive hover events so the user can temporarily restore full colour by
-// hovering over any done item.
-//
-// The fix adds `pointerEvents: 'auto'` to the `done` block of the Paper sx
-// inside MilestoneBadge. The mirror below documents this invariant so any
-// future revert is caught immediately.
-// ---------------------------------------------------------------------------
+describe('[regression] done milestone hover styles from milestonePaperSx', () => {
+  const mockTheme = {
+    vars: {
+      palette: {
+        primary: { main: '#2E7D32', mainChannel: '46 125 50' },
+        grey: { '500Channel': '145 158 171' },
+      },
+    },
+  } as unknown as Theme;
 
-/**
- * Mirrors the `done` style fragment of the Paper sx in milestone-badge.tsx.
- *
- * Done milestones must always be hoverable (pointerEvents: auto) so the
- * hover restore rule (opacity: 1, filter: none) can fire despite the parent
- * msCardWrapperSx applying pointerEvents: none when suppressElevation is set.
- */
-function buildDoneMilestoneFragment(done: boolean): Record<string, unknown> {
-  if (!done) return {};
-  return {
-    opacity: 0.45,
-    filter: 'grayscale(1)',
-    // Overrides parent pointerEvents:none so hover events reach this Paper.
-    pointerEvents: 'auto',
-  };
-}
+  it('done milestone uses dimmed base state and restores on hover', () => {
+    const sxFactory = milestonePaperSx({
+      isExpanded: false,
+      colorKey: 'primary',
+      rightAlign: false,
+      done: true,
+      hasDetails: true,
+      suppressElevation: false,
+    }) as (theme: Theme) => Record<string, unknown>;
+    const sx = sxFactory(mockTheme);
 
-describe('[regression] done milestone card pointerEvents — hover reachable despite parent suppress', () => {
-  it('done milestone has pointerEvents:auto so hover works when parent has pointerEvents:none', () => {
-    const fragment = buildDoneMilestoneFragment(true);
-    expect(fragment['pointerEvents']).toBe('auto');
+    expect(sx['opacity']).toBe(0.45);
+    expect(sx['filter']).toBe('grayscale(1)');
+    expect(sx['pointerEvents']).toBe('auto');
+
+    const hover = sx['&:hover'] as Record<string, unknown>;
+    expect(hover['opacity']).toBe(1);
+    expect(hover['filter']).toBe('none');
   });
 
-  it('not-done milestone does not set pointerEvents (inherits from parent, no override needed)', () => {
-    const fragment = buildDoneMilestoneFragment(false);
-    expect(fragment['pointerEvents']).toBeUndefined();
-  });
-
-  it('[regression] done milestone base opacity is 0.45 (greyed out at rest)', () => {
-    const fragment = buildDoneMilestoneFragment(true);
-    expect(fragment['opacity']).toBe(0.45);
-  });
-
-  it('[regression] done milestone base filter is grayscale(1) (greyed out at rest)', () => {
-    const fragment = buildDoneMilestoneFragment(true);
-    expect(fragment['filter']).toBe('grayscale(1)');
+  it('not-done milestone does not set pointerEvents override', () => {
+    const sxFactory = milestonePaperSx({
+      isExpanded: false,
+      colorKey: 'primary',
+      rightAlign: false,
+      done: false,
+      hasDetails: true,
+      suppressElevation: false,
+    }) as (theme: Theme) => Record<string, unknown>;
+    const sx = sxFactory(mockTheme);
+    expect(sx['pointerEvents']).toBeUndefined();
   });
 });

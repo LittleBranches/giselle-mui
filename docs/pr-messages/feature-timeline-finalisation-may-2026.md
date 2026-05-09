@@ -1,16 +1,16 @@
 # PR: `feature/giselle-mui-career-timeline-finalisation`
 
 > **Branch:** `feature/giselle-mui-career-timeline-finalisation` → `main`
-> **Date:** 8 May 2026
+> **Date:** 9 May 2026 (updated)
 > **Author:** Alex Rebula
 
 ---
 
 ## What this PR delivers
 
-This is the largest single PR in the library's history. It ships six new components, a
-complete cleanup and quality infrastructure overhaul, and a step-change in developer
-tooling for maintainers of this library.
+This is the largest single PR in the library's history. It ships major new timeline
+components and utilities, a complete cleanup and quality infrastructure overhaul, and a
+step-change in developer tooling for maintainers of this library.
 
 ---
 
@@ -50,6 +50,12 @@ Framework-agnostic hook for parent/child done-state sync. A phase is done when a
 milestones are done; marking a phase done cascades to children. Used by both
 `TimelineCompact` and `TimelineTwoColumn` accordion rows.
 
+### `TaskDetailsRenderer`
+
+Shared task-details renderer extracted for reuse across compact timeline detail surfaces.
+Renders summary text, optional rich details content, and nested task rows from the new
+`TaskDetails` shape.
+
 ### `MarkerRow` + `MarkerLabel` (internal `two-column` sub-components)
 
 Two new sub-components for the `TimelineTwoColumn` marker phase variant. `MarkerRow`
@@ -73,6 +79,8 @@ All outstanding polish items resolved:
 - **`PhaseWarningPopover`** — overdue warning tooltip for phases
 - **`MilestoneModal`** — slide-in detail panel with checklist task toggle functionality
 - **`PhaseAccordionRow`** — expandable accordion row for `TimelineCompact` integration
+- **`TaskDetailsModal` + `TaskDetailsRenderer` integration** — detail modal now delegates
+  rendering to a shared renderer component for consistent output and easier reuse
 - **`ScenarioBadge`** — scenario/variant label badge for phase cards
 - **Marker row styles** — `markerRowInnerSx`, `markerCaptionSx`, `markerDateSpanSx`
   consolidated into the correct `// ── Marker phase row ──` section in `two-column.styles.ts`
@@ -82,6 +90,23 @@ All outstanding polish items resolved:
   fetch from `api.iconify.design`
 - **Mobile regression tests** — responsive breakpoint assertions for column widths and
   layout overflow
+
+---
+
+## Post-draft updates (9 May 2026)
+
+After the initial draft, this branch received additional timeline and roadmap work:
+
+- **Task details model and rendering**
+  - Added `TaskDetails` type and export from the timeline API
+  - Added `TaskDetailsRenderer` component and tests
+  - Refactored `TaskDetailsModal` and `PhaseAccordionRow` to use shared details rendering
+- **Stable keying for timeline data**
+  - Added unique keys for milestones and nested tasks in timeline data and mapping helpers
+  - Updated `resolveTaskChildren` handling for richer details payloads and key stability
+- **Roadmap data restructuring**
+  - Reworked roadmap milestones into nested `children` entries with expanded descriptions
+    for clearer phase-level documentation
 
 ---
 
@@ -148,7 +173,7 @@ Components scored today:
 
 ## Test coverage
 
-All 825+ tests pass. Key new suites:
+All 843 tests pass (51 test files). Key new suites:
 
 - `accordion.test.ts` — render, ARIA, checklist mode, interaction
 - `check-icon-button.test.ts` — custom icon mode, WCAG
@@ -158,6 +183,7 @@ All 825+ tests pass. Key new suites:
 - `phase-card.test.ts` — corner badge positioning, eye button WCAG regression
 - `milestone-badge.test.ts` — eye button WCAG, column alignment regression
 - `compact.test.ts` + `compact.styles.test.ts` — TimelineCompact component + styles
+- `task-details-renderer.test.ts` — shared details renderer for compact timeline surfaces
 - `faq-accordion.test.ts` + `faq-accordion.styles.test.ts` — FaqAccordion
 
 ---
@@ -184,5 +210,5 @@ None. All additions are backward-compatible.
 
 - [x] `npm run check:verify` exits 0
 - [x] `npm run build` exits 0 (all four subpath entries: `index`, `utils`, `charts`, `motion`)
-- [ ] `yalc push` + `first-branch` validated (pending — `Accordion` cleanup in progress in parallel session)
-- [ ] SonarQube: zero violations on all changed component files (pending)
+- [x] `yalc push` + consumer validation completed (alexrebula, giselle-docs, first-branch)
+- [x] SonarQube: zero violations on cleaned component set

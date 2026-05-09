@@ -227,9 +227,17 @@ export function MilestoneBadge({
                 <Box key={i} sx={taskRowSx}>
                   <Box
                     component={onToggleTask ? 'button' : 'span'}
+                    type={onToggleTask ? 'button' : undefined}
                     aria-label={onToggleTask ? toggleLabel : undefined}
                     aria-pressed={onToggleTask ? isDoneTask : undefined}
-                    onClick={onToggleTask ? () => onToggleTask(i, !isDoneTask) : undefined}
+                    onClick={
+                      onToggleTask
+                        ? (e: MouseEvent<HTMLButtonElement>) => {
+                            e.stopPropagation();
+                            onToggleTask(i, !isDoneTask);
+                          }
+                        : undefined
+                    }
                     sx={
                       (onToggleTask
                         ? [taskToggleButtonSx, taskToggleColorSx(isDoneTask)]

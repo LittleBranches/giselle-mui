@@ -464,7 +464,7 @@ export type MilestoneRowCtx = {
   phaseSide: 'left' | 'right';
   checklist: boolean;
   localMilestoneDone: Record<string, boolean>;
-  /** Done state per task, keyed by `${phaseKey}-m${milestoneIdx}-t${taskIdx}`. */
+  /** Done state per task, keyed by `${phaseKey}-c${childIdx}-t${taskIdx}`. */
   localTaskDoneMap: Record<string, boolean>;
   expandedMiIdx: number | null;
   anyExpanded: boolean;
