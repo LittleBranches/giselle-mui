@@ -52,6 +52,10 @@ Ripeness scale: 🟢 green = alpha · 🟡 yellow-green = beta · 🟠 golden = 
    **Additional allowed peer dependencies** section below (`@mui/lab`,
    `framer-motion`, `apexcharts`, `react-apexcharts`).
 
+   **Subpath constraint:** `framer-motion` and `apexcharts`/`react-apexcharts` are allowed
+   **only in their dedicated subpath entries** — never in `src/index.ts` (the main bundle).
+   See **Subpath export architecture** below for the full rule.
+
 2. **`sx` array spread on root element.** Always:
    `sx={[baseStyles, ...(Array.isArray(sx) ? sx : [sx])]}`.
 
@@ -69,6 +73,25 @@ Never use bare indented code lines — they do not render as code blocks in Mark
 
 5. **ReactNode slots for icons and decoration.** Components never import an icon
    library internally. Accept `icon?: ReactNode` and let the consumer fill it.
+
+   **Consumer icon registration contract — non-negotiable:**
+   Every consumer app that renders `GiselleIcon` or any component with an icon slot
+   **must pre-register all used icons offline** before the first render. Iconify silently
+   fetches missing icons from `api.iconify.design` — this is a CDN fallback, not acceptable
+   in production or development. Use `createIconRegistrar` (exported from this library) to
+   register inline SVG bodies from `@iconify-json/*` **without importing the full package**:
+
+   ```ts
+   import { createIconRegistrar } from '@alexrebula/giselle-mui';
+   export const registerIcons = createIconRegistrar({
+     solar: { icons: { 'star-bold': { body: '<path ...>' } } },
+     logos: { icons: { 'react': { body: '<path ...>', width: 256, height: 256 } } },
+   });
+   ```
+
+   Never import `@iconify/react` directly in section/data files — it bypasses the
+   offline registration discipline. Always verify with the consumer app's offline
+   coverage test before using a new icon string.
 
 6. **`color` prop follows MUI palette key convention.**
    `'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error'`
@@ -88,21 +111,27 @@ in the quality gate.
 
 ```
 src/components/<name>/
-  <name>.tsx          — pure JSX composition only (no types, no utility functions)
+  <name>.tsx          — pure JSX composition only (no types, no utility functions, no constants)
+  <name>.const.ts     — named constants (sizes, font sizes, badge sizes, spacing values)
   <name>.styles.ts    — all sx constants (static) and sx factories (dynamic)
   <name>.styles.test.ts — mock-theme assertions for every exported sx function
   <name>.stories.tsx  — Storybook stories — MUST include the component name (Storybook glob: `*.stories.@(ts|tsx)`)
   <name>.test.ts      — Vitest unit tests — MUST end in `.test.ts` (vitest glob: `src/**/*.test.ts`)
+  types.ts            — all TypeScript types
+  utils.ts            — pure logic functions (no JSX)
   index.ts            — barrel: re-exports component and types
   README.md           — why it exists, why it belongs here, design decisions, library safety
+  <sub-component>.tsx — internal sub-components (one file each, flat in folder — NOT in subfolders)
 ```
 
 **Separation rule — non-negotiable for every component:**
 
 - **TypeScript `type` aliases AND `interface` declarations → `types.ts`** (never inside `.tsx`). This applies to every exported and internal type without exception — `Props`, `Item`, `Config`, helper union types, internal-only types. If it is a type, it does not live in a `.tsx` file.
+- **Named constants → `<name>.const.ts`** (never inside `.tsx`). Every exported `const` that represents a size, font size, badge size, minimum touch target, or spacing value belongs in the const file. **Primitive values only — no JSX.** If a constant contains JSX (e.g. a default actions array with `<GiselleIcon />` elements), it belongs in `<name>.defaults.tsx` instead. See `*.const.ts companion files` section below.
 - Pure logic / helper functions (no JSX) → separate `utils.ts` file (not inside `.tsx`)
 - Any `sx={}` with more than ~3 properties → `<name>.styles.ts` (enforced by ESLint)
-- The `.tsx` file is the **composition layer only**: it imports from the above, renders JSX, wires props.
+- **Internal sub-components → own `.tsx` files** (flat in the parent folder). See `Sub-component extraction rule` section below.
+- The `.tsx` file is the **composition layer only**: it imports from all of the above and renders JSX.
 
 **Domain/feature grouping:**
 Related components are grouped under a shared parent folder. The quality gate enforces that
@@ -126,7 +155,7 @@ src/components/
 ### TimelineTwoColumn internal file layout
 
 The `timeline/two-column/` folder is the **reference implementation** for complex components.
-It demonstrates the full types/utils/styles split:
+It demonstrates the full types/utils/styles/const/sub-component split:
 
 ```
 src/components/timeline/two-column/
@@ -158,8 +187,9 @@ src/components/timeline/two-column/
 - Use `React.createElement` (not JSX) — avoids JSX transform requirement in `.ts` files
 - Use `renderToStaticMarkup` for structure/ARIA tests
 - Use `ReactDOM.createRoot` + `act` for interaction/click tests
-- Mock all MUI components that have `theme.vars` in sx callbacks (MUI v7 CSS vars
-  require `CssVarsProvider` which is not available in tests without the full theme setup)
+- Mock all MUI components that have `theme.vars` in sx callbacks (`ThemeProvider` with
+  `cssVariables: true` is required — available in Storybook but not in unit tests without
+  wrapping, so mock the component instead)
 
 ## What Copilot should help build
 
@@ -184,21 +214,25 @@ inline in `alexrebula/src/sections/`. Examples of patterns that belong here:
 - KPI stats column alongside a timeline
 
 **Decision rule — ask before writing any new JSX in `alexrebula/src/sections/`:**
+
 > Would a second section page (or a different project) want this exact layout structure?
 > If yes → create a named component in `giselle-mui/src/components/layout/` first, then import it.
 
 This was violated when `StoreReadinessSectionInner` and `ReadinessGauge` were written directly
 in `alexrebula/src/sections/store-readiness/view.tsx`. Both belong in giselle-mui:
+
 - `ReadinessGauge` → `src/components/chart/radial-gauge/` (wraps ApexCharts radialBar)
 - The sidebar+timeline layout → `src/components/layout/sidebar-timeline/`
 
 **Backlog items (not yet extracted — add to roadmap when taking these on):**
+
 - `ReadinessGauge` → giselle-mui `chart/radial-gauge/`
 - `SidebarTimelineLayout` → giselle-mui `layout/sidebar-timeline/`
 
 ### Chart/ApexCharts options follow the data-layer convention
 
 When a component uses ApexCharts:
+
 - Chart `options` objects must **not** be defined inline in JSX.
 - Static options → module-level `const` in a `*.styles.ts` file.
 - Options that depend on theme tokens → a factory function in `*.styles.ts` that accepts `theme`.
@@ -229,15 +263,24 @@ library as its own thing. When updating or writing docs:
 - The one-liner `channelAlpha` helper is a standard MUI v7 pattern; it does not need
   to be attributed to any theme kit every time it appears.
 
+## Session shorthand commands
+
+| Command | Meaning |
+| ------- | ------- |
+| `cleanup component <Name>` | Read `docs/components/cleanup-workflow.md` and execute the full cleanup workflow on the named component. No further explanation needed. |
+
+---
+
 ## Session bootstrap: where Copilot should look first
 
 At the start of every new Copilot session in this package, read these files:
 
-| File                                                                      | Purpose                                                                                                        |
-| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [`docs/roadmap.md`](../docs/roadmap.md)                                   | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
-| [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md) | Full plan for `RoadmapTimeline` — next component to build                                                      |
-| [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                     | How to wire this library into a Next.js app                                                                    |
+| File                                                                                    | Purpose                                                                                                        |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [`docs/roadmap.md`](../docs/roadmap.md)                                                 | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
+| [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md)               | Full plan for `RoadmapTimeline` — next component to build                                                      |
+| [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                                   | How to wire this library into a Next.js app                                                                    |
+| [`docs/components/cleanup-workflow.md`](../docs/components/cleanup-workflow.md)         | Step-by-step playbook for creating or cleaning up any component — Definitions of Done for Scenario A and B    |
 
 ### Current components (shipped)
 
@@ -273,15 +316,61 @@ data files. Define once in giselle-mui, import everywhere.
 ### Next planned work (priority order)
 
 1. **Phase B — finalize** — add `giselleTheme` usage to `docs/theming/nextjs.md`. One docs update to close Phase B. Branch: `feature/giselle-theme-preset`.
-2. **Phase C — `GiselleThemeProvider`** — wraps `CssVarsProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C. Blocked until Phase B PR merges.
+2. **Phase C — `GiselleThemeProvider`** — wraps `ThemeProvider` with the Giselle default palette. Zero-config usage. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. See `docs/roadmap.md` Phase C. Blocked until Phase B PR merges.
 3. **Storybook story polish** — Remaining: MetricCard notes panel, responsive `sx` demo in GiselleIcon.
 4. **RoadmapTimeline component** — Phase A prerequisite (`channelAlpha`) is now met. Full plan in `docs/components/timeline-plan.md`. Uses `@mui/lab` Timeline primitives (acceptable peer dep).
+5. **Phase H — Dashboard component suite** — 23 new components across 7 groups: stat cards, chart cards, data tables, financial widgets, hero cards, motion components, and investment analytics. Subpath exports (`/charts`, `/motion`) wired in tsup + package.json — 7 May 2026. Full spec: `docs/components/dashboard-components-plan.md`.
 
 ### Additional allowed peer dependencies
 
-- `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). Acceptable under the zero-proprietary-dependencies rule.
-- `framer-motion` — used in `FloatingSubNav`. **Always use `motion.div`, never `m.div`.** The `m.*` API requires `LazyMotion` in the consumer's tree — this is an invisible requirement that breaks any app not using lazy motion (including Storybook). `motion.*` works without a provider and is correct for library components.
-- `apexcharts` + `react-apexcharts` — used in `RadialProgressCard` (optional peer deps — declared with `peerDependenciesMeta.optional: true`). Lazy-loaded via `React.lazy + Suspense` so consumers without ApexCharts installed do not pay the bundle cost.
+- `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). Acceptable under the zero-proprietary-dependencies rule. Goes in the **main bundle** (`dist/index.js`).
+- `framer-motion` — allowed **only in the `/motion` subpath entry** (`dist/motion.js`). Never import `framer-motion` from a file that is part of `src/index.ts` — it would impose the dep on every consumer. **Always use `motion.div`, never `m.div`.** The `m.*` API requires `LazyMotion` in the consumer's tree — this is an invisible requirement that breaks any app not using lazy motion (including Storybook). `motion.*` works without a provider and is correct for library components.
+- `apexcharts` + `react-apexcharts` — allowed **only in the `/charts` subpath entry** (`dist/charts.js`). Never import ApexCharts from a file that is part of `src/index.ts`. Components that embed a chart must accept `chart?: ReactNode` and let the consumer supply it — this keeps the component in the main bundle with zero chart dep. Declared with `peerDependenciesMeta.optional: true`.
+
+### Subpath export architecture — non-negotiable
+
+`giselle-mui` uses **tsup subpath exports** to isolate heavy optional dependencies. This is the answer to "can I use framer-motion / ApexCharts here?" — yes, but only in the right entry point.
+
+```
+@alexrebula/giselle-mui          → dist/index.js     MUI-only components + utils ('use client')
+@alexrebula/giselle-mui/utils    → dist/utils.js     Server-safe pure utilities (no 'use client')
+@alexrebula/giselle-mui/charts   → dist/charts.js    ApexCharts chart cards (optional peer dep)
+@alexrebula/giselle-mui/motion   → dist/motion.js    framer-motion components (optional peer dep)
+```
+
+**The rule in one sentence:** if a component imports `framer-motion`, it goes in `src/motion-index.ts` → `dist/motion.js`. If it imports `apexcharts` or `react-apexcharts`, it goes in `src/charts-index.ts` → `dist/charts.js`. Everything else goes in `src/index.ts` → `dist/index.js`.
+
+**Consumer contract:**
+- A project that imports only from `@alexrebula/giselle-mui` never needs ApexCharts or framer-motion installed.
+- A project that imports from `.../charts` must have `apexcharts` + `react-apexcharts` as deps.
+- A project that imports from `.../motion` must have `framer-motion` as a dep.
+
+**Why not a separate repo?** One repo, one `yalc push`, no version drift. The subpath pattern is strictly better at this library's scale.
+
+**tsup config must declare all three entry points:**
+
+```ts
+// tsup.config.ts — required shape
+defineConfig([
+  { entry: { index: 'src/index.ts' },          ... },  // main — MUI only
+  { entry: { utils: 'src/utils-index.ts' },     ... },  // utils — server-safe
+  { entry: { charts: 'src/charts-index.ts' },   ... },  // charts — ApexCharts
+  { entry: { motion: 'src/motion-index.ts' },   ... },  // motion — framer-motion
+]);
+```
+
+**`package.json` exports map must match:**
+
+```json
+"exports": {
+  ".": { "import": "./dist/index.mjs", "require": "./dist/index.js", "types": "./dist/index.d.ts" },
+  "./utils": { "import": "./dist/utils.mjs", "require": "./dist/utils.js", "types": "./dist/utils.d.ts" },
+  "./charts": { "import": "./dist/charts.mjs", "require": "./dist/charts.js", "types": "./dist/charts.d.ts" },
+  "./motion": { "import": "./dist/motion.mjs", "require": "./dist/motion.js", "types": "./dist/motion.d.ts" }
+}
+```
+
+**Status (7 May 2026):** `/utils` exists. `/charts` and `/motion` wired — `src/charts-index.ts`, `src/motion-index.ts`, tsup entries, and `package.json` exports map all in place. Build verified green. Placeholder barrels only — Phase H components will be exported from here.
 
 ### tsup `external` rule — non-negotiable
 
@@ -313,6 +402,10 @@ Current required entries (keep in sync with `package.json`):
 - `@mui/lab`
 - `@emotion/react`, `@emotion/styled`
 - `@iconify/react`
+- `framer-motion` — must be in `external` for the `/motion` entry
+- `apexcharts`, `react-apexcharts` — must be in `external` for the `/charts` entry
+
+**Each tsup entry has its own `external` array.** Do not assume the main entry's `external` covers the subpath entries — check each one.
 
 ---
 
@@ -377,7 +470,7 @@ Checks (in order): Prettier → ESLint → `tsc --noEmit` → Vitest → tsup bu
 
 ### Storybook infrastructure
 
-- Config: `.storybook/main.ts` (react-vite builder) + `.storybook/preview.tsx` (wraps stories in `CssVarsProvider`)
+- Config: `.storybook/main.ts` (react-vite builder) + `.storybook/preview.tsx` (wraps stories in `ThemeProvider` with `cssVariables: true`)
 - Stories live co-located with their component: `src/components/<name>/<name>.stories.tsx`
 - **The filename MUST match `*.stories.tsx`** — Storybook's glob is `src/**/*.stories.@(ts|tsx)`. A file named `stories.tsx` (no component-name prefix) is invisible to Storybook and will never appear in the UI.
 - Every story file must pass `tsc --noEmit`, ESLint, and Prettier — they are in `src/` and covered by all checks
@@ -491,21 +584,22 @@ Internal sub-components — helpers, local wrappers, private building blocks tha
 
 Every story file must use the correct group path. The `'Components'` group is **abolished** — it is a catch-all that gives no information. The canonical group map is:
 
-| Group | Contents |
-|---|---|
-| `Cards/Stat` | `StatCard` |
-| `Cards/Metric` | `MetricCard` + `MetricCardDecoration` |
-| `Cards/Quote` | `QuoteCard` |
-| `Cards/Selectable` | `SelectableCard` |
-| `Data Display/Icon` | `GiselleIcon` |
-| `Data Display/Action Bar` | `IconActionBar` |
-| `Giselle MUI/Timeline/Two Column` | `TimelineTwoColumn` |
-| `Giselle MUI/Timeline/Dot` | `TimelineDot` |
-| `Navigation/Floating Sub Nav` | `FloatingSubNav` |
-| `Layout/Section Title` | `SectionTitle` |
-| `Layout/Two Column Showcase Row` | `TwoColumnShowcaseRow` |
+| Group                             | Contents                              |
+| --------------------------------- | ------------------------------------- |
+| `Cards/Stat`                      | `StatCard`                            |
+| `Cards/Metric`                    | `MetricCard` + `MetricCardDecoration` |
+| `Cards/Quote`                     | `QuoteCard`                           |
+| `Cards/Selectable`                | `SelectableCard`                      |
+| `Data Display/Icon`               | `GiselleIcon`                         |
+| `Data Display/Action Bar`         | `IconActionBar`                       |
+| `Giselle MUI/Timeline/Two Column` | `TimelineTwoColumn`                   |
+| `Giselle MUI/Timeline/Dot`        | `TimelineDot`                         |
+| `Navigation/Floating Sub Nav`     | `FloatingSubNav`                      |
+| `Layout/Section Title`            | `SectionTitle`                        |
+| `Layout/Two Column Showcase Row`  | `TwoColumnShowcaseRow`                |
 
 **Rules:**
+
 - New card-type components → `Cards/<Name>` (just the noun, no "Card" suffix in the story title)
 - New display/presentational components → `Data Display/<Name>`
 - New complex compositions tied to the Timeline → `Giselle MUI/Timeline/<Name>`
@@ -596,6 +690,120 @@ describe('paperSx', () => {
 1. Any new `sx={}` with more than ~3 properties → move to the styles file immediately
 2. Any existing inline `sx={}` touched during the edit → extract it at the same time (no mixed state)
 3. After extraction → run the styles test file to confirm the mock-theme assertions still pass
+4. **Name by structural role, not by child content.** A Box that positions a label is a *slot* — name it `*SlotSx` or `*WrapperSx`, not `*LabelSx`. The name describes what the element *is* structurally; naming it after what currently lives inside it becomes wrong the moment the child changes. Full rule: `docs/components/cleanup-workflow.md` Step 3.
+5. **Merge parallel variants into a factory.** Two constants that share the same structure and differ only by one argument (e.g. `side: 'left' | 'right'`) must be a single factory — never two separate exports. Separate constants diverge silently under refactoring. Canonical examples: `timelineColumnSx`, `msColumnBoxSx`, `markerLabelSlotSx`. Full rule: `docs/components/cleanup-workflow.md` Step 3.
+
+### `*.const.ts` companion files for constants (enforce always)
+
+Every exported `const` that represents a **size, font size, badge size, minimum touch target, or spacing value** must live in a co-located `<component-name>.const.ts` file — never inside `.tsx`.
+
+**Why this rule exists:**
+
+- Constants are the most commonly regression-tested values in a component library. Extracting them lets a test do `import { CORNER_ALERT_BADGE_SIZE } from './phase-card.const'` without pulling in JSX, React, or MUI at all.
+- It makes the contract between components explicit: every size value is named and one import away.
+- Inline magic numbers (e.g. `width={26}`) are invisible to grep and untestable. Named exports are both.
+
+**Pattern — non-negotiable:**
+
+```ts
+// phase-card.const.ts
+
+/** Font size for all status badge labels (Overdue, Now, Date overlap, Scenario). */
+export const STATUS_BADGE_FONT_SIZE = '0.75rem';
+
+/** Size (px) of the corner alert badge circle container. */
+export const CORNER_ALERT_BADGE_SIZE = 26;
+
+/** Icon size (px) inside the corner alert badge circle. */
+export const CORNER_ALERT_ICON_SIZE = 16;
+
+/**
+ * Icon size (px) for the viewed eye button.
+ * Must meet WCAG 1.4.11 — interactive icons must be >= 20px. Never set below 20.
+ */
+export const PHASE_EYE_ICON_SIZE = 20;
+```
+
+Then in the component: `width={PHASE_EYE_ICON_SIZE}` — named, testable, grep-findable.
+
+**File naming:** `<component-name>.const.ts` — plain `.ts`, not `.tsx`. No JSX, no MUI imports.
+
+> **Scope of this rule:** `*.const.ts` is for **primitive constants only** — numbers, strings, booleans. Things like `ICON_SIZE = 20`, `FONT_SIZE = '0.75rem'`, `MIN_TOUCH_TARGET = 24`. Default value arrays that contain JSX (e.g. `DEFAULT_ICON_ACTIONS`) are **not** primitive constants — they belong in a separate `<component-name>.defaults.tsx` file instead. Never contort JSX into `createElement` calls just to satisfy a `.ts` extension.
+
+**Barrel export:** The const file must be added to the folder's `index.ts`:
+```ts
+export * from './phase-card.const';
+```
+
+**Regression tests — mandatory:** The component's `*.test.ts` must include a `describe('readability — minimum size constants', ...)` block that imports each constant and asserts it is at or above its minimum:
+
+```ts
+import {
+  PHASE_EYE_ICON_SIZE,
+  CORNER_ALERT_ICON_SIZE,
+} from './phase-card.const';
+
+describe('readability — minimum size constants', () => {
+  it('[regression] PHASE_EYE_ICON_SIZE >= 20px', () => {
+    expect(PHASE_EYE_ICON_SIZE).toBeGreaterThanOrEqual(20);
+  });
+  it('[regression] CORNER_ALERT_ICON_SIZE >= 16px', () => {
+    expect(CORNER_ALERT_ICON_SIZE).toBeGreaterThanOrEqual(16);
+  });
+});
+```
+
+**Enforcement checklist — run whenever a component file is edited:**
+
+1. Any `export const` in a `.tsx` file that is a size, font size, or touch-target value → move to `*.const.ts` immediately.
+2. Any `export const` that contains JSX (e.g. default action arrays, default icon elements) → move to `*.defaults.tsx` — never `.const.ts`.
+3. Check that the const file is re-exported from `index.ts`.
+4. Check that a regression test exists for every constant with a safety minimum.
+
+### Sub-component extraction rule (enforce always)
+
+Internal sub-components — functions that start with a capital letter and return JSX — must **never** be defined inline inside a parent `.tsx` file. Each sub-component gets its own `.tsx` file, flat in the same folder.
+
+**Rule:**
+
+- One `.tsx` file per component, including internal helpers.
+- The parent `.tsx` imports and uses them — never defines them.
+- Types for each sub-component remain in the folder's `types.ts` (not inside the sub-component file).
+- If the sub-component has constants, they go in the folder's `*.const.ts`.
+- If the sub-component has non-trivial logic, it calls helpers from the folder's `utils.ts`.
+
+**Why:**
+
+- A 600-line `.tsx` mixing 5 components is not maintainable. Finding a bug means searching the entire file.
+- Sub-components defined inline are untestable in isolation. After extraction, each gets its own focused test.
+- Even if a sub-component looks "internal today", it almost always becomes reusable later. Extracting now costs 2 minutes; extracting during a refactor costs much more.
+- The fact that a function is only *used* by one parent does not mean it should *live inside* that parent.
+
+**What belongs in its own file:**
+
+Any function that:
+- starts with a capital letter (React component convention), OR
+- returns JSX (`ReactNode`), OR
+- has its own prop type in `types.ts`
+
+...gets its own `.tsx` file.
+
+**What can stay inline:**
+
+- Anonymous function expressions inside `Array.map()` that return 1–2 JSX elements with no logic.
+- Helper render variables (e.g. `const badge = <GiselleIcon ... />`) that do not have their own props.
+
+**File naming:** Use kebab-case matching the component's PascalCase name:
+- `CardCornerAlertBadge` → `card-corner-alert-badge.tsx`
+- `LabeledIconStrip` → `labeled-icon-strip.tsx`
+
+**Barrel export:** Every sub-component file must be added to the folder's `index.ts`:
+```ts
+export * from './card-corner-alert-badge';
+export * from './labeled-icon-strip';
+```
+
+**Tests — mandatory:** Every sub-component must have at least one test. Add the sub-component tests to the folder's main `*.test.ts` (a new `describe` block) or create a dedicated `<sub-component>.test.ts`.
 
 ### Preferred `.dataset` over `getAttribute` in tests
 
@@ -713,10 +921,10 @@ Every dot on the timeline — phase dots and milestone dots alike — must be **
 **Where it is set:** in `timeline-two-column.tsx`, the `PhaseCard` call site:
 
 ```tsx
-<PhaseCard phase={phase} columnSide={phase.side === 'left' ? 'right' : 'left'} {...buildPhaseCardTsxProps(...)} />
+<PhaseCard phase={phase} columnSide={phase.side} {...buildPhaseCardTsxProps(...)} />
 ```
 
-Note: `phase.side` is **inverted** from the actual column (`phase.side='right'` → card in **LEFT** column, outer edge on left). So `columnSide` must use the opposite of `phase.side`.
+`phase.side` is **direct** — `'left'` means the card renders in the left column, `'right'` in the right column. `columnSide` matches it directly so the badge floats on the outer edge of whichever column the card is in.
 
 The logic is encapsulated in `resolveCornerBadgeAlign(columnSide)` in `phase-card.tsx`, which returns `{ left?, right?, transform, tooltipPlacement }`. Exported for regression tests.
 
@@ -746,6 +954,49 @@ All `isViewed` / `onMarkViewed` eye buttons in this component family must meet W
 - Milestone: inline in the title row (`<Box display="flex" alignItems="center">`), before the title when `columnSide='left'` (right-aligned column), after the title when `columnSide='right'` (left-aligned column). Constant: `MILESTONE_EYE_ICON_SIZE = 20`.
 
 **Regression test locations:** `phase-card.test.ts` — `eye button — WCAG accessibility regression`; `milestone-badge.test.ts` — `eye button — WCAG accessibility regression`.
+
+---
+
+### Component cleanup — definition of done
+
+Use `cleanup component <Name>` to trigger the full workflow (`docs/components/cleanup-workflow.md`). The checklists below are the acceptance criteria — every PR that touches a component file is reviewed against these.
+
+**Scenario A — Sub-component (flat inside a parent folder):**
+
+- [ ] No `type`/`interface` in `.tsx` — all in parent `types.ts`
+- [ ] No sx with more than ~3 properties inline — all in parent `*.styles.ts`
+- [ ] No duplicated JSX blocks — extracted to helper or util
+- [ ] All inline conditional logic that produces a derived value is in `utils.ts`
+- [ ] JSDoc covers all props including behaviour flags
+- [ ] At least one test `describe` block exists for this sub-component
+- [ ] Exported from parent `index.ts`
+- [ ] SonarQube: zero violations
+- [ ] `npm run check:verify` exits 0
+- [ ] Quality status added to JSDoc (one line) — Step 14
+
+**Scenario B — Standalone component (own subfolder):**
+
+- [ ] Own subfolder created with all companion files present
+- [ ] No `type`/`interface` in `.tsx` — all in `types.ts`
+- [ ] No sx with more than ~3 properties inline — all in `<name>.styles.ts`
+- [ ] `<name>.styles.test.ts` covers every exported factory
+- [ ] No named constants for sizes inline — all in `<name>.const.ts`
+- [ ] Regression tests for every size constant with a safety minimum
+- [ ] No pure logic functions in `.tsx` — all in `utils.ts`
+- [ ] No capital-letter helper components inside `.tsx` — each in its own flat `.tsx`
+- [ ] No `React.FC`, no `any`, no bare `<Box>` without props
+- [ ] `sx` array spread on root element
+- [ ] `...other` spread on root element
+- [ ] All internal sub-components exported from `index.ts`
+- [ ] `src/index.ts` exports the component
+- [ ] `README.md` complete
+- [ ] SonarQube: zero violations
+- [ ] All six palette keys shown in stories where colour variants exist
+- [ ] `Responsive` story present
+- [ ] `npm run check:verify` exits 0
+- [ ] `npm run build` exits 0
+- [ ] `yalc push` + consuming app validated
+- [ ] Quality status added to component JSDoc and `README.md` — Step 14
 
 ---
 
@@ -866,3 +1117,18 @@ DOM behaviour that falls outside these targets.
 - No low-resolution raster images. Any raster asset must look sharp at >200 PPI.
 - SVG files must be optimised — no verbose metadata, no inline raster data.
 - If SVGs are added to Storybook or a demo app, run them through `svgo` before committing.
+
+---
+
+## Contributor profiles — code review tone
+
+This repository welcomes contributors at all experience levels. When reviewing any PR:
+
+- **Hold the same quality standard regardless of contributor experience.** Do not lower the bar — explain what needs to change and why, just as you would for any contributor.
+- **Explain the why, not just the what.** Do not say "use `const` here"; say "use `const` here because this value never changes — it signals to anyone reading the code that this was intentional, not a mistake."
+- **One issue per comment.** Do not stack multiple changes into one comment.
+- **Acknowledge what is correct before noting what to improve.**
+- **When something is wrong, show what correct looks like** — not just "this is wrong"; show the fixed version and explain why it is better.
+- **Four sentences max per comment.** Link to MDN or the repo README instead of writing a lecture inline.
+- **No jargon without a definition.** If a term like "idempotent", "side effect", or "type assertion" appears in a comment, define it in the same sentence.
+- **Do not ask for perfection.** If the code is correct, passes the quality gate, and solves the problem — it ships. Encourage, merge, move on.

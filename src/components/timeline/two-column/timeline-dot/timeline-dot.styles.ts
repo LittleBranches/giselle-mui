@@ -1,6 +1,6 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-import { checkPop } from '../animations';
+import { checkPop, pulseRing } from '../animations';
 
 // ----------------------------------------------------------------------
 
@@ -80,3 +80,24 @@ export const timelineDotInnerSx =
         },
       }),
   });
+
+// ----------------------------------------------------------------------
+
+/**
+ * Pulsing halo ring applied via `::after` on the outer dot Box.
+ *
+ * Active phase dots only — not milestone dots, not done dots.
+ * The `inset` must be a string with a CSS unit — bare numbers are not
+ * transformed by MUI's sx for `inset` shorthand and produce invalid CSS.
+ */
+export const pulseRingAfterSx = (effectiveColor: string): SxProps<Theme> => ({
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    inset: '-5px',
+    borderRadius: '50%',
+    border: '2px solid',
+    borderColor: `${effectiveColor}.main`,
+    animation: `${pulseRing} 1.5s ease-in-out infinite`,
+  },
+});

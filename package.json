@@ -18,6 +18,16 @@
       "types": "./dist/utils.d.ts",
       "import": "./dist/utils.js",
       "require": "./dist/utils.cjs"
+    },
+    "./charts": {
+      "types": "./dist/charts.d.ts",
+      "import": "./dist/charts.js",
+      "require": "./dist/charts.cjs"
+    },
+    "./motion": {
+      "types": "./dist/motion.d.ts",
+      "import": "./dist/motion.js",
+      "require": "./dist/motion.cjs"
     }
   },
   "publishConfig": {
@@ -30,6 +40,7 @@
   ],
   "sideEffects": false,
   "scripts": {
+    "prebuild": "node -e \"require('fs').rmSync('dist', {recursive:true,force:true})\"",
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
@@ -44,7 +55,7 @@
     "check": "node scripts/quality-gate.js --fix",
     "check:verify": "node scripts/quality-gate.js --verify",
     "clean": "rm -rf dist storybook-static",
-    "postinstall": "node --input-type=module -e \"import('./scripts/setup-hooks.js').catch((error)=>{const isMissingSetupHooks=error?.code==='ERR_MODULE_NOT_FOUND'&&String(error?.message??'').includes('scripts/setup-hooks.js');if(!isMissingSetupHooks){console.error('Failed to run scripts/setup-hooks.js during postinstall.');console.error(error);process.exitCode=1;}})\""
+    "postinstall": "node --input-type=module -e \"import('./scripts/setup-hooks.js').catch((error)=>{const msg=String(error?.message??'');const isMissingSetupHooks=error?.code==='ERR_MODULE_NOT_FOUND'&&(msg.includes('scripts/setup-hooks.js')||msg.includes('scripts\\\\setup-hooks.js'));if(!isMissingSetupHooks){console.error('Failed to run scripts/setup-hooks.js during postinstall.');console.error(error);process.exitCode=1;}})\""
   },
   "repository": {
     "type": "git",
@@ -79,6 +90,9 @@
     "apexcharts": {
       "optional": true
     },
+    "framer-motion": {
+      "optional": true
+    },
     "react-apexcharts": {
       "optional": true
     }
@@ -87,6 +101,7 @@
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
     "@eslint/js": "^9.0.0",
+    "@iconify-json/solar": "^1.2.5",
     "@iconify/react": "^6.0.0",
     "@mui/lab": "^7.0.0",
     "@mui/material": "^7.0.0",

@@ -1,2 +1,3 @@
-export { SectionTitle, SectionCaption } from './section-title';
-export type { SectionTitleProps } from './section-title';
+export { SectionTitle } from './section-title';
+export { SectionCaption } from './section-caption';
+export * from './types';

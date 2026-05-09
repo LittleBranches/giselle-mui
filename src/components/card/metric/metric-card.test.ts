@@ -4,7 +4,7 @@
  *
  * All MUI components are mocked to avoid theme-provider requirements —
  * `theme.vars` is not available with the default MUI theme in MUI v7 CSS-vars
- * mode, and sx callbacks that reference it would throw without a CssVarsProvider.
+ * mode, and sx callbacks that reference it would throw without a ThemeProvider.
  * The mocks replace rendering with simple HTML elements so we can assert on
  * structure and content without a full React tree.
  *
@@ -73,7 +73,7 @@ vi.mock('@mui/material/Box', () => ({
     children?: React.ReactNode;
     sx?: unknown;
     [key: string]: unknown;
-  }) => React.createElement(component as string, props, children ?? null),
+  }) => React.createElement(component, props, children ?? null),
 }));
 
 vi.mock('@mui/material/Typography', () => ({
@@ -91,10 +91,25 @@ vi.mock('@mui/material/Typography', () => ({
     sx?: unknown;
     noWrap?: boolean;
     [key: string]: unknown;
-  }) => React.createElement(component as string, props, children ?? null),
+  }) => React.createElement(component, props, children ?? null),
 }));
 
 import { MetricCard, MetricCardDecoration } from './metric-card';
+import { METRIC_CARD_ICON_BOX_SIZE, METRIC_CARD_DECORATION_SIZE } from './metric-card.const';
+
+// ---------------------------------------------------------------------------
+// Readability — minimum size constants
+// ---------------------------------------------------------------------------
+
+describe('readability — minimum size constants', () => {
+  it('[regression] METRIC_CARD_ICON_BOX_SIZE >= 24px', () => {
+    expect(METRIC_CARD_ICON_BOX_SIZE).toBeGreaterThanOrEqual(24);
+  });
+
+  it('[regression] METRIC_CARD_DECORATION_SIZE >= 80px', () => {
+    expect(METRIC_CARD_DECORATION_SIZE).toBeGreaterThanOrEqual(80);
+  });
+});
 
 // ---------------------------------------------------------------------------
 // MetricCard — content rendering

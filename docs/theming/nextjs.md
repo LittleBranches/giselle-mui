@@ -6,7 +6,7 @@ sidebar_label: 'Next.js'
 # Theming in Next.js (App Router + Pages Router)
 
 `@alexrebula/giselle-mui` components use **MUI v7 CSS variables mode** and require a
-`CssVarsProvider` wrapping your application.
+`ThemeProvider` wrapping your application.
 
 Next.js has two routers with slightly different setup requirements. Both are covered below.
 
@@ -34,9 +34,10 @@ duplication and flash-of-unstyled-content (FOUC) in RSC/streaming environments.
 
 ```ts
 // src/theme.ts
-import { extendTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
-export const theme = extendTheme({
+export const theme = createTheme({
+  cssVariables: true,
   colorSchemes: {
     light: {
       palette: {
@@ -60,7 +61,7 @@ export const theme = extendTheme({
 // app/layout.tsx
 import type { ReactNode } from 'react';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { CssVarsProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from '../theme';
 
@@ -73,10 +74,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           into the <head> before the page streams to the client — preventing FOUC.
         */}
         <AppRouterCacheProvider>
-          <CssVarsProvider theme={theme} defaultMode="system">
+          <ThemeProvider theme={theme} defaultMode="system">
             <CssBaseline />
             {children}
-          </CssVarsProvider>
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
@@ -181,16 +182,16 @@ export default class MyDocument extends Document {
 ```tsx
 // pages/_app.tsx
 import type { AppProps } from 'next/app';
-import { CssVarsProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from '../theme';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <CssVarsProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Component {...pageProps} />
-    </CssVarsProvider>
+    </ThemeProvider>
   );
 }
 ```
@@ -256,10 +257,10 @@ remToPx(0.875); // 14
 
 `giselleTheme` is a ready-to-use `extendTheme()` result carrying the full Giselle
 brand palette for both light and dark colour schemes. Pass it directly to
-`CssVarsProvider` instead of writing your own palette from scratch.
+`ThemeProvider` instead of writing your own palette from scratch.
 
 ```tsx
-import { CssVarsProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { giselleTheme } from '@alexrebula/giselle-mui/utils';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -267,9 +268,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html suppressHydrationWarning>
       <body>
         <AppRouterCacheProvider>
-          <CssVarsProvider theme={giselleTheme} defaultMode="system">
+          <ThemeProvider theme={giselleTheme} defaultMode="system">
             {children}
-          </CssVarsProvider>
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
@@ -339,16 +340,16 @@ above is the recommended approach.
 ## Troubleshooting
 
 **FOUC on page load in App Router**
-→ Make sure `AppRouterCacheProvider` wraps `CssVarsProvider` (not the other way around).
+→ Make sure `AppRouterCacheProvider` wraps `ThemeProvider` (not the other way around).
 `AppRouterCacheProvider` needs to be the outermost provider so it can collect all styles.
 
 **Hydration mismatch on `<html>` tag**
 → Add `suppressHydrationWarning` to `<html>`. MUI sets `data-mui-color-scheme` on the
 element at runtime which doesn't exist in SSR output.
 
-**"useColorScheme must be used inside CssVarsProvider"**
+**"useColorScheme must be used inside ThemeProvider"**
 → The toggle component must be a client component (`'use client'`) and must be inside the
-`CssVarsProvider` tree in the layout.
+`ThemeProvider` tree in the layout.
 
 **Server components throwing on import**
 → MUI components use React context internally. Wrap them in a `'use client'` boundary as

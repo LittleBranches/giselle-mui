@@ -5,7 +5,7 @@
  * Uses `renderToStaticMarkup` (React SSR) for all assertions — purely
  * structural, no interactivity to test. MUI components are mocked to avoid
  * theme-provider requirements (`theme.vars` from MUI v7 CSS-vars mode is not
- * available with the default theme without a CssVarsProvider).
+ * available with the default theme without a ThemeProvider).
  *
  * ## What is tested
  * - Quote text is rendered in the output

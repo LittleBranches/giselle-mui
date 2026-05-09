@@ -320,7 +320,7 @@ src/
 // src/main.tsx
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { CssVarsProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { App } from './App';
 import { registerIcons } from './icon-sets';
 
@@ -330,9 +330,9 @@ registerIcons();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CssVarsProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <App />
-    </CssVarsProvider>
+    </ThemeProvider>
   </StrictMode>
 );
 ```
@@ -435,12 +435,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html>
       <body>
         <AppRouterCacheProvider>
-          <CssVarsProvider theme={theme}>
+          <ThemeProvider theme={theme}>
             {/* Mount before any route content to guarantee icons are registered
                 on the very first render of every page. */}
             <IconRegistrar />
             {children}
-          </CssVarsProvider>
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
@@ -533,7 +533,7 @@ src/
 ```tsx
 // src/pages/_app.tsx
 import type { AppProps } from 'next/app';
-import { CssVarsProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { registerIcons } from '../icon-sets';
 
 // ← Module-level call. Pages Router always runs _app.tsx on the client,
@@ -542,9 +542,9 @@ registerIcons();
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <CssVarsProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <Component {...pageProps} />
-    </CssVarsProvider>
+    </ThemeProvider>
   );
 }
 ```

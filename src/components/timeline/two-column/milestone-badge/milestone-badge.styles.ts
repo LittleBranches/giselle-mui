@@ -1,4 +1,20 @@
 import type { SxProps, Theme } from '@mui/material/styles';
+import type { HighlightedPaletteKey } from '../types';
+
+// ----------------------------------------------------------------------
+
+/**
+ * Inline icon slot inside detail-count and similar pill badges.
+ *
+ * Forces the SVG to the exact icon size used by the pill.
+ *
+ * @param iconSize - Width and height applied to the `& svg` selector (px).
+ */
+export const pillIconBoxSx = (iconSize: number): SxProps<Theme> => ({
+  display: 'inline-flex',
+  flexShrink: 0,
+  '& svg': { width: iconSize, height: iconSize },
+});
 
 /**
  * Styles for the `MilestoneBadge` component.
@@ -143,3 +159,120 @@ export const milestoneDetailRowSx: SxProps<Theme> = {
   alignItems: 'flex-start',
   textAlign: 'left',
 };
+
+/** Task toggle row — flex container for icon + title in the expanded detail list. */
+export const taskRowSx: SxProps<Theme> = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 0.75,
+  py: 0.25,
+};
+
+/** Task toggle icon button sx (interactive mode). */
+export const taskToggleButtonSx: SxProps<Theme> = {
+  all: 'unset',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  flexShrink: 0,
+  transition: 'color 0.2s',
+  '&:focus-visible': {
+    outline: '2px solid',
+    outlineColor: 'primary.main',
+    borderRadius: '50%',
+  },
+};
+
+/** Task toggle icon static (read-only mode). */
+export const taskIconStaticSx: SxProps<Theme> = {
+  display: 'flex',
+  alignItems: 'center',
+  flexShrink: 0,
+  transition: 'color 0.2s',
+};
+
+/** Task title sx — done state passed dynamically. */
+export const taskTitleSx = (isDone: boolean): SxProps<Theme> => ({
+  color: isDone ? 'text.disabled' : 'text.secondary',
+  lineHeight: 1.6,
+  textDecoration: isDone ? 'line-through' : 'none',
+  transition: 'color 0.2s, text-decoration 0.2s',
+});
+
+/** Task toggle icon colour sx — done state passed dynamically (interactive mode). */
+export const taskToggleColorSx = (isDone: boolean): SxProps<Theme> => ({
+  color: isDone ? 'success.main' : 'text.disabled',
+  '&:hover': { color: isDone ? 'success.dark' : 'text.secondary' },
+});
+
+/** Task icon colour sx — done state passed dynamically (read-only mode). */
+export const taskIconColorSx = (isDone: boolean): SxProps<Theme> => ({
+  color: isDone ? 'success.main' : 'text.disabled',
+});
+
+// ── Paper root ────────────────────────────────────────────────────────────────
+
+/**
+ * Root Paper sx for `MilestoneBadge`.
+ *
+ * Controls border, background, shadow, opacity, and hover/focus states based on
+ * the current expansion state, column alignment, and done/suppression flags.
+ */
+export const milestonePaperSx =
+  (opts: {
+    isExpanded: boolean;
+    colorKey: HighlightedPaletteKey;
+    rightAlign: boolean;
+    done: boolean;
+    hasDetails: boolean;
+    suppressElevation: boolean;
+  }): SxProps<Theme> =>
+  (theme) => ({
+    p: 2,
+    overflow: 'hidden',
+    borderTop: '3px solid',
+    borderTopColor: opts.isExpanded
+      ? (theme.vars!.palette[opts.colorKey]?.main ?? theme.vars!.palette.primary.main)
+      : 'transparent',
+    bgcolor: opts.isExpanded ? 'background.paper' : 'transparent',
+    boxShadow: opts.isExpanded
+      ? `0 4px 16px rgba(${
+          theme.vars!.palette[opts.colorKey]?.mainChannel ??
+          (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+        } / 0.1)`
+      : 'none',
+    transition:
+      'box-shadow 0.22s, opacity 0.3s, filter 0.3s, background-color 0.22s, border-color 0.22s',
+    ...(opts.rightAlign && { textAlign: 'right' }),
+    ...(opts.done && {
+      opacity: 0.45,
+      filter: 'grayscale(1)',
+      pointerEvents: 'auto',
+    }),
+    ...(!opts.isExpanded && {
+      '&:hover': {
+        bgcolor: 'background.paper',
+        borderTopColor:
+          theme.vars!.palette[opts.colorKey]?.main ?? theme.vars!.palette.primary.main,
+        boxShadow: `0 16px 40px rgba(${
+          theme.vars!.palette[opts.colorKey]?.mainChannel ??
+          (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+        } / 0.22)`,
+        ...(opts.hasDetails && { cursor: 'pointer' }),
+        ...(opts.done && { opacity: 1, filter: 'none' }),
+      },
+    }),
+    ...(opts.hasDetails &&
+      !opts.isExpanded && {
+        '&:focus-visible': {
+          bgcolor: 'background.paper',
+          borderTopColor:
+            theme.vars!.palette[opts.colorKey]?.main ?? theme.vars!.palette.primary.main,
+          outline: '2px solid',
+          outlineColor:
+            theme.vars!.palette[opts.colorKey]?.main ?? theme.vars!.palette.primary.main,
+          outlineOffset: 3,
+        },
+      }),
+    ...(opts.suppressElevation && { boxShadow: 'none' }),
+  });

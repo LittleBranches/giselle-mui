@@ -1,2 +1,3 @@
 export { MetricCard, MetricCardDecoration } from './metric-card';
-export type { MetricCardProps, MetricCardDecorationProps, MetricCardColor } from './metric-card';
+export * from './types';
+export * from './metric-card.const';

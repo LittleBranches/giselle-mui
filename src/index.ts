@@ -17,6 +17,14 @@ export {
 export { GiselleIcon } from './components/icon/giselle';
 export type { GiselleIconProps } from './components/icon/giselle';
 
+export { Accordion } from './components/accordion';
+export type { AccordionProps } from './components/accordion';
+export {
+  ACCORDION_DONE_MIN_TOUCH_TARGET,
+  ACCORDION_CHECK_ICON_SIZE,
+  ACCORDION_ICON_BUTTON_MIN_SIZE,
+} from './components/accordion';
+
 export { MetricCard, MetricCardDecoration } from './components/card/metric';
 export type {
   MetricCardProps,
@@ -36,15 +44,37 @@ export type { StatCardProps, StatCardColor, StatCardItem } from './components/ca
 export { PhaseCard, TimelineDot, TimelineTwoColumn } from './components/timeline/two-column';
 export type {
   PhaseCardProps,
+  TaskDetails,
   TimelineDotComponentProps,
   TimelineTwoColumnProps,
+  Task,
   TimelinePhase,
+  TimelineMilestone,
   TimelinePlatformItem,
   HighlightedPaletteKey,
   TimelineSidebar,
   TimelineColumnLabels,
   TimelineSectionData,
 } from './components/timeline/two-column';
+
+export {
+  TimelineCompact,
+  TaskDetailsRenderer,
+  resolveCompactColor,
+} from './components/timeline/compact';
+export type { TimelineCompactProps } from './components/timeline/compact';
+export { TaskList } from './components/timeline/task-list';
+export type { TaskListProps } from './components/timeline/task-list';
+export {
+  COMPACT_PHASE_DOT_SIZE,
+  COMPACT_MILESTONE_DOT_SIZE,
+  COMPACT_PHASE_ICON_SIZE,
+  COMPACT_MIN_PHASE_DOT_SIZE,
+  COMPACT_MIN_MILESTONE_DOT_SIZE,
+} from './components/timeline/compact';
+
+export { useNestedChecklist } from './utils/use-nested-checklist';
+export type { NestedChecklistState } from './utils/use-nested-checklist';
 
 export { IconActionBar, DEFAULT_ICON_ACTIONS } from './components/action-bar/icon';
 export type { IconActionBarProps, IconActionItem } from './components/action-bar/icon';

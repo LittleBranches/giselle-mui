@@ -71,12 +71,28 @@ Items are keyed by `"${tooltip}-${index}"`. Tooltip values should be unique with
 ## File structure
 
 ```
-src/components/icon-action-bar/
-  icon-action-bar.tsx   — component, Props interface, DEFAULT_ICON_ACTIONS
-  index.ts              — barrel
-  README.md             — this file
-  icon-action-bar.test.ts
+src/components/action-bar/icon/
+  icon-action-bar.tsx          — pure JSX composition (imports from all below)
+  types.ts                     — IconActionItem, IconActionBarProps interfaces
+  icon-action-bar.defaults.tsx  — DEFAULT_ICON_ACTIONS (JSX default values)
+  icon-action-bar.styles.ts    — iconActionBarRootSx constant
+  icon-action-bar.styles.test.ts — mock-theme assertions for styles
+  icon-action-bar.test.ts      — Vitest unit tests (structure, interaction, smoke)
+  icon-action-bar.stories.tsx  — Storybook stories
+  index.ts                     — barrel: re-exports component, types, constant
+  README.md                    — this file
 ```
+
+---
+
+## Quality status — 8 May 2026
+
+| Dimension        | Score | Open items |
+| ---------------- | ----- | ---------- |
+| DoD (Scenario B) | 20/20 | —          |
+| Best practices   | 13/13 | —          |
+
+> Scores reflect the state at the cleanup date. Update the date and re-run SonarQube whenever the component is significantly changed.
 
 ---
 

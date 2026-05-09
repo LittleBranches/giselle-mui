@@ -38,7 +38,7 @@ describe('SectionTitle', () => {
 
   it('renders txtGradient word when provided', () => {
     // The gradient span uses a theme.vars sx callback — mock the theme access
-    // by overriding the sx on the span to a plain object so it renders without CssVarsProvider.
+    // by overriding the sx on the span to a plain object so it renders without ThemeProvider.
     // We test that the text content is present; the gradient visuals are verified in Storybook.
     const titleEl = React.createElement(
       'h2',

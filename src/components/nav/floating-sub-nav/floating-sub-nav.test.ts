@@ -20,7 +20,7 @@ vi.mock('framer-motion', () => ({
   ),
 }));
 
-// MUI components are mocked to avoid CssVarsProvider / theme.vars requirements
+// MUI components are mocked to avoid ThemeProvider / theme.vars requirements
 vi.mock('@mui/material/Box', () => ({
   default: ({
     children,

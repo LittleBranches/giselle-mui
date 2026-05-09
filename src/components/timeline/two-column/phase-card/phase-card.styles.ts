@@ -1,6 +1,8 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
 import { pulseDot } from '../animations';
+import type { HighlightedPaletteKey } from '../types';
+import type { PaperSxParams, DateTypographySxParams } from './types';
 
 /**
  * Styles for the `PhaseCard` component.
@@ -315,3 +317,196 @@ export const phaseCardIconBoxSx =
         theme.vars!.palette.primary.main),
     opacity: isOverduePending ? 0.55 : 0.35,
   });
+
+/** Task toggle row — flex container for icon + title in the expanded detail list. */
+export const taskRowSx: SxProps<Theme> = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 0.75,
+  py: 0.25,
+};
+
+/** Task toggle icon button sx (interactive mode). */
+export const taskToggleButtonSx: SxProps<Theme> = {
+  all: 'unset',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  flexShrink: 0,
+  transition: 'color 0.2s',
+  '&:focus-visible': {
+    outline: '2px solid',
+    outlineColor: 'primary.main',
+    borderRadius: '50%',
+  },
+};
+
+/** Task toggle icon static (read-only mode). */
+export const taskIconStaticSx: SxProps<Theme> = {
+  display: 'flex',
+  alignItems: 'center',
+  flexShrink: 0,
+  transition: 'color 0.2s',
+};
+
+/** Task title sx — done state passed dynamically. */
+export const taskTitleSx = (isDone: boolean): SxProps<Theme> => ({
+  color: isDone ? 'text.disabled' : 'text.secondary',
+  lineHeight: 1.6,
+  textDecoration: isDone ? 'line-through' : 'none',
+  transition: 'color 0.2s, text-decoration 0.2s',
+});
+
+/** Task toggle icon colour sx — done state passed dynamically (interactive mode). */
+export const taskToggleColorSx = (isDone: boolean): SxProps<Theme> => ({
+  color: isDone ? 'success.main' : 'text.disabled',
+  '&:hover': { color: isDone ? 'success.dark' : 'text.secondary' },
+});
+
+/** Task icon colour sx — done state passed dynamically (read-only mode). */
+export const taskIconColorSx = (isDone: boolean): SxProps<Theme> => ({
+  color: isDone ? 'success.main' : 'text.disabled',
+});
+
+// ── Paper root ────────────────────────────────────────────────────────────────
+
+/** Returns the sx theme callback for the root Paper element of a PhaseCard. */
+export function buildPaperSx(p: PaperSxParams) {
+  return (theme: Theme) => ({
+    p: 2.5,
+    position: 'relative' as const,
+    overflow: 'hidden',
+    textAlign: p.textAlign ?? 'left',
+    bgcolor: `rgba(${(theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']} / 0.08)`,
+    transition: p.hasDetails
+      ? 'box-shadow 0.2s, opacity 0.3s, filter 0.3s'
+      : 'opacity 0.3s, filter 0.3s',
+    ...(p.hasDetails && {
+      cursor: 'pointer',
+      '&:hover': {
+        boxShadow: `0 16px 40px rgba(${
+          theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.mainChannel ??
+          (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+        } / 0.22)`,
+      },
+      '&:focus-visible': {
+        outline: '2px solid',
+        outlineColor:
+          theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.main ??
+          theme.vars!.palette.primary.main,
+        outlineOffset: 3,
+      },
+    }),
+    ...(p.isDone && {
+      opacity: 0.45,
+      filter: 'grayscale(1)',
+      '&:hover': {
+        opacity: 1,
+        filter: 'none',
+        ...(p.hasDetails && {
+          boxShadow: `0 16px 40px rgba(${
+            theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.mainChannel ??
+            (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+          } / 0.22)`,
+        }),
+      },
+    }),
+    ...(p.phaseSide === 'left' &&
+      !p.isHighlighted && {
+        bgcolor: 'background.paper',
+        borderTop: '3px solid',
+        borderColor: `${p.color ?? 'primary'}.main`,
+        boxShadow: `0 8px 24px rgba(${
+          theme.vars!.palette[(p.color ?? 'primary') as HighlightedPaletteKey]?.mainChannel ??
+          (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+        } / 0.12)`,
+      }),
+    ...(p.isHighlighted && {
+      borderLeft: '4px solid',
+      borderColor: `${p.color}.main`,
+      bgcolor: `rgba(${
+        theme.vars!.palette[p.color as HighlightedPaletteKey]?.mainChannel ??
+        (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
+      } / ${p.isScenario ? 0.1 : 0.08})`,
+    }),
+    ...(p.isOverdue &&
+      !p.isDone && {
+        border: '2px solid',
+        borderColor: 'error.main',
+        boxShadow: `0 0 0 2px rgba(${theme.vars!.palette.error.mainChannel} / 0.2), 0 8px 32px rgba(${theme.vars!.palette.error.mainChannel} / 0.18)`,
+      }),
+    ...(p.suppressElevation && { boxShadow: 'none' }),
+  });
+}
+
+// ── Date Typography ───────────────────────────────────────────────────────────
+
+/** Returns the sx object for the phase date Typography element. */
+export function buildDateTypographySx({
+  isScenario,
+  isHighlighted,
+  hideDecoration,
+  color,
+}: DateTypographySxParams) {
+  return {
+    display: 'block',
+    mb: 1.5,
+    pr: !isHighlighted && !hideDecoration ? 6 : 0,
+    fontSize: isScenario ? '0.875rem' : '0.8rem',
+    fontWeight: isScenario ? 800 : undefined,
+    letterSpacing: isScenario ? 0 : undefined,
+    color: isScenario ? `${color ?? 'primary'}.main` : 'text.disabled',
+  };
+}
+
+// ── CardDecoration gradient ───────────────────────────────────────────────────
+
+/**
+ * Rotating gradient rectangle that sits in the top-right corner of a PhaseCard.
+ *
+ * @param color - MUI palette key for the gradient colour (already resolved from phase.color).
+ * @param isOverduePending - When true, switches to the error palette and raises opacity.
+ */
+export const buildCardDecorationGradientSx =
+  (color: string, isOverduePending: boolean): SxProps<Theme> =>
+  (theme) => ({
+    top: -40,
+    right: -56,
+    width: 140,
+    height: 140,
+    borderRadius: 4,
+    position: 'absolute',
+    transform: 'rotate(40deg)',
+    pointerEvents: 'none',
+    background: `linear-gradient(to right, ${
+      theme.vars!.palette[isOverduePending ? 'error' : (color as HighlightedPaletteKey)]?.main ??
+      theme.vars!.palette.primary.main
+    }, transparent)`,
+    opacity: isOverduePending ? 0.18 : 0.08,
+  });
+
+// ── Corner alert tooltip ──────────────────────────────────────────────────────
+
+/** Sx for the Tooltip popup in `CardCornerAlertBadge`. */
+export const cornerAlertTooltipSx: SxProps<Theme> = {
+  maxWidth: 320,
+  px: 1.75,
+  py: 1.25,
+  bgcolor: 'grey.900',
+  '& .MuiTooltip-arrow': { color: 'grey.900' },
+};
+
+// ── Pill icon box ─────────────────────────────────────────────────────────────
+
+/**
+ * Inline icon slot inside detail-count and similar pill badges.
+ *
+ * Forces the SVG to the exact icon size used by the pill.
+ *
+ * @param iconSize - Width and height applied to the `& svg` selector (px).
+ */
+export const pillIconBoxSx = (iconSize: number): SxProps<Theme> => ({
+  display: 'inline-flex',
+  flexShrink: 0,
+  '& svg': { width: iconSize, height: iconSize },
+});

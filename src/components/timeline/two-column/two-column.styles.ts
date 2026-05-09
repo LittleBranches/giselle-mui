@@ -13,25 +13,35 @@ import type { SxProps, Theme } from '@mui/material/styles';
 /**
  * Column Box inside the `TimelineColumn` layout helper.
  *
- * - Left column: right-aligned text, right padding, hidden on mobile when empty.
- * - Right column: left-aligned text, left padding, hidden on mobile when empty.
+ * - Left column: right-aligned text, right padding, always hidden on xs (cards shift to right slot on mobile).
+ * - Right column: left-aligned text, left padding, always visible on xs.
+ * - Both columns always `display:block` on md — an empty column must stay in the
+ *   flex row so the centre spine remains equidistant from both edges. Hiding it via
+ *   `display:none` removes the column from flow and shifts the spine off-centre.
  *
  * @param columnSide - `'left'` or `'right'`.
- * @param hasContent - When false, the column is hidden on xs screens.
+ * @param hasContent - Passed through from the parent; content rendering is guarded
+ *   by the caller, but the column box itself is always in the flex row on md.
  * @param bottomPadding - Phase-card gap (px) added via `paddingBottom`.
  */
 export const timelineColumnSx = (
   columnSide: 'left' | 'right',
-  hasContent: boolean,
+  _hasContent: boolean,
   bottomPadding: number
 ): SxProps<Theme> => ({
   flex: 1,
+  minWidth: 0,
   textAlign: columnSide === 'left' ? 'right' : 'left',
   pr: columnSide === 'left' ? 2 : 0,
   pl: columnSide === 'right' ? 2 : 0,
   pt: 0.75,
   paddingBottom: `${bottomPadding}px`,
-  display: { xs: hasContent ? 'block' : 'none', md: 'block' },
+  // xs: left column hidden (all cards move to right slot on mobile).
+  // md: BOTH columns always in layout — keeps the centre spine centred.
+  display: {
+    xs: columnSide === 'left' ? 'none' : 'block',
+    md: 'block',
+  },
 });
 
 // ── Milestone row ─────────────────────────────────────────────────────────────
@@ -54,15 +64,24 @@ export const msRowSx = (topPercent: number): SxProps<Theme> => ({
 /**
  * Left or right column Box inside a milestone row.
  *
- * Hidden on mobile when its `visible` condition is false (prevents phantom padding).
+ * - Left column: always hidden on xs (milestone cards shift to the right slot on mobile).
+ * - Right column: always visible on xs (receives all cards on mobile).
+ * - Both columns always `display:block` on md — same reasoning as `timelineColumnSx`:
+ *   removing a column from flow shifts the centre spine off-centre.
  *
- * @param visible - When false, the column is hidden on xs screens.
+ * @param columnSide - `'left'` or `'right'`.
+ * @param visible - Content rendering is guarded by the caller; the column box itself
+ *   is always in the flex row on md so the spine stays centred.
  */
-export const msColumnBoxSx = (visible: boolean): SxProps<Theme> => ({
+export const msColumnBoxSx = (columnSide: 'left' | 'right', _visible: boolean): SxProps<Theme> => ({
   flex: 1,
+  minWidth: 0,
   position: 'relative',
   overflow: 'visible',
-  display: { xs: visible ? 'block' : 'none', md: 'block' },
+  display: {
+    xs: columnSide === 'right' ? 'block' : 'none',
+    md: 'block',
+  },
 });
 
 /**
@@ -121,30 +140,65 @@ export const markerPhaseLiSx: SxProps<Theme> = {
   minHeight: 40,
 };
 
-/** Left label Box inside a marker row — right-aligned, flush against the spine. */
-export const markerLeftLabelSx: SxProps<Theme> = {
+/**
+ * Flex slot (layout container) that positions the left or right floating label
+ * in a marker row.
+ *
+ * **Named `*SlotSx`, not `*LabelSx`:** this is a structural container, not the label
+ * itself. The label (`MarkerLabel`, styled via `markerCaptionSx`) is the child content —
+ * the slot only positions it against the spine. Naming by structural role (slot) rather
+ * than by current child content (label) prevents the name from becoming misleading if the
+ * slot ever holds a different child.
+ *
+ * **Unified into a factory:** the left and right variants differ only in alignment and
+ * padding — identical in structure. Two static constants would duplicate that structure
+ * and diverge silently during refactors. This follows the same pattern as `timelineColumnSx`
+ * and `msColumnBoxSx` already in this file: every left/right pair is a single factory
+ * taking a `side` argument.
+ *
+ * @param side - `'left'` or `'right'`.
+ */
+export const markerLabelSlotSx = (side: 'left' | 'right'): SxProps<Theme> => ({
   flex: 1,
-  display: 'flex',
-  justifyContent: 'flex-end',
+  minWidth: 0,
+  overflow: 'hidden',
+  // xs: left slot hidden — label shifts to the right slot on mobile.
+  // Right slot is always visible.
+  display: side === 'left' ? { xs: 'none', md: 'flex' } : 'flex',
+  justifyContent: side === 'left' ? 'flex-end' : 'flex-start',
   alignItems: 'center',
-  pr: 1.5,
-};
+  pr: side === 'left' ? 1.5 : 0,
+  pl: side === 'right' ? 1.5 : 0,
+});
 
 /** Centre Box in a marker row — contains the dot and spine connector. */
 export const markerCenterSx: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  flexShrink: 0,
   position: 'relative',
 };
 
-/** Right label Box inside a marker row — left-aligned, flush against the spine. */
-export const markerRightLabelSx: SxProps<Theme> = {
-  flex: 1,
+/** Inner flex row for a `variant='marker'` phase — horizontal, centred. */
+export const markerRowInnerSx: SxProps<Theme> = {
   display: 'flex',
-  justifyContent: 'flex-start',
+  flexDirection: 'row',
   alignItems: 'center',
-  pl: 1.5,
+};
+
+/** Caption `Typography` for the left/right floating label in a marker row. */
+export const markerCaptionSx: SxProps<Theme> = {
+  color: 'text.secondary',
+  fontWeight: 600,
+  whiteSpace: 'nowrap',
+};
+
+/** Inline date `Box` span appended to a marker label. */
+export const markerDateSpanSx: SxProps<Theme> = {
+  ml: 0.75,
+  fontWeight: 400,
+  opacity: 0.7,
 };
 
 // ── Phase row ─────────────────────────────────────────────────────────────────
@@ -160,6 +214,7 @@ export const phaseRowSx = (blurred: boolean): SxProps<Theme> => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'stretch',
+  minWidth: 0,
   transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease',
   ...(blurred && {
     filter: 'blur(1.5px)',
@@ -231,12 +286,14 @@ export const msCardWrapperSx =
 
 /**
  * Centre column Box — used for both the phase dot column and the milestone dot column.
- * Flex column with centred items; does not constrain width.
+ * Flex column with centred items; `flexShrink: 0` prevents the spine from being squeezed
+ * at narrow viewport widths.
  */
 export const centerColumnSx: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  flexShrink: 0,
 };
 
 // ── Timeline MUI root ─────────────────────────────────────────────────────────
@@ -248,28 +305,20 @@ export const centerColumnSx: SxProps<Theme> = {
 export const timelineRootSx: SxProps<Theme> = {
   p: 0,
   m: 0,
+  overflowX: 'hidden',
   '& .MuiTimelineItem-root:before': { flex: 0, padding: 0 },
 };
 
-// ── Marker row inner ──────────────────────────────────────────────────────────
+// ── Phase dot ─────────────────────────────────────────────────────────────────
 
-/** Inner flex row for a `variant='marker'` phase — horizontal, centred. */
-export const markerRowInnerSx: SxProps<Theme> = {
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-};
-
-/** Caption `Typography` for the left/right floating label in a marker row. */
-export const markerCaptionSx: SxProps<Theme> = {
-  color: 'text.secondary',
-  fontWeight: 600,
-  whiteSpace: 'nowrap',
-};
-
-/** Inline date `Box` span appended to a marker label. */
-export const markerDateSpanSx: SxProps<Theme> = {
-  ml: 0.75,
-  fontWeight: 400,
-  opacity: 0.7,
+/**
+ * Wrapper around the phase dot and its floating date pill.
+ *
+ * `position: relative` is required so the absolutely-positioned pill floats
+ * above the dot without affecting the row's layout flow.
+ * `display: inline-flex` keeps the wrapper tight to the dot's own size.
+ */
+export const phaseDotWrapperSx: SxProps<Theme> = {
+  position: 'relative',
+  display: 'inline-flex',
 };

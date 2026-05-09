@@ -46,6 +46,7 @@ type Milestone = NonNullable<TimelinePhase['milestones']>[number];
 /** Minimal valid Milestone for tooltip tests. */
 function milestone(overrides: Partial<Milestone> = {}): Milestone {
   return {
+    key: 'default-milestone',
     title: 'Default Milestone',
     date: 'Feb 2020',
     icon: null,

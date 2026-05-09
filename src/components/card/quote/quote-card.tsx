@@ -1,36 +1,14 @@
-import type { PaperProps } from '@mui/material/Paper';
+import type { QuoteCardProps } from './types';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { quoteMarkSx, quoteTextSx } from './quote-card.styles';
+import { quoteMarkSx, quoteTextSx, quoteCardPaperSx } from './quote-card.styles';
 
-// ----------------------------------------------------------------------
-
-type QuoteColor = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
-
-export interface QuoteCardProps extends PaperProps {
-  /** The full text of the quote. Rendered in italics inside the card body. */
-  quote: string;
-  /**
-   * Attribution name displayed below the quote, e.g. `"Jane Smith"`.
-   * Omit to hide the attribution row entirely.
-   */
-  author?: string;
-  /**
-   * Source or context label displayed next to the author, e.g. `"Platform Team"`.
-   * A separator dot is only rendered when both `author` and `source` are present.
-   */
-  source?: string;
-  /**
-   * Accent color key applied to the background tint, border, and decorative quote mark.
-   * Accepts any MUI palette color key.
-   * @default 'primary'
-   */
-  color?: QuoteColor;
-}
+// Re-exports — keeps `import { QuoteCardProps } from './quote-card'` working.
+export type { QuoteCardProps } from './types';
 
 /**
  * A warm, readable block-quote card built on MUI Paper.
@@ -75,15 +53,7 @@ export function QuoteCard({
   return (
     <Paper
       elevation={elevation}
-      sx={[
-        (theme) => ({
-          p: 3,
-          borderRadius: 2,
-          bgcolor: `rgba(${theme.vars!.palette[color].mainChannel} / 0.06)`,
-          border: `1px solid rgba(${theme.vars!.palette[color].mainChannel} / 0.12)`,
-        }),
-        ...(Array.isArray(sx) ? sx : [sx]),
-      ]}
+      sx={[quoteCardPaperSx(color), ...(Array.isArray(sx) ? sx : [sx])]}
       {...other}
     >
       <Box sx={{ display: 'flex', gap: 2 }}>
