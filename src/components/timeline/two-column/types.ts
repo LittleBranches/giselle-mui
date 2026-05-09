@@ -30,18 +30,12 @@ export interface TaskDetails {
  * Base unit for any trackable work item in the timeline.
  *
  * `TimelinePhase`, `TimelineMilestone`, and every nested sub-task all share this shape.
- * Having a common base makes parent-child done-state propagation computable at any depth:
+ * The shared base keeps phase/milestone/task shapes consistent for done-state propagation.
  *
  * - All `children` done → parent can be auto-marked done.
  * - Any `children` un-done → parent reverts to not-done.
- * - Nesting is unbounded: a `Task` child can itself have `children`.
- *
- * ```
- * TimelinePhase (extends Task)
- *   └─ children / milestones: Task[]
- *        └─ children: Task[]
- *             └─ children: Task[]   ← infinite depth
- * ```
+ * - Current timeline UI/callback plumbing is position-based and supports one visible
+ *   nested `children` level for interactive toggling.
  */
 export type Task = {
   /** Stable identifier for this work item. */
@@ -63,10 +57,13 @@ export type Task = {
   /** Optional rich details rendered in a modal or drawer. */
   details?: TaskDetails;
   /**
-   * Nested sub-tasks. Can be nested to any depth.
+   * Nested sub-tasks.
+   *
+   * Data may include deeper nesting, but current timeline rendering/toggle callbacks
+   * operate on one visible nested level.
    *
    * Replaces the legacy flat `details: string[]` field. Migrate data files by converting
-   * each string to `{ title: string }`. Add `done?` and further `children?` as needed.
+   * each string to `{ title: string }`.
    */
   children?: Task[];
 };

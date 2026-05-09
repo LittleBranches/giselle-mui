@@ -117,8 +117,8 @@ export type PhaseCardProps = Omit<BoxProps, 'children'> & {
   expandableIcon?: ReactNode;
   /**
    * Which column the card sits in — controls where the corner alert badge is anchored.
-   * - `'right'` (default): badge floats on the right top corner (between card and spine).
-   * - `'left'`: badge floats on the left top corner (mirrored, between spine and card edge).
+   * - `'right'` (default): badge floats on the right top corner (outer edge, away from spine).
+   * - `'left'`: badge floats on the left top corner (mirrored outer edge, away from spine).
    */
   columnSide?: 'left' | 'right';
   /**

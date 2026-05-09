@@ -90,6 +90,9 @@
     "apexcharts": {
       "optional": true
     },
+    "framer-motion": {
+      "optional": true
+    },
     "react-apexcharts": {
       "optional": true
     }

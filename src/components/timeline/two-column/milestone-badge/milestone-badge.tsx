@@ -78,7 +78,7 @@ export function MilestoneBadge({
    * Normalises milestone expandable content to `Task[]`.
    *
    * Resolution order:
-   *   1. `m.children` — new structured form (Task tree, any depth).
+   *   1. `m.children` — new structured form.
    *   2. `m.details`  — legacy flat string array, mapped to `{ title }` shims.
    *   3. Empty array  — milestone has no expandable content.
    */

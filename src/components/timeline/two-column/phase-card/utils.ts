@@ -11,9 +11,9 @@ import type { TimelinePhase, Task, TimelinePlatformItem } from '../types';
  * column the card sits in.
  *
  * - Right column (default): badge floats on the **right** top corner so it sits
- *   between the card and the centre spine.
- * - Left column: badge floats on the **left** top corner so it sits between the
- *   card and the centre spine (mirrored).
+ *   on the outer edge (away from the centre spine).
+ * - Left column: badge floats on the **left** top corner so it sits on the
+ *   outer edge (away from the centre spine), mirrored.
  *
  * Exported so tests can assert the positioning rule independently.
  */
@@ -54,7 +54,7 @@ export function isHighlightedVariant(variant?: string): boolean {
  * Normalises phase expandable content to `Task[]`.
  *
  * Resolution order:
- *   1. `phase.children` — new structured form (Task tree, any depth).
+ *   1. `phase.children` — new structured form (Task tree).
  *   2. `phase.details` — legacy flat string array, mapped to `{ title }` shims.
  *   3. Empty array — phase has no expandable content.
  */
