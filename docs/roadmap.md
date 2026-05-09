@@ -434,3 +434,12 @@ consumer boilerplate.
 | Vitest tests for every Phase H component + utility                                            | Components | ⬜     |
 | README for every Phase H component folder                                                     | Components | ⬜     |
 | Docusaurus page in `giselle-docs` wiring Phase H component docs                               | Docs       | ⬜     |
+
+---
+
+## Phase L — Quality Infrastructure
+
+| Task                                                                      | Label   | Status |
+| ------------------------------------------------------------------------- | ------- | ------ |
+| PR template (`.github/pull_request_template.md`) — consistent across all repos | Chore | ✅ Done — 9 May 2026 |
+| PR messages index (`docs/pr-messages/`) — all 26 PRs documented           | Chore   | ✅ Done — 9 May 2026 |
