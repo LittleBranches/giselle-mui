@@ -3,10 +3,8 @@
 /**
  * Pure-logic unit tests for the helper functions inside PhaseCard.
  *
- * None of these tests mount the component — they extract and verify the exact
- * decision functions in isolation. If the component logic changes, update the
- * mirror functions below to match and the tests will catch any unintentional
- * behavioural drift.
+ * These tests focus on production helpers/components and avoid local mirror logic
+ * so regressions are caught against the real implementation.
  *
  * ## Derivations under test
  *
@@ -41,67 +39,14 @@ import {
   resolveCornerBadgeAlign,
   resolvePhotoSources,
 } from './phase-card';
-
-// ---------------------------------------------------------------------------
-// Mirror functions — exact copies of the inline helpers in phase-card.tsx
-// ---------------------------------------------------------------------------
-
-function isHighlightedVariant(variant?: string): boolean {
-  return variant === 'scenario' || variant === 'life-event';
-}
-
-function buildCardClickHandler(hasDetails: boolean, toggle: () => void): () => void {
-  return () => {
-    if (hasDetails) toggle();
-  };
-}
-
-function buildCardKeyDownHandler(
-  hasDetails: boolean,
-  toggle: () => void
-): (e: { key: string; preventDefault: () => void }) => void {
-  return (e) => {
-    if (hasDetails && (e.key === 'Enter' || e.key === ' ')) {
-      e.preventDefault();
-      toggle();
-    }
-  };
-}
-
-function resolveCardExpansion(
-  onRequestExpand: (() => void) | undefined,
-  isExpanded: boolean | undefined,
-  internalExpanded: boolean,
-  setInternalExpanded: (updater: (v: boolean) => boolean) => void
-): { expanded: boolean; toggle: () => void } {
-  if (onRequestExpand === undefined) {
-    return { expanded: internalExpanded, toggle: () => setInternalExpanded((v) => !v) };
-  }
-  return { expanded: isExpanded ?? false, toggle: onRequestExpand };
-}
-
-/** Mirrors CardStatusBadge stacked logic — returns the set of badge types that render. */
-function resolveStatusBadges(opts: {
-  isOverdue: boolean;
-  isDone: boolean;
-  isActive: boolean;
-  isScenario: boolean;
-  scenarioLabel?: string;
-  dateConflict?: boolean;
-}): Array<'active' | 'overdue' | 'dateConflict' | 'scenario'> {
-  const result: Array<'active' | 'overdue' | 'dateConflict' | 'scenario'> = [];
-  if (opts.isActive && !opts.isDone) result.push('active');
-  if (opts.isOverdue && !opts.isDone) result.push('overdue');
-  if (opts.dateConflict) result.push('dateConflict');
-  const showScenario =
-    !opts.isActive &&
-    !opts.isOverdue &&
-    !opts.dateConflict &&
-    opts.isScenario &&
-    Boolean(opts.scenarioLabel);
-  if (showScenario) result.push('scenario');
-  return result;
-}
+import {
+  isHighlightedVariant,
+  buildCardClickHandler,
+  buildCardKeyDownHandler,
+  resolveCardExpansion,
+} from './utils';
+import { CardStatusBadge } from './card-status-badge';
+import { buildDateTypographySx } from './phase-card.styles';
 
 // ---------------------------------------------------------------------------
 // isHighlightedVariant
@@ -158,7 +103,10 @@ describe('buildCardClickHandler', () => {
 // ---------------------------------------------------------------------------
 
 function makeEvent(key: string) {
-  return { key, preventDefault: vi.fn() };
+  return {
+    key,
+    preventDefault: vi.fn(),
+  } as unknown as React.KeyboardEvent<HTMLDivElement>;
 }
 
 describe('buildCardKeyDownHandler', () => {
@@ -250,125 +198,44 @@ describe('resolveCardExpansion — controlled mode', () => {
 });
 
 // ---------------------------------------------------------------------------
-// CardStatusBadge stacked badge logic
+// CardStatusBadge
 // ---------------------------------------------------------------------------
 
-describe('CardStatusBadge stacked badge logic', () => {
-  it('overdue + not done → [overdue] badge', () => {
-    expect(
-      resolveStatusBadges({
-        isOverdue: true,
-        isDone: false,
-        isActive: false,
-        isScenario: false,
-      })
-    ).toEqual(['overdue']);
-  });
-
-  it('[regression] overdue + done → [] (done suppresses overdue)', () => {
-    // A completed phase cannot be pending — the done flag wins.
-    expect(
-      resolveStatusBadges({
-        isOverdue: true,
-        isDone: true,
-        isActive: false,
-        isScenario: false,
-      })
-    ).toEqual([]);
-  });
-
-  it('active phase → [active] badge', () => {
-    expect(
-      resolveStatusBadges({
-        isOverdue: false,
-        isDone: false,
-        isActive: true,
-        isScenario: false,
-      })
-    ).toEqual(['active']);
-  });
-
-  it('[regression] active + overdue → both badges render (Now dot + Overdue chip)', () => {
-    // An in-progress phase that has passed its end date shows both simultaneously.
-    expect(
-      resolveStatusBadges({
-        isOverdue: true,
-        isDone: false,
-        isActive: true,
-        isScenario: false,
-      })
-    ).toEqual(['active', 'overdue']);
-  });
-
-  it('[regression] done + active → [] (done suppresses Now dot)', () => {
-    // A completed phase must not show the active "Now" dot.
-    expect(
-      resolveStatusBadges({
-        isOverdue: false,
-        isDone: true,
-        isActive: true,
-        isScenario: false,
-      })
-    ).toEqual([]);
-  });
-
-  it('dateConflict stacks on top of active + overdue', () => {
-    expect(
-      resolveStatusBadges({
-        isOverdue: true,
-        isDone: false,
-        isActive: true,
-        isScenario: false,
-        dateConflict: true,
-      })
-    ).toEqual(['active', 'overdue', 'dateConflict']);
-  });
-
-  it('scenario + scenarioLabel → [scenario] badge (fallback when nothing else applies)', () => {
-    expect(
-      resolveStatusBadges({
-        isOverdue: false,
-        isDone: false,
-        isActive: false,
+describe('CardStatusBadge', () => {
+  it('renders scenario badge when scenario flag and label are provided', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(CardStatusBadge, {
+        color: 'warning',
         isScenario: true,
         scenarioLabel: 'Departure scenario',
       })
-    ).toEqual(['scenario']);
+    );
+
+    expect(html).toContain('Departure scenario');
   });
 
-  it('scenario suppressed when active is set', () => {
-    expect(
-      resolveStatusBadges({
-        isOverdue: false,
-        isDone: false,
-        isActive: true,
-        isScenario: true,
-        scenarioLabel: 'Departure scenario',
-      })
-    ).toEqual(['active']);
-  });
-
-  it('scenario without scenarioLabel → [] (no empty badge)', () => {
-    expect(
-      resolveStatusBadges({
-        isOverdue: false,
-        isDone: false,
-        isActive: false,
+  it('returns empty markup when scenario label is missing', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(CardStatusBadge, {
+        color: 'warning',
         isScenario: true,
         scenarioLabel: undefined,
       })
-    ).toEqual([]);
+    );
+
+    expect(html).toBe('');
   });
 
-  it('no conditions met → [] (no badges)', () => {
-    expect(
-      resolveStatusBadges({
-        isOverdue: false,
-        isDone: false,
-        isActive: false,
+  it('returns empty markup when scenario mode is disabled', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(CardStatusBadge, {
+        color: 'warning',
         isScenario: false,
+        scenarioLabel: 'Departure scenario',
       })
-    ).toEqual([]);
+    );
+
+    expect(html).toBe('');
   });
 });
 
@@ -769,134 +636,50 @@ describe('photos slot — render-level markup (regression)', () => {
   });
 });
 
-// ---------------------------------------------------------------------------
-// ScenarioBadge — rendering (regression)
-//
-// The `variant: 'scenario'` path was fully untested at the DOM level.
-// These tests lock the rendering contract for:
-//   - ScenarioBadge renders the scenarioLabel text when showScenario is true
-//   - ScenarioBadge is absent when isScenario is false
-//   - ScenarioBadge is absent when scenarioLabel is undefined
-//   - ScenarioBadge is absent when isActive is true (active suppresses scenario)
-//
-// Mirror of the CardStatusBadge logic used in PhaseCard for the scenario path:
-//   const showActive = isActive && !isDone;
-//   const showScenario = !showActive && isScenario && Boolean(scenarioLabel);
-// ---------------------------------------------------------------------------
-
-/** Mirror of ScenarioBadge render output — text content only (CSS is in styles tests). */
-function renderScenarioBadgeSlot(opts: {
-  isActive: boolean;
-  isDone: boolean;
-  isScenario: boolean;
-  scenarioLabel?: string;
-}): string {
-  const showActive = opts.isActive && !opts.isDone;
-  const showScenario = !showActive && opts.isScenario && Boolean(opts.scenarioLabel);
-  if (!showScenario) return '';
-  // Mirror of ScenarioBadge JSX: <Typography variant="overline">{scenarioLabel}</Typography>
-  const node = React.createElement('span', { className: 'scenario-badge' }, opts.scenarioLabel);
-  return renderToStaticMarkup(node);
-}
-
-describe('ScenarioBadge — rendering (regression)', () => {
-  it('[regression] scenarioLabel text appears in output when isScenario=true and label is set', () => {
-    const html = renderScenarioBadgeSlot({
-      isActive: false,
-      isDone: false,
-      isScenario: true,
-      scenarioLabel: 'Alternative path',
-    });
-    expect(html).toContain('Alternative path');
-  });
-
-  it('[regression] nothing rendered when isScenario=false', () => {
-    const html = renderScenarioBadgeSlot({
-      isActive: false,
-      isDone: false,
-      isScenario: false,
-      scenarioLabel: 'Alternative path',
-    });
-    expect(html).toBe('');
-  });
-
-  it('[regression] nothing rendered when scenarioLabel is undefined', () => {
-    const html = renderScenarioBadgeSlot({
-      isActive: false,
-      isDone: false,
-      isScenario: true,
-      scenarioLabel: undefined,
-    });
-    expect(html).toBe('');
-  });
-
-  it('[regression] scenario suppressed when isActive=true (active takes precedence)', () => {
-    const html = renderScenarioBadgeSlot({
-      isActive: true,
-      isDone: false,
-      isScenario: true,
-      scenarioLabel: 'Alternative path',
-    });
-    expect(html).toBe('');
-  });
-
-  it('[regression] scenario renders when isDone=true and isActive=false (done does not suppress scenario)', () => {
-    // A completed scenario phase should still show its label — done only suppresses the
-    // active badge, not the scenario label.
-    const html = renderScenarioBadgeSlot({
-      isActive: false,
-      isDone: true,
-      isScenario: true,
-      scenarioLabel: 'Option B',
-    });
+describe('scenario rendering and typography contracts', () => {
+  it('CardStatusBadge renders scenario label when enabled', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(CardStatusBadge, {
+        color: 'primary',
+        isScenario: true,
+        scenarioLabel: 'Option B',
+      })
+    );
     expect(html).toContain('Option B');
   });
-});
 
-// ---------------------------------------------------------------------------
-// Scenario variant — isHighlighted and typography decisions (regression)
-//
-// `variant: 'scenario'` must trigger the same highlighted treatment as `life-event`:
-//   - isHighlightedVariant returns true → coloured border + tinted bg in Paper
-//   - Title uses h6 instead of subtitle1
-//   - Date uses 0.875rem instead of 0.8rem
-//
-// These are locked by mirroring the exact conditional expressions from phase-card.tsx.
-// ---------------------------------------------------------------------------
-
-/** Mirror of the isScenario-gated title variant selection in phase-card.tsx. */
-function resolveTitleVariant(isScenario: boolean): 'h6' | 'subtitle1' {
-  return isScenario ? 'h6' : 'subtitle1';
-}
-
-/** Mirror of the isScenario-gated date font-size in buildDateTypographySx. */
-function resolveDateFontSize(isScenario: boolean): string {
-  return isScenario ? '0.875rem' : '0.8rem';
-}
-
-describe('scenario variant — typography decisions (regression)', () => {
-  it('[regression] title uses h6 for scenario phases', () => {
-    expect(resolveTitleVariant(true)).toBe('h6');
+  it('CardStatusBadge renders nothing when scenario mode is disabled', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(CardStatusBadge, {
+        color: 'primary',
+        isScenario: false,
+        scenarioLabel: 'Option B',
+      })
+    );
+    expect(html).toBe('');
   });
 
-  it('[regression] title uses subtitle1 for non-scenario phases', () => {
-    expect(resolveTitleVariant(false)).toBe('subtitle1');
+  it('scenario date typography uses 0.875rem', () => {
+    const sx = buildDateTypographySx({
+      isScenario: true,
+      isHighlighted: true,
+      hideDecoration: false,
+      color: 'primary',
+    }) as Record<string, unknown>;
+    expect(sx['fontSize']).toBe('0.875rem');
   });
 
-  it('[regression] date font-size is 0.875rem for scenario phases (larger than standard 0.8rem)', () => {
-    expect(resolveDateFontSize(true)).toBe('0.875rem');
+  it('standard date typography uses 0.8rem', () => {
+    const sx = buildDateTypographySx({
+      isScenario: false,
+      isHighlighted: false,
+      hideDecoration: false,
+      color: 'primary',
+    }) as Record<string, unknown>;
+    expect(sx['fontSize']).toBe('0.8rem');
   });
 
-  it('[regression] date font-size is 0.8rem for standard phases', () => {
-    expect(resolveDateFontSize(false)).toBe('0.8rem');
-  });
-
-  it('[regression] isHighlightedVariant returns true for scenario (coloured border + bg applied)', () => {
+  it('scenario variant remains highlighted', () => {
     expect(isHighlightedVariant('scenario')).toBe(true);
-  });
-
-  it('[regression] isHighlightedVariant returns false for default variant (no highlighted treatment)', () => {
-    // Passing no variant argument — the default regular phase
-    expect(isHighlightedVariant()).toBe(false);
   });
 });

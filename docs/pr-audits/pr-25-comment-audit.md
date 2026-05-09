@@ -4,6 +4,12 @@
 
 This report groups the live GitHub review comments for PR #25 and the cached review-summary posts used in the earlier audit. All comments have been addressed on GitHub (replies posted), and all corresponding code fixes are complete with quality gate green.
 
+## Remediation Verification (May 10, 2026)
+
+- Re-verified comment counts against live GitHub API for PR #25.
+- Completed follow-up code remediation for remaining task-state and test-contract gaps.
+- Re-ran `npm run check:verify` with all checks green after remediation.
+
 ## Counts
 
 | Metric | Count |

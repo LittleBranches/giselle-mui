@@ -36,7 +36,10 @@ export function CardDetailBullets({
     <Collapse in={expanded} timeout={50}>
       <Box id={id} sx={detailBulletsContainerSx}>
         {details.map((task, i) => {
-          const isDoneTask = taskDoneStates ? (taskDoneStates[i] ?? false) : (task.done ?? false);
+          const taskKey = String(task.key);
+          const isDoneTask = taskDoneStates
+            ? (taskDoneStates[taskKey] ?? taskDoneStates[`idx-${i}`] ?? false)
+            : (task.done ?? false);
           const toggleLabel = isDoneTask
             ? `Mark "${task.title}" as not done`
             : `Mark "${task.title}" as done`;

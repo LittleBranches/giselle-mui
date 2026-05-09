@@ -105,9 +105,15 @@ export function MilestoneRow({ ms, mi, totalMilestones, ctx }: MilestoneRowProps
               onMarkViewed={
                 ctx.onMarkViewed ? () => ctx.onMarkViewed!(`ms-${ctx.phaseKey}-${mi}`) : undefined
               }
-              taskDoneStates={resolveTaskChildren(ms).map(
-                (task, ti) =>
-                  ctx.localTaskDoneMap[`${ctx.phaseKey}-c${mi}-t${ti}`] ?? task.done ?? false
+              taskDoneStates={resolveTaskChildren(ms).reduce<Record<string, boolean>>(
+                (acc, task, ti) => {
+                  const done =
+                    ctx.localTaskDoneMap[`${ctx.phaseKey}-c${mi}-t${ti}`] ?? task.done ?? false;
+                  acc[String(task.key)] = done;
+                  acc[`idx-${ti}`] = done;
+                  return acc;
+                },
+                {}
               )}
               onToggleTask={(taskIdx, _done) => ctx.handleToggleTask(ctx.phaseKey, mi, taskIdx)}
               onRequestExpand={() => ctx.handleExpandMilestone(ctx.phaseKey, mi)}
@@ -167,9 +173,15 @@ export function MilestoneRow({ ms, mi, totalMilestones, ctx }: MilestoneRowProps
               onMarkViewed={
                 ctx.onMarkViewed ? () => ctx.onMarkViewed!(`ms-${ctx.phaseKey}-${mi}`) : undefined
               }
-              taskDoneStates={resolveTaskChildren(ms).map(
-                (task, ti) =>
-                  ctx.localTaskDoneMap[`${ctx.phaseKey}-c${mi}-t${ti}`] ?? task.done ?? false
+              taskDoneStates={resolveTaskChildren(ms).reduce<Record<string, boolean>>(
+                (acc, task, ti) => {
+                  const done =
+                    ctx.localTaskDoneMap[`${ctx.phaseKey}-c${mi}-t${ti}`] ?? task.done ?? false;
+                  acc[String(task.key)] = done;
+                  acc[`idx-${ti}`] = done;
+                  return acc;
+                },
+                {}
               )}
               onToggleTask={(taskIdx, _done) => ctx.handleToggleTask(ctx.phaseKey, mi, taskIdx)}
               onRequestExpand={() => ctx.handleExpandMilestone(ctx.phaseKey, mi)}

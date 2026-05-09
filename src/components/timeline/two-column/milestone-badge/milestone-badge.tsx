@@ -217,8 +217,9 @@ export function MilestoneBadge({
         <Collapse in={isExpanded} timeout={50}>
           <Box id={detailsId} sx={milestoneDetailListSx}>
             {taskChildren.map((task, i) => {
+              const taskKey = String(task.key);
               const isDoneTask = taskDoneStates
-                ? (taskDoneStates[i] ?? false)
+                ? (taskDoneStates[taskKey] ?? taskDoneStates[`idx-${i}`] ?? false)
                 : (task.done ?? false);
               const toggleLabel = isDoneTask
                 ? `Mark "${task.title}" as not done`

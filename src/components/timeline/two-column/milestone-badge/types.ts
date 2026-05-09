@@ -40,11 +40,11 @@ export type MilestoneBadgeProps = Omit<PaperProps, 'children'> & {
    */
   columnSide?: 'left' | 'right';
   /**
-   * Done state for each task (sub-item) in this milestone, indexed by position.
-   * Provided by `TimelineTwoColumn` when task-level done state is active.
+   * Done state for each task (sub-item) in this milestone, keyed by `String(task.key)`.
+   * `idx-${n}` fallback keys are accepted for compatibility with legacy index-based wiring.
    * Falls back to `task.done` from the data when absent.
    */
-  taskDoneStates?: boolean[];
+  taskDoneStates?: Record<string, boolean>;
   /**
    * Called when the user clicks a task toggle icon.
    * When provided, task rows are interactive; when absent they are decorative.

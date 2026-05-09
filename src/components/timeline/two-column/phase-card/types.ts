@@ -30,7 +30,11 @@ export type CardDetailBulletsProps = {
   id: string;
   details: Task[];
   in: boolean;
-  taskDoneStates?: boolean[];
+  /**
+   * Done state keyed by task id (`String(task.key)`).
+   * Implementations may also provide `idx-${n}` fallback keys for legacy list-index wiring.
+   */
+  taskDoneStates?: Record<string, boolean>;
   onToggleTask?: (taskIndex: number, done: boolean) => void;
 };
 
@@ -138,11 +142,11 @@ export type PhaseCardProps = Omit<BoxProps, 'children'> & {
    */
   allPhases?: TimelinePhase[];
   /**
-   * Done state for each task (sub-item) in this phase, indexed by position.
-   * Provided by `TimelineTwoColumn` when task-level done state is active.
+   * Done state for each task (sub-item) in this phase, keyed by `String(task.key)`.
+   * `idx-${n}` fallback keys are accepted for compatibility with legacy index-based wiring.
    * Falls back to `task.done` from the data when absent.
    */
-  taskDoneStates?: boolean[];
+  taskDoneStates?: Record<string, boolean>;
   /**
    * Called when the user clicks a task toggle icon.
    * When provided, task rows are interactive; when absent they are decorative.

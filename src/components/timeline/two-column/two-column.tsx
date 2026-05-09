@@ -437,9 +437,17 @@ export function TimelineTwoColumn({
                   allPhases={onPhasesChange ? phases : undefined}
                   isExpanded={isThisPhaseExpanded}
                   onRequestExpand={() => handleExpandPhaseCard(phase.key)}
-                  taskDoneStates={resolveTaskChildren(phase).map(
-                    (task, ti) =>
-                      localTaskDoneMap[makeTaskStateKey(phase.key, null, ti)] ?? task.done ?? false
+                  taskDoneStates={resolveTaskChildren(phase).reduce<Record<string, boolean>>(
+                    (acc, task, ti) => {
+                      const done =
+                        localTaskDoneMap[makeTaskStateKey(phase.key, null, ti)] ??
+                        task.done ??
+                        false;
+                      acc[String(task.key)] = done;
+                      acc[`idx-${ti}`] = done;
+                      return acc;
+                    },
+                    {}
                   )}
                   onToggleTask={(taskIdx, _done) => handleToggleTask(phase.key, null, taskIdx)}
                 />
