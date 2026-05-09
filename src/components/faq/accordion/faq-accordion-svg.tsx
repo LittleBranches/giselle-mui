@@ -11,7 +11,9 @@ import { svgLineTransition } from './utils';
 // No custom props are forwarded; `sx` is handled by MUI styled.
 // ----------------------------------------------------------------------
 
-const MotionSvg = styled(motion.svg)``;
+const MotionSvg = styled(motion.svg, {
+  shouldForwardProp: (prop) => prop !== 'vertical',
+})``;
 
 type SvgProps = React.ComponentProps<typeof MotionSvg>;
 

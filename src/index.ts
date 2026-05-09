@@ -103,12 +103,3 @@ export type {
   RadialProgressCardProps,
   RadialProgressItem,
 } from './components/chart/radial-progress';
-
-// ─── Parents Across Borders — data model types ────────────────────────────────
-export type {
-  PersonProfile,
-  PersonRole,
-  BehavioralPattern,
-  LegalRecord,
-  CommunicationNote,
-} from './types/person-profile';
