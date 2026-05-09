@@ -280,12 +280,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html>
       <body>
         <AppRouterCacheProvider>
-          <CssVarsProvider theme={theme}>
+          <ThemeProvider theme={theme}>
             {/* Must render before any route content so icons are ready
                 on the first render of every page. */}
             <IconRegistrar />
             {children}
-          </CssVarsProvider>
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
@@ -311,7 +311,7 @@ src/
 // src/main.tsx
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { CssVarsProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { App } from './App';
 import { registerIcons } from './icon-sets';
 
@@ -319,9 +319,9 @@ registerIcons(); // ← module-level, before createRoot
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CssVarsProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <App />
-    </CssVarsProvider>
+    </ThemeProvider>
   </StrictMode>
 );
 ```
@@ -335,16 +335,16 @@ createRoot(document.getElementById('root')!).render(
 ```tsx
 // pages/_app.tsx
 import type { AppProps } from 'next/app';
-import { CssVarsProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { registerIcons } from '../src/icon-sets';
 
 registerIcons(); // ← module-level — safe, _app.tsx is always client-side
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <CssVarsProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <Component {...pageProps} />
-    </CssVarsProvider>
+    </ThemeProvider>
   );
 }
 ```

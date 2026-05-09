@@ -216,7 +216,7 @@ The toggle behavior (click-to-expand, click-again-to-collapse) was tested via st
 pure-logic tests added in commit `84dfd55`. The full render-path interaction test originally
 described as future work below has not been added. It would require rendering `TimelineTwoColumn`
 in JSDOM with real phase data, firing click events, and asserting `pointerEvents` style — which
-requires `CssVarsProvider` setup not yet in the test harness.
+requires `ThemeProvider` setup not yet in the test harness.
 
 ---
 

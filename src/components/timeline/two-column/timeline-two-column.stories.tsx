@@ -95,6 +95,7 @@ const CAREER_PHASES: TimelinePhase[] = [
     ],
     milestones: [
       {
+        key: 'first-solo-deploy',
         date: 'Mar 2009',
         shortTitle: 'First solo deploy',
         title: 'First solo production deploy',
@@ -137,6 +138,7 @@ const CAREER_PHASES: TimelinePhase[] = [
     ],
     milestones: [
       {
+        key: 'realtime-dashboard',
         date: 'Jan 2013',
         shortTitle: 'Real-time dashboard',
         title: 'Real-time analytics dashboard shipped',
@@ -147,6 +149,7 @@ const CAREER_PHASES: TimelinePhase[] = [
         done: true,
       },
       {
+        key: 'ts-migration',
         date: 'Nov 2013',
         shortTitle: 'TypeScript migration',
         title: 'TypeScript migration complete',
@@ -181,6 +184,7 @@ const CAREER_PHASES: TimelinePhase[] = [
     ],
     milestones: [
       {
+        key: 'patient-portal-v2',
         date: 'Jan 2015',
         shortTitle: 'Patient portal v2',
         title: 'Patient portal v2 launched',
@@ -190,6 +194,7 @@ const CAREER_PHASES: TimelinePhase[] = [
         color: 'success',
       },
       {
+        key: 'design-system-oss',
         date: 'Aug 2016',
         shortTitle: 'Design system open-sourced',
         title: 'Internal design system open-sourced',
@@ -216,6 +221,7 @@ const CHECKLIST_PHASES: TimelinePhase[] = [
     icon: icon('solar:telescope-bold-duotone'),
     milestones: [
       {
+        key: 'user-interviews',
         date: 'Jan 2024',
         shortTitle: '12 user interviews',
         title: '12 user interviews conducted',
@@ -226,6 +232,7 @@ const CHECKLIST_PHASES: TimelinePhase[] = [
         done: true,
       },
       {
+        key: 'competitive-audit',
         date: 'Feb 2024',
         shortTitle: 'Competitive audit',
         title: 'Competitive audit report',
@@ -249,6 +256,7 @@ const CHECKLIST_PHASES: TimelinePhase[] = [
     icon: icon('solar:pen-new-round-bold-duotone'),
     milestones: [
       {
+        key: 'wireframes-approved',
         date: 'Mar 2024',
         shortTitle: 'Wireframes approved',
         title: 'Wireframes approved by stakeholders',
@@ -271,6 +279,7 @@ const CHECKLIST_PHASES: TimelinePhase[] = [
     icon: icon('solar:rocket-bold-duotone'),
     milestones: [
       {
+        key: 'beta-launch',
         date: 'Jun 2024',
         shortTitle: 'Beta launch',
         title: 'Beta launch to 500 users',
@@ -444,6 +453,7 @@ export const MarkerVariant: Story = {
             icon: icon('solar:code-square-bold'),
             milestones: [
               {
+                key: 'first-solo-deploy-alt',
                 date: 'Mar 2009',
                 shortTitle: 'First solo deploy',
                 title: 'First solo production deploy',
@@ -479,6 +489,7 @@ export const MarkerVariant: Story = {
             icon: icon('solar:chart-bold-duotone'),
             milestones: [
               {
+                key: 'ts-migration-alt',
                 date: 'Nov 2013',
                 shortTitle: 'TypeScript migration',
                 title: 'TypeScript migration complete',
@@ -565,6 +576,7 @@ export const LifeEventVsMarker: Story = {
             icon: icon('solar:code-square-bold'),
             milestones: [
               {
+                key: 'first-production-deploy',
                 date: 'Dec 2009',
                 shortTitle: 'First production deploy',
                 title: 'First production deploy',
@@ -603,7 +615,7 @@ export const LifeEventVsMarker: Story = {
             color: 'info',
             side: 'left',
             variant: 'life-event',
-            icon: icon('solar:airplane-bold'),
+            icon: icon('solar:planet-bold'),
             details: [
               'Closed the main office; team moved fully distributed',
               'Introduced async-first RFC process for major decisions',
@@ -624,6 +636,7 @@ export const LifeEventVsMarker: Story = {
             icon: icon('solar:chart-bold-duotone'),
             milestones: [
               {
+                key: 'ts-migration-life-story',
                 date: 'Nov 2013',
                 shortTitle: 'TypeScript migration',
                 title: 'TypeScript migration complete',
@@ -631,6 +644,104 @@ export const LifeEventVsMarker: Story = {
                 icon: msIcon('solar:shield-check-bold'),
                 color: 'success',
               },
+            ],
+          },
+        ]}
+      />
+    </Box>
+  ),
+  argTypes: { phases: { control: false }, sx: { control: false } },
+};
+
+// ----------------------------------------------------------------------
+
+/**
+ * **Scenario variant** — a hypothetical or speculative phase card alongside real phases.
+ *
+ * ---
+ *
+ * ### What `variant: 'scenario'` is
+ *
+ * A **scenario** phase represents a possible future path or a counterfactual — it is NOT
+ * a committed event. The card uses a highlighted background (tinted left border + coloured
+ * background), an overline `scenarioLabel` pill at the top, and renders the title as `h6`
+ * instead of `subtitle1`. The date font-size increases to `0.875rem` (vs `0.8rem` for
+ * regular phases) to match the more prominent treatment.
+ *
+ * ### When to use `variant: 'scenario'`
+ *
+ * | Situation | Use |
+ * |---|---|
+ * | Committed phase (past or planned) | default (no variant) |
+ * | Discrete event with no card needed | `marker` |
+ * | Life period that spans time with context | `life-event` |
+ * | Hypothetical, optional, or alternative path | `scenario` |
+ *
+ * ### Design decisions this variant encodes
+ *
+ * - `scenarioLabel` is the pill text that labels the scenario (e.g. `'Option A'`, `'If funded'`).
+ *   Without it the `ScenarioBadge` does not render — do not use `variant: 'scenario'` without
+ *   also providing `scenarioLabel`.
+ * - `isHighlightedVariant('scenario')` returns `true` — the same highlighting applied to
+ *   `life-event` is applied here. This suppresses the `CardDecoration` rectangle and
+ *   switches the Paper bg to a coloured tint at 10% opacity (vs 8% for `life-event`).
+ * - `ScenarioBadge` is the **only** badge that renders in the `CardStatusBadge` slot for
+ *   a `variant: 'scenario'` phase. It is suppressed when `isActive=true` — if a scenario
+ *   is ever marked active, the scenario label disappears (active badge took priority in
+ *   the old code; now the badge area is reserved for `ScenarioBadge` only).
+ *
+ * ### The canvas shows
+ *
+ * - One `variant: 'scenario'` card (right column) alongside a regular phase (left column)
+ * - The `scenarioLabel` pill appears below the card date
+ * - The title uses `h6` typography — visually larger than a regular `subtitle1` phase title
+ * - The highlighted card background (tinted, left border) distinguishes it from normal phases
+ */
+export const ScenarioVariant: Story = {
+  render: () => (
+    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+      <TimelineTwoColumn
+        phases={[
+          {
+            key: 1,
+            title: 'Frontend Developer',
+            shortTitle: 'Frontend Dev',
+            description:
+              'Fintech SaaS — React, TypeScript, real-time dashboards. First experience owning a component library.',
+            date: 'Jun 2011 – Feb 2014',
+            side: 'right',
+            color: 'primary',
+            done: true,
+            icon: icon('solar:chart-bold-duotone'),
+            milestones: [
+              {
+                key: 'ts-migration-scenario-story',
+                date: 'Nov 2013',
+                shortTitle: 'TypeScript migration',
+                title: 'TypeScript migration complete',
+                description: 'Full codebase migrated to TypeScript strict mode.',
+                icon: msIcon('solar:shield-check-bold'),
+                color: 'success',
+                done: true,
+              },
+            ],
+          },
+          {
+            key: 2,
+            title: 'Pivot to Product Engineering',
+            shortTitle: 'Product Eng pivot',
+            description:
+              'A hypothetical path: if the platform team had been resourced in 2014, this is where the roadmap would have gone — internal tooling, design system, and API platform ownership.',
+            date: 'Mar 2014',
+            side: 'left',
+            color: 'warning',
+            variant: 'scenario',
+            scenarioLabel: 'Alternative path',
+            icon: icon('solar:alt-arrow-right-bold'),
+            details: [
+              'Internal tooling platform',
+              'Design system from scratch',
+              'API gateway + versioning strategy',
             ],
           },
         ]}
@@ -807,14 +918,14 @@ export const Responsive: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       {BREAKPOINTS.map(({ label, width }) => (
-        <Box key={width}>
+        <div key={width}>
           <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
             {label}
           </Typography>
           <Box sx={storyResponsiveBoxSx(width)}>
             <TimelineTwoColumn phases={CAREER_PHASES} />
           </Box>
-        </Box>
+        </div>
       ))}
     </Box>
   ),
@@ -905,7 +1016,7 @@ export const FooterSlot: Story = {
           color: 'primary',
           side: 'right',
           active: true,
-          icon: icon('solar:servers-bold'),
+          icon: icon('solar:server-bold'),
           details: [
             'Internal developer platform for 200+ engineers',
             'TypeScript monorepo with shared tooling',
@@ -929,7 +1040,7 @@ const OVERLAPPING_PHASES: TimelinePhase[] = [
     date: 'Jan 2022 – Aug 2022',
     color: 'primary',
     side: 'right',
-    icon: icon('solar:servers-bold'),
+    icon: icon('solar:server-bold'),
     details: ['REST + GraphQL endpoints', 'OAuth 2.0 authentication', 'Rate limiting at 1k rps'],
   },
   {
@@ -1111,4 +1222,158 @@ export const PhotosArraySlot: Story = {
     phases: { control: false },
     sx: { control: false },
   },
+};
+
+// ----------------------------------------------------------------------
+
+/**
+ * **Marker label side — direct placement (not inverted like phase cards)**
+ *
+ * ---
+ *
+ * ### The rule
+ *
+ * For `variant='marker'`, `phase.side` controls which side the floating label appears on
+ * — **directly**: `side='left'` places the label on the left; `side='right'` on the right.
+ *
+ * ### Why this is a decision-doc story
+ *
+ * Full phase cards use `side` *inversely*: a `side='right'` phase card renders in the LEFT
+ * column. Markers have no card — the label floats directly to the named side. These are
+ * opposite conventions for the same prop within the same component. Without a story that
+ * makes the difference visually verifiable, this distinction only lives in JSDoc comments
+ * and is easy to get wrong when adding new marker entries.
+ *
+ * ### What to verify in the canvas
+ *
+ * - Top marker (`side: 'left'`): label appears to the **left** of the spine dot
+ * - Bottom marker (`side: 'right'`): label appears to the **right** of the spine dot
+ * - Neither marker has a card
+ */
+export const MarkerLabelSidePlacement: Story = {
+  render: () => (
+    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+      <Box sx={{ display: 'flex', gap: 4, mb: 3 }}>
+        <Box sx={storyColumnIndicatorSx('info.main')}>
+          <Typography variant="caption" color="info.main" fontWeight={700}>
+            LEFT — label floats left when side=&#x27;left&#x27;
+          </Typography>
+        </Box>
+        <Box sx={storyColumnIndicatorSx('success.main')}>
+          <Typography variant="caption" color="success.main" fontWeight={700}>
+            RIGHT — label floats right when side=&#x27;right&#x27;
+          </Typography>
+        </Box>
+      </Box>
+      <TimelineTwoColumn
+        phases={[
+          {
+            key: 0,
+            title: 'Left-side marker',
+            shortTitle: 'Left label',
+            date: 'Jan 2020',
+            color: 'info',
+            side: 'left',
+            variant: 'marker',
+            icon: icon('solar:star-bold'),
+            description: 'side="left" — label floats to the left of the spine (direct placement).',
+          },
+          {
+            key: 1,
+            title: 'Right-side marker',
+            shortTitle: 'Right label',
+            date: 'Jun 2020',
+            color: 'success',
+            side: 'right',
+            variant: 'marker',
+            icon: icon('solar:star-bold'),
+            description:
+              'side="right" — label floats to the right of the spine (direct placement).',
+          },
+        ]}
+      />
+    </Box>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Verify that `side="left"` places the label on the **left** and `side="right"` places it on the **right**. Contrast with `ColumnPlacementInvariant` where `side="right"` phase cards render in the LEFT column — these are opposite conventions in the same component.',
+      },
+    },
+  },
+  argTypes: { phases: { control: false }, sx: { control: false } },
+};
+
+// ----------------------------------------------------------------------
+
+/**
+ * **Marker mobile collapse — `isMobile` forces all labels to the right slot**
+ *
+ * ---
+ *
+ * ### The rule
+ *
+ * When the viewport drops below the `md` breakpoint, `isMobile=true` is computed
+ * internally (via `useMediaQuery`). For marker rows this triggers:
+ *
+ * - Left label slot hidden via CSS (`markerLabelSlotSx('left')` sets `display: { xs: 'none', md: 'flex' }`)
+ * - Right slot renders the label **regardless of `phase.side`** (`shouldShowRightLabel = side !== 'left' || isMobile`)
+ *
+ * ### Why CSS-toggle rather than conditional render?
+ *
+ * A conditional render removes the element from the DOM on resize — React reconciles,
+ * causing a flash of content. CSS show/hide is instantaneous. The label is always present
+ * in the DOM; only visibility changes. A `side='left'` marker therefore has its label in
+ * **both** slots in the DOM — the left slot is invisible on mobile, the right slot visible.
+ *
+ * ### What to verify
+ *
+ * Resize the browser below 900 px — both marker labels should shift to the right of the
+ * spine, regardless of their `side` value. Above 900 px, `side='left'` renders left and
+ * `side='right'` renders right.
+ */
+export const MarkerMobileCollapse: Story = {
+  render: () => (
+    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+      <Typography variant="caption" sx={{ display: 'block', mb: 2, color: 'text.secondary' }}>
+        Resize below 900 px — both labels shift to the right of the spine.
+      </Typography>
+      <TimelineTwoColumn
+        phases={[
+          {
+            key: 0,
+            title: 'Left-side marker',
+            shortTitle: 'Left marker',
+            date: 'Jan 2020',
+            color: 'primary',
+            side: 'left',
+            variant: 'marker',
+            icon: icon('solar:star-bold'),
+            description: 'Desktop: label left. Mobile: label right (CSS column collapse).',
+          },
+          {
+            key: 1,
+            title: 'Right-side marker',
+            shortTitle: 'Right marker',
+            date: 'Jun 2020',
+            color: 'secondary',
+            side: 'right',
+            variant: 'marker',
+            icon: icon('solar:star-bold'),
+            description: 'Desktop: label right. Mobile: also label right.',
+          },
+        ]}
+      />
+    </Box>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Resize to below 900 px to verify that both `side="left"` and `side="right"` markers show their label on the **right** of the spine. The left slot is hidden via CSS at xs; the right slot receives all labels on mobile.',
+      },
+    },
+  },
+  argTypes: { phases: { control: false }, sx: { control: false } },
 };

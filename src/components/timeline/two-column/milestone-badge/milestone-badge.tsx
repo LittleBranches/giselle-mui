@@ -1,8 +1,8 @@
 import type { PaperProps } from '@mui/material/Paper';
-import type { TimelinePhase, HighlightedPaletteKey } from '../types';
+import type { Task, HighlightedPaletteKey } from '../types';
+import type { MilestoneBadgeProps } from './types';
 
-import { useCallback, useState, type ReactNode, type KeyboardEvent } from 'react';
-import type React from 'react';
+import { useCallback, useState, type KeyboardEvent, type MouseEvent } from 'react';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import { DEFAULT_EXPANDABLE_ICON } from '../icons';
 import { GiselleIcon } from '../../../icon/giselle/giselle-icon';
 import {
+  milestonePaperSx,
   milestoneNewBadgeRowSx,
   milestoneNewDotSx,
   milestoneNewLabelSx,
@@ -21,73 +22,31 @@ import {
   milestoneEyeButtonSx,
   milestoneDetailPillSx,
   milestoneDetailListSx,
-  milestoneDetailRowSx,
+  taskRowSx,
+  taskToggleButtonSx,
+  taskIconStaticSx,
+  taskToggleColorSx,
+  taskIconColorSx,
+  taskTitleSx,
+  pillIconBoxSx,
 } from './milestone-badge.styles';
+import {
+  MILESTONE_DATE_FONT_SIZE,
+  MILESTONE_PILL_ICON_SIZE,
+  MILESTONE_PILL_TEXT_FONT_SIZE,
+  MILESTONE_EYE_ICON_SIZE,
+  MILESTONE_EYE_BUTTON_MIN_SIZE,
+  MILESTONE_TASK_ICON_SIZE,
+} from './milestone-badge.const';
 
 // ----------------------------------------------------------------------
 
-/** Minimum readable font size for the milestone date label. Matches `body2`. */
-export const MILESTONE_DATE_FONT_SIZE = '0.875rem';
-
-/** Width/height (px) of the subtask icon in the expandable details pill. */
-export const MILESTONE_PILL_ICON_SIZE = 16;
-
-/** Font size for the count label in the expandable details pill. */
-export const MILESTONE_PILL_TEXT_FONT_SIZE = '0.75rem';
-
-/**
- * Size (px) of the viewed eye icon in the milestone title row.
- * Must meet WCAG 1.4.11 — interactive controls must have visible contrast >= 3:1.
- * Never set below 20px.
- */
-export const MILESTONE_EYE_ICON_SIZE = 20;
-
-/**
- * Minimum touch-target size (px) for the milestone eye viewed button.
- * Meets WCAG 2.2 AA 2.5.8 — minimum 24 × 24 CSS pixels for pointer targets.
- */
-export const MILESTONE_EYE_BUTTON_MIN_SIZE = 28;
+// Re-export — keeps `import { MilestoneBadgeProps } from './milestone-badge'` working.
+export type { MilestoneBadgeProps } from './types';
+// Re-export constants — keeps `import { MILESTONE_DATE_FONT_SIZE, ... } from './milestone-badge'` working.
+export * from './milestone-badge.const';
 
 // ----------------------------------------------------------------------
-
-export type MilestoneBadgeProps = Omit<PaperProps, 'children'> & {
-  /** The milestone data object from the parent phase's `milestones` array. */
-  milestone: NonNullable<TimelinePhase['milestones']>[number];
-  /** Dims and desaturates the card. Mirrors the checklist done state from the parent timeline. */
-  done?: boolean;
-  /** Whether this card's details section is currently expanded. Controlled by the parent accordion. */
-  isExpanded: boolean;
-  /** Called when the user clicks or keys Enter/Space to toggle this card open or closed. */
-  onRequestExpand: () => void;
-  /** When true, suppresses box-shadow so the card appears flat (used when another card is expanded). */
-  suppressElevation?: boolean;
-  /**
-   * Icon rendered in the expandable-details count badge. Defaults to the bundled inline SVG subtask icon.
-   * Pass `null` to suppress the icon and show only the count number.
-   */
-  expandableIcon?: ReactNode;
-  /**
-   * Stable unique id prefix used to construct the `aria-controls` / `id` pair for the
-   * expandable details region. Should be unique across all milestones on the page
-   * (e.g. `"${phaseKey}-${milestoneIndex}"`). Falls back to a sanitised title slug
-   * when omitted, which can collide if two milestones share the same title.
-   */
-  stableId?: string;
-  /**
-   * When true, the viewed eye indicator shows as filled (success colour).
-   * Only renders when `onMarkViewed` is also provided.
-   */
-  isViewed?: boolean;
-  /** Called when the user clicks the viewed eye button. Parent handles persistence. */
-  onMarkViewed?: () => void;
-  /**
-   * Which column this milestone sits in. Left-column milestones right-align their
-   * collapsed title and inline elements so text sits flush against the centre spine.
-   * Alignment resets to left when the card is expanded.
-   * @default 'right'
-   */
-  columnSide?: 'left' | 'right';
-};
 
 /**
  * Milestone card — spine-adjacent badge that expands/collapses on click.
@@ -105,6 +64,8 @@ export function MilestoneBadge({
   isViewed = false,
   onMarkViewed,
   columnSide = 'right',
+  taskDoneStates,
+  onToggleTask,
   sx,
   ...other
 }: MilestoneBadgeProps) {
@@ -112,7 +73,23 @@ export function MilestoneBadge({
   // against the centre spine instead of leaving a gap at the right edge of the card.
   // Alignment resets to left only when expanded.
   const rightAlign = columnSide === 'left' && !isExpanded;
-  const hasDetails = !!m.details?.length;
+
+  /**
+   * Normalises milestone expandable content to `Task[]`.
+   *
+   * Resolution order:
+   *   1. `m.children` — new structured form.
+   *   2. `m.details`  — legacy flat string array, mapped to `{ title }` shims.
+   *   3. Empty array  — milestone has no expandable content.
+   */
+  const taskChildren: Task[] = m.children?.length
+    ? m.children
+    : (m.details?.map((title: string, index: number) => ({
+        key: `detail-${index}`,
+        title,
+      })) ?? []);
+
+  const hasDetails = taskChildren.length > 0;
   const colorKey = (m.color ?? 'primary') as HighlightedPaletteKey;
   const titleSlug = String(m.title)
     .replace(/[^a-z0-9]/gi, '-')
@@ -158,61 +135,7 @@ export function MilestoneBadge({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       sx={[
-        (theme) => ({
-          p: 2,
-          overflow: 'hidden',
-          // Default (collapsed): transparent — no background, border colour set to transparent
-          // so the 3px top border slot is reserved for a smooth colour transition on hover.
-          borderTop: '3px solid',
-          borderTopColor: isExpanded
-            ? (theme.vars!.palette[colorKey]?.main ?? theme.vars!.palette.primary.main)
-            : 'transparent',
-          bgcolor: isExpanded ? 'background.paper' : 'transparent',
-          boxShadow: isExpanded
-            ? `0 4px 16px rgba(${
-                theme.vars!.palette[colorKey]?.mainChannel ??
-                (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
-              } / 0.1)`
-            : 'none',
-          transition:
-            'box-shadow 0.22s, opacity 0.3s, filter 0.3s, background-color 0.22s, border-color 0.22s',
-          ...(rightAlign && { textAlign: 'right' }),
-          ...(done && {
-            opacity: 0.45,
-            filter: 'grayscale(1)',
-          }),
-          // Hover reveals the styled card for ALL milestones (title preview),
-          // but cursor:pointer only for expandable ones.
-          // Done cards also restore full opacity/filter on hover so the opaque
-          // background.paper is fully visible and doesn't bleed through.
-          ...(!isExpanded && {
-            '&:hover': {
-              bgcolor: 'background.paper',
-              borderTopColor:
-                theme.vars!.palette[colorKey]?.main ?? theme.vars!.palette.primary.main,
-              boxShadow: `0 16px 40px rgba(${
-                theme.vars!.palette[colorKey]?.mainChannel ??
-                (theme.vars!.palette.grey as unknown as Record<string, string>)['500Channel']
-              } / 0.22)`,
-              ...(hasDetails && { cursor: 'pointer' }),
-              ...(done && { opacity: 1, filter: 'none' }),
-            },
-          }),
-          ...(hasDetails &&
-            !isExpanded && {
-              '&:focus-visible': {
-                bgcolor: 'background.paper',
-                borderTopColor:
-                  theme.vars!.palette[colorKey]?.main ?? theme.vars!.palette.primary.main,
-                outline: '2px solid',
-                outlineColor:
-                  theme.vars!.palette[colorKey]?.main ?? theme.vars!.palette.primary.main,
-                outlineOffset: 3,
-              },
-            }),
-          // Flatten elevation when another card is expanded
-          ...(suppressElevation && { boxShadow: 'none' }),
-        }),
+        milestonePaperSx({ isExpanded, colorKey, rightAlign, done, hasDetails, suppressElevation }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
@@ -232,17 +155,16 @@ export function MilestoneBadge({
       )}
 
       <Box sx={milestoneTitleRowSx(rightAlign)}>
-        {/* Eye button: left side for right-aligned (left-column) cards */}
-        {onMarkViewed && rightAlign && (
+        {onMarkViewed && (
           <Tooltip
             title={isViewed ? 'Mark as not viewed' : 'Mark as viewed'}
-            placement="right"
+            placement={rightAlign ? 'right' : 'left'}
             arrow
           >
             <Box
               component="button"
               type="button"
-              onClick={(e: React.MouseEvent) => {
+              onClick={(e: MouseEvent) => {
                 e.stopPropagation();
                 onMarkViewed();
               }}
@@ -265,36 +187,6 @@ export function MilestoneBadge({
         <Typography variant="subtitle2" sx={{ fontWeight: 700, lineHeight: 1.3 }}>
           {displayTitle}
         </Typography>
-
-        {/* Eye button: right side for left-aligned (right-column) cards */}
-        {onMarkViewed && !rightAlign && (
-          <Tooltip
-            title={isViewed ? 'Mark as not viewed' : 'Mark as viewed'}
-            placement="left"
-            arrow
-          >
-            <Box
-              component="button"
-              type="button"
-              onClick={(e: React.MouseEvent) => {
-                e.stopPropagation();
-                onMarkViewed();
-              }}
-              aria-label={isViewed ? 'Mark as not viewed' : 'Mark as viewed'}
-              aria-pressed={isViewed}
-              sx={milestoneEyeButtonSx({
-                isViewed: !!isViewed,
-                minSize: MILESTONE_EYE_BUTTON_MIN_SIZE,
-              })}
-            >
-              <GiselleIcon
-                icon={isViewed ? 'solar:eye-bold' : 'solar:eye-outline'}
-                width={MILESTONE_EYE_ICON_SIZE}
-                aria-hidden
-              />
-            </Box>
-          </Tooltip>
-        )}
       </Box>
 
       {(isExpanded || isHovered) && m.description && (
@@ -306,16 +198,9 @@ export function MilestoneBadge({
       {hasDetails && (
         <Box
           sx={milestoneDetailPillSx}
-          aria-label={`${m.details?.length ?? 0} expandable detail${(m.details?.length ?? 0) === 1 ? '' : 's'}`}
+          aria-label={`${taskChildren.length} expandable detail${taskChildren.length === 1 ? '' : 's'}`}
         >
-          <Box
-            component="span"
-            sx={{
-              display: 'inline-flex',
-              flexShrink: 0,
-              '& svg': { width: MILESTONE_PILL_ICON_SIZE, height: MILESTONE_PILL_ICON_SIZE },
-            }}
-          >
+          <Box component="span" sx={pillIconBoxSx(MILESTONE_PILL_ICON_SIZE)}>
             {expandableIcon ?? DEFAULT_EXPANDABLE_ICON}
           </Box>
           <Typography
@@ -323,7 +208,7 @@ export function MilestoneBadge({
             variant="caption"
             sx={{ fontWeight: 600, lineHeight: 1, fontSize: MILESTONE_PILL_TEXT_FONT_SIZE }}
           >
-            {m.details?.length ?? 0}
+            {taskChildren.length}
           </Typography>
         </Box>
       )}
@@ -331,21 +216,48 @@ export function MilestoneBadge({
       {hasDetails && (
         <Collapse in={isExpanded} timeout={50}>
           <Box id={detailsId} sx={milestoneDetailListSx}>
-            {m.details?.map((detail, i) => (
-              <Box key={i} sx={milestoneDetailRowSx}>
-                <Typography
-                  aria-hidden="true"
-                  component="span"
-                  variant="body2"
-                  sx={{ color: 'text.disabled', flexShrink: 0, lineHeight: 1.6 }}
-                >
-                  ›
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
-                  {detail}
-                </Typography>
-              </Box>
-            ))}
+            {taskChildren.map((task, i) => {
+              const taskKey = String(task.key);
+              const isDoneTask = taskDoneStates
+                ? (taskDoneStates[taskKey] ?? taskDoneStates[`idx-${i}`] ?? false)
+                : (task.done ?? false);
+              const toggleLabel = isDoneTask
+                ? `Mark "${task.title}" as not done`
+                : `Mark "${task.title}" as done`;
+              return (
+                <Box key={i} sx={taskRowSx}>
+                  <Box
+                    component={onToggleTask ? 'button' : 'span'}
+                    type={onToggleTask ? 'button' : undefined}
+                    aria-label={onToggleTask ? toggleLabel : undefined}
+                    aria-pressed={onToggleTask ? isDoneTask : undefined}
+                    onClick={
+                      onToggleTask
+                        ? (e: MouseEvent<HTMLButtonElement>) => {
+                            e.stopPropagation();
+                            onToggleTask(i, !isDoneTask);
+                          }
+                        : undefined
+                    }
+                    sx={
+                      (onToggleTask
+                        ? [taskToggleButtonSx, taskToggleColorSx(isDoneTask)]
+                        : [taskIconStaticSx, taskIconColorSx(isDoneTask)]) as PaperProps['sx']
+                    }
+                  >
+                    <GiselleIcon
+                      icon={
+                        isDoneTask ? 'solar:check-circle-bold' : 'solar:record-minimalistic-outline'
+                      }
+                      width={MILESTONE_TASK_ICON_SIZE}
+                    />
+                  </Box>
+                  <Typography variant="body2" sx={taskTitleSx(isDoneTask)}>
+                    {task.title}
+                  </Typography>
+                </Box>
+              );
+            })}
           </Box>
         </Collapse>
       )}

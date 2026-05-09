@@ -182,6 +182,7 @@ function makePhase(key: number, side: 'left' | 'right', milestoneCount: number):
     icon: null,
     side,
     milestones: Array.from({ length: milestoneCount }, (_, i) => ({
+      key: `ms-${i}`,
       title: `M${i}`,
       date: '',
       icon: null,
@@ -318,5 +319,104 @@ describe('[regression] checklist msDone initialization from ms.done', () => {
     map['5-0'] = true; // simulate a toggled-but-not-in-checklist-mode state
     const result = resolveMsDone(map, '5-0', { done: false }, false);
     expect(result).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Bidirectional parent-child done sync — regression (6 May 2026)
+//
+// Before the fix, handleToggleMilestone only synced one direction:
+//   all milestones done → mark parent done         (worked)
+//   any milestone undone → mark parent not-done    (BROKEN — never fired)
+//
+// The fix replaces:
+//   if (allDone && !localPhaseDone[String(phaseKey)])
+// with:
+//   if (allDone !== currentPhaseDone)
+//
+// This mirrors that corrected logic as a pure function.
+// ---------------------------------------------------------------------------
+
+/**
+ * Mirrors the bidirectional sync block inside handleToggleMilestone.
+ *
+ * Returns { changed: boolean; newPhaseDone: boolean } — the caller decides
+ * whether to update state.
+ */
+function computePhaseDoneSync(
+  milestoneCount: number,
+  localMilestoneMap: Record<string, boolean>,
+  phaseKey: number,
+  toggledIndex: number,
+  newMilestoneValue: boolean,
+  currentPhaseDone: boolean
+): { changed: boolean; newPhaseDone: boolean } {
+  const updated = { ...localMilestoneMap, [`${phaseKey}-${toggledIndex}`]: newMilestoneValue };
+  const allDone = Array.from(
+    { length: milestoneCount },
+    (_, i) => updated[`${phaseKey}-${i}`] ?? false
+  ).every(Boolean);
+  return { changed: allDone !== currentPhaseDone, newPhaseDone: allDone };
+}
+
+describe('[regression] bidirectional parent-child done sync', () => {
+  // Scenario: 2-milestone phase, both initially not done.
+
+  it('ticking the last undone milestone → parent becomes done', () => {
+    const map = { '1-0': true, '1-1': false };
+    const result = computePhaseDoneSync(2, map, 1, 1, true, false);
+    expect(result.changed).toBe(true);
+    expect(result.newPhaseDone).toBe(true);
+  });
+
+  it('[regression] un-ticking one milestone when parent was done → parent becomes not-done', () => {
+    // Before the fix: allDone=false but `allDone && !currentPhaseDone` is false → no sync
+    const map = { '1-0': true, '1-1': true };
+    const result = computePhaseDoneSync(2, map, 1, 0, false, true);
+    expect(result.changed).toBe(true);
+    expect(result.newPhaseDone).toBe(false);
+  });
+
+  it('un-ticking one of many milestones → parent stays not-done (no change needed)', () => {
+    // Parent was already not-done; un-ticking one milestone keeps it not-done → no change
+    const map = { '1-0': true, '1-1': false };
+    const result = computePhaseDoneSync(2, map, 1, 0, false, false);
+    expect(result.changed).toBe(false);
+    expect(result.newPhaseDone).toBe(false);
+  });
+
+  it('ticking one of many milestones but not all → parent stays not-done (no change)', () => {
+    const map = { '1-0': false, '1-1': false };
+    const result = computePhaseDoneSync(2, map, 1, 0, true, false);
+    expect(result.changed).toBe(false);
+    expect(result.newPhaseDone).toBe(false);
+  });
+
+  it('single-milestone phase: ticking → parent done', () => {
+    const map = { '2-0': false };
+    const result = computePhaseDoneSync(1, map, 2, 0, true, false);
+    expect(result.changed).toBe(true);
+    expect(result.newPhaseDone).toBe(true);
+  });
+
+  it('single-milestone phase: un-ticking → parent not-done', () => {
+    const map = { '2-0': true };
+    const result = computePhaseDoneSync(1, map, 2, 0, false, true);
+    expect(result.changed).toBe(true);
+    expect(result.newPhaseDone).toBe(false);
+  });
+
+  it('ticking milestone when phase already done → no change (idempotent)', () => {
+    const map = { '3-0': true, '3-1': true };
+    const result = computePhaseDoneSync(2, map, 3, 1, true, true);
+    expect(result.changed).toBe(false);
+  });
+
+  it('[regression] three-milestone phase: un-ticking one undoes parent', () => {
+    // All three were done, parent was done — un-tick index 2 → parent must become not-done
+    const map = { '4-0': true, '4-1': true, '4-2': true };
+    const result = computePhaseDoneSync(3, map, 4, 2, false, true);
+    expect(result.changed).toBe(true);
+    expect(result.newPhaseDone).toBe(false);
   });
 });

@@ -1,5 +1,6 @@
 import type * as React from 'react';
-import type { ReactNode } from 'react';
+
+type ReactNode = React.ReactNode;
 import type { BoxProps } from '@mui/material/Box';
 import type { TimelineDotProps } from '@mui/lab/TimelineDot';
 
@@ -10,6 +11,62 @@ export type HighlightedPaletteKey = Exclude<
   NonNullable<TimelineDotProps['color']>,
   'inherit' | 'grey'
 >;
+
+// ----------------------------------------------------------------------
+
+/** Structured rich content rendered inside a task details modal or drawer. */
+export interface TaskDetails {
+  /** Optional short summary rendered above the main content. */
+  summary?: ReactNode;
+  /** Arbitrary rich content for modal/drawer presentation. */
+  content?: ReactNode;
+  /** Optional nested tasks shown inside the details surface. */
+  tasks?: Task[];
+}
+
+// ----------------------------------------------------------------------
+
+/**
+ * Base unit for any trackable work item in the timeline.
+ *
+ * `TimelinePhase`, `TimelineMilestone`, and every nested sub-task all share this shape.
+ * The shared base keeps phase/milestone/task shapes consistent for done-state propagation.
+ *
+ * - All `children` done → parent can be auto-marked done.
+ * - Any `children` un-done → parent reverts to not-done.
+ * - Current timeline UI/callback plumbing is position-based and supports one visible
+ *   nested `children` level for interactive toggling.
+ */
+export type Task = {
+  /** Stable identifier for this work item. */
+  key: number | string;
+  /** Display text for this work item. */
+  title: string;
+  /** Short label for collapsed display. Falls back to `title` when omitted. */
+  shortTitle?: string;
+  /** Optional summary shown inline when the parent accordion row expands. */
+  description?: string;
+  /** Human-readable date label. */
+  date?: string;
+  /** Whether this task is complete. */
+  done?: boolean;
+  /** Optional icon slot rendered in the leading dot. */
+  icon?: ReactNode;
+  /** Optional palette key for the leading dot. */
+  color?: TimelineDotProps['color'];
+  /** Optional rich details rendered in a modal or drawer. */
+  details?: TaskDetails;
+  /**
+   * Nested sub-tasks.
+   *
+   * Data may include deeper nesting, but current timeline rendering/toggle callbacks
+   * operate on one visible nested level.
+   *
+   * Replaces the legacy flat `details: string[]` field. Migrate data files by converting
+   * each string to `{ title: string }`.
+   */
+  children?: Task[];
+};
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +83,77 @@ export type TimelinePlatformItem = { icon: ReactNode; label: string } | string;
 
 // ----------------------------------------------------------------------
 
-export type TimelinePhase = {
+/**
+ * A milestone on the timeline spine — a tracked point-in-time event between two phases.
+ *
+ * Extends `Task` — every milestone has its own `done` state and can carry nested sub-tasks
+ * via `children`. The legacy `details: string[]` flat array is preserved for backward
+ * compatibility but superseded by `children`.
+ */
+export type TimelineMilestone = Task & {
+  /** Human-readable date shown on the milestone badge (e.g. `'Mar 2022'`). */
+  date: string;
+  /** Display title of the milestone. */
+  title: string;
+  /**
+   * Glanceable 2–4 word label shown in the collapsed milestone card at rest.
+   * Falls back to `title` when omitted.
+   */
+  shortTitle?: string;
+  /**
+   * Short description shown when the milestone card is hovered or expanded.
+   * Provides context about what this milestone is and why it matters.
+   */
+  description?: string;
+  /** Icon rendered inside the milestone dot. Pass any ReactNode icon slot. */
+  icon: ReactNode;
+  /** MUI TimelineDot color. */
+  color?: TimelineDotProps['color'];
+  /**
+   * @deprecated Use `children` (inherited from `Task`) instead.
+   *
+   * Kept for backward compatibility. The component renders `children` first; when
+   * absent it falls back to mapping these strings to `{ title: string }` Task objects.
+   * Migrate data files by converting `details: ['text']` to `children: [{ title: 'text' }]`.
+   */
+  details?: string[];
+  /** Dims the milestone badge and card — mirrors the phase-level `done` flag. */
+  done?: boolean;
+  /** Renders the milestone badge in error (red) colour when not done. */
+  overdue?: boolean;
+  /** Marks this milestone as newly added — renders a "NEW" dot near the title. Clear once seen. */
+  new?: boolean;
+  /**
+   * Overrides the spine dot circle background colour.
+   * Accepts any CSS colour string (e.g. `'#111'`).
+   * Useful when a brand icon has a specific colour that clashes with the palette-derived background.
+   */
+  dotBg?: string;
+  /**
+   * Custom tooltip shown on the milestone dot in the centre spine.
+   *
+   * When omitted the tooltip is computed automatically:
+   * - **Read-only mode:** first sentence of `description` (capped at 72 characters) →
+   *   falls back to `shortTitle ?? title` + `date` when `description` is absent.
+   * - **Checklist mode:** status label (`Done`, `Blocking`, etc.) + `date`.
+   *
+   * Set this explicitly to override the computed value with a custom metric or note.
+   */
+  dotTooltip?: string;
+  /**
+   * Which column this milestone renders in.
+   *
+   * Inherits the parent `phase.side` when omitted — the milestone appears in the
+   * same column as its phase card. Set explicitly to place the milestone in the
+   * **opposite** column (e.g. a tech-context event on a professional phase that
+   * should appear in the "Education & Open Source" column).
+   */
+  side?: 'left' | 'right';
+};
+
+// ----------------------------------------------------------------------
+
+export type TimelinePhase = Task & {
   /** Numeric sort key. Fractional keys (e.g. 4.5) interleave life events between roles. */
   key: number;
   /** Display title of the phase — shown as the card heading. */
@@ -52,9 +179,13 @@ export type TimelinePhase = {
   color?: TimelineDotProps['color'];
   /** Which column this item appears in. */
   side: 'left' | 'right';
-  /** Dims the card and separator — used for completed/past steps. */
-  done?: boolean;
-  /** Optional expandable bullet-point details. */
+  /**
+   * @deprecated Use `children` (inherited from `Task`) instead.
+   *
+   * Kept for backward compatibility. The component renders `children` first; when
+   * absent it falls back to mapping these strings to `{ title: string }` Task objects.
+   * Migrate data files by converting `details: ['text']` to `children: [{ title: 'text' }]`.
+   */
   details?: string[];
   /**
    * Custom tooltip shown on the phase dot in the centre spine.
@@ -103,56 +234,7 @@ export type TimelinePhase = {
    * Nested milestone keypoints on the connector spine between this phase and the next.
    * Each milestone renders as a coloured badge dot on the spine.
    */
-  milestones?: Array<{
-    date: string;
-    title: string;
-    /**
-     * Glanceable 2–4 word label shown in the collapsed milestone card at rest.
-     * Falls back to `title` when omitted.
-     */
-    shortTitle?: string;
-    /**
-     * Short description shown when the milestone card is hovered or expanded.
-     * Provides context about what this milestone is and why it matters.
-     */
-    description?: string;
-    icon: ReactNode;
-    color?: TimelineDotProps['color'];
-    /** Short bullet-point facts shown when the card is expanded. */
-    details?: string[];
-    /** Dims the milestone badge and card — mirrors the phase-level `done` flag. */
-    done?: boolean;
-    /** Renders the milestone badge in error (red) colour when not done. */
-    overdue?: boolean;
-    /** Marks this milestone as newly added — renders a "NEW" dot near the title. Clear once seen. */
-    new?: boolean;
-    /**
-     * Overrides the spine dot circle background colour.
-     * Accepts any CSS colour string (e.g. `'#111'`).
-     * Useful when a brand icon has a specific colour that clashes with the palette-derived background.
-     */
-    dotBg?: string;
-    /**
-     * Custom tooltip shown on the milestone dot in the centre spine.
-     *
-     * When omitted the tooltip is computed automatically:
-     * - **Read-only mode:** first sentence of `description` (capped at 72 characters) →
-     *   falls back to `shortTitle ?? title` + `date` when `description` is absent.
-     * - **Checklist mode:** status label (`Done`, `Blocking`, etc.) + `date`.
-     *
-     * Set this explicitly to override the computed value with a custom metric or note.
-     */
-    dotTooltip?: string;
-    /**
-     * Which column this milestone renders in.
-     *
-     * Inherits the parent `phase.side` when omitted — the milestone appears in the
-     * same column as its phase card. Set explicitly to place the milestone in the
-     * **opposite** column (e.g. a tech-context event on a professional phase that
-     * should appear in the "Education & Open Source" column).
-     */
-    side?: 'left' | 'right';
-  }>;
+  milestones?: TimelineMilestone[];
   /**
    * Client logos shown as a horizontal strip directly in the card (always visible).
    * Each entry is a public path (e.g. '/assets/icons/clients/nbn.svg') plus an accessible name.
@@ -240,6 +322,19 @@ export type TimelineTwoColumnProps = Omit<BoxProps, 'children'> & {
    * Receives the parent phase `key`, the milestone `index`, and the new `done` value.
    */
   onToggleMilestoneDone?: (phaseKey: number, milestoneIndex: number, done: boolean) => void;
+  /**
+   * Called when the user toggles a task (sub-item) within a milestone or phase.
+   * Fires unconditionally — task toggles are always interactive regardless of `checklist`.
+   *
+   * Receives the parent phase `key`, the milestone `index` (or `null` for phase-level tasks),
+   * the task `index`, and the new `done` value.
+   */
+  onToggleTaskDone?: (
+    phaseKey: number,
+    milestoneIndex: number | null,
+    taskIndex: number,
+    done: boolean
+  ) => void;
   /**
    * Controlled selection — the key of the currently selected phase.
    * When set, the matching phase dot is shown in its active (enlarged) state.
@@ -366,6 +461,8 @@ export type MilestoneRowCtx = {
   phaseSide: 'left' | 'right';
   checklist: boolean;
   localMilestoneDone: Record<string, boolean>;
+  /** Done state per task, keyed by `${phaseKey}-c${childIdx}-t${taskIdx}`. */
+  localTaskDoneMap: Record<string, boolean>;
   expandedMiIdx: number | null;
   anyExpanded: boolean;
   dotColor: HighlightedPaletteKey;
@@ -373,6 +470,8 @@ export type MilestoneRowCtx = {
   viewedKeys: Set<string>;
   onMarkViewed: ((key: string) => void) | undefined;
   handleToggleMilestone: (phaseKey: number, mi: number) => void;
+  /** Toggles a single task within a milestone. Always wired (not gated on checklist). */
+  handleToggleTask: (phaseKey: number, mi: number, taskIdx: number) => void;
   handleExpandMilestone: (phaseKey: number, milestoneIndex: number) => void;
   /** Called with the mounted card element so the parent can measure its height. */
   onMeasure: (mi: number, el: HTMLDivElement | null) => void;
@@ -395,6 +494,90 @@ export type TimelineColumnProps = {
    */
   bottomPadding: number;
   children: ReactNode;
+};
+
+/** Props for the `MilestoneRow` internal sub-component. @internal */
+/** Props for the `MilestoneRow` internal sub-component. @internal */
+export type MilestoneRowProps = {
+  /** The milestone data to render. */
+  ms: Milestone;
+  /** Zero-based index of this milestone within its parent phase. */
+  mi: number;
+  /** Total number of milestones in the parent phase — used to compute vertical position. */
+  totalMilestones: number;
+  /** Shared context derived from the parent phase row. */
+  ctx: MilestoneRowCtx;
+  /** Whether the viewport is below the md breakpoint — collapses to single-column layout. */
+  isMobile: boolean;
+};
+
+/** Props for the `MarkerLabel` internal sub-component. @internal */
+export type MarkerLabelProps = {
+  /** Display text — pass `phase.shortTitle ?? phase.title`. */
+  title: string;
+  /** Optional date string appended inline after a middle-dot separator. */
+  date?: string;
+};
+
+/** Props for the `MarkerRow` internal sub-component. @internal */
+export type MarkerRowProps = {
+  /** The phase data for this marker. `variant` must be `'marker'`. */
+  phase: TimelinePhase;
+  /** Whether this is the last visible phase — suppresses the spine connector below. */
+  isLastPhase: boolean;
+  /** Resolved dot colour for this phase (accounts for overdue, done, and data colour). */
+  dotColor: HighlightedPaletteKey;
+  /** Whether this phase is marked done. */
+  isDone: boolean;
+  /** Whether the timeline is in interactive checklist mode. */
+  checklist: boolean;
+  /** Year boundary value shown on the spine connector, or `null` when no boundary exists. */
+  yearLabelValue: string | null;
+  /**
+   * Whether the viewport is below the md breakpoint.
+   *
+   * When `true`, the left label slot is hidden via CSS (`markerLabelSlotSx('left') display.xs='none'`)
+   * and the right slot also renders the label for `side='left'` phases — mirroring the
+   * column-collapse behaviour of full phase cards on mobile. This ensures the label is
+   * always visible regardless of viewport width.
+   */
+  isMobile: boolean;
+} & React.HTMLAttributes<HTMLLIElement>;
+
+/** Props for the `PhaseRow` internal sub-component. @internal */
+export type PhaseRowProps = {
+  /** The phase data for this row. */
+  phase: TimelinePhase;
+  /** When `true`, this row should appear blurred/dimmed because another card is open. */
+  isSuppressed: boolean;
+  /** Gap (px) added below the phase card — passed through to `TimelineColumn`. */
+  phaseCardGap: number;
+  /** Pre-built phase card node — computed by the parent and passed through as a slot. */
+  phaseCardNode: ReactNode;
+  /** Resolved dot colour for this phase. */
+  dotColor: HighlightedPaletteKey;
+  /** Whether this phase is marked done. */
+  isDone: boolean;
+  /** Whether this is the last visible phase — suppresses the spine connector below. */
+  isLastPhase: boolean;
+  /** Year boundary value shown on the spine connector, or `null` when no boundary exists. */
+  yearLabelValue: string | null;
+  /** Bottom offset (px) of the year-boundary label chip — passed through to `SpineConnector`. */
+  yearLabelMarginBottom: number;
+  /** Whether the timeline is in interactive checklist mode. */
+  checklist: boolean;
+  /** Click handler for the phase dot — `undefined` in read-only mode. */
+  dotClickAction: (() => void) | undefined;
+  /** Keyboard handler for the phase dot — `undefined` in read-only mode. */
+  dotKeyDownHandler: ((e: React.KeyboardEvent) => void) | undefined;
+  /** Accessible label for the phase dot — `undefined` in read-only mode. */
+  dotAriaLabel: string | undefined;
+  /** Per-phase toggle counts — drives the pulse animation on the dot. */
+  phaseToggleCounts: Record<string, number>;
+  /** Controlled selected phase key — drives the active dot state. */
+  selectedPhaseKey: number | undefined;
+  /** Whether the viewport is below the md breakpoint — collapses to single-column layout. */
+  isMobile: boolean;
 };
 
 // ----------------------------------------------------------------------

@@ -253,7 +253,7 @@ describe('IconActionBar — interaction', () => {
   });
 
   afterEach(() => {
-    document.body.removeChild(container);
+    container.remove();
   });
 
   it('calls onClick when a button is clicked', () => {

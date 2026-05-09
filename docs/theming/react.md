@@ -7,7 +7,7 @@ sidebar_label: 'React / Vite'
 
 `@alexrebula/giselle-mui` components use **MUI v7 CSS variables mode**. They resolve
 colours through CSS custom properties like `var(--mui-palette-primary-main)`, which are
-injected by `CssVarsProvider` at the root of your app.
+injected by `ThemeProvider` at the root of your app.
 
 Without a theme provider these CSS variables don't exist, and components render
 without meaningful colours, borders, or typography scale.
@@ -29,13 +29,14 @@ npm install @iconify/react
 
 ## 2. Create your theme
 
-Use `extendTheme()` — the CSS-vars-aware version of `createTheme()`.
+Use `createTheme()` with `cssVariables: true` to enable CSS variables mode.
 
 ```ts
 // src/theme.ts
-import { extendTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
-export const theme = extendTheme({
+export const theme = createTheme({
+  cssVariables: true,
   colorSchemes: {
     light: {
       palette: {
@@ -55,32 +56,36 @@ export const theme = extendTheme({
 });
 ```
 
-You can skip customisation entirely and call `extendTheme()` with no arguments — MUI's
-built-in defaults are a solid starting point.
+You can also use the pre-built Giselle brand theme instead of defining your own:
+
+```ts
+import { giselleTheme } from '@alexrebula/giselle-mui';
+// Pass giselleTheme directly to ThemeProvider — no extra configuration needed.
+```
 
 ---
 
-## 3. Wrap your app in `CssVarsProvider`
+## 3. Wrap your app in `ThemeProvider`
 
 ```tsx
 // src/main.tsx  (Vite)  or  src/index.tsx  (CRA)
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { CssVarsProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './theme';
 import { App } from './App';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CssVarsProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       {/*
         CssBaseline normalises browser styles and injects the CSS custom
         properties onto :root so they're available everywhere.
       */}
       <CssBaseline />
       <App />
-    </CssVarsProvider>
+    </ThemeProvider>
   </StrictMode>
 );
 ```
@@ -129,15 +134,15 @@ export function App() {
 
 ## 5. Dark mode (optional)
 
-`CssVarsProvider` supports `defaultMode` and the `useColorScheme()` hook for runtime
+`ThemeProvider` supports `defaultMode` and the `useColorScheme()` hook for runtime
 mode switching — no page reload needed.
 
 ```tsx
 // Provide a default mode:
-<CssVarsProvider theme={theme} defaultMode="dark">
+<ThemeProvider theme={theme} defaultMode="dark">
 
 // Or let the OS decide:
-<CssVarsProvider theme={theme} defaultMode="system">
+<ThemeProvider theme={theme} defaultMode="system">
 ```
 
 Toggle mode from anywhere in the tree:
@@ -159,20 +164,24 @@ function DarkModeToggle() {
 
 ## Key differences from MUI v5 / v6
 
-| MUI v5/v6 | MUI v7 CSS vars mode |
+| MUI v5/v6 | MUI v7 CSS variables mode |
 |---|---|
-| `createTheme()` | `extendTheme()` |
-| `ThemeProvider` | `CssVarsProvider` |
+| `createTheme()` | `createTheme({ cssVariables: true })` |
+| `ThemeProvider` | `ThemeProvider` (same component — unified API in v7) |
 | `theme.palette.primary.main` | `theme.vars.palette.primary.main` |
 | Values are JS strings | Values are CSS `var(--...)` references |
 | No built-in dark mode toggle | `useColorScheme()` built in |
+
+> **Note:** Early MUI v7 documentation shows `extendTheme()` + `CssVarsProvider` — that was the
+> experimental CSS vars API. The stable v7 approach is `createTheme({ cssVariables: true })` +
+> `ThemeProvider`, which is what this library uses.
 
 ---
 
 ## Troubleshooting
 
 **"Components look unstyled / colours are transparent"**
-→ Check that `CssVarsProvider` wraps the component in the React tree. Open DevTools
+→ Check that `ThemeProvider` wraps the component in the React tree. Open DevTools
 and look for `--mui-palette-primary-main` on `:root`. If it's missing, the provider
 isn't mounted or isn't above the component.
 

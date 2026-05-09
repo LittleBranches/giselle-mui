@@ -33,66 +33,16 @@
  */
 
 import { useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
-import ButtonBase from '@mui/material/ButtonBase';
 
-import {
-  pillSx,
-  stickyWrapperSx,
-  stickyInnerSx,
-  fixedWrapperSx,
-  subNavButtonSx,
-} from './floating-sub-nav.styles';
-import type { FloatingSubNavItem, FloatingSubNavProps } from './types';
+import { stickyWrapperSx, stickyInnerSx, fixedWrapperSx } from './floating-sub-nav.styles';
+import type { FloatingSubNavProps } from './types';
+import { NavPill } from './nav-pill';
 
 // Re-export for consumers that import types from the component directly.
 export type { FloatingSubNavItem, FloatingSubNavProps } from './types';
-
-// ---------------------------------------------------------------------------
-// Shared pill — same visuals for both fixed and sticky variants
-// ---------------------------------------------------------------------------
-
-function NavPill({
-  items,
-  activeId,
-  onPress,
-}: {
-  items: FloatingSubNavItem[];
-  activeId: string;
-  onPress: (id: string) => void;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
-    >
-      <Stack
-        direction="column"
-        alignItems="center"
-        role="navigation"
-        aria-label="Section navigation"
-        sx={pillSx}
-      >
-        <Stack direction="row" spacing={0.5}>
-          {items.map((item) => (
-            <SubNavButton
-              key={item.id}
-              item={item}
-              isActive={activeId === item.id}
-              onPress={onPress}
-            />
-          ))}
-        </Stack>
-      </Stack>
-    </motion.div>
-  );
-}
 
 // ---------------------------------------------------------------------------
 
@@ -126,35 +76,5 @@ export function FloatingSubNav({ items, activeId, onSelect, sticky = false }: Fl
         </Box>
       )}
     </AnimatePresence>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// SubNavButton — compact square icon-only button with Tooltip
-// ---------------------------------------------------------------------------
-
-type SubNavButtonProps = {
-  item: FloatingSubNavItem;
-  isActive: boolean;
-  onPress: (id: string) => void;
-};
-
-function SubNavButton({ item, isActive, onPress }: SubNavButtonProps) {
-  const handleClick = useCallback(() => onPress(item.id), [onPress, item.id]);
-
-  return (
-    <Tooltip title={item.label} placement="top" arrow>
-      <ButtonBase
-        disableRipple
-        component="button"
-        type="button"
-        aria-label={item.label}
-        aria-pressed={isActive}
-        onClick={handleClick}
-        sx={subNavButtonSx(isActive)}
-      >
-        {item.icon}
-      </ButtonBase>
-    </Tooltip>
   );
 }

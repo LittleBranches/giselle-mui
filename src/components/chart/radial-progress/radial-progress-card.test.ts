@@ -2,7 +2,7 @@
 /**
  * Unit tests for RadialProgressCard.
  *
- * All MUI components are mocked to avoid CssVarsProvider requirements.
+ * All MUI components are mocked to avoid ThemeProvider/theme.vars requirements.
  * The chart area (React.lazy + Suspense) renders its fallback during
  * renderToStaticMarkup — we test title, legend labels, and value display
  * which are rendered synchronously.

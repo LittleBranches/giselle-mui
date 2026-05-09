@@ -23,9 +23,8 @@ It does not belong in a single page's `view.tsx` because:
   (hollow size, track colour via CSS vars, total-centre formatter, value formatter).
 - The legend row pattern (coloured dot + label + percentage) is a repeating UI element
   that must stay consistent across sections.
-- The Minimals analogue (`EcommerceSaleByGender`) cannot be used because it relies on
-  `varAlpha` and `ChartLegends` — proprietary utilities. This component is the
-  independently written, MIT-licensed equivalent.
+- Proprietary alternatives to this pattern rely on non-MIT utilities (`varAlpha`, closed
+  chart legend helpers). This component is the independently written, MIT-licensed equivalent.
 
 ---
 
@@ -40,7 +39,7 @@ to defer the import until the browser is ready.
 
 ### Solid colours — no gradient
 
-`EcommerceSaleByGender` (Minimals) uses `fill.gradient` with `colorStops`. Gradient
+Some radial bar implementations use `fill.gradient` with `colorStops`. Gradient
 fill in ApexCharts requires the `offset` values to match the segment positions, which
 means coupling the factory to the number of segments. Solid colours are simpler,
 visually clear, and still colour-coded by MUI palette key. Gradient can be added later
@@ -50,7 +49,7 @@ as a separate prop if needed.
 
 ApexCharts resolves chart colours in SVG/Canvas, where CSS variable resolution is
 browser-dependent and inconsistent across chart rendering modes. `theme.palette[color].main`
-in MUI v7 with `CssVarsProvider` returns the CSS variable reference string
+in MUI v7 with `ThemeProvider` (CSS variables mode) returns the CSS variable reference string
 (`var(--mui-palette-primary-main)`), which modern browsers do resolve in SVG.
 However, `theme.vars.palette.text.secondary` is used for text colours in the chart
 labels because these do not depend on the SVG renderer — they are rendered as `style`

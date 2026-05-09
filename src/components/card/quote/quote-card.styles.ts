@@ -30,3 +30,25 @@ export const quoteTextSx: SxProps<Theme> = {
   color: 'text.secondary',
   lineHeight: 1.85,
 };
+
+// ----------------------------------------------------------------------
+
+/**
+ * `Paper` root for `QuoteCard` — tinted surface with a palette-keyed border.
+ *
+ * @param color - MUI palette key for the tint and border colour.
+ */
+export const quoteCardPaperSx =
+  (color: string): SxProps<Theme> =>
+  (theme) => ({
+    p: 3,
+    borderRadius: 2,
+    bgcolor: `rgba(${
+      (theme.vars!.palette as unknown as Record<string, { mainChannel: string }>)[color]
+        ?.mainChannel
+    } / 0.06)`,
+    border: `1px solid rgba(${
+      (theme.vars!.palette as unknown as Record<string, { mainChannel: string }>)[color]
+        ?.mainChannel
+    } / 0.12)`,
+  });

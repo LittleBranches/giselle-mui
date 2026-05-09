@@ -22,10 +22,17 @@ import {
   platformStripSx,
   projectLogoSx,
   eyeButtonSx,
+  buildPaperSx,
 } from './phase-card.styles';
 
 const mockTheme = {
-  vars: { palette: { grey: { '900Channel': '33 43 54' } } },
+  vars: {
+    palette: {
+      primary: { main: '#2E7D32', mainChannel: '46 125 50' },
+      grey: { '500Channel': '145 158 171', '900Channel': '33 43 54' },
+      error: { mainChannel: '211 47 47' },
+    },
+  },
 } as unknown as Theme;
 
 // ---------------------------------------------------------------------------
@@ -397,5 +404,50 @@ describe('eyeButtonSx — viewed eye button', () => {
     const styles = eyeButtonSx({ columnSide: 'right', isViewed: false }) as Record<string, unknown>;
     expect(styles['position']).toBe('absolute');
     expect(styles['bottom']).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Done card hover behavior — regression (production sx assertion)
+// ---------------------------------------------------------------------------
+
+describe('[regression] done phase card hover styles from buildPaperSx', () => {
+  it('done card uses dimmed base state and restores on hover', () => {
+    const sxFactory = buildPaperSx({
+      hasDetails: true,
+      isDone: true,
+      color: 'primary',
+      phaseSide: 'right',
+      isHighlighted: false,
+      isScenario: false,
+      isOverdue: false,
+      suppressElevation: false,
+      textAlign: 'left',
+    }) as (theme: Theme) => Record<string, unknown>;
+
+    const sx = sxFactory(mockTheme);
+    expect(sx['opacity']).toBe(0.45);
+    expect(sx['filter']).toBe('grayscale(1)');
+
+    const hover = sx['&:hover'] as Record<string, unknown>;
+    expect(hover['opacity']).toBe(1);
+    expect(hover['filter']).toBe('none');
+  });
+
+  it('done state does not declare pointerEvents override in buildPaperSx', () => {
+    const sxFactory = buildPaperSx({
+      hasDetails: true,
+      isDone: true,
+      color: 'primary',
+      phaseSide: 'right',
+      isHighlighted: false,
+      isScenario: false,
+      isOverdue: false,
+      suppressElevation: false,
+      textAlign: 'left',
+    }) as (theme: Theme) => Record<string, unknown>;
+
+    const sx = sxFactory(mockTheme);
+    expect(sx['pointerEvents']).toBeUndefined();
   });
 });

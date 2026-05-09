@@ -168,7 +168,7 @@ export const Responsive: Story = {
   render: () => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       {([360, 600, 900, 1200] as const).map((width) => (
-        <Box key={width}>
+        <div key={width}>
           <Box sx={{ mb: 0.5, fontSize: '0.75rem', color: 'text.secondary' }}>{width}px</Box>
           <Box sx={{ width }}>
             <StatCard
@@ -181,14 +181,12 @@ export const Responsive: Story = {
               chart={<SparklineChart data={SAMPLE_SPARKLINE} colorKey="info" />}
             />
           </Box>
-        </Box>
+        </div>
       ))}
     </Box>
   ),
   parameters: { layout: 'padded' },
 };
-
-// ----------------------------------------------------------------------
 
 /**
  * Named helper — uses `useState` so it must be a named function (not inline arrow).
