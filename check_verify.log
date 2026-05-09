@@ -1,0 +1,310 @@
+
+> @alexrebula/giselle-mui@0.1.0 check:verify
+> node scripts/quality-gate.js --verify
+
+
+══════════════════════════════════════════════════════════
+ Quality gate — giselle-mui
+ Mode: verify only (use --fix to auto-fix)
+══════════════════════════════════════════════════════════
+
+→ Structure check…
+✓ Structure check passed — no flat component files
+✓ Structure check passed
+
+→ Prettier format check…
+
+> @alexrebula/giselle-mui@0.1.0 fm:check
+> prettier --check "src/**/*.{ts,tsx}"
+
+Checking formatting...
+All matched files use Prettier code style!
+✓ Prettier format check passed
+
+→ ESLint (--max-warnings 0)…
+
+> @alexrebula/giselle-mui@0.1.0 lint
+> eslint "src/**/*.{ts,tsx}" --max-warnings 0
+
+✓ ESLint (--max-warnings 0) passed
+
+→ TypeScript (tsc --noEmit)…
+✓ TypeScript (tsc --noEmit) passed
+
+→ Tests (vitest)…
+
+> @alexrebula/giselle-mui@0.1.0 test
+> vitest run
+
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/work/projects/ar/giselle-mui[39m
+
+ [32m✓[39m src/components/timeline/two-column/milestone-badge/interaction.test.ts [2m([22m[2m32 tests[22m[2m)[22m[33m 684[2mms[22m[39m
+[90mstderr[2m | src/components/accordion/check-icon-button.test.ts[2m > [22m[2mCheckIconButton — CSS-only icon structure[2m > [22m[2mrenders all three icon spans in the DOM regardless of done state
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/check-icon-button.test.ts[2m > [22m[2mCheckIconButton — CSS-only icon structure[2m > [22m[2mrenders all three spans when done=true as well
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/check-icon-button.test.ts[2m > [22m[2mCheckIconButton — aria-pressed semantics[2m > [22m[2msets aria-pressed=false when done=false
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/check-icon-button.test.ts[2m > [22m[2mCheckIconButton — aria-pressed semantics[2m > [22m[2msets aria-pressed=true when done=true
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/check-icon-button.test.ts[2m > [22m[2mCheckIconButton — click interaction[2m > [22m[2mcalls onDoneButtonClick(!done) on click when done=false
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/check-icon-button.test.ts[2m > [22m[2mCheckIconButton — click interaction[2m > [22m[2mcalls onDoneButtonClick(!done) on click when done=true
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/check-icon-button.test.ts[2m > [22m[2mCheckIconButton — click interaction[2m > [22m[2mtoggles aria-pressed through a controlled wrapper on two clicks
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/check-icon-button.test.ts[2m > [22m[2mCheckIconButton — click interaction[2m > [22m[2mtoggles aria-pressed through a controlled wrapper on two clicks
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/check-icon-button.test.ts[2m > [22m[2mCheckIconButton — click interaction[2m > [22m[2mtoggles aria-pressed through a controlled wrapper on two clicks
+[22m[39mThe current testing environment is not configured to support act(...)
+
+ [32m✓[39m src/components/accordion/check-icon-button.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 553[2mms[22m[39m
+[90mstderr[2m | src/components/accordion/accordion.test.ts[2m > [22m[2mAccordion — checklist interaction[2m > [22m[2mcalls onDoneButtonClick(true) when unchecked checkbox is clicked
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/accordion.test.ts[2m > [22m[2mAccordion — checklist interaction[2m > [22m[2mcalls onDoneButtonClick(false) when checked checkbox is clicked
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/timeline/task-list/task-list.test.ts[2m > [22m[2mTaskList — checklist mode[2m > [22m[2mcalls onToggle with the correct index on change
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/accordion.test.ts[2m > [22m[2mAccordion — checklist interaction[2m > [22m[2mdoes not call onDoneButtonClick when checklist is false
+[22m[39mThe current testing environment is not configured to support act(...)
+
+ [32m✓[39m src/components/timeline/task-list/task-list.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 818[2mms[22m[39m
+   [33m[2m✓[22m[39m TaskList — checklist mode[2m > [22mcalls onToggle with the correct index on change [33m 363[2mms[22m[39m
+[90mstderr[2m | src/components/accordion/accordion.test.ts[2m > [22m[2mAccordion — icon-button mode (checkIcon provided)[2m > [22m[2mcalls onDoneButtonClick(true) when the icon button is clicked (done=false)
+[22m[39mThe current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/components/accordion/accordion.test.ts[2m > [22m[2mAccordion — icon-button mode (checkIcon provided)[2m > [22m[2mcalls onDoneButtonClick(false) when the icon button is clicked (done=true)
+[22m[39mThe current testing environment is not configured to support act(...)
+
+ [32m✓[39m src/components/accordion/accordion.test.ts [2m([22m[2m35 tests[22m[2m)[22m[33m 1565[2mms[22m[39m
+[90mstderr[2m | src/components/timeline/compact/compact.test.ts[2m > [22m[2mTimelineCompact — interaction (click to expand)[2m > [22m[2mreveals description text after clicking accordion summary
+[22m[39mThe current testing environment is not configured to support act(...)
+
+ [32m✓[39m src/components/card/selectable/selectable-card.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 234[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/sort.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1045[2mms[22m[39m
+   [33m[2m✓[22m[39m sortOrder integration — milestone render order in DOM[2m > [22msortOrder="asc" renders milestones earliest-first (oldest at top) [33m 523[2mms[22m[39m
+[90mstderr[2m | src/components/timeline/compact/compact.test.ts[2m > [22m[2mTimelineCompact — interaction (click to expand)[2m > [22m[2mreveals description text after clicking accordion summary
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+ [32m✓[39m src/components/timeline/compact/compact.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 1697[2mms[22m[39m
+   [33m[2m✓[22m[39m TimelineCompact — interaction (click to expand)[2m > [22mreveals description text after clicking accordion summary [33m 873[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/column-placement.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1283[2mms[22m[39m
+   [33m[2m✓[22m[39m milestone same-column placement (direct — no mirroring)[2m > [22mphase side=left → phase card in LEFT col (0) → milestone (no side) in LEFT col (0) [33m 511[2mms[22m[39m
+   [33m[2m✓[22m[39m milestone same-column placement (direct — no mirroring)[2m > [22mmilestone column matches its parent phase card column when ms.side is not set [33m 327[2mms[22m[39m
+[90mstderr[2m | src/components/timeline/two-column/timeline-dot/index.test.ts[2m > [22m[2mTimelineDot — interaction[2m > [22m[2mfires onClick when the root element is clicked
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+ [32m✓[39m src/components/action-bar/icon/icon-action-bar.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 243[2mms[22m[39m
+[90mstderr[2m | src/components/timeline/two-column/timeline-dot/index.test.ts[2m > [22m[2mTimelineDot — interaction[2m > [22m[2mfires onKeyDown when a key is pressed on the root element
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+ [32m✓[39m src/components/timeline/two-column/timeline-dot/index.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 264[2mms[22m[39m
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — initial state[2m > [22m[2mreflects initialParentDone and initialChildrenDone
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — initial state[2m > [22m[2mindeterminate is true when some but not all children are done
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — initial state[2m > [22m[2mindeterminate is false when no children are done
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — initial state[2m > [22m[2mindeterminate is false when ALL children are done
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — toggleParent[2m > [22m[2mmarks ALL children done when parent transitions to done
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — toggleParent[2m > [22m[2mmarks ALL children undone when parent transitions to undone
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — toggleChild[2m > [22m[2mmarks parent done when toggling the last undone child
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+ [32m✓[39m src/components/timeline/two-column/marker-row.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 173[2mms[22m[39m
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — toggleChild[2m > [22m[2m[regression] marks parent UNDONE when any child is toggled off
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — toggleChild[2m > [22m[2msets indeterminate when some but not all children are done
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — toggleChild[2m > [22m[2mclears indeterminate when all children become undone
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — toggleChild[2m > [22m[2mhandles a single child correctly
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+[90mstderr[2m | src/utils/use-nested-checklist.test.ts[2m > [22m[2museNestedChecklist — empty children[2m > [22m[2mtoggling parent with no children works without throwing
+[22m[39mThe current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+The current testing environment is not configured to support act(...)
+
+ [32m✓[39m src/utils/use-nested-checklist.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 175[2mms[22m[39m
+ [32m✓[39m src/components/chart/radial-progress/radial-progress-card.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+ [32m✓[39m src/components/layout/two-column-showcase-row/two-column-showcase-row.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 137[2mms[22m[39m
+ [32m✓[39m src/components/card/quote/quote-card.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 112[2mms[22m[39m
+ [32m✓[39m src/components/card/metric/metric-card.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/phase-card/index.test.ts [2m([22m[2m75 tests[22m[2m)[22m[32m 247[2mms[22m[39m
+ [32m✓[39m src/components/icon/giselle/giselle-icon.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+ [32m✓[39m src/components/card/stat/stat-card.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 168[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/utils.test.ts [2m([22m[2m62 tests[22m[2m)[22m[32m 67[2mms[22m[39m
+ [32m✓[39m src/components/layout/section-title/section-title.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 78[2mms[22m[39m
+ [32m✓[39m src/components/nav/floating-sub-nav/floating-sub-nav.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32m✓[39m src/components/timeline/compact/task-details-renderer.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 82[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/interaction.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/tooltip.test.ts [2m([22m[2m38 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/two-column.styles.test.ts [2m([22m[2m54 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/spine-connector/index.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/phase-card/phase-card.styles.test.ts [2m([22m[2m44 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m src/components/card/stat/stat-card.styles.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/phase-warning-popover/index.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m src/utils/theme-utils.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/milestone-badge/milestone-badge.styles.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/components/faq/accordion/faq-accordion.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/components/card/metric/metric-card.styles.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m src/utils/theme-preset.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/milestone-badge/logic.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/components/timeline/compact/compact.styles.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/components/chart/radial-progress/radial-progress-card.styles.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/utils/maturity-utils.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/components/accordion/accordion.styles.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/components/nav/floating-sub-nav/floating-sub-nav.styles.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/components/faq/accordion/faq-accordion.styles.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/components/timeline/task-list/task-list.styles.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/components/layout/section-title/section-title.styles.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/components/card/quote/quote-card.styles.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/timeline-dot/timeline-dot.styles.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/phase-warning-popover/phase-warning-popover.styles.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/utils/timeline-utils.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/spine-connector/spine-connector.styles.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/components/action-bar/icon/icon-action-bar.styles.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/components/timeline/two-column/milestone-badge/index.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m51 passed[39m[22m[90m (51)[39m
+[2m      Tests [22m [1m[32m834 passed[39m[22m[90m (834)[39m
+[2m   Start at [22m 01:15:26
+[2m   Duration [22m 53.25s[2m (transform 13.59s, setup 0ms, collect 63.34s, tests 10.62s, environment 168.81s, prepare 35.64s)[22m
+
+✓ Tests (vitest) passed
+
+→ tsup build…
+
+> @alexrebula/giselle-mui@0.1.0 prebuild
+> node -e "require('fs').rmSync('dist', {recursive:true,force:true})"
+
+
+> @alexrebula/giselle-mui@0.1.0 build
+> tsup
+
+[34mCLI[39m Building entry: {"index":"src/index.ts"}
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m Building entry: {"utils":"src/utils-index.ts"}
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m Building entry: {"charts":"src/charts-index.ts"}
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m Building entry: {"motion":"src/motion-index.ts"}
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Using tsup config: C:\work\projects\ar\giselle-mui\tsup.config.ts
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Using tsup config: C:\work\projects\ar\giselle-mui\tsup.config.ts
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Using tsup config: C:\work\projects\ar\giselle-mui\tsup.config.ts
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Using tsup config: C:\work\projects\ar\giselle-mui\tsup.config.ts
+[34mCLI[39m Target: es2020
+[34mESM[39m Build start
+[34mCJS[39m Build start
+[34mCLI[39m Target: es2020
+[34mESM[39m Build start
+[34mCJS[39m Build start
+[34mCLI[39m Target: es2020
+[34mESM[39m Build start
+[34mCJS[39m Build start
+[34mCLI[39m Target: es2020
+[34mESM[39m Build start
+[34mCJS[39m Build start
+[32mESM[39m [1mdist\charts.js     [22m[32m48.00 B[39m
+[32mESM[39m [1mdist\charts.js.map [22m[32m71.00 B[39m
+[32mESM[39m ⚡️ Build success in 129ms
+[32mCJS[39m [1mdist\utils.cjs     [22m[32m4.13 KB[39m
+[32mCJS[39m [1mdist\utils.cjs.map [22m[32m14.50 KB[39m
+[32mCJS[39m ⚡️ Build success in 146ms
+[32mCJS[39m [1mdist\charts.cjs     [22m[32m828.00 B[39m
+[32mCJS[39m [1mdist\charts.cjs.map [22m[32m892.00 B[39m
+[32mCJS[39m ⚡️ Build success in 150ms
+[32mESM[39m [1mdist\utils.js     [22m[32m2.63 KB[39m
+[32mESM[39m [1mdist\utils.js.map [22m[32m13.75 KB[39m
+[32mESM[39m ⚡️ Build success in 164ms
+[32mESM[39m [1mdist\motion.js     [22m[32m13.80 KB[39m
+[32mESM[39m [1mdist\motion.js.map [22m[32m36.83 KB[39m
+[32mESM[39m ⚡️ Build success in 254ms
+[32mCJS[39m [1mdist\motion.cjs     [22m[32m17.47 KB[39m
+[32mCJS[39m [1mdist\motion.cjs.map [22m[32m38.17 KB[39m
+[32mCJS[39m ⚡️ Build success in 265ms
+[32mESM[39m [1mdist\index.js     [22m[32m157.51 KB[39m
+[32mESM[39m [1mdist\index.js.map [22m[32m402.17 KB[39m
+[32mESM[39m ⚡️ Build success in 501ms
+[32mCJS[39m [1mdist\index.cjs     [22m[32m174.98 KB[39m
+[32mCJS[39m [1mdist\index.cjs.map [22m[32m406.12 KB[39m
+[32mCJS[39m ⚡️ Build success in 526ms
+[34mDTS[39m Build start
+[34mDTS[39m Build start
+[34mDTS[39m Build start
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 5588ms
+[32mDTS[39m [1mdist\charts.d.ts  [22m[32m13.00 B[39m
+[32mDTS[39m [1mdist\charts.d.cts [22m[32m13.00 B[39m
+[32mDTS[39m ⚡️ Build success in 8898ms
+[32mDTS[39m [1mdist\utils.d.ts  [22m[32m21.15 KB[39m
+[32mDTS[39m [1mdist\utils.d.cts [22m[32m21.15 KB[39m
+[32mDTS[39m ⚡️ Build success in 12248ms
+[32mDTS[39m [1mdist\motion.d.ts  [22m[32m2.68 KB[39m
+[32mDTS[39m [1mdist\motion.d.cts [22m[32m2.68 KB[39m
+[32mDTS[39m ⚡️ Build success in 16794ms
+[32mDTS[39m [1mdist\index.d.ts  [22m[32m84.34 KB[39m
+[32mDTS[39m [1mdist\index.d.cts [22m[32m84.34 KB[39m
+✓ tsup build passed
+
+══════════════════════════════════════════════════════════
+ ✅  All checks passed
+══════════════════════════════════════════════════════════
