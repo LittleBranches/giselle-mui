@@ -118,7 +118,7 @@
     "eslint-plugin-unused-imports": "^4.0.0",
     "framer-motion": "^12.38.0",
     "globals": "^15.0.0",
-    "jsdom": "^26.0.0",
+    "jsdom": "^29.1.1",
     "prettier": "^3.0.0",
     "react": "^19.0.0",
     "react-apexcharts": "^1.9.0",
