@@ -29,7 +29,7 @@ package that must remain free of MUI.
 
 This package must not import:
 
-- `minimal-shared/hooks` or `minimal-shared/utils`
+- the `minimal-shared` package (hooks or utils subpaths) — **must not import**
 - `es-toolkit`
 - Any other proprietary or non-MIT dependency
 

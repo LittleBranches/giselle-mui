@@ -165,7 +165,7 @@ Update `README.md` with:
 1. **Why it exists** — the non-obvious decision it encodes
 2. **Why it belongs here** — what makes it library-worthy vs. app-specific
 3. **Design decisions** — anything non-obvious about layout, accessibility, colour, or interaction
-4. **Library safety** — zero proprietary deps, no personal content, no Minimals identifiers
+4. **Library safety** — zero proprietary deps, no personal content, no banned identifier names
 5. **File structure** — list every file in the folder and its purpose
 6. **Related** — links to related components or docs
 

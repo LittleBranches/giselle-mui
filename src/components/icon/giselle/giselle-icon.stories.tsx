@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import { GiselleIcon } from './giselle-icon';
 
@@ -70,6 +71,31 @@ export const FlipAndRotate: Story = {
       <GiselleIcon icon="solar:arrow-right-bold-duotone" width={32} rotate={1} />
       <GiselleIcon icon="solar:arrow-right-bold-duotone" width={32} rotate={2} />
       <GiselleIcon icon="solar:arrow-right-bold-duotone" width={32} rotate={3} />
+    </Box>
+  ),
+};
+
+/**
+ * Responsive — icon renders identically at all breakpoints.
+ * Sizes story shows the available width range; this story shows in-context usage
+ * within labeled containers at standard MUI breakpoint widths.
+ */
+export const Responsive: Story = {
+  parameters: { layout: 'padded' },
+  render: () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      {[360, 600, 900, 1200].map((width) => (
+        <Box key={width}>
+          <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+            {width}px
+          </Typography>
+          <Box sx={{ width, maxWidth: '100%', display: 'flex', alignItems: 'center', gap: 2 }}>
+            {([16, 20, 24, 32, 48] as const).map((size) => (
+              <GiselleIcon key={size} icon="solar:rocket-bold-duotone" width={size} />
+            ))}
+          </Box>
+        </Box>
+      ))}
     </Box>
   ),
 };

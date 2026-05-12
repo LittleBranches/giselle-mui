@@ -9,6 +9,7 @@ import {
   fixedWrapperSx,
   subNavButtonSx,
 } from './floating-sub-nav.styles';
+import { SUB_NAV_BUTTON_SIZE, SUB_NAV_BUTTON_MIN_SIZE } from './floating-sub-nav.const';
 
 // ----------------------------------------------------------------------
 
@@ -91,5 +92,23 @@ describe('subNavButtonSx', () => {
   it('active button has primary.main color', () => {
     const styles = (subNavButtonSx(true) as unknown as StyleFn)(mockTheme);
     expect(styles.color).toBe('primary.main');
+  });
+});
+
+describe('readability — minimum touch-target constants (regression)', () => {
+  it('[regression] SUB_NAV_BUTTON_SIZE.xs >= SUB_NAV_BUTTON_MIN_SIZE', () => {
+    expect(SUB_NAV_BUTTON_SIZE.xs).toBeGreaterThanOrEqual(SUB_NAV_BUTTON_MIN_SIZE);
+  });
+
+  it('[regression] SUB_NAV_BUTTON_SIZE.sm >= SUB_NAV_BUTTON_MIN_SIZE', () => {
+    expect(SUB_NAV_BUTTON_SIZE.sm).toBeGreaterThanOrEqual(SUB_NAV_BUTTON_MIN_SIZE);
+  });
+
+  it('[regression] SUB_NAV_BUTTON_SIZE.md >= SUB_NAV_BUTTON_MIN_SIZE', () => {
+    expect(SUB_NAV_BUTTON_SIZE.md).toBeGreaterThanOrEqual(SUB_NAV_BUTTON_MIN_SIZE);
+  });
+
+  it('[regression] SUB_NAV_BUTTON_SIZE.lg >= SUB_NAV_BUTTON_MIN_SIZE', () => {
+    expect(SUB_NAV_BUTTON_SIZE.lg).toBeGreaterThanOrEqual(SUB_NAV_BUTTON_MIN_SIZE);
   });
 });

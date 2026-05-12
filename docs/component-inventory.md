@@ -35,8 +35,6 @@ sidebar_label: 'Component Inventory'
 
 **Shipped count: 16 exports (13 components + 5 utilities)**
 
-> Note: `Accordion`, `TimelineTwoColumn` (+ sub-exports), `TaskList`, and `useNestedChecklist` are also shipped but not yet listed in this table. Add them in the next inventory refresh.
-
 ---
 
 ## Quality status — shipped components
@@ -47,21 +45,22 @@ sidebar_label: 'Component Inventory'
 
 | Component                                                            | DoD   | Best practices | Last audited |
 | -------------------------------------------------------------------- | ----- | -------------- | ------------ |
-| `Accordion`                                                          | 19/20 | 12/13          | 8 May 2026   |
-| `TimelineTwoColumn` (+ `PhaseCard`, `TimelineDot`, `MilestoneBadge`) | 18/20 | 12/13          | 8 May 2026   |
-| `GiselleIcon`                                                        | ⬜    | ⬜             | —            |
-| `MetricCard` + `MetricCardDecoration`                                | ⬜    | ⬜             | —            |
-| `SelectableCard`                                                     | ⬜    | ⬜             | —            |
-| `QuoteCard`                                                          | ⬜    | ⬜             | —            |
-| `StatCard`                                                           | ⬜    | ⬜             | —            |
-| `RadialProgressCard`                                                 | ⬜    | ⬜             | —            |
-| `TimelineCompact`                                                    | ⬜    | ⬜             | —            |
-| `FloatingSubNav`                                                     | ⬜    | ⬜             | —            |
-| `TwoColumnShowcaseRow`                                               | ⬜    | ⬜             | —            |
-| `SectionTitle` + `SectionCaption`                                    | ⬜    | ⬜             | —            |
-| `SectionContainer`                                                   | ⬜    | ⬜             | —            |
-| `IconActionBar`                                                      | ⬜    | ⬜             | —            |
-| `TaskList`                                                           | ⬜    | ⬜             | —            |
+| `Accordion`                                                          | 20/20 | 13/13          | 13 May 2026  |
+| `TimelineTwoColumn` (+ `PhaseCard`, `TimelineDot`, `MilestoneBadge`) | 20/20 | 13/13          | 13 May 2026  |
+| `GiselleIcon`                                                        | 20/20 | 13/13          | 13 May 2026  |
+| `MetricCard` + `MetricCardDecoration`                                | 20/20 | 13/13          | 13 May 2026  |
+| `SelectableCard`                                                     | 20/20 | 13/13          | 13 May 2026  |
+| `QuoteCard`                                                          | 20/20 | 13/13          | 13 May 2026  |
+| `StatCard`                                                           | 20/20 | 13/13          | 13 May 2026  |
+| `RadialProgressCard`                                                 | 20/20 | 13/13          | 13 May 2026  |
+| `TimelineCompact`                                                    | 20/20 | 13/13          | 13 May 2026  |
+| `FloatingSubNav`                                                     | 20/20 | 13/13          | 13 May 2026  |
+| `TwoColumnShowcaseRow`                                               | 20/20 | 13/13          | 13 May 2026  |
+| `SectionTitle` + `SectionCaption`                                    | 20/20 | 13/13          | 13 May 2026  |
+| `SectionContainer`                                                   | 20/20 | 13/13          | 13 May 2026  |
+| `IconActionBar`                                                      | 20/20 | 13/13          | 13 May 2026  |
+| `TaskList`                                                           | 20/20 | 13/13          | 13 May 2026  |
+| `FaqAccordion`                                                       | 20/20 | 13/13          | 13 May 2026  |
 
 **DoD scale:** Scenario B = n/20 items · Scenario A (sub-component) = n/10 items  
 **Best practices scale:** 13 items — see `docs/components/cleanup-workflow.md` Step 14 for the rubric
@@ -210,9 +209,9 @@ sidebar_label: 'Component Inventory'
 
 | Phase | Component / Export                                                                                                    | Status | Blocker                                                                  |
 | ----- | --------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ |
-| 1     | `varFade`, `varScale`, `varZoom` — motion variant factory utilities                                                   | ⬜     | None (start in parallel with anything)                                   |
-| 2     | `SectionTitle` + `SectionCaption` — **animated `/motion` variants** (static base shipped in Phase E)                  | ⬜     | Phase 1 (`varFade`)                                                      |
-| 3     | `FloatingSideNav` — vertically stacked left-side pill nav (distinct from `FloatingSubNav`)                            | ⬜     | Phase 1 (`varFade`)                                                      |
+| 1     | `fadeVariants`, `scaleVariants`, `zoomVariants` — motion variant factory utilities                                    | ⬜     | None (start in parallel with anything)                                   |
+| 2     | `SectionTitle` + `SectionCaption` — **animated `/motion` variants** (static base shipped in Phase E)                  | ⬜     | Phase 1 (`fadeVariants`)                                                 |
+| 3     | `FloatingSideNav` — vertically stacked left-side pill nav (distinct from `FloatingSubNav`)                            | ⬜     | Phase 1 (`fadeVariants`)                                                 |
 | 4     | SVG animation primitives — `FloatLine`, `FloatTriangle`, `FloatDot`, `CircleDot`, `PlusSign` (internal, not exported) | ⬜     | Phase 1                                                                  |
 | 5     | `HeroBackground` — radial gradient backdrop + animated SVG grid layer                                                 | ⬜     | Phases 1, 4                                                              |
 | 6     | `FloatingIconCloud` — floating icon images with seeded pseudo-random positioning                                      | ⬜     | None                                                                     |
@@ -300,9 +299,9 @@ sidebar_label: 'Component Inventory'
 
 #### Deferred (post-launch)
 
-| Item                                                                                                                                                      | Status |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| Extract `CardStatusBadge` — "Now" pulsing badge + "Overdue" chip + scenario label from `PhaseCard`; deferred until Minimals cleanup is confirmed complete | ⬜     |
+| Item                                                                                                                                                                    | Status |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| Extract `CardStatusBadge` — "Now" pulsing badge + "Overdue" chip + scenario label from `PhaseCard`; deferred until proprietary identifier cleanup is confirmed complete | ⬜     |
 
 ---
 

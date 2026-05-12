@@ -120,7 +120,7 @@ function GiselleThemeProvider({ children, themeOverrides, theme }: Props) {
 
 | Task                                                                                   | Label   | Status |
 | -------------------------------------------------------------------------------------- | ------- | ------ |
-| Complete Phase B (Giselle theme preset) — this prerequisite is already met              | Theming | ✅     |
+| Complete Phase B (Giselle theme preset) — this prerequisite is already met             | Theming | ✅     |
 | Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ⬜     |
 | Implement `GiselleThemeProvider` wrapping `CssVarsProvider` with merge logic           | Theming | ⬜     |
 | Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | Theming | ⬜     |
@@ -157,8 +157,8 @@ for the milestone tracking the removal of `minimal-shared/utils` imports from
 
 **Goal:** Export a framework-agnostic, MIT-safe `GiselleSettingsProvider<TState>` that
 persists user UI preferences (color mode, direction, font size, color presets) with zero
-proprietary dependencies. Enables consumers to migrate off the Minimals `SettingsProvider`
-in a one-import swap.
+proprietary dependencies. Enables consumers to swap out a third-party `SettingsProvider`
+in a one-import change.
 
 **Prerequisite:** Phase C (GiselleThemeProvider) — the settings system drives the theme.
 
@@ -188,7 +188,7 @@ Full design: [`docs/components/settings-provider-plan.md`](../components/setting
 ### Phase E — Standalone project UI primitives — Components (Medium priority)
 
 **Goal:** Export the layout and section primitives that every portfolio or product site needs,
-so a blank Next.js project can assemble full pages with zero Minimals dependency and zero
+so a blank Next.js project can assemble full pages with zero proprietary dependencies and zero
 reimplementation of recurring patterns.
 
 **Prerequisite:** Phase A (`channelAlpha`) — some primitives use CSS-variable alpha tints.
@@ -200,10 +200,10 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 
 | Task                                                                                              | Label      | Status |
 | ------------------------------------------------------------------------------------------------- | ---------- | ------ |
-| Extract `TwoColumnShowcaseRow` — clean, zero Minimals, ready now                                  | Components | ✅     |
+| Extract `TwoColumnShowcaseRow` — clean, no proprietary identifiers, ready now                     | Components | ✅     |
 | Extract `SectionTitle` + `SectionCaption` — section heading group with optional gradient accent   | Components | ✅     |
 | Extract `FloatingSubNav` — sticky/fixed pill nav with framer-motion, `ReactNode` icon slot        | Components | ✅     |
-| Extract `OptionWithBlurb` — tiny wrapper, clean, zero Minimals                                    | Components | ⬜     |
+| Extract `OptionWithBlurb` — tiny wrapper, clean, no proprietary identifiers                       | Components | ⬜     |
 | Extract `SectionPendingLoader` — replace internal `Iconify` with `GiselleIcon`                    | Components | ⬜     |
 | Extract `FloatingControlBar` — replace `channelAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | Components | ⬜     |
 
@@ -228,7 +228,7 @@ Full gap analysis: [`docs/components/standalone-gap-analysis.md`](../components/
 ### Phase F — DetailsDrawer — Components (Medium priority)
 
 **Goal:** Export a reusable `<DetailsDrawer>` component — a slide-in panel from the right edge
-of the viewport, styled to MUI theme tokens, with zero Minimals dependency. This is the
+of the viewport, styled to MUI theme tokens, with zero proprietary dependencies. This is the
 universal shell for any detail or edit view in the library: timeline item details, settings,
 preview panels, and any future per-item UI.
 
@@ -252,11 +252,10 @@ It does NOT own:
 that default. Stays within `xs: '100%', md: 480` using MUI `sx`.
 
 **Inspiration source (non-negotiable copyright note):**
-The interaction model is inspired by the Minimals `SettingsDrawer` pattern, but this
-component is written **entirely from scratch** in giselle-mui. No code, no utility
-functions, no styled-component definitions are copied from Minimals. The pattern (slide-in
-drawer with overlay, header, body, close button) is a standard UI primitive — it is not
-proprietary to Minimals.
+The interaction model is a standard UI primitive — a slide-in drawer with overlay, header,
+body, and close button. This component is written **entirely from scratch** in giselle-mui.
+No code, utility functions, or styled-component definitions from any external theme kit are
+copied. The pattern is not proprietary to any specific theme.
 
 **Props interface:**
 
@@ -439,7 +438,7 @@ consumer boilerplate.
 
 ## Phase L — Quality Infrastructure
 
-| Task                                                                      | Label   | Status |
-| ------------------------------------------------------------------------- | ------- | ------ |
+| Task                                                                           | Label | Status               |
+| ------------------------------------------------------------------------------ | ----- | -------------------- |
 | PR template (`.github/pull_request_template.md`) — consistent across all repos | Chore | ✅ Done — 9 May 2026 |
-| PR messages index (`docs/pr-messages/`) — all 26 PRs documented           | Chore   | ✅ Done — 9 May 2026 |
+| PR messages index (`docs/pr-messages/`) — all 26 PRs documented                | Chore | ✅ Done — 9 May 2026 |

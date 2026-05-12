@@ -53,7 +53,7 @@ safer than passing `hideContactFooter: true` — the default state is the simple
 
 ## Library safety
 
-- No Minimals imports (`varAlpha`, `varFade`, `varBlur`)
+- No banned identifier names (`varAlpha`, `varFade`, `varBlur`)
 - `channelAlpha` from `../../utils/theme-utils` replaces `varAlpha`
 - No hardcoded hex or rgba literals — all colours use `theme.vars.palette` channels
 - No personal content in stories
@@ -63,7 +63,7 @@ safer than passing `hideContactFooter: true` — the default state is the simple
 ```
 faq-accordion.tsx          — JSX composition only
 types.ts                   — FaqItem, FaqAccordionProps
-utils.ts                   — varFade, varContainer, svgLineTransition (no JSX)
+utils.ts                   — fadeVariants, containerVariants, svgLineTransition (no JSX)
 faq-accordion.styles.ts    — sx constants and factories
 faq-accordion.const.ts     — named size/spacing constants
 faq-accordion-svg.tsx      — internal SVG decoration sub-components

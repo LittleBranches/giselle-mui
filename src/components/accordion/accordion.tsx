@@ -12,7 +12,13 @@ import Typography from '@mui/material/Typography';
 
 import { CheckIconButton } from './check-icon-button';
 import type { AccordionProps } from './types';
-import { checkboxSx, leadingIconSx, summarySx, summaryRowSx } from './accordion.styles';
+import {
+  accordionRootSx,
+  checkboxSx,
+  leadingIconSx,
+  summarySx,
+  summaryRowSx,
+} from './accordion.styles';
 
 // ----------------------------------------------------------------------
 
@@ -151,7 +157,7 @@ export function Accordion({
   );
 
   return (
-    <MuiAccordion sx={[...(Array.isArray(sx) ? sx : [sx])]} {...other}>
+    <MuiAccordion sx={[accordionRootSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       {hasLeadingElement ? (
         <Box sx={summaryRowSx}>
           {leadingElement}

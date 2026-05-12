@@ -21,7 +21,7 @@ type FadeDirection = 'in' | 'inUp' | 'inDown' | 'inLeft' | 'inRight';
  * @param direction - `'in'` | `'inUp'` | `'inDown'` | `'inLeft'` | `'inRight'`
  * @param distance - Translation distance in px. @default 120
  */
-export const varFade = (direction: FadeDirection, distance = 120): Variants => {
+export const fadeVariants = (direction: FadeDirection, distance = 120): Variants => {
   const variants: Record<FadeDirection, Variants> = {
     in: {
       initial: { opacity: 0 },
@@ -56,7 +56,7 @@ export const varFade = (direction: FadeDirection, distance = 120): Variants => {
  * Returns framer-motion `Variants` for a stagger container.
  * Children animate with a 50 ms stagger delay.
  */
-export const varContainer = (): Variants => ({
+export const containerVariants = (): Variants => ({
   animate: {
     transition: {
       staggerChildren: 0.05,

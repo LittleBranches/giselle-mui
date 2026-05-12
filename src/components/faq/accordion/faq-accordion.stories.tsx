@@ -150,3 +150,19 @@ export const SingleItem: Story = {
     contactHref: '/contact',
   },
 };
+
+/**
+ * Responsive — verifies the section layout at standard MUI breakpoint widths.
+ * The decorative SVGs appear only at ≥1440 px (display:none below that threshold).
+ */
+export const Responsive: Story = {
+  parameters: { layout: 'padded' },
+  args: {
+    caption: 'Support',
+    title: 'Frequently Asked',
+    txtGradient: 'Questions',
+    faqs: SAMPLE_FAQS.slice(0, 2),
+    contactHref: '/contact',
+    contactLabel: 'Send a message',
+  },
+};

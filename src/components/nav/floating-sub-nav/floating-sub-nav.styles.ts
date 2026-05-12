@@ -1,6 +1,7 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
 import { channelAlpha } from '../../../utils/theme-utils';
+import { SUB_NAV_BUTTON_SIZE } from './floating-sub-nav.const';
 
 // Typed channel accessor helpers for palette entries not typed as Record<string, string>
 const grey500Ch = (theme: Theme): string =>
@@ -68,8 +69,8 @@ export const subNavButtonSx =
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    width: { xs: 36, sm: 38, md: 42, lg: 44 },
-    height: { xs: 36, sm: 38, md: 42, lg: 44 },
+    width: SUB_NAV_BUTTON_SIZE,
+    height: SUB_NAV_BUTTON_SIZE,
     p: 0,
     borderRadius: 1.5,
     border: `solid 1px transparent`,

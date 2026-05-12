@@ -21,7 +21,7 @@ nav, animated section titles, icon cloud, interactive logo. Building them _in_ g
 and documenting them in Storybook serves two goals simultaneously:
 
 1. **The portfolio gets better-tested, more maintainable components** — extracted from alexrebula,
-   cleaned of Minimals deps, independently regression-tested.
+   with proprietary identifier dependencies removed, independently regression-tested.
 2. **giselle-docs gets a real homepage** using the components it ships — eating its own dog food.
 
 ---
@@ -29,7 +29,7 @@ and documenting them in Storybook serves two goals simultaneously:
 ## Dependency tree
 
 ```
-Phase 1: Motion variant utilities (varFade, varSlide, varScale)
+Phase 1: Motion variant utilities (fadeVariants, slideVariants, scaleVariants)
    └─ Phase 2: SectionTitle + SectionCaption     [/motion]
    └─ Phase 3: FloatingSideNav                   [/motion]
    └─ Phase 4: SVG animation primitives          [/motion]
@@ -52,7 +52,7 @@ and `package.json`.
 **Exported from:** `src/motion-index.ts`
 
 Defines clean, standalone framer-motion `Variants` factories. These are the giselle-mui
-counterpart to Minimals' `varFade`, `varSlide`, `varScale`, `varRotate`.
+counterpart to the `fadeVariants`, `slideVariants`, `scaleVariants`, `rotateVariants` pattern.
 
 ```ts
 // motion-variants.ts
@@ -65,20 +65,20 @@ export type MotionVariantOptions = {
 };
 
 /** Fade in/out with optional vertical slide. */
-export function varFade(
+export function fadeVariants(
   direction: 'in' | 'inUp' | 'inDown' | 'inLeft' | 'inRight' | 'out' | 'outUp' | 'outDown',
   options?: MotionVariantOptions
 ): Variants { ... }
 
 /** Scale in/out from a neutral starting size. */
-export function varScale(options?: MotionVariantOptions): Variants { ... }
+export function scaleVariants(options?: MotionVariantOptions): Variants { ... }
 
 /** Zoom in/out with opacity. */
-export function varZoom(options?: MotionVariantOptions): Variants { ... }
+export function zoomVariants(options?: MotionVariantOptions): Variants { ... }
 ```
 
-**Blocker removed:** All components that currently import `varFade` from
-`../../../components/animate` (Minimals) switch to this.
+**Blocker removed:** All components that currently import `fadeVariants` from
+`../../../components/animate` switch to this.
 
 **Storybook:** Not a visual component — no story needed. Unit tests assert variant shape
 (hidden/visible keys, expected property names).
@@ -95,11 +95,11 @@ Already listed in the Storybook title group map as `Layout/Section Title`.
 
 ### Blockers to fix (all mechanical)
 
-| Blocker                                | Fix                                            |
-| -------------------------------------- | ---------------------------------------------- |
-| `varAlpha` from `minimal-shared/utils` | `channelAlpha` from `src/utils/theme-utils.ts` |
-| `varFade` from Minimals animate        | Phase 1 `varFade` utility                      |
-| `m.h2`, `m.span`, `m.div`              | `motion.h2`, `motion.span`, `motion.div`       |
+| Blocker                                          | Fix                                            |
+| ------------------------------------------------ | ---------------------------------------------- |
+| proprietary alpha helper (removed) | `channelAlpha` from `src/utils/theme-utils.ts` |
+| `fadeVariants` from the portfolio's animate utilities | Phase 1 `fadeVariants` utility                      |
+| `m.h2`, `m.span`, `m.div`                        | `motion.h2`, `motion.span`, `motion.div`       |
 
 ### API (unchanged from alexrebula version)
 
@@ -143,7 +143,7 @@ placement. They share `NavPill`-style item rendering but that's all.
 
 | Blocker                                | Fix                                                                                                |
 | -------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `varAlpha` from `minimal-shared/utils` | `channelAlpha`                                                                                     |
+| proprietary alpha helper (removed) | `channelAlpha`                                                                                     |
 | `m.*` from framer-motion               | `motion.*`                                                                                         |
 | `useHomeScroll` context                | Remove — accept `isVisible: boolean`, `activeId: string \| null`, `onSelect: (id: string) => void` |
 | `IconifyName` type                     | Use `ReactNode` for icon slot (per rule 5)                                                         |
@@ -200,12 +200,12 @@ A full-width animated hero background: radial gradient backdrop + SVG grid layer
 
 ### Blockers to fix
 
-| Blocker                                   | Fix                                                                                       |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `theme.mixins.bgGradient(...)` (Minimals) | CSS gradient directly: `background: \`radial-gradient(...)\``using`theme.vars.palette.\*` |
-| `CONFIG.assetsDir` import                 | `backgroundImageSrc?: string` prop                                                        |
-| `m.*`                                     | `motion.*`                                                                                |
-| `MotionContainer` from Minimals animate   | Replace with `motion.div` or Phase 1 variant                                              |
+| Blocker                                                  | Fix                                                                                       |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `theme.mixins.bgGradient(...)` (legacy MUI mixin)        | CSS gradient directly: `background: \`radial-gradient(...)\``using`theme.vars.palette.\*` |
+| `CONFIG.assetsDir` import                                | `backgroundImageSrc?: string` prop                                                        |
+| `m.*`                                                    | `motion.*`                                                                                |
+| `MotionContainer` from the portfolio's animate utilities | Replace with `motion.div` or Phase 1 variant                                              |
 
 ### API
 
@@ -344,7 +344,7 @@ giselle-mui premium tier ships:
 
 | #   | Component                                 | Subpath   | Effort | Blocker?              |
 | --- | ----------------------------------------- | --------- | ------ | --------------------- |
-| 1   | Motion variant utilities (`varFade` etc.) | `/motion` | S      | None                  |
+| 1   | Motion variant utilities (`fadeVariants` etc.) | `/motion` | S      | None                  |
 | 2   | `SectionTitle` + `SectionCaption`         | `/motion` | S      | Phase 1               |
 | 3   | `FloatingSideNav`                         | `/motion` | M      | Phase 1               |
 | 4   | SVG animation primitives                  | `/motion` | S      | None                  |

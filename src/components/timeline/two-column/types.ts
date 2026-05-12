@@ -216,7 +216,7 @@ export type TimelinePhase = Task & {
    */
   platformsLabel?: string;
   /**
-   * 'scenario' — coloured left border + badge label (used in case-001 for departure scenarios).
+   * 'scenario' — coloured left border + badge label (used for scheduling scenarios with multiple options).
    * 'life-event' — coloured left border + tinted background (used in career timeline).
    * 'marker' — spine-only: dot + floating label, no card. For single point-in-time events
    *             that don't warrant a full phase card (e.g. a certification date, a visa grant).

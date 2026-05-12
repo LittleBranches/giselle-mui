@@ -66,7 +66,7 @@ A visually rich, alternating-side timeline is non-trivial to build correctly wit
 and responsive side-switching are easy to get wrong and worth encoding once for all
 consumers. This is the same justification as every other component in this library.
 
-**Reference implementation:** `alexrebula/src/sections/case-001/view.tsx` (private repo).
+**Reference implementation:** a section view in the private `alexrebula` portfolio (private repo).
 That file is the working source of truth for the visual pattern. The public component
 will be rewritten from scratch — no code copied from the private repo.
 

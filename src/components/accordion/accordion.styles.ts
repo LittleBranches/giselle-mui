@@ -5,6 +5,13 @@ import { ACCORDION_CHECK_ICON_SIZE } from './accordion.const';
 // ----------------------------------------------------------------------
 
 /**
+ * Root sx applied to the MuiAccordion element. Stable empty object so that
+ * consumer `sx` merging via `sx={[accordionRootSx, ...consumerSx]}` never
+ * creates a new object reference on every render.
+ */
+export const accordionRootSx: SxProps<Theme> = {};
+
+/**
  * Flex row containing the optional leading element (checkbox or icon) and
  * the `AccordionSummary`. The checkbox and summary are siblings — never
  * nested — which is required for WCAG 2.2 AA compliance (no interactive

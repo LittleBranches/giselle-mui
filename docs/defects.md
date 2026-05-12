@@ -63,3 +63,38 @@ grep -rn "inputProps=" src/ --include="*.tsx" --include="*.ts"
 
 - If a defect changes behavior expectations, update component README and story docs in the same PR.
 - If a decision changes API behavior, update `docs/components/cleanup-workflow.md` checklist language in the same PR.
+
+---
+
+## Process defects
+
+### DEF-PROC-001 — Banned content bypass: docs/ not scanned by the quality gate
+
+- **Opened:** 13 May 2026
+- **Status:** Fixed — `scripts/check-banned-content.js` added; wired into `quality-gate.js` as step 0a
+- **Severity:** Critical. This is a public MIT-licensed repository. Banned content that reaches `main` is immediately visible to any consumer who clones or browses the repo.
+
+**What happened (PR #34):**
+
+Three classes of banned content reached a pushed commit on a public-facing branch before being caught:
+
+1. **Personal name** (`Žiga`) — in `docs/components/dashboard-components-plan.md`, inside an "Immediate consumer" description.
+2. **Internal project codename** (`first-branch`) — same file, multiple occurrences in component consumer bullets.
+3. **Private internal path reference** (`case-001`) — in `docs/components/dashboard-components-plan.md`, `docs/standalone-gap-analysis.md`, `docs/components/timeline/two-column/timeline-plan.md`, and `src/components/timeline/two-column/types.ts` JSDoc.
+4. **Banned identifier names in docs** (`varFade`, `varContainer` etc.) — in `docs/roadmap.mdx` and `docs/components/home-components-extraction-plan.md`. ESLint bans these in `src/**`; it does not run on `docs/**`.
+
+**Root cause:**
+
+The quality gate only ran ESLint on `src/**`. There was no automated check that scanned `docs/**` or `*.md` / `*.mdx` files for the same banned patterns. A human reviewer (the GitHub Copilot bot) caught all four classes — but only after the commits had already been force-pushed to the remote branch.
+
+**Fix applied:**
+
+- Added `scripts/check-banned-content.js` — a Node.js scanner that checks both `docs/**` and `src/**` for banned identifier names (`varAlpha`, `varFade`, `varBlur`, `varContainer`, `customShadows`, `_mock`, `minimal-shared`) and known private reference patterns (`case-001`).
+- Wired as step 0a in `scripts/quality-gate.js` — runs before structure check, Prettier, and ESLint. A violation fails the quality gate with a clear file + line report.
+- Renamed all flagged occurrences in docs files: `varFade` → `fadeVariants`, `varScale` → `scaleVariants`, `varZoom` → `zoomVariants`, etc.
+
+**Lesson:**
+
+The pre-push hook and CI run `check:verify`. Adding any new content-correctness rule to `quality-gate.js` automatically propagates it to both. If a rule cannot be expressed as a script step, it must be expressed as an ESLint rule (for source files) — but those two tools together must cover every file type that this repository publishes.
+
+**Personal names are not detectable by automation alone.** No script can know every name that should be excluded. The responsibility is author discipline at write time. The `copilot-instructions.md` rule 0 ("Zero personal data") must be treated as a pre-commit mental checklist item, not a post-push catch. If a name slips through, the check-banned-content script will not catch it — but the GitHub Copilot code reviewer will, as it did here.

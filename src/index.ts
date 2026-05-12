@@ -41,8 +41,14 @@ export type { QuoteCardProps } from './components/card/quote';
 export { StatCard, STAT_CARD_SPARKLINE_OPTIONS } from './components/card/stat';
 export type { StatCardProps, StatCardColor, StatCardItem } from './components/card/stat';
 
-export { PhaseCard, TimelineDot, TimelineTwoColumn } from './components/timeline/two-column';
+export {
+  MilestoneBadge,
+  PhaseCard,
+  TimelineDot,
+  TimelineTwoColumn,
+} from './components/timeline/two-column';
 export type {
+  MilestoneBadgeProps,
   PhaseCardProps,
   TaskDetails,
   TimelineDotComponentProps,
