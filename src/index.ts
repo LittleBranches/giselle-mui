@@ -23,6 +23,13 @@ export {
 export { GiselleThemeProvider } from './components/theme-provider/giselle';
 export type { GiselleThemeProviderProps } from './components/theme-provider/giselle';
 
+export { GiselleSettingsProvider, useGiselleSettings } from './components/settings-provider';
+export type {
+  BaseSettingsState,
+  GiselleSettingsContextValue,
+  GiselleSettingsProviderProps,
+} from './components/settings-provider';
+
 export { GiselleIcon } from './components/icon/giselle';
 export type { GiselleIconProps } from './components/icon/giselle';
 
