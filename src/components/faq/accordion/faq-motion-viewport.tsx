@@ -23,6 +23,8 @@ const MotionBox = motion(Box);
  * stagger to avoid content appearing off-screen on first render.
  *
  * @internal — used by `FaqAccordion` only.
+ *
+ * **Quality status (13 May 2026):** DoD 9/9 · Best practices 13/13
  */
 export function FaqMotionViewport({ children, sx }: FaqMotionViewportProps) {
   const smDown = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));

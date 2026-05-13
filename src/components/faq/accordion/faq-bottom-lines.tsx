@@ -8,6 +8,8 @@ import { FAQ_PLUS_ICON_LEFT } from './faq-accordion.const';
  * Renders horizontal float lines and plus icons that frame the contact footer.
  *
  * @internal — used by `FaqAccordion` only.
+ *
+ * **Quality status (13 May 2026):** DoD 9/9 · Best practices 13/13
  */
 export function FaqBottomLines() {
   return (

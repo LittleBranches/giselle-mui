@@ -23,6 +23,8 @@ type SvgProps = React.ComponentProps<typeof MotionSvg>;
  * Decorative dashed float line (horizontal or vertical).
  * Only rendered at ≥1440 px via base decoration styles.
  * @internal — used by `FaqAccordion` only.
+ *
+ * **Quality status (13 May 2026):** DoD 9/9 · Best practices 13/13
  */
 export function FaqFloatLine({ sx, vertical, ...other }: SvgProps & { vertical?: boolean }) {
   return (

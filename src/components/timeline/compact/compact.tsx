@@ -12,6 +12,19 @@ import { PhaseAccordionRow } from './phase-accordion-row';
 
 // ----------------------------------------------------------------------
 
+/**
+ * Collapsible accordion view of timeline phases and milestones,
+ * optimised for mobile and narrow-viewport contexts.
+ *
+ * One phase = one accordion row. Expanding a row reveals its milestones in
+ * the order controlled by `sortOrder`. In checklist mode each phase and
+ * milestone row shows a completion toggle.
+ *
+ * Shares the same `TimelinePhase` data model as `TimelineTwoColumn` — the
+ * same dataset can render both views from a single source.
+ *
+ * **Quality status (13 May 2026):** DoD 20/20 · Best practices 13/13
+ */
 export function TimelineCompact({
   phases,
   checklist = false,

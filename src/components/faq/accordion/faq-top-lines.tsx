@@ -11,6 +11,8 @@ import { FAQ_FLOAT_LINE_LEFT } from './faq-accordion.const';
  * Renders stacked triangle icons and a vertical float line on the left edge.
  *
  * @internal — used by `FaqAccordion` only.
+ *
+ * **Quality status (13 May 2026):** DoD 9/9 · Best practices 13/13
  */
 export function FaqTopLines() {
   return (

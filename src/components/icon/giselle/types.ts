@@ -7,12 +7,19 @@ import type React from 'react';
 /**
  * Props for {@link GiselleIcon}.
  *
- * Not extending `IconProps` directly — `@iconify/react` types `display` as
- * `string | number`, which conflicts with MUI Box's `ResponsiveStyleValue<Display>`
- * and causes a TypeScript overload resolution failure when used with `Box component`.
- * Only the safe subset of `IconProps` is exposed here.
+ * Extends `Omit<React.HTMLAttributes<HTMLSpanElement>, 'style' | 'className' | 'children'>`
+ * to support `id`, `aria-*`, `data-*`, and other standard HTML attributes forwarded
+ * to the outer `Box component="span"` wrapper.
+ *
+ * Not extending `BoxProps` or `IconProps` directly — `@iconify/react` types `display` as
+ * `string | number`, which conflicts with MUI Box's `ResponsiveStyleValue<Display>`.
+ * `className` and `style` are intentionally kept as explicit props because they are
+ * forwarded to the inner `Icon` SVG element, not the outer wrapper.
  */
-export interface GiselleIconProps {
+export interface GiselleIconProps extends Omit<
+  React.HTMLAttributes<HTMLSpanElement>,
+  'style' | 'className' | 'children'
+> {
   /**
    * Iconify icon identifier in the format `"prefix:name"`,
    * e.g. `"solar:rocket-bold-duotone"` or `"logos:react"`.

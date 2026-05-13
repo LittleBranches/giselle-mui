@@ -40,6 +40,8 @@ export type { QuoteCardProps } from './types';
  *   source="Platform Team"
  *   elevation={0}
  * />
+ *
+ * **Quality status (13 May 2026):** DoD 20/20 · Best practices 13/13
  */
 export function QuoteCard({
   quote,

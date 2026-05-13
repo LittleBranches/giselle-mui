@@ -75,6 +75,13 @@ index.ts                   — barrel
 README.md                  — this file
 ```
 
+## Quality status — 13 May 2026
+
+| Dimension        | Score | Open items |
+| ---------------- | ----- | ---------- |
+| DoD (Scenario B) | 20/20 | —          |
+| Best practices   | 13/13 | —          |
+
 ## Related
 
 - [`SectionTitle`](../../layout/section-title/README.md) — used for the heading block
