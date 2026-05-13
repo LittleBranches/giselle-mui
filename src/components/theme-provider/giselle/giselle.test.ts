@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import React, { act } from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ReactDOM from 'react-dom/client';
 import { extendTheme } from '@mui/material/styles';
@@ -28,8 +28,15 @@ describe('GiselleThemeProvider — rendering', () => {
 });
 
 describe('GiselleThemeProvider — defaultMode', () => {
+  let container: HTMLDivElement;
+
+  afterEach(async () => {
+    await act(async () => {
+      container?.remove();
+    });
+  });
+
   it('accepts defaultMode prop and renders children without error', async () => {
-    let container!: HTMLDivElement;
     await act(async () => {
       container = document.createElement('div');
       document.body.appendChild(container);
