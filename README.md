@@ -364,7 +364,7 @@ This library grew out of building production applications with commercial MUI th
 
 ## Contributing
 
-Issues and pull requests are welcome. Before opening a PR, please read the quality gate requirements — all six checks (Prettier, ESLint, TypeScript, Vitest, tsup build, Storybook build) must pass. The pre-push hook runs them automatically.
+Issues and pull requests are welcome. Before opening a PR, please read the quality gate requirements — all checks (Structure, Prettier, ESLint, TypeScript, Vitest, tsup build, Storybook build) must pass. The pre-push hook runs them automatically.
 
 See [docs/local-development.md](./docs/local-development.md) to get started.
 
