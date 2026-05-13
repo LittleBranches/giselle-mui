@@ -4,11 +4,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import ReactDOM from 'react-dom/client';
 
-import {
-  ACCORDION_DONE_MIN_TOUCH_TARGET,
-  ACCORDION_CHECK_ICON_SIZE,
-  ACCORDION_ICON_BUTTON_MIN_SIZE,
-} from './accordion.const';
+import { ACCORDION_DONE_MIN_TOUCH_TARGET } from './accordion.const';
 import { Accordion } from './accordion';
 
 // ----------------------------------------------------------------------
@@ -250,14 +246,6 @@ describe('Accordion — checklist interaction', () => {
 describe('readability — minimum size constants', () => {
   it('[regression] ACCORDION_DONE_MIN_TOUCH_TARGET >= 24px (WCAG 2.5.8)', () => {
     expect(ACCORDION_DONE_MIN_TOUCH_TARGET).toBeGreaterThanOrEqual(24);
-  });
-
-  it('[regression] ACCORDION_CHECK_ICON_SIZE >= 20px (WCAG 1.4.11 interactive icons)', () => {
-    expect(ACCORDION_CHECK_ICON_SIZE).toBeGreaterThanOrEqual(20);
-  });
-
-  it('[regression] ACCORDION_ICON_BUTTON_MIN_SIZE >= 24px (WCAG 2.5.8 interactive target)', () => {
-    expect(ACCORDION_ICON_BUTTON_MIN_SIZE).toBeGreaterThanOrEqual(24);
   });
 });
 

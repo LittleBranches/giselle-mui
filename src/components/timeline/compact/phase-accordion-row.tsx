@@ -7,7 +7,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import Typography from '@mui/material/Typography';
 
 import { Accordion } from '../../accordion';
-import { CheckIconButton } from '../../accordion/check-icon-button';
+import { ToggleIconButton } from '../../inputs/toggle-icon-button';
 import { useNestedChecklist } from '../../../utils/use-nested-checklist';
 import { ChevronDownIcon } from './chevron-down-icon';
 import { TaskDetailsModal } from './milestone-modal';
@@ -261,15 +261,16 @@ export function PhaseAccordionRow({
                     >
                       <Box sx={milestoneDotColumnSx}>
                         {checklist && usesMilestoneChildren ? (
-                          <CheckIconButton
-                            done={isDone}
-                            checkIcon={dotNode}
-                            checkDoneIcon={MS_CHECK_DONE_DOT}
-                            checkHoverIcon={MS_CHECK_HOVER_DOT}
-                            onDoneButtonClick={(newDone) => {
+                          <ToggleIconButton
+                            pressed={isDone}
+                            idleIcon={dotNode}
+                            pressedIcon={MS_CHECK_DONE_DOT}
+                            hoverIcon={MS_CHECK_HOVER_DOT}
+                            onPressedChange={(newDone: boolean) => {
                               toggleChild(idx);
                               onToggleMilestoneDone?.(phase.key, idx, newDone);
                             }}
+                            aria-label={isDone ? 'Mark as not done' : 'Mark as done'}
                           />
                         ) : (
                           dotNode

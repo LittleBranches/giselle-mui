@@ -19,11 +19,11 @@ export type { GiselleIconProps } from './components/icon/giselle';
 
 export { Accordion } from './components/accordion';
 export type { AccordionProps } from './components/accordion';
-export {
-  ACCORDION_DONE_MIN_TOUCH_TARGET,
-  ACCORDION_CHECK_ICON_SIZE,
-  ACCORDION_ICON_BUTTON_MIN_SIZE,
-} from './components/accordion';
+export { ACCORDION_DONE_MIN_TOUCH_TARGET } from './components/accordion';
+
+export { ToggleIconButton } from './components/inputs/toggle-icon-button';
+export type { ToggleIconButtonProps } from './components/inputs/toggle-icon-button';
+export { TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET } from './components/inputs/toggle-icon-button';
 
 export { MetricCard, MetricCardDecoration } from './components/card/metric';
 export type {

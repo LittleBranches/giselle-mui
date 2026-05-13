@@ -10,7 +10,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 
-import { CheckIconButton } from './check-icon-button';
+import { ToggleIconButton } from '../inputs/toggle-icon-button';
 import type { AccordionProps } from './types';
 import {
   accordionRootSx,
@@ -59,7 +59,7 @@ import {
  * </Accordion>
  * ```
  *
- * **Quality status (8 May 2026):** DoD 20/20 · Best practices 13/13 · Coverage 100% · Cleanup complete
+ * **Quality status (13 May 2026):** DoD 20/20 · Best practices 13/13 · Coverage 100% · Cleanup complete
  */
 export function Accordion({
   title,
@@ -116,12 +116,13 @@ export function Accordion({
       );
     } else {
       leadingElement = (
-        <CheckIconButton
-          done={done}
-          checkIcon={checkIcon}
-          checkDoneIcon={checkDoneIcon}
-          checkHoverIcon={checkHoverIcon}
-          onDoneButtonClick={onDoneButtonClick}
+        <ToggleIconButton
+          pressed={done}
+          idleIcon={checkIcon as ReactNode}
+          pressedIcon={checkDoneIcon}
+          hoverIcon={checkHoverIcon}
+          onPressedChange={onDoneButtonClick}
+          aria-label={done ? 'Mark as not done' : 'Mark as done'}
         />
       );
     }

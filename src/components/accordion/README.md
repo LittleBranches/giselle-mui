@@ -91,7 +91,7 @@ src/components/accordion/
   README.md                 — this file
 ```
 
-## Quality status — 8 May 2026
+## Quality status — 13 May 2026
 
 | Dimension        | Score | Open items |
 | ---------------- | ----- | ---------- |
