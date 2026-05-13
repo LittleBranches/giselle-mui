@@ -12,5 +12,9 @@
 //   import { DonutChartCard } from '@alexrebula/giselle-mui/charts';
 //   // requires: apexcharts + react-apexcharts in the consumer's own deps
 //
-// Phase H components will be exported from here. Placeholder only.
-export {};
+// Phase H components will be exported from here.
+export { RadialProgressCard } from './components/chart/radial-progress';
+export type {
+  RadialProgressCardProps,
+  RadialProgressItem,
+} from './components/chart/radial-progress';
