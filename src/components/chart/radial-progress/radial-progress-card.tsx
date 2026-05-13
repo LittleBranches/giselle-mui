@@ -32,8 +32,7 @@ const ReactApexChart = lazy(() => import('react-apexcharts'));
  * `RadialProgressCard`
  *
  * A `Card` containing a multi-series radial-bar chart and a legend row.
- * Inspired by the EcommerceSaleByGender pattern — independently implemented
- * without any Minimals utilities.
+ * Independently implemented using standard MUI v7 theme tokens.
  *
  * **Usage:**
  * ```tsx

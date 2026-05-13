@@ -60,13 +60,10 @@ via `overflow: hidden` — no extra work required.
 />
 ```
 
-### Design inspiration and credit
+### Design decisions
 
 The visual concept — a soft, rotated gradient shape in the background of a stat card, tinted to
-the card's accent colour — was inspired by the [Minimals MUI kit](https://minimals.cc/).
-The implementation is independent and original.
-
-`MetricCardDecoration` is an independent, clean-room implementation of this idea:
+the card's accent colour — is an independently implemented clean-room component.
 
 - Colour tinting uses `theme.vars.palette[color].main` with a plain `opacity` value — the
   standard MUI v7 CSS variables approach, fully open-source. No proprietary colour utilities.

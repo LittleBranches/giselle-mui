@@ -71,7 +71,15 @@ console.log('══════════════════════�
 
 const failures = [];
 
-// 0. Structure check (component folder convention — no flat .tsx under src/components/)
+// 0a. Banned content scan — catches prohibited identifier names and private refs in docs/**
+// ESLint only covers src/**; this step fills the gap for *.md and *.mdx files.
+if (!run('Banned content scan', 'node scripts/check-banned-content.js', { fatal: false })) {
+  failures.push(
+    'Banned content — prohibited identifier name or private reference found in docs/ or src/. See output above.'
+  );
+}
+
+// 0b. Structure check (component folder convention — no flat .tsx under src/components/)
 if (!run('Structure check', 'node scripts/check-structure.js', { fatal: false })) {
   failures.push(
     'Structure — flat component file(s) found under src/components/; move each into its own named subfolder'

@@ -14,17 +14,11 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 
 import { GiselleIcon } from '../../icon/giselle';
 import { SectionTitle } from '../../layout/section-title';
-import { varFade } from './utils';
-import {
-  contentBoxSx,
-  accordionItemSx,
-  contactSectionSx,
-  topTriangleStackSx,
-  smallTriangleSx,
-} from './faq-accordion.styles';
-import { FaqFloatLine, FaqFloatPlusIcon, FaqFloatTriangleDownIcon } from './faq-accordion-svg';
+import { fadeVariants } from './utils';
+import { contentBoxSx, accordionItemSx, contactSectionSx } from './faq-accordion.styles';
 import { FaqMotionViewport } from './faq-motion-viewport';
-import { FAQ_FLOAT_LINE_LEFT, FAQ_PLUS_ICON_LEFT } from './faq-accordion.const';
+import { FaqTopLines } from './faq-top-lines';
+import { FaqBottomLines } from './faq-bottom-lines';
 
 // ----------------------------------------------------------------------
 
@@ -105,7 +99,7 @@ export function FaqAccordion({
               <MotionAccordion
                 key={item.question}
                 disableGutters
-                variants={varFade('inUp', 24)}
+                variants={fadeVariants('inUp', 24)}
                 expanded={expanded === item.question}
                 onChange={handleChange(item.question)}
                 sx={accordionItemSx}
@@ -129,17 +123,17 @@ export function FaqAccordion({
 
           {contactHref && (
             <Box sx={contactSectionSx}>
-              <motion.div variants={varFade('in')}>
+              <motion.div variants={fadeVariants('in')}>
                 <Typography variant="h4">{contactTitle}</Typography>
               </motion.div>
 
-              <motion.div variants={varFade('in')}>
+              <motion.div variants={fadeVariants('in')}>
                 <Typography sx={{ mt: 2, mb: 3, color: 'text.secondary' }}>
                   {contactDescription}
                 </Typography>
               </motion.div>
 
-              <motion.div variants={varFade('in')}>
+              <motion.div variants={fadeVariants('in')}>
                 <Button
                   color="inherit"
                   variant="contained"
@@ -158,27 +152,3 @@ export function FaqAccordion({
 }
 
 // ----------------------------------------------------------------------
-
-function FaqTopLines() {
-  return (
-    <>
-      <Stack spacing={8} alignItems="center" sx={topTriangleStackSx}>
-        <FaqFloatTriangleDownIcon sx={{ position: 'static', opacity: 0.12 }} />
-        <FaqFloatTriangleDownIcon sx={smallTriangleSx} />
-      </Stack>
-
-      <FaqFloatLine vertical sx={{ top: 0, left: FAQ_FLOAT_LINE_LEFT }} />
-    </>
-  );
-}
-
-function FaqBottomLines() {
-  return (
-    <>
-      <FaqFloatLine sx={{ top: 0, left: 0 }} />
-      <FaqFloatLine sx={{ bottom: 0, left: 0 }} />
-      <FaqFloatPlusIcon sx={{ top: -8, left: FAQ_PLUS_ICON_LEFT }} />
-      <FaqFloatPlusIcon sx={{ bottom: -8, left: FAQ_PLUS_ICON_LEFT }} />
-    </>
-  );
-}

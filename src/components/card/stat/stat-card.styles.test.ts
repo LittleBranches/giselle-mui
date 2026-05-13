@@ -12,6 +12,7 @@ import {
   decorationSx,
   STAT_CARD_SPARKLINE_OPTIONS,
 } from './stat-card.styles';
+import { STAT_CARD_ICON_BOX_SIZE, STAT_CARD_LABELS_MIN_WIDTH } from './stat-card.const';
 
 // ----------------------------------------------------------------------
 
@@ -48,7 +49,7 @@ describe('statCardRootSx', () => {
     expect(styles.overflow).toBe('hidden');
   });
 
-  it('[regression] gradient uses lightChannel at low opacity — no Minimals lighterChannel', () => {
+  it('[regression] gradient uses lightChannel at low opacity — not a hardcoded channel value', () => {
     const styles = (statCardRootSx('warning') as unknown as ThemeFn)(mockTheme);
     // Both gradient stops must reference the lightChannel value, not a hardcoded hex
     expect(styles.backgroundImage).toContain('255 167 38');
@@ -118,5 +119,15 @@ describe('decorationSx', () => {
 
   it('[regression] pointer events disabled — decoration must not intercept clicks', () => {
     expect((decorationSx as Record<string, unknown>).pointerEvents).toBe('none');
+  });
+});
+
+describe('readability — minimum size constants (regression)', () => {
+  it('[regression] STAT_CARD_ICON_BOX_SIZE >= 32px for icon readability', () => {
+    expect(STAT_CARD_ICON_BOX_SIZE).toBeGreaterThanOrEqual(32);
+  });
+
+  it('[regression] STAT_CARD_LABELS_MIN_WIDTH >= 80px to prevent label collapse', () => {
+    expect(STAT_CARD_LABELS_MIN_WIDTH).toBeGreaterThanOrEqual(80);
   });
 });

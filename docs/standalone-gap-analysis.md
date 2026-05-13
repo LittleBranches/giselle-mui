@@ -24,7 +24,7 @@ additional setup.
 | Export                                | What it does                                       | Used in alexrebula                 |
 | ------------------------------------- | -------------------------------------------------- | ---------------------------------- |
 | `GiselleIcon`                         | Offline-safe Iconify icon wrapper                  | 5+ files                           |
-| `TimelineTwoColumn`                   | Alternating two-column expandable timeline         | career-timeline, roadmap, case-001 |
+| `TimelineTwoColumn`                   | Alternating two-column expandable timeline         | career-timeline, roadmap, scheduling |
 | `MetricCard` + `MetricCardDecoration` | Metric card with stat, label, and decoration slot  | expertise-areas                    |
 | `QuoteCard`                           | Pull-quote card with author, source, and icon slot | testimonials                       |
 | `SelectableCard`                      | Keyboard-accessible selectable/toggle card         | billing/plan pages                 |

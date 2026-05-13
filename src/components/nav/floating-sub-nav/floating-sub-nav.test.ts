@@ -14,8 +14,8 @@ vi.mock('framer-motion', () => ({
     {
       get:
         (_target, prop: string) =>
-        ({ children, ...rest }: Record<string, unknown>) =>
-          React.createElement(prop as string, rest, children as React.ReactNode),
+        ({ children, ...rest }: { children?: React.ReactNode; [key: string]: unknown }) =>
+          React.createElement(prop, rest, children),
     }
   ),
 }));

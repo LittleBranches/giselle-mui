@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { Icon } from '@iconify/react';
 
 import { FloatingSubNav } from './floating-sub-nav';
@@ -94,4 +96,36 @@ export const Hidden: Story = {
     activeId: null,
     onSelect: () => {},
   },
+};
+
+/**
+ * Responsive — verify `FloatingSubNav` renders correctly at each standard MUI breakpoint.
+ * Uses `sticky` mode so the pill sits at the bottom of its container, making it
+ * measurable at a fixed width without requiring a full viewport simulation.
+ */
+export const Responsive: Story = {
+  parameters: { layout: 'padded' },
+  render: () => (
+    <Stack spacing={4}>
+      {([360, 600, 900, 1200] as const).map((width) => (
+        <div key={width}>
+          <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mb: 1 }}>
+            {width}px
+          </Typography>
+          <Box
+            sx={{
+              width,
+              maxWidth: '100%',
+              position: 'relative',
+              height: 100,
+              border: '1px dashed',
+              borderColor: 'divider',
+            }}
+          >
+            <FloatingSubNav items={ITEMS} activeId="overview" onSelect={() => {}} sticky />
+          </Box>
+        </div>
+      ))}
+    </Stack>
+  ),
 };

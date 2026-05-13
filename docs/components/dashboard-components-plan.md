@@ -15,7 +15,7 @@ sidebar_label: 'Dashboard Components Plan'
 > Every component listed here must be built independently from scratch in `giselle-mui` — no
 > proprietary code, no `varAlpha`, no `minimal-shared` imports.
 >
-> _Last updated: 7 May 2026_
+> _Last updated: 12 May 2026_
 
 ---
 
@@ -107,6 +107,37 @@ Accepts a `StatCardItem[]` array (type already in `giselle-mui`) and lays them o
 
 ---
 
+### `ProfileSummaryCard` 🔴 Needs building
+
+**What it is:** Right-sidebar profile card. Avatar (image or initials fallback), display
+name, optional role/subtitle, and a horizontal row of 2–4 labelled stat values below.
+
+**Seen in:** Analytics-style dashboards — avatar, name, role label, 3 stat numbers in a row (e.g. "Courses in progress / Completed / Certificates").
+
+**Immediate consumer:**
+
+- Example: contributor dashboard sidebar — profile card with display name, earned-to-date, and pending payment stats. Display name comes from the authenticated session.
+
+**Accepts:**
+
+```ts
+type ProfileSummaryCardProps = {
+  name: string;
+  role?: string;
+  avatarSrc?: string;
+  stats: Array<{ label: string; value: string | number }>;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Transferability:** 100%. Pure MUI (`Avatar`, `Typography`, `Stack`, `Divider`). No charts.
+
+**Blockers:** None.
+
+**Output subpath:** Main bundle.
+
+---
+
 ### `BalanceSummaryCard` 🔴 Needs building
 
 **What it is:** Large financial overview card. Primary metric (e.g. total balance), two
@@ -166,6 +197,10 @@ Accepts `series: number[]`, `labels: string[]`, `title: string`, `total?: number
 **Seen in:** App dashboard ("Current download by OS"), Ecommerce ("Sale by gender"),
 Analytics ("Current visits"), Banking ("Expenses categories").
 
+**Immediate consumer:**
+
+- Example: task management viewer dashboard — status breakdown (Open / In Progress / In Review / Done counts).
+
 **Transferability:** 100% once ApexCharts subpath is in place.
 
 **Blockers:**
@@ -185,6 +220,10 @@ Year selector in card header. Accepts `series: ApexAxisChartSeries`, `title`, `s
 `yearOptions?: number[]`.
 
 **Seen in:** Ecommerce ("Yearly sales"), Banking (balance line in BalanceSummaryCard).
+
+**Immediate consumer:**
+
+- Example: contributor earnings dashboard — accumulated total per week (bucketed from task completion date).
 
 **Output subpath:** `/charts`.
 
@@ -221,10 +260,9 @@ Area fill between the two series uses `theme.vars.palette.error.mainChannel` whe
 > planned and `theme.vars.palette.success.mainChannel` when actual < planned. Never
 > hardcoded hex or rgba literals.
 
-**Immediate consumers:**
+**Immediate consumer:**
 
-- `alexrebula` trip-costs dashboard — week-by-week planned vs actual spend (AUD)
-- `first-branch` `/admin/payments` — planned payment schedule vs actual payout dates
+- Example: project administration dashboard — planned payment schedule vs actual payout dates.
 
 **Output subpath:** `/charts`.
 
@@ -268,7 +306,11 @@ axis alignment.
 **What it is:** Radar / spider chart. Multiple polygon series, labelled axes. Accepts
 `series: ApexAxisChartSeries`, `categories: string[]`, `title`.
 
-**Seen in:** Analytics ("Current subject — English, History, Physics, Chemistry...").
+**Seen in:** Analytics-style dashboards — strength/score breakdown by category (e.g. subjects, skill areas, repo types).
+
+**Immediate consumer:**
+
+- Example: contributor metrics dashboard — per-repository completion strength across multiple tracked repositories.
 
 **Output subpath:** `/charts`.
 
@@ -503,7 +545,7 @@ animations. Used for dashboard tab switches.
 > These components exist because of a specific mental model: an investment (e.g. a person,
 > a codebase, a tool) has both a cost curve and a return curve. The cost appears first;
 > the return emerges over time. The widgets below make that model visible and interactive.
-> They are general-purpose — nothing trip-cost or Žiga-specific belongs in giselle-mui.
+> They are general-purpose — nothing use-case-specific belongs in giselle-mui.
 > The data shapes are intentionally abstract (`InvestmentItem`, `ProjectionSeries`,
 > `ScenarioInput`) so any ROI or planning dashboard can consume them.
 
@@ -591,8 +633,8 @@ set of outcome metrics in real time. Shows a before/after or multi-scenario grid
 
 **General enough to model:**
 
-- "What if Žiga completes 4 tasks vs 8 tasks — how does the wage cost change and
-  how does the projected shipping speed change?"
+- "What if a contributor completes 4 tasks vs 8 tasks — how does the wage cost change and
+  how does the projected delivery speed change?"
 - "What if I defer the desk — how does CAPEX drop and what is the productivity impact?"
 - "What if the visit is 48 days vs 53 days — how do recurring costs change?"
 
@@ -686,7 +728,7 @@ Build these in parallel with Tier 1 — they have no architectural dependencies:
 
 ## Trip-costs dashboard — component shopping list
 
-The specific components needed to render `docs/fab/cases/case-001/trip-costs.md` as a
+The specific components needed to render a cost-breakdown dataset as a
 live dashboard in alexrebula (Phase H of the alexrebula roadmap):
 
 | Widget                                                     | Component                       | Status                          |
@@ -704,7 +746,7 @@ live dashboard in alexrebula (Phase H of the alexrebula roadmap):
 | Costs vs projected return over time (break-even line)      | `ProjectionChartCard`           | 🔴                              |
 | Planned vs actual spend over time (budget adherence)       | `BudgetVsActualChartCard`       | 🔴                              |
 | Material vs non-material dividends                         | `ROIComparisonCard`             | 🔴                              |
-| Scenario: "what if Žiga does 4 vs 8 tasks?"                | `ScenarioComparisonWidget`      | 🔴                              |
+| Scenario: "what if contributor does 4 vs 8 tasks?"         | `ScenarioComparisonWidget`      | 🔴                              |
 | Laptop/desk amortization over 24 months                    | `AmortizationScheduleTable`     | 🔴                              |
 
 **Minimum viable dashboard (MUI-only components only, no charts subpath needed):**
@@ -732,5 +774,4 @@ add visual richness but are not required for the data to be legible.
 
 - [`roadmap.mdx`](../roadmap.mdx) — Phases A–G (add Phase H: Dashboard Components here)
 - [`standalone-gap-analysis.md`](../standalone-gap-analysis.md) — Phase D UI primitives
-- [`alexrebula/docs/fab/cases/case-001/trip-costs.md`](private) — source data for the trip-costs dashboard
 - `alexrebula/docs/roadmap.md` — Phase 1.6: Dashboard Components (bubble-up entry)

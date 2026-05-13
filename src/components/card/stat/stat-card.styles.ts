@@ -3,13 +3,13 @@ import type { ApexOptions } from 'apexcharts';
 
 import { channelAlpha } from '../../../utils/theme-utils';
 import type { StatCardColor } from './types';
+import { STAT_CARD_ICON_BOX_SIZE, STAT_CARD_LABELS_MIN_WIDTH } from './stat-card.const';
 
 // ----------------------------------------------------------------------
 
 /**
  * Root `Card` sx — gradient background tinted by the chosen palette color.
  * Uses `channelAlpha` on the standard MUI v7 `lightChannel` token.
- * No `varAlpha` or Minimals-specific channels are used.
  */
 export const statCardRootSx =
   (color: StatCardColor): SxProps<Theme> =>
@@ -35,8 +35,8 @@ export const trendBoxSx: SxProps<Theme> = {
 /** Icon container — fixed 48×48, sits above the value row. */
 export const iconBoxSx: SxProps<Theme> = {
   mb: 3,
-  width: 48,
-  height: 48,
+  width: STAT_CARD_ICON_BOX_SIZE,
+  height: STAT_CARD_ICON_BOX_SIZE,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-start',
@@ -53,7 +53,7 @@ export const contentRowSx: SxProps<Theme> = {
 /** Flexible left block holding label and value. */
 export const labelsBoxSx: SxProps<Theme> = {
   flexGrow: 1,
-  minWidth: 112,
+  minWidth: STAT_CARD_LABELS_MIN_WIDTH,
 };
 
 /**

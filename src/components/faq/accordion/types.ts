@@ -41,3 +41,9 @@ export type FaqAccordionProps = Omit<BoxProps, 'children'> & {
   contactIcon?: ReactNode | string;
   sx?: SxProps<Theme>;
 };
+
+/** @internal Props for the scroll-triggered animation container used by {@link FaqAccordion}. */
+export type FaqMotionViewportProps = {
+  children: ReactNode;
+  sx?: SxProps<Theme>;
+};

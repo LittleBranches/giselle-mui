@@ -53,7 +53,7 @@ The phase dot is 14px × 14px with a 12px icon slot inside. This is deliberately
 
 ## Library safety
 
-- Zero Minimals utilities (`varAlpha`, `varFade`, `varBlur`, `customShadows`).
+- No banned identifier names (`varAlpha`, `varFade`, `varBlur`, `customShadows`).
 - Only `@mui/material` and `@mui/lab` APIs — both existing peer dependencies.
 - The component renders nothing proprietary — palette colors come from the consumer's theme.
 - `...other` spread on root Box enables `data-*`, `aria-*`, `id`, `className` without prop drilling.

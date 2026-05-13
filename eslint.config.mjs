@@ -59,6 +59,10 @@ export default eslintTs.config(
       'no-nested-ternary': 'error',
       // MUI Store quality bar — ban React.FC / React.FunctionComponent
       // sx extraction rule — inline sx objects with >3 properties must go to *.styles.ts
+      // Copyright boundary — banned identifier names. These names signal proprietary lineage
+      // and must never appear in this MIT-licensed public package. Use descriptive names instead:
+      //   varAlpha → channelAlpha   varFade → fadeVariants   varBlur → blurVariants
+      //   varContainer → containerVariants   customShadows → shadows
       'no-restricted-syntax': [
         'error',
         {
@@ -66,6 +70,40 @@ export default eslintTs.config(
             'TSTypeReference[typeName.name="FC"], TSTypeReference > TSQualifiedName[left.name="React"][right.name="FC"], TSTypeReference[typeName.name="FunctionComponent"], TSTypeReference > TSQualifiedName[left.name="React"][right.name="FunctionComponent"]',
           message:
             'Avoid React.FC / React.FunctionComponent; type props directly on the function or parameters (MUI Store quality bar).',
+        },
+        // Banned identifier names — these must never appear in this MIT-licensed public package.
+        {
+          selector: 'Identifier[name="varAlpha"]',
+          message:
+            'Prohibited identifier. Use channelAlpha (already exported from src/utils/theme-utils.ts) instead.',
+        },
+        {
+          selector: 'Identifier[name="varFade"]',
+          message:
+            'Prohibited identifier. Rename to fadeVariants (or similar descriptive name).',
+        },
+        {
+          selector: 'Identifier[name="varBlur"]',
+          message:
+            'Prohibited identifier. Rename to blurVariants (or similar descriptive name).',
+        },
+        {
+          selector: 'Identifier[name="varContainer"]',
+          message:
+            'Prohibited identifier. Rename to containerVariants (or similar descriptive name).',
+        },
+        {
+          selector: 'Identifier[name="customShadows"]',
+          message: 'Prohibited identifier. Rename to shadows (or similar descriptive name).',
+        },
+        {
+          selector: 'Identifier[name="_mock"]',
+          message: 'Prohibited identifier (_mock). Use a descriptive sample/placeholder name.',
+        },
+        {
+          selector: 'ImportDeclaration[source.value="minimal-shared"]',
+          message:
+            'minimal-shared is a proprietary package. It must never be imported in this MIT-licensed library.',
         },
         {
           selector:
@@ -94,7 +132,8 @@ export default eslintTs.config(
 
   // ── Stories override — exempt inline-sx rule ──────────────────────────────
   // Stories are documentation/demo code; large inline sx is acceptable there.
-  // The React.FC ban still applies (enforced via the separate override below).
+  // The React.FC ban and banned-identifier rules still apply — only the
+  // sx-extraction selectors are relaxed.
   {
     files: ['src/**/*.stories.tsx'],
     rules: {
@@ -105,6 +144,39 @@ export default eslintTs.config(
             'TSTypeReference[typeName.name="FC"], TSTypeReference > TSQualifiedName[left.name="React"][right.name="FC"], TSTypeReference[typeName.name="FunctionComponent"], TSTypeReference > TSQualifiedName[left.name="React"][right.name="FunctionComponent"]',
           message:
             'Avoid React.FC / React.FunctionComponent; type props directly on the function or parameters (MUI Store quality bar).',
+        },
+        {
+          selector: 'Identifier[name="varAlpha"]',
+          message:
+            'Prohibited identifier. Use channelAlpha (already exported from src/utils/theme-utils.ts) instead.',
+        },
+        {
+          selector: 'Identifier[name="varFade"]',
+          message:
+            'Prohibited identifier. Rename to fadeVariants (or similar descriptive name).',
+        },
+        {
+          selector: 'Identifier[name="varBlur"]',
+          message:
+            'Prohibited identifier. Rename to blurVariants (or similar descriptive name).',
+        },
+        {
+          selector: 'Identifier[name="varContainer"]',
+          message:
+            'Prohibited identifier. Rename to containerVariants (or similar descriptive name).',
+        },
+        {
+          selector: 'Identifier[name="customShadows"]',
+          message: 'Prohibited identifier. Rename to shadows (or similar descriptive name).',
+        },
+        {
+          selector: 'Identifier[name="_mock"]',
+          message: 'Prohibited identifier (_mock). Use a descriptive sample/placeholder name.',
+        },
+        {
+          selector: 'ImportDeclaration[source.value="minimal-shared"]',
+          message:
+            'minimal-shared is a proprietary package. It must never be imported in this MIT-licensed library.',
         },
       ],
     },

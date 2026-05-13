@@ -1,11 +1,11 @@
-import type { ReactNode } from 'react';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
 
 import { motion } from 'framer-motion';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { varContainer } from './utils';
+import type { FaqMotionViewportProps } from './types';
+import { containerVariants } from './utils';
 
 // ----------------------------------------------------------------------
 
@@ -13,11 +13,6 @@ import { varContainer } from './utils';
 const MotionBox = motion(Box);
 
 // ----------------------------------------------------------------------
-
-type FaqMotionViewportProps = {
-  children: ReactNode;
-  sx?: SxProps<Theme>;
-};
 
 /**
  * Scroll-triggered animation container for `FaqAccordion`.
@@ -40,7 +35,7 @@ export function FaqMotionViewport({ children, sx }: FaqMotionViewportProps) {
     <MotionBox
       initial="initial"
       whileInView="animate"
-      variants={varContainer()}
+      variants={containerVariants()}
       viewport={{ once: true, amount: 0.3 }}
       sx={sx}
     >

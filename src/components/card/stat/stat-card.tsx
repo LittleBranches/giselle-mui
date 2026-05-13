@@ -27,7 +27,6 @@ export { STAT_CARD_SPARKLINE_OPTIONS } from './stat-card.styles';
  * StatCard — KPI summary card with icon, trend indicator, and optional chart slot.
  *
  * The gradient background is built from the palette's `lightChannel` via `channelAlpha`.
- * No Minimals utilities (`varAlpha`, `varFade`, etc.) are used.
  *
  * The `chart` slot accepts any `ReactNode` — no chart-library dependency inside this
  * component. Use `STAT_CARD_SPARKLINE_OPTIONS` as the base options for the canonical
