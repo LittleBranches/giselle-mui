@@ -43,5 +43,7 @@ export function setCookieValue(name: string, value: string, options: SetCookieOp
     `SameSite=${sameSite}`,
   ];
   if (maxAge !== undefined) parts.push(`max-age=${maxAge}`);
+  // SameSite=None requires Secure — modern browsers reject the cookie without it.
+  if (sameSite === 'None') parts.push('Secure');
   document.cookie = parts.join('; ');
 }
