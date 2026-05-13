@@ -26,10 +26,19 @@ Branch naming encodes the type of work:
 | `data/` | Data-only changes (`tasks.json`) |
 | `refactor/` | Code restructure with no behaviour change |
 
-**Rule:** every commit on a branch must fit the branch's category. A `chore/` branch must
-not carry a `fix:` commit. A `feature/` branch must not carry a `chore:` commit.
+**Rule:** every commit on a branch must be related to the branch's stated purpose. Commit
+type (the conventional-commits prefix) does not need to match the branch prefix exactly —
+a `feature/` branch will often legitimately carry `chore:` commits (barrel export updates,
+tsup config changes, dependency additions required by the feature). What matters is whether
+the commit is **related to the work the branch describes**.
 
-### 0.2 — Moving out-of-category commits
+A commit does not belong on a branch when it is **unrelated** to that branch's purpose:
+
+- A `chore: bump eslint version` on a `feature/add-metric-card` branch — unrelated, move it.
+- A `fix: correct aria-label on button` on a `chore/update-deps` branch — unrelated, move it.
+- A `chore: add barrel export for MetricCard` on a `feature/add-metric-card` branch — related, keep it.
+
+### 0.2 — Moving unrelated commits
 
 If a commit does not belong on its current branch:
 
