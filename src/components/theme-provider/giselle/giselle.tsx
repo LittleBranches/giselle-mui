@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { ThemeProvider, extendTheme } from '@mui/material/styles';
 
 import { deepMerge } from '../../../utils/deep-merge';
@@ -54,9 +55,12 @@ export function GiselleThemeProvider({
   theme,
   defaultMode = 'system',
 }: GiselleThemeProviderProps) {
-  const resolvedTheme =
-    theme ??
-    (themeOverrides ? extendTheme(deepMerge(giselleThemeOptions, themeOverrides)) : giselleTheme);
+  const resolvedTheme = useMemo(
+    () =>
+      theme ??
+      (themeOverrides ? extendTheme(deepMerge(giselleThemeOptions, themeOverrides)) : giselleTheme),
+    [theme, themeOverrides]
+  );
 
   return (
     <ThemeProvider theme={resolvedTheme} defaultMode={defaultMode}>

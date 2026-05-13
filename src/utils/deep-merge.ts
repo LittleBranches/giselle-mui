@@ -6,12 +6,20 @@
  *
  * Used internally by `GiselleThemeProvider` to merge `themeOverrides`
  * on top of `giselleThemeOptions` before passing the result to `extendTheme()`.
+ *
+ * Iterates via `Object.keys()` (not `for...in`) to skip inherited enumerable properties.
+ * Explicitly rejects `__proto__`, `constructor`, and `prototype` keys to prevent
+ * prototype-pollution attacks.
  */
+const DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 export function deepMerge<T extends object>(base: T, override: Partial<T>): T {
   const result = { ...(base as Record<string, unknown>) } as Record<string, unknown>;
   const src = override as Record<string, unknown>;
 
-  for (const key in src) {
+  for (const key of Object.keys(src)) {
+    if (DANGEROUS_KEYS.has(key)) continue;
+
     const baseVal = result[key];
     const overrideVal = src[key];
 
