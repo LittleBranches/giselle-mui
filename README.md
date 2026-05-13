@@ -55,9 +55,14 @@ That means 3 things every time:
 
 Technical rule we enforce:
 
-- Props type extends/omits from the matching MUI root type.
-- Root `sx` is array-safe: `sx={[base, ...(Array.isArray(sx) ? sx : [sx])]}`.
-- Root DOM passthrough uses `...other`.
+- **Props type extends/omits from the matching MUI root type.**
+  _In other words:_ your wrapper's TypeScript definition inherits everything from the real MUI component, so any valid MUI prop Just Works without you listing it manually. Where a prop means something different in the wrapper (e.g. `color`), it is stripped out and redefined rather than silently overridden.
+
+- **Root `sx` is array-safe: `sx={[base, ...(Array.isArray(sx) ? sx : [sx])]}`.**
+  _In other words:_ MUI lets you pass `sx` as an array — `sx={[myStyles, conditionalStyles]}` — which is the recommended way to extend a component's styles from outside. Most third-party wrappers silently drop every entry after the first because they spread `sx` naively. This library spreads it correctly so array-style overrides always work.
+
+- **Root DOM passthrough uses `...other`.**
+  _In other words:_ any prop not explicitly listed — `id`, `data-testid`, `aria-label`, `className` — passes straight through to the root element without needing a separate prop.
 
 If a component is intentionally different (opinionated API), that exception must be clearly written in both `types.ts` and the component `README.md`.
 
@@ -83,8 +88,7 @@ Current high-priority timeline items include:
 > The API is stable and the test suite covers component structure, prop forwarding, ARIA
 > semantics, and interaction behaviour across all shipped components. The package is fully
 > built and tested locally. First public npm release is planned alongside the portfolio
-> site launch (May/June 2026).
-> Feedback and issues are welcome on [GitHub](https://github.com/AlexRebula/giselle-mui/issues).
+> site launch (May/June 2026). Feedback and issues are welcome on [GitHub](https://github.com/AlexRebula/giselle-mui/issues).
 
 Test coverage is functional and growing. The current suite covers component structure,
 prop forwarding, ARIA semantics, and interaction behaviour. Coverage of edge cases
@@ -134,25 +138,30 @@ Full integration guides:
 
 - [React — Vite / CRA](./docs/theming/react.md)
 - [Next.js — App Router + Pages Router](./docs/theming/nextjs.md)
-- [PR message docs index](./docs/pr-messages/README.md)
 
 ---
 
 ## Components
 
-| Component                                         | What it solves                                                                                                                                   |
-| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `GiselleIcon`                                     | `@iconify/react` wrapper with full MUI `sx` support — fixes the `Box component={ThirdParty}` TypeScript pitfall and the CDN flicker problem.     |
-| `createIconRegistrar`                             | Bundles icon SVG bodies offline — no CDN, no flicker, any framework.                                                                             |
-| `MetricCard` + `MetricCardDecoration`             | Structured stat card (value / label / icon / decoration slots) with CSS-var colour tinting. Zero icon-library dependency.                        |
-| `StatCard`                                        | Single-metric summary card (value / label / icon / trend) — data-layer driven via `StatCardItem`; palette-key colour prop.                       |
-| `SelectableCard`                                  | Clickable card on `ButtonBase` — correct `aria-pressed`, keyboard focus ring, and hover state without rediscovering the `Paper onClick` pitfall. |
-| `QuoteCard`                                       | Testimonial card with CSS-var tinted border and conditional attribution row.                                                                     |
-| `TimelineTwoColumn` + `PhaseCard` + `TimelineDot` | Two-column alternating timeline for career or roadmap layouts — phase cards, milestone badges, animated active dot, checklist mode.              |
-| `IconActionBar`                                   | Horizontal row of `Tooltip` + `IconButton` pairs — encodes the disabled-child `<span>` wrapper pattern so tooltips work on disabled buttons.     |
-| `FloatingSubNav`                                  | Sticky / fixed floating pill navigation bar with `framer-motion` enter/exit animation — position-mode aware, scroll-offset configurable.         |
-| `SectionTitle`                                    | Section heading with optional subtitle and colour accent — consistent vertical rhythm across section layouts.                                    |
-| `TwoColumnShowcaseRow`                            | Responsive two-column row (text + visual) for showcase/feature layouts — MUI v7 Grid v2 with configurable column widths.                         |
+| Component                                         | What it solves                                                                                                                                                                                        |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GiselleIcon`                                     | `@iconify/react` wrapper with full MUI `sx` support — fixes the `Box component={ThirdParty}` TypeScript pitfall and the CDN flicker problem.                                                          |
+| `createIconRegistrar`                             | Bundles icon SVG bodies offline — no CDN, no flicker, any framework.                                                                                                                                  |
+| `MetricCard` + `MetricCardDecoration`             | Structured stat card (value / label / icon / decoration slots) with CSS-var colour tinting. Zero icon-library dependency.                                                                             |
+| `StatCard`                                        | Single-metric summary card (value / label / icon / trend) — data-layer driven via `StatCardItem`; palette-key colour prop.                                                                            |
+| `SelectableCard`                                  | Clickable card on `ButtonBase` — correct `aria-pressed`, keyboard focus ring, and hover state without rediscovering the `Paper onClick` pitfall.                                                      |
+| `QuoteCard`                                       | Testimonial card with CSS-var tinted border and conditional attribution row.                                                                                                                          |
+| `Accordion`                                       | Collapsible row with an independent done-toggle before the title — solves the nested-interactive-element WCAG violation that occurs when a checkbox sits inside a summary button.                     |
+| `TimelineTwoColumn` + `PhaseCard` + `TimelineDot` | Two-column alternating timeline for career or roadmap layouts — phase cards, milestone badges, animated active dot, checklist mode.                                                                   |
+| `TimelineCompact`                                 | Single-column accordion timeline for the same `TimelinePhase[]` data — swap in at `xs`/`sm` breakpoints, no data layer changes required.                                                              |
+| `TaskList`                                        | Flat or nested task checklist driven by `TimelinePhase[]` task arrays — done-state, priority badges, and optional eye-button viewed tracking.                                                         |
+| `RadialProgressCard`                              | Multi-segment radial bar chart card showing one aggregate metric with per-dimension breakdown — encodes the ApexCharts radial-bar configuration once. Imported from `@alexrebula/giselle-mui/charts`. |
+| `useNestedChecklist`                              | Framework-agnostic hook for parent/child done-state cascade — mark a phase done → all milestones become done; all milestones done → phase auto-completes.                                             |
+| `IconActionBar`                                   | Horizontal row of `Tooltip` + `IconButton` pairs — encodes the disabled-child `<span>` wrapper pattern so tooltips work on disabled buttons.                                                          |
+| `FloatingSubNav`                                  | Sticky / fixed floating pill navigation bar with `framer-motion` enter/exit animation — position-mode aware, scroll-offset configurable.                                                              |
+| `SectionTitle` + `SectionCaption`                 | Section heading with optional subtitle and colour accent, and a standalone caption primitive — consistent vertical rhythm across section layouts.                                                     |
+| `SectionContainer`                                | Standardised section wrapper with configurable max-width, padding, and background — ensures consistent outer spacing across all section layouts.                                                      |
+| `TwoColumnShowcaseRow`                            | Responsive two-column row (text + visual) for showcase/feature layouts — MUI v7 Grid v2 with configurable column widths.                                                                              |
 
 **Full API documentation, prop tables, and live examples → [Storybook](./storybook-static/index.html)** (build locally with `npm run build-storybook`, then open the generated file)
 
@@ -163,8 +172,6 @@ Every component exists because it solves a problem that is either easy to get wr
 ---
 
 ## Install
-
-> **Not yet published to npm.** This will work after the package is released.
 
 ```bash
 npm install @alexrebula/giselle-mui
@@ -349,4 +356,18 @@ MIT — see [LICENSE](./LICENSE).
 
 ---
 
-Made with ❤️ by [Alex Rebula](https://github.com/AlexRebula)
+## Background
+
+This library grew out of building production applications with commercial MUI themes — in particular the [Minimals MUI kit](https://minimals.cc). That work revealed which MUI design decisions are most commonly left to the consumer and most commonly gotten wrong. Every component here is an original implementation, written from scratch and licensed MIT. None of the source code from Minimals or any other proprietary theme has been copied or derived.
+
+---
+
+## Contributing
+
+Issues and pull requests are welcome. Before opening a PR, please read the quality gate requirements — all six checks (Prettier, ESLint, TypeScript, Vitest, tsup build, Storybook build) must pass. The pre-push hook runs them automatically.
+
+See [docs/local-development.md](./docs/local-development.md) to get started.
+
+---
+
+— [Alex Rebula](https://github.com/AlexRebula)
