@@ -285,6 +285,7 @@ If you prefer to manage `ThemeProvider` yourself, pass the pre-built theme direc
 
 ```tsx
 import { ThemeProvider } from '@mui/material/styles';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { giselleTheme } from '@alexrebula/giselle-mui';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -330,12 +331,12 @@ import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
   themeOverrides={{
     colorSchemes: {
       light: { palette: { primary: { main: '#1976d2' } } },
-      dark:  { palette: { primary: { main: '#90caf9' } } },
+      dark: { palette: { primary: { main: '#90caf9' } } },
     },
   }}
 >
   <App />
-</GiselleThemeProvider>
+</GiselleThemeProvider>;
 ```
 
 **Option B — `extendTheme()` with `giselleThemeOptions`:**
@@ -345,7 +346,9 @@ theme object manually:
 
 ```ts
 import { extendTheme } from '@mui/material/styles';
-import { giselleThemeOptions } from '@alexrebula/giselle-mui';
+// giselleThemeOptions is a plain object — import from /utils to avoid the
+// 'use client' banner on the root entry point.
+import { giselleThemeOptions } from '@alexrebula/giselle-mui/utils';
 
 const myTheme = extendTheme({
   ...giselleThemeOptions,

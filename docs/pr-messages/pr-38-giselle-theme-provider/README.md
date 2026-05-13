@@ -1,5 +1,5 @@
 ---
-sidebar_label: "PR38 - GiselleThemeProvider (Phase C)"
+sidebar_label: 'PR38 - GiselleThemeProvider (Phase C)'
 ---
 
 **[Open](https://github.com/AlexRebula/giselle-mui/pull/38)** — [`feature/giselle-theme-provider`](https://github.com/AlexRebula/giselle-mui/tree/feature/giselle-theme-provider) — 13 May 2026
@@ -62,23 +62,23 @@ component. Correct for an App Router root layout wrapper.
 
 **Public API:**
 
-| Prop | Type | Default | Notes |
-| --- | --- | --- | --- |
-| `children` | `ReactNode` | required | Content wrapped in the provider |
-| `themeOverrides?` | `CssVarsThemeOptions` | — | Partial override merged onto `giselleThemeOptions` |
-| `theme?` | `CssVarsTheme` | — | Fully custom theme — bypasses defaults entirely |
-| `defaultMode?` | `'light' \| 'dark' \| 'system'` | `'system'` | Initial colour mode on first render |
+| Prop              | Type                            | Default    | Notes                                              |
+| ----------------- | ------------------------------- | ---------- | -------------------------------------------------- |
+| `children`        | `ReactNode`                     | required   | Content wrapped in the provider                    |
+| `themeOverrides?` | `CssVarsThemeOptions`           | —          | Partial override merged onto `giselleThemeOptions` |
+| `theme?`          | `CssVarsTheme`                  | —          | Fully custom theme — bypasses defaults entirely    |
+| `defaultMode?`    | `'light' \| 'dark' \| 'system'` | `'system'` | Initial colour mode on first render                |
 
 **Files:**
 
-| File | Role |
-| --- | --- |
-| `giselle.tsx` | Component implementation |
-| `types.ts` | `GiselleThemeProviderProps` interface |
-| `giselle.test.ts` | 6 Vitest tests |
-| `giselle.stories.tsx` | 4 Storybook stories |
-| `index.ts` | Barrel — re-exports component and types |
-| `README.md` | Why it exists, three-tier model, `deepMerge` rationale, `defaultMode='system'` choice |
+| File                  | Role                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------- |
+| `giselle.tsx`         | Component implementation                                                              |
+| `types.ts`            | `GiselleThemeProviderProps` interface                                                 |
+| `giselle.test.ts`     | 6 Vitest tests                                                                        |
+| `giselle.stories.tsx` | 4 Storybook stories                                                                   |
+| `index.ts`            | Barrel — re-exports component and types                                               |
+| `README.md`           | Why it exists, three-tier model, `deepMerge` rationale, `defaultMode='system'` choice |
 
 ---
 
@@ -184,7 +184,7 @@ runtime, different TypeScript shapes. See [Design decisions](#design-decisions) 
   (`giselleThemeOptions`, `deepMerge`, `defaultMode`)
 - `alexrebula/docs/roadmap.md` — Phase C summary updated (bubble-up rule):
   `✅ Phase C shipped (GiselleThemeProvider component — zero-config, themeOverrides, full custom
-  theme prop; Vitest + Storybook; giselleThemeOptions export for Option B consumers) — 13 May 2026`
+theme prop; Vitest + Storybook; giselleThemeOptions export for Option B consumers) — 13 May 2026`
 - `alexrebula/src/sections-api/roadmap/data.tsx` — `giselle-mui Phase B/C` milestone:
   `color: 'warning'` → `color: 'success'`; description updated to include 13 May 2026 delivery
   date and `giselleThemeOptions` export
@@ -193,45 +193,45 @@ runtime, different TypeScript shapes. See [Design decisions](#design-decisions) 
 
 ### Tests (6 new in `giselle.test.ts`)
 
-| Test | What it verifies |
-| --- | --- |
-| `renders children with zero config` | Default usage renders children without crashing |
-| `zero-config — uses giselleTheme as default` | No props → `data-mui-color-scheme` attribute is set (ThemeProvider active) |
-| `defaultMode prop is forwarded` | Passes `defaultMode` through to ThemeProvider |
-| `themeOverrides are accepted without crash` | Partial override object does not throw |
-| `custom theme bypasses giselleTheme` | `theme` prop is accepted and provider renders correctly |
-| `theme wins over themeOverrides when both provided` | `theme` takes priority; `themeOverrides` is silently ignored |
+| Test                                                | What it verifies                                                           |
+| --------------------------------------------------- | -------------------------------------------------------------------------- |
+| `renders children with zero config`                 | Default usage renders children without crashing                            |
+| `zero-config — uses giselleTheme as default`        | No props → `data-mui-color-scheme` attribute is set (ThemeProvider active) |
+| `defaultMode prop is forwarded`                     | Passes `defaultMode` through to ThemeProvider                              |
+| `themeOverrides are accepted without crash`         | Partial override object does not throw                                     |
+| `custom theme bypasses giselleTheme`                | `theme` prop is accepted and provider renders correctly                    |
+| `theme wins over themeOverrides when both provided` | `theme` takes priority; `themeOverrides` is silently ignored               |
 
 ---
 
 ## Files changed
 
-| File | Change |
-| --- | --- |
-| `src/components/theme-provider/giselle/giselle.tsx` | New — `GiselleThemeProvider` component |
-| `src/components/theme-provider/giselle/types.ts` | New — `GiselleThemeProviderProps` interface |
-| `src/components/theme-provider/giselle/giselle.test.ts` | New — 6 Vitest tests |
-| `src/components/theme-provider/giselle/giselle.stories.tsx` | New — 4 Storybook stories (Default, WithThemeOverrides, FullyCustomTheme, DarkMode) |
-| `src/components/theme-provider/giselle/index.ts` | New — barrel export |
-| `src/components/theme-provider/giselle/README.md` | New — component README |
-| `src/utils/deep-merge.ts` | New — internal recursive merge utility (not exported from barrel) |
-| `src/utils/theme-preset.ts` | Updated — `giselleThemeOptions` exported |
-| `src/index.ts` | Updated — `giselleThemeOptions`, `GiselleThemeProvider`, `GiselleThemeProviderProps` added |
-| `src/utils-index.ts` | Updated — `giselleThemeOptions` added |
-| `docs/theming/nextjs.md` | Updated — zero-config section added; Option B corrected to use `giselleThemeOptions` spread |
-| `.storybook/preview.tsx` | Updated — `giselleTheme` registered; default changed to `'giselle'`; `🥭 Giselle` toolbar item; Phase B TODO comments removed |
-| `giselle-mui/docs/roadmap.md` | Updated — Phase C ✅ Done 13 May 2026; code snippet corrected |
-| `alexrebula/docs/roadmap.md` | Updated — Phase C summary entry (bubble-up rule) |
-| `alexrebula/src/sections-api/roadmap/data.tsx` | Updated — milestone color and description |
+| File                                                        | Change                                                                                                                        |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `src/components/theme-provider/giselle/giselle.tsx`         | New — `GiselleThemeProvider` component                                                                                        |
+| `src/components/theme-provider/giselle/types.ts`            | New — `GiselleThemeProviderProps` interface                                                                                   |
+| `src/components/theme-provider/giselle/giselle.test.ts`     | New — 6 Vitest tests                                                                                                          |
+| `src/components/theme-provider/giselle/giselle.stories.tsx` | New — 4 Storybook stories (Default, WithThemeOverrides, FullyCustomTheme, DarkMode)                                           |
+| `src/components/theme-provider/giselle/index.ts`            | New — barrel export                                                                                                           |
+| `src/components/theme-provider/giselle/README.md`           | New — component README                                                                                                        |
+| `src/utils/deep-merge.ts`                                   | New — internal recursive merge utility (not exported from barrel)                                                             |
+| `src/utils/theme-preset.ts`                                 | Updated — `giselleThemeOptions` exported                                                                                      |
+| `src/index.ts`                                              | Updated — `giselleThemeOptions`, `GiselleThemeProvider`, `GiselleThemeProviderProps` added                                    |
+| `src/utils-index.ts`                                        | Updated — `giselleThemeOptions` added                                                                                         |
+| `docs/theming/nextjs.md`                                    | Updated — zero-config section added; Option B corrected to use `giselleThemeOptions` spread                                   |
+| `.storybook/preview.tsx`                                    | Updated — `giselleTheme` registered; default changed to `'giselle'`; `🥭 Giselle` toolbar item; Phase B TODO comments removed |
+| `giselle-mui/docs/roadmap.md`                               | Updated — Phase C ✅ Done 13 May 2026; code snippet corrected                                                                 |
+| `alexrebula/docs/roadmap.md`                                | Updated — Phase C summary entry (bubble-up rule)                                                                              |
+| `alexrebula/src/sections-api/roadmap/data.tsx`              | Updated — milestone color and description                                                                                     |
 
 ---
 
 ## Cross-repo impact
 
-| Repo | Change |
-| --- | --- |
-| `alexrebula` | Roadmap updated (bubble-up rule). `GiselleThemeProvider` available in `node_modules` via `yalc push`. |
-| `giselle-docs` | `@alexrebula/giselle-mui` updated via `yalc push`. |
+| Repo           | Change                                                                                                                               |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `alexrebula`   | Roadmap updated (bubble-up rule). `GiselleThemeProvider` available in `node_modules` via `yalc push`.                                |
+| `giselle-docs` | `@alexrebula/giselle-mui` updated via `yalc push`.                                                                                   |
 | `first-branch` | `@alexrebula/giselle-mui` updated via `yalc push`. Phase C is the prerequisite for zero-config theming in the Žiga task-tracker app. |
 
 ---
