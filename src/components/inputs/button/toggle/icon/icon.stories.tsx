@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import SvgIcon from '@mui/material/SvgIcon';
 import Typography from '@mui/material/Typography';
 
-import { ToggleIconButton } from './toggle-icon-button';
+import { ToggleIconButton } from './icon';
 
 // ----------------------------------------------------------------------
 // Inline SVG icons — no Iconify dependency, keeps stories self-contained.

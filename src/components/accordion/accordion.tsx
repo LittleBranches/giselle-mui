@@ -10,7 +10,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 
-import { ToggleIconButton } from '../inputs/toggle-icon-button';
+import { ToggleIconButton } from '../inputs/button/toggle/icon';
 import type { AccordionProps } from './types';
 import {
   accordionRootSx,

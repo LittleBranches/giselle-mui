@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
 
-import { TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET } from './toggle-icon-button.const';
-import { rootSx, defaultIconSvgSx } from './toggle-icon-button.styles';
+import { TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET } from './icon.const';
+import { rootSx, defaultIconSvgSx } from './icon.styles';
 
 // ----------------------------------------------------------------------
 

@@ -6,8 +6,8 @@ import type { MouseEvent } from 'react';
 import IconButton from '@mui/material/IconButton';
 
 import type { ToggleIconButtonProps } from './types';
-import { DEFAULT_PRESSED_ICON, DEFAULT_HOVER_ICON } from './toggle-icon-button.defaults';
-import { rootSx } from './toggle-icon-button.styles';
+import { DEFAULT_PRESSED_ICON, DEFAULT_HOVER_ICON } from './icon.defaults';
+import { rootSx } from './icon.styles';
 
 // ----------------------------------------------------------------------
 

@@ -21,9 +21,9 @@ export { Accordion } from './components/accordion';
 export type { AccordionProps } from './components/accordion';
 export { ACCORDION_DONE_MIN_TOUCH_TARGET } from './components/accordion';
 
-export { ToggleIconButton } from './components/inputs/toggle-icon-button';
-export type { ToggleIconButtonProps } from './components/inputs/toggle-icon-button';
-export { TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET } from './components/inputs/toggle-icon-button';
+export { ToggleIconButton } from './components/inputs/button/toggle/icon';
+export type { ToggleIconButtonProps } from './components/inputs/button/toggle/icon';
+export { TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET } from './components/inputs/button/toggle/icon';
 
 export { MetricCard, MetricCardDecoration } from './components/card/metric';
 export type {

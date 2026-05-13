@@ -1,6 +1,6 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-import { TOGGLE_ICON_SIZE } from './toggle-icon-button.const';
+import { TOGGLE_ICON_SIZE } from './icon.const';
 
 // ----------------------------------------------------------------------
 

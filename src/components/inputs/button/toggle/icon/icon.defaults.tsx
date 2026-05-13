@@ -1,6 +1,6 @@
 import SvgIcon from '@mui/material/SvgIcon';
 
-import { defaultIconSvgSx } from './toggle-icon-button.styles';
+import { defaultIconSvgSx } from './icon.styles';
 
 // ----------------------------------------------------------------------
 // Built-in default icons — created once at module load, never recreated.

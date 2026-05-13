@@ -12,8 +12,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { createElement, useState, act } from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET } from './toggle-icon-button.const';
-import { ToggleIconButton } from './toggle-icon-button';
+import { TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET } from './icon.const';
+import { ToggleIconButton } from './icon';
 
 // Distinct test icons — identifiable by data-testid.
 const IDLE_ICON = createElement('svg', { 'data-testid': 'idle-icon' });

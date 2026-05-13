@@ -7,7 +7,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import Typography from '@mui/material/Typography';
 
 import { Accordion } from '../../accordion';
-import { ToggleIconButton } from '../../inputs/toggle-icon-button';
+import { ToggleIconButton } from '../../inputs/button/toggle/icon';
 import { useNestedChecklist } from '../../../utils/use-nested-checklist';
 import { ChevronDownIcon } from './chevron-down-icon';
 import { TaskDetailsModal } from './milestone-modal';
