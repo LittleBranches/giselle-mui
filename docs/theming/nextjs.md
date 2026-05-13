@@ -331,12 +331,12 @@ import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
   themeOverrides={{
     colorSchemes: {
       light: { palette: { primary: { main: '#1976d2' } } },
-      dark:  { palette: { primary: { main: '#90caf9' } } },
+      dark: { palette: { primary: { main: '#90caf9' } } },
     },
   }}
 >
   <App />
-</GiselleThemeProvider>
+</GiselleThemeProvider>;
 ```
 
 **Option B — `extendTheme()` with `giselleThemeOptions`:**

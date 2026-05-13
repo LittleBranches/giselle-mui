@@ -117,7 +117,11 @@ function GiselleThemeProvider({ children, themeOverrides, theme, defaultMode = '
   const resolvedTheme =
     theme ??
     (themeOverrides ? extendTheme(deepMerge(giselleThemeOptions, themeOverrides)) : giselleTheme);
-  return <ThemeProvider theme={resolvedTheme} defaultMode={defaultMode}>{children}</ThemeProvider>;
+  return (
+    <ThemeProvider theme={resolvedTheme} defaultMode={defaultMode}>
+      {children}
+    </ThemeProvider>
+  );
 }
 ```
 
@@ -125,6 +129,7 @@ function GiselleThemeProvider({ children, themeOverrides, theme, defaultMode = '
 | -------------------------------------------------------------------------------------- | ------- | ------ |
 | Complete Phase B (Giselle theme preset) — this prerequisite is already met             | Theming | ✅     |
 | Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ✅     |
+
 | Implement `GiselleThemeProvider` wrapping `ThemeProvider` with merge logic             | Theming | ✅     |
 | Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | Theming | ✅     |
 | Add Storybook story: default palette, with overrides, fully custom                     | Theming | ✅     |
