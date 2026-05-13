@@ -449,3 +449,5 @@ consumer boilerplate.
 | ------------------------------------------------------------------------------ | ----- | -------------------- |
 | PR template (`.github/pull_request_template.md`) — consistent across all repos | Chore | ✅ Done — 9 May 2026 |
 | PR messages index (`docs/pr-messages/`) — all 26 PRs documented                | Chore | ✅ Done — 9 May 2026 |
+| **Per-component `roadmap.md` files** — each component folder gets its own `roadmap.md` with a standard format covering planned improvements, known gaps, and next milestones. The format must be identical across all components so information transfers consistently to any tooling or documentation layer. Named `roadmap.md` in every component folder. | Chore | ⬜ |
+| Update `docs/components/cleanup-workflow.md` to include Step 10b — create/update the component `roadmap.md` as a mandatory step so Copilot always creates or updates it during any cleanup run. | Chore | ✅ Done — 14 May 2026 |

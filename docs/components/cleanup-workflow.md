@@ -184,6 +184,55 @@ Update `README.md` with:
 5. **File structure** — list every file in the folder and its purpose
 6. **Related** — links to related components or docs
 
+### Step 10b — Component roadmap
+
+Every standalone component folder must contain a `roadmap.md` file. Create it if it does not exist; update it if it does.
+
+**Naming:** always `roadmap.md` — identical across every component.
+
+**Format — non-negotiable (use this template exactly):**
+
+```md
+# <ComponentName> — Roadmap
+
+> Last updated: DD Mon YYYY
+
+## Status
+
+`alpha` | `beta` | `stable` | `lts`
+
+One sentence on the current state of the component.
+
+## Open improvements
+
+| Task | Priority | Status |
+| ---- | -------- | ------ |
+| Description of planned improvement | High / Medium / Low | ⬜ / 🔄 / ✅ |
+
+## Known gaps
+
+Bullet list of anything missing from the current implementation that is not yet in the table above
+(e.g. missing story variants, untested edge cases, accessibility gaps).
+Write "None" if there are no known gaps.
+
+## Completed
+
+| Task | Completed |
+| ---- | --------- |
+| Description of completed improvement | DD Mon YYYY |
+```
+
+**Rules:**
+- Status values: `⬜` not started · `🔄` in progress · `✅` done
+- When a task from "Open improvements" is completed, move it to the "Completed" table with the date — do not delete it.
+- The "Status" line must be one of the four ripeness labels used across the Giselle ecosystem: `alpha`, `beta`, `stable`, `lts`.
+- Update `> Last updated:` every time the file is edited.
+- Do not add personal names, client names, or any content that could not safely appear in a public MIT-licensed repository.
+
+This file is the single source of truth for planned work on this specific component. It is distinct from `docs/roadmap.md` (the library-level roadmap) — the library roadmap summarises phases and milestones; the component roadmap tracks granular per-component improvements.
+
+---
+
 ### Step 11 — Quality gate
 
 ```sh
@@ -273,6 +322,7 @@ src/components/<name>/
   <name>.stories.tsx      — Storybook stories
   index.ts                — barrel: re-exports everything
   README.md               — why it exists, design decisions, file structure
+  roadmap.md              — per-component planned improvements, known gaps, completed work
   <sub-component>.tsx     — internal sub-components (flat, not in subfolders)
 ```
 
