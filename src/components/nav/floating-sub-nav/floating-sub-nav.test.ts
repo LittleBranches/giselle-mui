@@ -4,6 +4,7 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import { FloatingSubNav } from './floating-sub-nav';
+import { pillVariants } from './floating-sub-nav.animations';
 
 // framer-motion uses browser APIs — mock AnimatePresence and motion to plain wrappers
 vi.mock('framer-motion', () => ({
@@ -132,5 +133,35 @@ describe('FloatingSubNav', () => {
     );
     // The active button has aria-pressed="true"
     expect(html).toContain('aria-pressed="true"');
+  });
+});
+
+// ----------------------------------------------------------------------
+
+describe('NavPill — animation variants', () => {
+  it('renders into the DOM via FloatingSubNav without throwing', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(FloatingSubNav, {
+        items,
+        activeId: 'about',
+        onSelect: vi.fn(),
+      })
+    );
+    // NavPill renders the nav landmark and all buttons
+    expect(html).toContain('aria-label="Section navigation"');
+  });
+
+  it('[regression] exit y-offset (10) is smaller than enter y-offset (20)', () => {
+    // Intentional design rule: the pill exits with a shorter slide than it enters.
+    // Entry feels like the pill is arriving; exit feels like a collapse, not a second entrance.
+    const enterY = (pillVariants.initial as { y: number }).y;
+    const exitY = (pillVariants.exit as { y: number }).y;
+    expect(Math.abs(exitY)).toBeLessThan(Math.abs(enterY));
+  });
+
+  it('[regression] animate state has full opacity and zero offset', () => {
+    const animate = pillVariants.animate as { opacity: number; y: number };
+    expect(animate.opacity).toBe(1);
+    expect(animate.y).toBe(0);
   });
 });

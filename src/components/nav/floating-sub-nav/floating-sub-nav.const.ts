@@ -12,3 +12,6 @@ export const SUB_NAV_BUTTON_SIZE: { xs: number; sm: number; md: number; lg: numb
 
 /** Minimum interactive touch-target size enforced by WCAG 2.2 AA (24 px). */
 export const SUB_NAV_BUTTON_MIN_SIZE = 24;
+
+/** Gap (MUI spacing units) between buttons in the pill button row. */
+export const PILL_BUTTON_ROW_SPACING = 0.5;

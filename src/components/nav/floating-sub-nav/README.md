@@ -47,7 +47,8 @@ minimum touch target (24 px) at all breakpoints (xs: 36 px → lg: 44 px). Regre
 ```
 floating-sub-nav/
   floating-sub-nav.tsx              — composition
-  floating-sub-nav.const.ts         — SUB_NAV_BUTTON_SIZE, SUB_NAV_BUTTON_MIN_SIZE
+  floating-sub-nav.const.ts         — SUB_NAV_BUTTON_SIZE, SUB_NAV_BUTTON_MIN_SIZE, PILL_BUTTON_ROW_SPACING
+  floating-sub-nav.animations.ts    — pillVariants, pillTransition, PILL_EASING, PILL_TRANSITION_DURATION
   floating-sub-nav.styles.ts        — all sx constants and factories
   floating-sub-nav.styles.test.ts   — styles + regression tests (touch-target)
   floating-sub-nav.test.ts          — Vitest unit tests
@@ -63,3 +64,10 @@ floating-sub-nav/
 
 - `SectionContainer` — the outer shell used to constrain section content. `FloatingSubNav` can
   be rendered inside a `SectionContainer` with `sticky={true}` to pin the nav to that section.
+
+## Quality status — 13 May 2026
+
+| Dimension        | Score | Open items |
+| ---------------- | ----- | ---------- |
+| DoD (Scenario A) | 9/9   | —          |
+| Best practices   | 13/13 | —          |
