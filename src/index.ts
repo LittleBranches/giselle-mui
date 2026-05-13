@@ -6,6 +6,11 @@ export { createIconRegistrar } from './utils/create-icon-registrar';
 export type { GiselleIconData, GiselleIconMap } from './utils/create-icon-registrar';
 
 export { channelAlpha, hexToChannel, pxToRem, remToPx } from './utils/theme-utils';
+export { isDeepEqual } from './utils/is-deep-equal';
+export { getCookieValue, setCookieValue } from './utils/cookie';
+export type { SetCookieOptions } from './utils/cookie';
+export { useLocalStorage } from './utils/use-local-storage';
+export type { UseLocalStorageReturn } from './utils/use-local-storage';
 
 export {
   giselleTheme,

@@ -7,6 +7,9 @@
  */
 
 export { channelAlpha, hexToChannel, pxToRem, remToPx } from './utils/theme-utils';
+export { isDeepEqual } from './utils/is-deep-equal';
+export { getCookieValue, setCookieValue } from './utils/cookie';
+export type { SetCookieOptions } from './utils/cookie';
 export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity-utils';
 export { assignMilestoneSidesByDone } from './utils/timeline-utils';
 export {
