@@ -9,10 +9,14 @@ export { channelAlpha, hexToChannel, pxToRem, remToPx } from './utils/theme-util
 
 export {
   giselleTheme,
+  giselleThemeOptions,
   GISELLE_PRIMARY_MAIN,
   GISELLE_PRIMARY_DARK_MAIN,
   GISELLE_SECONDARY_MAIN,
 } from './utils/theme-preset';
+
+export { GiselleThemeProvider } from './components/theme-provider/giselle';
+export type { GiselleThemeProviderProps } from './components/theme-provider/giselle';
 
 export { GiselleIcon } from './components/icon/giselle';
 export type { GiselleIconProps } from './components/icon/giselle';
