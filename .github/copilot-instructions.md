@@ -268,6 +268,7 @@ library as its own thing. When updating or writing docs:
 | Command | Meaning |
 | ------- | ------- |
 | `cleanup component <Name>` | Read `docs/components/cleanup-workflow.md` and execute the full cleanup workflow on the named component. No further explanation needed. |
+| `review pr <N>` | Read `docs/pr-review-workflow.md` and execute the full PR review workflow for PR number `<N>`. No further explanation needed. |
 
 ---
 
