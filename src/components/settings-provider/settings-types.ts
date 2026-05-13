@@ -114,7 +114,8 @@ export type GiselleSettingsProviderProps<TState extends BaseSettingsState> = {
    * Pre-resolved initial state from a server layer (e.g. Next.js RSC reading cookies).
    *
    * Pass this to avoid a hydration mismatch when the stored value differs from the
-   * server-rendered default. When omitted, the provider reads from storage on first render.
+   * server-rendered default. When omitted, the provider reads from storage in a
+   * mount-only `useEffect` (after the first render).
    */
   initialState?: TState;
 

@@ -336,7 +336,7 @@ import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
   }}
 >
   <App />
-</GiselleThemeProvider>;
+</GiselleThemeProvider>
 ```
 
 **Option B — `extendTheme()` with `giselleThemeOptions`:**

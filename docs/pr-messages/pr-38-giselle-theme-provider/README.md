@@ -184,7 +184,7 @@ runtime, different TypeScript shapes. See [Design decisions](#design-decisions) 
   (`giselleThemeOptions`, `deepMerge`, `defaultMode`)
 - `alexrebula/docs/roadmap.md` — Phase C summary updated (bubble-up rule):
   `✅ Phase C shipped (GiselleThemeProvider component — zero-config, themeOverrides, full custom
-theme prop; Vitest + Storybook; giselleThemeOptions export for Option B consumers) — 13 May 2026`
+  theme prop; Vitest + Storybook; giselleThemeOptions export for Option B consumers) — 13 May 2026`
 - `alexrebula/src/sections-api/roadmap/data.tsx` — `giselle-mui Phase B/C` milestone:
   `color: 'warning'` → `color: 'success'`; description updated to include 13 May 2026 delivery
   date and `giselleThemeOptions` export
