@@ -15,14 +15,14 @@ const MotionBox = motion(Box);
 // ----------------------------------------------------------------------
 
 /**
- * Scroll-triggered animation container for `FaqAccordion`.
+ * Scroll-triggered animation container for `FaqSection`.
  * Wraps children in a framer-motion stagger container that fires once when
  * the section enters the viewport.
  *
  * Animation is disabled on `sm` and below — short viewports skip the
  * stagger to avoid content appearing off-screen on first render.
  *
- * @internal — used by `FaqAccordion` only.
+ * @internal — used by `FaqSection` only.
  *
  * **Quality status (13 May 2026):** DoD 9/9 · Best practices 13/13
  */

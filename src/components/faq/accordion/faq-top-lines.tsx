@@ -7,10 +7,10 @@ import { FAQ_FLOAT_LINE_LEFT } from './faq-accordion.const';
 // ----------------------------------------------------------------------
 
 /**
- * Decorative top-edge elements for `FaqAccordion`.
+ * Decorative top-edge elements for `FaqSection`.
  * Renders stacked triangle icons and a vertical float line on the left edge.
  *
- * @internal — used by `FaqAccordion` only.
+ * @internal — used by `FaqSection` only.
  *
  * **Quality status (13 May 2026):** DoD 9/9 · Best practices 13/13
  */

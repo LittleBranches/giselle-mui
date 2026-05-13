@@ -22,7 +22,7 @@ type SvgProps = React.ComponentProps<typeof MotionSvg>;
 /**
  * Decorative dashed float line (horizontal or vertical).
  * Only rendered at ≥1440 px via base decoration styles.
- * @internal — used by `FaqAccordion` only.
+ * @internal — used by `FaqSection` only.
  *
  * **Quality status (13 May 2026):** DoD 9/9 · Best practices 13/13
  */
@@ -74,7 +74,7 @@ export function FaqFloatLine({ sx, vertical, ...other }: SvgProps & { vertical?:
 /**
  * Decorative animated "+" mark.
  * Only rendered at ≥1440 px.
- * @internal — used by `FaqAccordion` only.
+ * @internal — used by `FaqSection` only.
  */
 export function FaqFloatPlusIcon({ sx, ...other }: SvgProps) {
   return (
@@ -108,7 +108,7 @@ export function FaqFloatPlusIcon({ sx, ...other }: SvgProps) {
 /**
  * Decorative downward-pointing triangle.
  * Only rendered at ≥1440 px.
- * @internal — used by `FaqAccordion` only.
+ * @internal — used by `FaqSection` only.
  */
 export function FaqFloatTriangleDownIcon({ sx, ...other }: SvgProps) {
   return (

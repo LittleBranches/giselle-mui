@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import Typography from '@mui/material/Typography';
 
-import { FaqAccordion } from './faq-accordion';
+import { FaqSection } from './faq-accordion';
 
 // ----------------------------------------------------------------------
 
-const meta: Meta<typeof FaqAccordion> = {
+const meta: Meta<typeof FaqSection> = {
   title: 'Motion/FAQ Accordion',
-  component: FaqAccordion,
+  component: FaqSection,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -26,7 +26,7 @@ const meta: Meta<typeof FaqAccordion> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof FaqAccordion>;
+type Story = StoryObj<typeof FaqSection>;
 
 // ----------------------------------------------------------------------
 

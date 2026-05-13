@@ -101,6 +101,6 @@ src/components/accordion/
 ## Related
 
 - `TaskList` — renders a flat list of `done`/`pending` items without expand/collapse
-- `FaqAccordion` — full FAQ section with framer-motion scroll animation, decorative
+- `FaqSection` — full FAQ section with framer-motion scroll animation, decorative
   SVGs, and a contact footer; lives in `faq/accordion/` in the `/motion` subpath
 - `TimelineCompact` — accordion-based timeline with milestone modals
