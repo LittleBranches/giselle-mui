@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { addCollection } from '@iconify/react';
+import { giselleTheme } from '../src/utils/theme-preset';
 import { solarStorybookIcons } from './solar-storybook-icons';
 
 // Register the Solar icon set offline so icons don't flicker due to CDN fetches.
@@ -12,9 +13,9 @@ const muiDefaultTheme = createTheme({
 });
 
 // Registry of themes available in the Storybook toolbar.
-// Phase B: add 'giselle' entry once the Giselle brand palette ships in src/utils/.
 const themes: Record<string, typeof muiDefaultTheme> = {
   'mui-default': muiDefaultTheme,
+  giselle: giselleTheme as unknown as typeof muiDefaultTheme,
 };
 
 // Hide low-signal inherited args globally so controls focus on design decisions.
@@ -32,15 +33,17 @@ const STORYBOOK_GLOBAL_CONTROLS_EXCLUDE = [
 /**
  * Toolbar dropdown — switch between registered themes in the Storybook canvas.
  * Each `value` must match a key in the `themes` registry above.
- * Phase B: add `{ value: 'giselle', title: 'Giselle' }` once the palette ships.
  */
 export const globalTypes = {
   theme: {
     name: 'Theme',
-    defaultValue: 'mui-default',
+    defaultValue: 'giselle',
     toolbar: {
       icon: 'paintbrush',
-      items: [{ value: 'mui-default', title: 'MUI Default' }],
+      items: [
+        { value: 'mui-default', title: 'MUI Default' },
+        { value: 'giselle', title: '🥭 Giselle' },
+      ],
       dynamicTitle: true,
     },
   },

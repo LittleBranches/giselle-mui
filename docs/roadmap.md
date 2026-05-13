@@ -105,16 +105,19 @@ The previous plan required consumers to provide all tokens. This created too muc
 the zero-config case. The revised design ships a real default so consumers can try the library
 immediately without any theme configuration.
 
-**What it wraps:**
+**What it wraps (shipped implementation — simplified):**
 
 ```tsx
-// Internal implementation shape (simplified)
+// 'use client' — CssVarsProvider is a client component
 import { CssVarsProvider, extendTheme } from '@mui/material/styles';
-import { giselleTheme } from '../utils/theme-preset';
+import { giselleTheme, giselleThemeOptions } from '../utils/theme-preset';
+import { deepMerge } from '../utils/deep-merge'; // internal — not exported from barrel
 
-function GiselleThemeProvider({ children, themeOverrides, theme }: Props) {
-  const resolvedTheme = theme ?? extendTheme(merge(giselleTheme, themeOverrides ?? {}));
-  return <CssVarsProvider theme={resolvedTheme}>{children}</CssVarsProvider>;
+function GiselleThemeProvider({ children, themeOverrides, theme, defaultMode = 'system' }: Props) {
+  const resolvedTheme =
+    theme ??
+    (themeOverrides ? extendTheme(deepMerge(giselleThemeOptions, themeOverrides)) : giselleTheme);
+  return <CssVarsProvider theme={resolvedTheme} defaultMode={defaultMode}>{children}</CssVarsProvider>;
 }
 ```
 
