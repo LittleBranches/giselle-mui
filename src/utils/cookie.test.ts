@@ -42,6 +42,48 @@ describe('setCookieValue + getCookieValue', () => {
   });
 });
 
+describe('setCookieValue — SameSite=None must include Secure', () => {
+  it('[regression] includes Secure attribute when sameSite is None', () => {
+    const written: string[] = [];
+    const descriptor = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie')!;
+    Object.defineProperty(document, 'cookie', {
+      configurable: true,
+      get: descriptor.get,
+      set(value: string) {
+        written.push(value);
+        descriptor.set!.call(document, value);
+      },
+    });
+
+    try {
+      setCookieValue('auth', 'token', { sameSite: 'None' });
+      expect(written.some((s) => s.includes('Secure'))).toBe(true);
+    } finally {
+      Object.defineProperty(document, 'cookie', descriptor);
+    }
+  });
+
+  it('[regression] does not include Secure attribute when sameSite is Lax', () => {
+    const written: string[] = [];
+    const descriptor = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie')!;
+    Object.defineProperty(document, 'cookie', {
+      configurable: true,
+      get: descriptor.get,
+      set(value: string) {
+        written.push(value);
+        descriptor.set!.call(document, value);
+      },
+    });
+
+    try {
+      setCookieValue('pref', 'value', { sameSite: 'Lax' });
+      expect(written.some((s) => s.includes('Secure'))).toBe(false);
+    } finally {
+      Object.defineProperty(document, 'cookie', descriptor);
+    }
+  });
+});
+
 describe('getCookieValue — SSR guard', () => {
   it('is safe to call (returns null or value depending on environment)', () => {
     // In jsdom, document is defined — just verify it does not throw

@@ -35,12 +35,16 @@ import type { BaseSettingsState, GiselleThemeAndSettingsProviderProps } from './
  *
  * ## With cookie storage + SSR hydration
  *
- * Pass `initialState` with the cookie value read server-side (e.g. from
- * Next.js `cookies()`) to avoid a flash of default settings on first render.
+ * Read the stored settings server-side (e.g. via Next.js `cookies()`), parse them,
+ * and pass as `initialState` to avoid a flash of default settings on first render.
  * ```tsx
+ * // In a Next.js RSC (app/layout.tsx) — read + parse the stored cookie
+ * const raw = (await cookies()).get('giselle-settings')?.value ?? null;
+ * const initialState = raw ? (JSON.parse(raw) as typeof defaultSettings) : undefined;
+ *
  * <GiselleThemeAndSettingsProvider
  *   defaultSettings={defaultSettings}
- *   initialState={serverParsedCookieState}
+ *   initialState={initialState}
  *   storage="cookie"
  *   getMode={(s) => s.mode}
  * >
