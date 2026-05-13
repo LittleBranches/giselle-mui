@@ -1,6 +1,6 @@
 'use client';
 
-import { CssVarsProvider, extendTheme } from '@mui/material/styles';
+import { ThemeProvider, extendTheme } from '@mui/material/styles';
 
 import { deepMerge } from '../../../utils/deep-merge';
 import { giselleThemeOptions, giselleTheme } from '../../../utils/theme-preset';
@@ -59,8 +59,8 @@ export function GiselleThemeProvider({
     (themeOverrides ? extendTheme(deepMerge(giselleThemeOptions, themeOverrides)) : giselleTheme);
 
   return (
-    <CssVarsProvider theme={resolvedTheme} defaultMode={defaultMode}>
+    <ThemeProvider theme={resolvedTheme} defaultMode={defaultMode}>
       {children}
-    </CssVarsProvider>
+    </ThemeProvider>
   );
 }
