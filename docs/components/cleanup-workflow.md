@@ -87,6 +87,21 @@ When two style constants are structurally identical except for one varying argum
 
 Check every `*.styles.ts` file for sibling pairs. If they share the same shape and differ only by one dimension, merge them. See `timelineColumnSx`, `msColumnBoxSx`, and `markerLabelSlotSx` in `two-column.styles.ts` as canonical examples.
 
+### Step 3b — Animations (motion subpath components only)
+
+Applies to any component exported from `src/motion-index.ts` (compiled to `dist/motion.js`).
+
+- Move every framer-motion `Variants` object and `Transition` config out of `.tsx` files and into `<component-name>.animations.ts`.
+- Named `Variants` → `export const <name>Variants: Variants = { initial: {...}, animate: {...}, exit: {...} }`.
+- Named `Transition` → `export const <name>Transition: Transition = { duration: X, ease: [...] }`.
+- Export primitive curve/duration values as named constants so they can be referenced in tests and shared across related components:
+  ```ts
+  export const MY_EASING: [number, number, number, number] = [0.4, 0, 0.2, 1];
+  export const MY_DURATION = 0.28;
+  ```
+- Use the named variants API in JSX: `variants={myVariants} initial="initial" animate="animate" exit="exit"` — never inline objects.
+- No mock-theme test file is required (animations have no theme dependency), but add at least one smoke assertion in the component's `*.test.ts` if any variant value encodes a non-obvious design decision (e.g. `y` offsets for enter vs. exit differ intentionally).
+
 ### Step 4 — Utils
 
 - Move every pure logic function (nothing that returns JSX) out of `.tsx` files and into `utils.ts`.
@@ -251,6 +266,7 @@ src/components/<name>/
   utils.ts                — pure logic functions (no JSX)
   <name>.styles.ts        — sx constants (static) and sx factories (dynamic)
   <name>.styles.test.ts   — mock-theme assertions for every exported sx function
+  <name>.animations.ts    — framer-motion variants and transition configs (motion subpath components only)
   <name>.const.ts         — named constants (sizes, font sizes, spacing) — primitive values only, no JSX
   <name>.defaults.tsx     — default value arrays/objects that contain JSX (optional, only when needed)
   <name>.test.ts          — Vitest unit tests
