@@ -151,7 +151,7 @@ describe('TimelineCompact — interaction (click to expand)', () => {
     // Description should be in the DOM (accordion renders details in DOM even when collapsed)
     expect(container.textContent).toContain('Initial platform deployment');
 
-    root.unmount();
+    act(() => root.unmount());
     container.remove();
   });
 });

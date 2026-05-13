@@ -37,7 +37,7 @@ function setup() {
     div,
     root,
     cleanup: () => {
-      root.unmount();
+      act(() => root.unmount());
       div.remove();
     },
   };
