@@ -60,6 +60,36 @@ export type GiselleSettingsContextValue<TState> = {
 // ----------------------------------------------------------------------
 
 /**
+ * Custom storage adapter for `GiselleSettingsProvider`.
+ *
+ * Implement this interface to use a custom storage backend (e.g. IndexedDB,
+ * server-synced state, or a cookie library with custom serialisation options).
+ *
+ * **Example:**
+ * ```ts
+ * const myAdapter: StorageAdapter<MySettings> = {
+ *   get: () => JSON.parse(redis.get('settings') ?? 'null'),
+ *   set: (value) => redis.set('settings', JSON.stringify(value)),
+ *   clear: () => redis.del('settings'),
+ * };
+ *
+ * <GiselleSettingsProvider storage={myAdapter} defaultSettings={defaults}>
+ *   <App />
+ * </GiselleSettingsProvider>
+ * ```
+ */
+export type StorageAdapter<TState> = {
+  /** Read the stored settings. Returns `null` when nothing is stored. */
+  get: () => TState | null;
+  /** Write the full settings object to storage. */
+  set: (value: TState) => void;
+  /** Remove the stored settings (called on `onReset`). */
+  clear: () => void;
+};
+
+// ----------------------------------------------------------------------
+
+/**
  * Props for `GiselleSettingsProvider<TState>`.
  */
 export type GiselleSettingsProviderProps<TState extends BaseSettingsState> = {
@@ -83,15 +113,26 @@ export type GiselleSettingsProviderProps<TState extends BaseSettingsState> = {
    * Pre-resolved initial state from a server layer (e.g. Next.js RSC reading cookies).
    *
    * Pass this to avoid a hydration mismatch when the stored value differs from the
-   * server-rendered default. When omitted, the provider reads from `localStorage`
-   * on the client.
+   * server-rendered default. When omitted, the provider reads from storage on first render.
    */
   initialState?: TState;
 
   /**
-   * `localStorage` key used to persist settings.
+   * Storage key used when `storage` is `'localStorage'` or `'cookie'`.
    *
    * @default 'giselle-settings'
    */
   storageKey?: string;
+
+  /**
+   * Storage backend.
+   *
+   * - `'localStorage'` — default; SSR-safe, reads/writes `window.localStorage`
+   * - `'cookie'` — reads/writes `document.cookie`; pair with `initialState` from an
+   *   RSC layer for SSR hydration without a flash
+   * - `StorageAdapter<TState>` — fully custom adapter for any storage backend
+   *
+   * @default 'localStorage'
+   */
+  storage?: 'localStorage' | 'cookie' | StorageAdapter<TState>;
 };

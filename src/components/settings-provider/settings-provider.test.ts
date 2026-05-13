@@ -1,10 +1,11 @@
 // @vitest-environment jsdom
 import React, { act } from 'react';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import ReactDOM from 'react-dom/client';
 
 import { GiselleSettingsProvider } from './settings-provider';
 import { useGiselleSettings } from './settings-context';
+import type { StorageAdapter } from './settings-types';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +31,7 @@ function renderProvider(
     defaultSettings: TestSettings;
     initialState: TestSettings;
     storageKey: string;
+    storage: 'localStorage' | 'cookie' | StorageAdapter<TestSettings>;
   }> = {}
 ): HTMLDivElement {
   const container = document.createElement('div');
@@ -276,5 +278,123 @@ describe('GiselleSettingsProvider — drawer state', () => {
       captured?.onCloseDrawer();
     });
     expect(captured?.openDrawer).toBe(false);
+  });
+});
+
+// ----------------------------------------------------------------------
+
+describe('GiselleSettingsProvider — custom StorageAdapter', () => {
+  beforeEach(() => {
+    captured = null;
+  });
+
+  afterEach(() => {
+    document.body.querySelectorAll('div').forEach((el) => el.remove());
+  });
+
+  it('reads initial state from adapter.get()', () => {
+    const stored: TestSettings = { version: '1', mode: 'dark', fontSize: 18 };
+    const adapter: StorageAdapter<TestSettings> = {
+      get: () => stored,
+      set: vi.fn(),
+      clear: vi.fn(),
+    };
+    renderProvider({ storage: adapter });
+    expect(captured?.state.mode).toBe('dark');
+    expect(captured?.state.fontSize).toBe(18);
+  });
+
+  it('falls back to defaultSettings when adapter.get() returns null', () => {
+    const adapter: StorageAdapter<TestSettings> = {
+      get: () => null,
+      set: vi.fn(),
+      clear: vi.fn(),
+    };
+    renderProvider({ storage: adapter });
+    expect(captured?.state).toEqual(DEFAULTS);
+  });
+
+  it('calls adapter.set on setField', () => {
+    const set = vi.fn();
+    const adapter: StorageAdapter<TestSettings> = { get: () => null, set, clear: vi.fn() };
+    renderProvider({ storage: adapter });
+    act(() => {
+      captured?.setField('mode', 'dark');
+    });
+    expect(set).toHaveBeenCalledWith(expect.objectContaining({ mode: 'dark' }));
+  });
+
+  it('calls adapter.set on setState', () => {
+    const set = vi.fn();
+    const adapter: StorageAdapter<TestSettings> = { get: () => null, set, clear: vi.fn() };
+    renderProvider({ storage: adapter });
+    act(() => {
+      captured?.setState({ fontSize: 20 });
+    });
+    expect(set).toHaveBeenCalledWith(expect.objectContaining({ fontSize: 20 }));
+  });
+
+  it('calls adapter.clear on onReset', () => {
+    const clear = vi.fn();
+    const adapter: StorageAdapter<TestSettings> = { get: () => null, set: vi.fn(), clear };
+    renderProvider({ storage: adapter });
+    act(() => {
+      captured?.setField('mode', 'dark');
+    });
+    act(() => {
+      captured?.onReset();
+    });
+    expect(clear).toHaveBeenCalledOnce();
+    expect(captured?.state).toEqual(DEFAULTS);
+  });
+
+  it('resets to defaults when adapter version mismatches', () => {
+    const stale: TestSettings = { version: '0', mode: 'dark', fontSize: 20 };
+    const clear = vi.fn();
+    const adapter: StorageAdapter<TestSettings> = { get: () => stale, set: vi.fn(), clear };
+    renderProvider({ storage: adapter });
+    expect(captured?.state).toEqual(DEFAULTS);
+    expect(clear).toHaveBeenCalledOnce();
+  });
+});
+
+// ----------------------------------------------------------------------
+
+describe('GiselleSettingsProvider — cookie storage', () => {
+  const COOKIE_KEY = 'test-settings-cookie';
+
+  beforeEach(() => {
+    captured = null;
+    // Clear the test cookie
+    document.cookie = `${COOKIE_KEY}=; max-age=0; path=/`;
+  });
+
+  afterEach(() => {
+    document.body.querySelectorAll('div').forEach((el) => el.remove());
+    document.cookie = `${COOKIE_KEY}=; max-age=0; path=/`;
+  });
+
+  it('provides default state when no cookie is set', () => {
+    renderProvider({ storage: 'cookie', storageKey: COOKIE_KEY });
+    expect(captured?.state).toEqual(DEFAULTS);
+  });
+
+  it('reads stored state from cookie', () => {
+    const stored: TestSettings = { version: '1', mode: 'dark', fontSize: 18 };
+    document.cookie = `${COOKIE_KEY}=${encodeURIComponent(JSON.stringify(stored))}; path=/`;
+    renderProvider({ storage: 'cookie', storageKey: COOKIE_KEY });
+    expect(captured?.state.mode).toBe('dark');
+    expect(captured?.state.fontSize).toBe(18);
+  });
+
+  it('persists updated field to cookie', () => {
+    renderProvider({ storage: 'cookie', storageKey: COOKIE_KEY });
+    act(() => {
+      captured?.setField('fontSize', 22);
+    });
+    const cookieRaw = document.cookie.split('; ').find((row) => row.startsWith(`${COOKIE_KEY}=`));
+    expect(cookieRaw).toBeDefined();
+    const stored = JSON.parse(decodeURIComponent(cookieRaw!.split('=').slice(1).join('=')));
+    expect(stored.fontSize).toBe(22);
   });
 });

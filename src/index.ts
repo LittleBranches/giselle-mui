@@ -28,6 +28,7 @@ export type {
   BaseSettingsState,
   GiselleSettingsContextValue,
   GiselleSettingsProviderProps,
+  StorageAdapter,
 } from './components/settings-provider';
 
 export { GiselleIcon } from './components/icon/giselle';

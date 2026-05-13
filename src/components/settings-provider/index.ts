@@ -4,4 +4,5 @@ export type {
   BaseSettingsState,
   GiselleSettingsContextValue,
   GiselleSettingsProviderProps,
+  StorageAdapter,
 } from './settings-types';
