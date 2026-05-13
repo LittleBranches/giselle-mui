@@ -1,6 +1,6 @@
 # PR Review Workflow
 
-> Last updated: 14 May 2026
+> Last updated: 14 May 2026 (improvements integrated)
 > Session trigger: `review pr <N>` — type this in any new Copilot chat session to execute the full workflow for PR number `<N>`.
 
 This document defines the end-to-end pull request workflow used across all repos in this
@@ -178,6 +178,25 @@ possible outcomes are.] Holding this fix until clarified.
 
 Do not fix anything flagged with ⏸️ until the branch owner responds.
 
+### 2.5 — Inline suggestions (GitHub "Suggested change" blocks)
+
+The Copilot reviewer sometimes posts GitHub Suggested Change blocks — fenced diff suggestions
+that can be applied with one click in the GitHub UI. These are not ordinary comments; they
+propose a specific code change inline.
+
+**Rule:** every suggested change block must be explicitly accepted or rejected in the thread.
+Never silently ignore them.
+
+- **Accept:** apply the suggestion via the GitHub UI (one click) or replicate the change
+  manually in the local working tree. Either way, include the change in the fix batch commit
+  — do not apply it as a separate commit.
+- **Reject:** reply in the thread explaining why the suggestion is not correct, using the
+  same ❌ / ⚠️ format as any other not-valid or partially-valid response.
+
+Accepted suggestions that are applied via the GitHub UI create a commit directly on the branch.
+If this happens, squash that commit into the fix batch commit before pushing — do not leave
+an orphaned single-suggestion commit in the branch history.
+
 ---
 
 ## Phase 3 — Fixing valid comments (one batch)
@@ -277,91 +296,8 @@ The branch owner:
 ```
 Phase 0  → branch hygiene + quality gate (before green light)
 Phase 1  → green light → create PR → trigger Copilot review
-Phase 2  → read ALL threads → respond one-by-one (✅ / ❌ / ⚠️ / ⏸️)
-Phase 3  → fix all valid issues → one batch commit → one push → follow-up replies (SHA)
-Phase 4  → threads stay UNRESOLVED → branch owner resolves
-Phase 5  → branch owner verifies → merges
+Phase 2  → read ALL threads → respond one-by-one (✅ / ❌ / ⚠️ / ⏸️) → handle suggestion blocks
+Phase 3  → fix all valid issues → quality gate → one batch commit → one push → follow-up replies (SHA)
+Phase 4  → threads stay UNRESOLVED → update PR description if scope changed
+Phase 5  → branch owner verifies, resolves, merges
 ```
-
----
-
-## Improvements and gaps not listed in the original brief
-
-These were identified during the writing of this document. They are included here so they
-are not silently dropped.
-
-### G1 — The "partially valid" case
-
-The original brief only covered valid / not valid. Many Copilot comments are partially
-right — the identified location is wrong but the underlying concern is real, or the fix
-suggested is incorrect while the bug is genuine. The ⚠️ format handles this.
-
-### G2 — Security and WCAG comments are non-negotiable valid
-
-The brief did not distinguish comment types. Security findings and accessibility gaps
-should be treated as always-valid unless there is a specific technical reason to push back.
-Treating them like any other "is this valid?" judgment call introduces risk.
-
-### G3 — Read all threads before responding to any
-
-If you respond to thread 1 without reading thread 5, and thread 5 provides context that
-changes whether thread 1 is valid, you have posted a wrong response that cannot be deleted.
-Gather first, respond second.
-
-### G4 — "Needs branch owner input" flag
-
-The brief assumed Copilot can always assess validity. For comments about intentional design
-decisions or business rules that only the branch owner knows, Copilot should flag and hold —
-not guess.
-
-### G5 — Force-push safety after branch hygiene
-
-Moving commits off a branch (Phase 0.2) requires a force-push. If the branch already has
-an open PR at that point, a force-push rewrites history and orphans existing review threads.
-This must be confirmed with the branch owner before doing it.
-
-### G6 — One batch push discipline (and why)
-
-The brief mentioned "one push in one batch" but did not explain the reason. The reason is
-important: reviewers and CI both react to every push. A push-per-fix creates noise, wastes
-CI minutes, and makes it harder to bisect a regression to a specific fix. One commit, one push
-is the correct discipline.
-
-### G7 — Commit message must list every fix
-
-Without an explicit per-fix list in the commit message, the branch owner cannot verify fixes
-from the commit alone — they must cross-reference every thread. A structured commit message
-(one bullet per fix, file + what changed) is the minimum required.
-
-### G8 — PR description update after fix batch
-
-If the fix batch added meaningful changes to the PR, the description should reflect them.
-The original brief did not mention this. Stale PR descriptions mislead reviewers and future
-readers of the git log.
-
-### G9 — Re-requesting review is the branch owner's choice
-
-The brief said "once this post-review-and-fix is done" without specifying whether a new
-Copilot review cycle is triggered. This is left to the branch owner — Copilot does not
-decide. Some small fix batches do not warrant a second review; larger ones do.
-
-### G10 — Thread resolution is a sign-off signal, not a cleanup step
-
-The original brief said threads must stay unresolved "so the branch owner can review them".
-The stronger framing: resolving a thread is the branch owner's sign-off that a fix is
-accepted. It is not a housekeeping step. Copilot resolving its own threads removes the
-branch owner's ability to signal acceptance without merging.
-
-### G11 — Quality gate before the fix batch push
-
-The brief described the fix → push flow but did not mention running the quality gate between
-fixing and pushing. A fix that breaks a type check or a test is worse than the original issue.
-Quality gate is mandatory before the single batch push.
-
-### G12 — Inline suggestions (GitHub code suggestion blocks)
-
-Copilot reviewers sometimes post GitHub "Suggested change" blocks (fenced diff suggestions
-in the review UI). These can be accepted directly via the GitHub UI (one click) or rejected
-with a comment. The brief did not cover this. Rule: accept or reject in the thread (with
-explanation); do not silently ignore them. Accepted suggestions are cherry-picked into the
-fix batch commit, not applied separately.
