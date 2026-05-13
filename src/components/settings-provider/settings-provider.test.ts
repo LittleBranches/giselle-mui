@@ -38,12 +38,11 @@ function renderProvider(
   document.body.appendChild(container);
   act(() => {
     ReactDOM.createRoot(container).render(
-      React.createElement(GiselleSettingsProvider<TestSettings>, {
-        defaultSettings: DEFAULTS,
-        storageKey: STORAGE_KEY,
-        children: React.createElement(Harness),
-        ...overrides,
-      })
+      React.createElement(
+        GiselleSettingsProvider<TestSettings>,
+        { defaultSettings: DEFAULTS, storageKey: STORAGE_KEY, ...overrides },
+        React.createElement(Harness)
+      )
     );
   });
   return container;
