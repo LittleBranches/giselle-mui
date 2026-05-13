@@ -84,12 +84,14 @@ src/components/accordion/
   accordion.styles.test.ts  — assertions for every sx constant
   accordion.test.ts         — render, ARIA, interaction, and branch coverage tests
   accordion.stories.tsx     — Storybook: Default, Checklist, TaskList, CheckboxOutsideSummary (WCAG doc), Responsive
-  check-icon-button.tsx     — internal icon-button done toggle sub-component
-  check-icon-button.test.ts — structure, ARIA, and click tests for CheckIconButton
   index.ts                  — barrel export
-  types.ts                  — AccordionProps, CheckIconButtonProps
+  types.ts                  — AccordionProps
   README.md                 — this file
 ```
+
+> **Done-toggle:** the icon-button checklist control previously lived here as `check-icon-button.tsx`.
+> It was extracted into `ToggleIconButton` (`src/components/inputs/button/toggle/icon/`) —
+> a general-purpose binary toggle that `Accordion` now imports from the library barrel.
 
 ## Quality status — 13 May 2026
 

@@ -22,3 +22,10 @@
 
 export { FaqSection } from './components/faq/accordion';
 export type { FaqSectionProps, FaqItem } from './components/faq/accordion';
+// @deprecated — FaqAccordion was renamed to FaqSection in 0.1.x.
+// These aliases re-export the renamed symbols so existing consumers don't break.
+// Remove in the next minor version.
+/** @deprecated Use {@link FaqSection} instead. */
+export { FaqSection as FaqAccordion } from './components/faq/accordion';
+/** @deprecated Use {@link FaqSectionProps} instead. */
+export type { FaqSectionProps as FaqAccordionProps } from './components/faq/accordion';

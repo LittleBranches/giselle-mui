@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 
 import { floatDecorationBase } from './faq-accordion.styles';
 import { svgLineTransition } from './utils';
+import type { SvgProps } from './types';
 
 // ----------------------------------------------------------------------
 // Internal styled root — applies MUI `sx` to a framer-motion SVG element.
@@ -14,8 +15,6 @@ import { svgLineTransition } from './utils';
 const MotionSvg = styled(motion.svg, {
   shouldForwardProp: (prop) => prop !== 'vertical',
 })``;
-
-type SvgProps = React.ComponentProps<typeof MotionSvg>;
 
 // ----------------------------------------------------------------------
 

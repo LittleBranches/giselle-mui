@@ -77,17 +77,17 @@ The built-in `pressedIcon` and `hoverIcon` are filled/outlined green check circl
 ## File structure
 
 ```
-src/components/inputs/toggle-icon-button/
-  toggle-icon-button.tsx              — JSX composition only
-  toggle-icon-button.const.ts         — TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET
-  toggle-icon-button.defaults.tsx     — DEFAULT_PRESSED_ICON, DEFAULT_HOVER_ICON (JSX constants)
-  toggle-icon-button.styles.ts        — rootSx, defaultIconSvgSx
-  toggle-icon-button.styles.test.ts   — assertions for every sx constant
-  toggle-icon-button.test.ts          — structure, ARIA, interaction, and regression tests
-  toggle-icon-button.stories.tsx      — Default, AllCustomIcons, ControlledToggle, Responsive
-  types.ts                            — ToggleIconButtonProps
-  index.ts                            — barrel export
-  README.md                           — this file
+src/components/inputs/button/toggle/icon/
+  icon.tsx                — JSX composition only
+  icon.const.ts           — TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET
+  icon.defaults.tsx       — DEFAULT_PRESSED_ICON, DEFAULT_HOVER_ICON (JSX constants)
+  icon.styles.ts          — rootSx, defaultIconSvgSx
+  icon.styles.test.ts     — assertions for every sx constant
+  icon.test.ts            — structure, ARIA, interaction, and regression tests
+  icon.stories.tsx        — Default, AllCustomIcons, ControlledToggle, Responsive
+  types.ts                — ToggleIconButtonProps
+  index.ts                — barrel export
+  README.md               — this file
 ```
 
 ## Quality status — 13 May 2026

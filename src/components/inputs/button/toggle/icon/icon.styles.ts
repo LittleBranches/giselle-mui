@@ -1,6 +1,6 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-import { TOGGLE_ICON_SIZE } from './icon.const';
+import { TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET } from './icon.const';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +18,8 @@ export const rootSx: SxProps<Theme> = {
   padding: 0,
   flexShrink: 0,
   alignSelf: 'center',
+  minWidth: TOGGLE_MIN_TOUCH_TARGET,
+  minHeight: TOGGLE_MIN_TOUCH_TARGET,
   // idle (not pressed)
   '& .ti-idle': { display: 'flex', alignItems: 'center' },
   '& .ti-pressed': { display: 'none' },
