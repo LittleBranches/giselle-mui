@@ -16,7 +16,7 @@ sidebar_label: "PR38 - GiselleThemeProvider (Phase C)"
 ## Summary
 
 Phase C of the giselle-mui theming roadmap. Ships `GiselleThemeProvider` — a zero-config
-`CssVarsProvider` wrapper that uses the Giselle brand palette by default, accepts
+`ThemeProvider` wrapper that uses the Giselle brand palette by default, accepts
 `themeOverrides` for partial customisation, or accepts a fully custom `theme` for total bypass.
 
 Introduces `giselleThemeOptions` as a new public export — the raw `CssVarsThemeOptions` object
@@ -48,7 +48,7 @@ Giselle default.
 
 **3. `theme`** — accepts a fully custom `extendTheme()` result (`CssVarsTheme`). Bypasses
 `giselleThemeOptions` and `deepMerge` entirely. The consumer owns the full theme object;
-`GiselleThemeProvider` ensures correct `CssVarsProvider` wrapping with `defaultMode`.
+`GiselleThemeProvider` ensures correct `ThemeProvider` wrapping with `defaultMode`.
 
 Priority rule: `theme` > `themeOverrides` > default. If `theme` is provided, `themeOverrides`
 is silently ignored (documented in README and JSDoc).
@@ -57,7 +57,7 @@ is silently ignored (documented in README and JSDoc).
 See [Design decisions](#design-decisions) for why `'system'` is the correct default for a
 library component.
 
-**`'use client'`** — the component carries `'use client'` because `CssVarsProvider` is a client
+**`'use client'`** — the component carries `'use client'` because `ThemeProvider` is a client
 component. Correct for an App Router root layout wrapper.
 
 **Public API:**
@@ -196,8 +196,8 @@ runtime, different TypeScript shapes. See [Design decisions](#design-decisions) 
 | Test | What it verifies |
 | --- | --- |
 | `renders children with zero config` | Default usage renders children without crashing |
-| `zero-config — uses giselleTheme as default` | No props → `data-mui-color-scheme` attribute is set (CssVarsProvider active) |
-| `defaultMode prop is forwarded` | Passes `defaultMode` through to CssVarsProvider |
+| `zero-config — uses giselleTheme as default` | No props → `data-mui-color-scheme` attribute is set (ThemeProvider active) |
+| `defaultMode prop is forwarded` | Passes `defaultMode` through to ThemeProvider |
 | `themeOverrides are accepted without crash` | Partial override object does not throw |
 | `custom theme bypasses giselleTheme` | `theme` prop is accepted and provider renders correctly |
 | `theme wins over themeOverrides when both provided` | `theme` takes priority; `themeOverrides` is silently ignored |
