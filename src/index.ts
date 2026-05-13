@@ -19,11 +19,18 @@ export type { GiselleIconProps } from './components/icon/giselle';
 
 export { Accordion } from './components/accordion';
 export type { AccordionProps } from './components/accordion';
-export {
-  ACCORDION_DONE_MIN_TOUCH_TARGET,
-  ACCORDION_CHECK_ICON_SIZE,
-  ACCORDION_ICON_BUTTON_MIN_SIZE,
-} from './components/accordion';
+export { ACCORDION_DONE_MIN_TOUCH_TARGET } from './components/accordion';
+
+export { ToggleIconButton } from './components/inputs/button/toggle/icon';
+export type { ToggleIconButtonProps } from './components/inputs/button/toggle/icon';
+export { TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET } from './components/inputs/button/toggle/icon';
+// @deprecated — CheckIconButton was renamed to ToggleIconButton in 0.1.x.
+// These aliases re-export the replacement constants so existing consumers don't break.
+// Remove in the next minor version.
+/** @deprecated Use {@link TOGGLE_ICON_SIZE} instead. */
+export { TOGGLE_ICON_SIZE as ACCORDION_CHECK_ICON_SIZE } from './components/inputs/button/toggle/icon';
+/** @deprecated Use {@link TOGGLE_MIN_TOUCH_TARGET} instead. */
+export { TOGGLE_MIN_TOUCH_TARGET as ACCORDION_ICON_BUTTON_MIN_SIZE } from './components/inputs/button/toggle/icon';
 
 export { MetricCard, MetricCardDecoration } from './components/card/metric';
 export type {

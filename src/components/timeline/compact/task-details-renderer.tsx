@@ -26,6 +26,20 @@ function renderDetailsNode(node: ReactNode | undefined) {
   return node;
 }
 
+/**
+ * Renders the detailed content for a single timeline task or milestone.
+ *
+ * Handles all content variants in priority order:
+ * - Inline `description` string → rendered as `body2` text.
+ * - `details.summary` → ReactNode summary paragraph.
+ * - `details.content` → ReactNode free-form content block.
+ * - Nested `tasks` array → rendered via `TaskList` (optionally in checklist mode).
+ *
+ * Falls back to `emptyState` text when no content is present.
+ *
+ * **Quality status (13 May 2026):** DoD 9/9 · Best practices 13/13
+ * @internal — used by `TaskDetailsModal` and `PhaseAccordionRow`.
+ */
 export function TaskDetailsRenderer({
   task,
   checklist = false,

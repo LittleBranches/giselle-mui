@@ -9,7 +9,7 @@
 // that explicitly import from '/motion' need framer-motion installed.
 //
 // Consumer contract:
-//   import { FaqAccordion } from '@alexrebula/giselle-mui/motion';
+//   import { FaqSection } from '@alexrebula/giselle-mui/motion';
 //   // requires: framer-motion in the consumer's own deps
 //
 // Important: always use motion.div, never m.div.
@@ -20,5 +20,12 @@
 // shim or minor version bump required for existing consumers).
 // Phase H components will be exported from here.
 
-export { FaqAccordion } from './components/faq/accordion';
-export type { FaqAccordionProps, FaqItem } from './components/faq/accordion';
+export { FaqSection } from './components/faq/accordion';
+export type { FaqSectionProps, FaqItem } from './components/faq/accordion';
+// @deprecated — FaqAccordion was renamed to FaqSection in 0.1.x.
+// These aliases re-export the renamed symbols so existing consumers don't break.
+// Remove in the next minor version.
+/** @deprecated Use {@link FaqSection} instead. */
+export { FaqSection as FaqAccordion } from './components/faq/accordion';
+/** @deprecated Use {@link FaqSectionProps} instead. */
+export type { FaqSectionProps as FaqAccordionProps } from './components/faq/accordion';

@@ -31,13 +31,25 @@ export type FloatingSubNavProps = {
 // Internal sub-component types
 
 export type SubNavButtonProps = {
+  /** The navigation item this button represents (id, label, icon). */
   item: FloatingSubNavItem;
+  /**
+   * Whether this button represents the currently active section.
+   * Drives `aria-pressed`, hover suppression, and active colour via `subNavButtonSx`.
+   */
   isActive: boolean;
+  /** Called with `item.id` when the user clicks the button. */
   onPress: (id: string) => void;
 };
 
 export type NavPillProps = {
+  /** Ordered list of items to render as icon buttons. */
   items: FloatingSubNavItem[];
+  /**
+   * The id of the currently active item.
+   * Each `SubNavButton` derives its `aria-pressed` state by comparing `item.id` to this value.
+   */
   activeId: string;
+  /** Called when the user presses a button. Receives the id of the pressed item. */
   onPress: (id: string) => void;
 };

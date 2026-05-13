@@ -19,7 +19,7 @@ Target mature-state workflow:
 - minimal companion documentation for routine changes
 - detailed companion records only for high-risk, cross-cutting, or migration-heavy work
 
-Last updated: 9 May 2026
+Last updated: 13 May 2026
 
 ## How To Read This Index
 
@@ -307,3 +307,11 @@ Covers all 25 PRs from inception, adds per-PR companion doc scaffolding, branch-
 Currently open (PR 26, not yet merged).
 
 - PR 26 ([GitHub](https://github.com/AlexRebula/giselle-mui/pull/26)) - [pr-26-pr-messages-index/README.md](./pr-26-pr-messages-index/README.md)
+
+### [`chore/all-components-dod-complete`](https://github.com/AlexRebula/giselle-mui/tree/chore/all-components-dod-complete)
+
+Quality cleanup branch — brings all 16 shipped components to DoD 20/20 · Best practices 13/13.
+Extracts `CheckIconButton` into a standalone `ToggleIconButton` in the correct MUI Inputs taxonomy (`inputs/button/toggle/icon/`), renames `FaqAccordion` → `FaqSection`, completes `TimelineTwoColumn` DoD, and adds a cognitive complexity fix to `Accordion`.
+Currently open (PR 27, not yet merged).
+
+- PR 27 ([GitHub](https://github.com/AlexRebula/giselle-mui/pull/27)) - [pr-27-all-components-dod-complete/README.md](./pr-27-all-components-dod-complete/README.md)

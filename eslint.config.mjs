@@ -101,7 +101,7 @@ export default eslintTs.config(
           message: 'Prohibited identifier (_mock). Use a descriptive sample/placeholder name.',
         },
         {
-          selector: 'ImportDeclaration[source.value="minimal-shared"]',
+          selector: 'ImportDeclaration[source.value^="minimal-shared"]',
           message:
             'minimal-shared is a proprietary package. It must never be imported in this MIT-licensed library.',
         },
@@ -174,7 +174,7 @@ export default eslintTs.config(
           message: 'Prohibited identifier (_mock). Use a descriptive sample/placeholder name.',
         },
         {
-          selector: 'ImportDeclaration[source.value="minimal-shared"]',
+          selector: 'ImportDeclaration[source.value^="minimal-shared"]',
           message:
             'minimal-shared is a proprietary package. It must never be imported in this MIT-licensed library.',
         },

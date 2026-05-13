@@ -41,6 +41,13 @@ layout/two-column-showcase-row/
   README.md                      — this file
 ```
 
+## Quality status — 13 May 2026
+
+| Dimension        | Score | Open items |
+| ---------------- | ----- | ---------- |
+| DoD (Scenario B) | 20/20 | —          |
+| Best practices   | 13/13 | —          |
+
 ## Related
 
 - `SectionContainer` — page-level width wrapper and vertical spacing; typically wraps this component.

@@ -53,6 +53,13 @@ card/stat/
   README.md                  — this file
 ```
 
+## Quality status — 13 May 2026
+
+| Dimension        | Score | Open items |
+| ---------------- | ----- | ---------- |
+| DoD (Scenario B) | 20/20 | —          |
+| Best practices   | 13/13 | —          |
+
 ## Related
 
 - `MetricCard` — a wider KPI card with a larger metric, delta chip, and icon. Different layout.

@@ -10,7 +10,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 
-import { CheckIconButton } from './check-icon-button';
+import { ToggleIconButton } from '../inputs/button/toggle/icon';
 import type { AccordionProps } from './types';
 import {
   accordionRootSx,
@@ -59,7 +59,7 @@ import {
  * </Accordion>
  * ```
  *
- * **Quality status (8 May 2026):** DoD 20/20 · Best practices 13/13 · Coverage 100% · Cleanup complete
+ * **Quality status (13 May 2026):** DoD 20/20 · Best practices 13/13 · Coverage 100% · Cleanup complete
  */
 export function Accordion({
   title,
@@ -98,8 +98,10 @@ export function Accordion({
   // return so the JSX stays flat — ESLint bans nested ternaries inside JSX.
   let leadingElement: ReactNode = null;
   if (checklist) {
-    if (checkIcon === undefined) {
-      leadingElement = (
+    // Ternary (not nested if/else) to stay within cognitive complexity budget.
+    // checkIcon === undefined → standard Checkbox; otherwise → custom icon ToggleIconButton.
+    leadingElement =
+      checkIcon === undefined ? (
         <Checkbox
           checked={done}
           indeterminate={indeterminate}
@@ -113,18 +115,16 @@ export function Accordion({
           size="small"
           sx={checkboxSx}
         />
-      );
-    } else {
-      leadingElement = (
-        <CheckIconButton
-          done={done}
-          checkIcon={checkIcon}
-          checkDoneIcon={checkDoneIcon}
-          checkHoverIcon={checkHoverIcon}
-          onDoneButtonClick={onDoneButtonClick}
+      ) : (
+        <ToggleIconButton
+          pressed={done}
+          idleIcon={checkIcon as ReactNode}
+          pressedIcon={checkDoneIcon}
+          hoverIcon={checkHoverIcon}
+          onPressedChange={onDoneButtonClick}
+          aria-label={done ? 'Mark as not done' : 'Mark as done'}
         />
       );
-    }
   } else if (leadingAction === undefined) {
     leadingElement = (
       <Box aria-hidden="true" sx={leadingIconSx}>

@@ -1,6 +1,17 @@
 import type { ReactNode } from 'react';
+import type { SVGMotionProps } from 'framer-motion';
 import type { BoxProps } from '@mui/material/Box';
 import type { SxProps, Theme } from '@mui/material/styles';
+
+// ----------------------------------------------------------------------
+
+/**
+ * Props for internal decorative SVG elements in `FaqSection`
+ * (`FaqFloatLine`, `FaqFloatPlusIcon`, `FaqFloatTriangleDownIcon`).
+ *
+ * @internal
+ */
+export type SvgProps = SVGMotionProps<SVGSVGElement> & { sx?: SxProps<Theme> };
 
 // ----------------------------------------------------------------------
 
@@ -12,8 +23,8 @@ export type FaqItem = {
   answer: ReactNode;
 };
 
-/** Props for the {@link FaqAccordion} component. */
-export type FaqAccordionProps = Omit<BoxProps, 'children'> & {
+/** Props for the {@link FaqSection} component. */
+export type FaqSectionProps = Omit<BoxProps, 'children'> & {
   /** Overline caption above the heading. @default 'FAQs' */
   caption?: string;
   /** Main `h2` heading. @default 'Frequently Asked' */
@@ -42,7 +53,7 @@ export type FaqAccordionProps = Omit<BoxProps, 'children'> & {
   sx?: SxProps<Theme>;
 };
 
-/** @internal Props for the scroll-triggered animation container used by {@link FaqAccordion}. */
+/** @internal Props for the scroll-triggered animation container used by {@link FaqSection}. */
 export type FaqMotionViewportProps = {
   children: ReactNode;
   sx?: SxProps<Theme>;

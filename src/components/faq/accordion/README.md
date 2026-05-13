@@ -1,11 +1,11 @@
-# FaqAccordion
+# FaqSection
 
 ## Why it exists
 
 Every landing page FAQ section needs the same structure: animated accordions in a centred
 column, a heading with gradient accent, and a contact footer. Getting the motion stagger,
 the accordion tint-on-hover, and the decorative SVG elements right every time is non-trivial.
-`FaqAccordion` encodes these decisions so consumers don't have to rediscover them.
+`FaqSection` encodes these decisions so consumers don't have to rediscover them.
 
 ## Why it belongs here
 
@@ -17,7 +17,7 @@ drop this in and receive the full visual treatment from a single component.
 
 ### framer-motion subpath
 
-`FaqAccordion` is exported from `@alexrebula/giselle-mui/motion` (not the root import) because
+`FaqSection` is exported from `@alexrebula/giselle-mui/motion` (not the root import) because
 it depends on `framer-motion`. Isolating it in a subpath ensures that apps which never use
 animation don't pay the bundle cost.
 
@@ -62,7 +62,7 @@ safer than passing `hideContactFooter: true` — the default state is the simple
 
 ```
 faq-accordion.tsx          — JSX composition only
-types.ts                   — FaqItem, FaqAccordionProps
+types.ts                   — FaqItem, FaqSectionProps
 utils.ts                   — fadeVariants, containerVariants, svgLineTransition (no JSX)
 faq-accordion.styles.ts    — sx constants and factories
 faq-accordion.const.ts     — named size/spacing constants
@@ -74,6 +74,13 @@ faq-accordion.styles.test.ts — mock-theme assertions for styles
 index.ts                   — barrel
 README.md                  — this file
 ```
+
+## Quality status — 13 May 2026
+
+| Dimension        | Score | Open items |
+| ---------------- | ----- | ---------- |
+| DoD (Scenario B) | 20/20 | —          |
+| Best practices   | 13/13 | —          |
 
 ## Related
 

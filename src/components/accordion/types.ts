@@ -4,36 +4,6 @@ import type { AccordionProps as MuiAccordionProps } from '@mui/material/Accordio
 // ----------------------------------------------------------------------
 
 /**
- * Props for the internal {@link CheckIconButton} sub-component.
- * Not exported from the package barrel — consumers interact with the parent
- * `Accordion` props (`checkIcon`, `checkDoneIcon`, `checkHoverIcon`) instead.
- */
-export type CheckIconButtonProps = {
-  /** Current done state — determines which icon is shown at idle. */
-  done: boolean;
-  /**
-   * Icon for the idle undone state (the consumer's custom icon).
-   * Required — `CheckIconButton` is only rendered when this is defined.
-   */
-  checkIcon: ReactNode;
-  /**
-   * Icon shown when the item is done and not hovered/focused.
-   * Default: built-in filled green check circle SVG.
-   */
-  checkDoneIcon?: ReactNode;
-  /**
-   * Icon shown on hover or keyboard focus regardless of done state.
-   * Default: built-in outlined green check circle SVG.
-   * Signals "click/press to toggle" to the user.
-   */
-  checkHoverIcon?: ReactNode;
-  /** Called with the NEXT done state when the button is activated. */
-  onDoneButtonClick?: (nextDone: boolean) => void;
-};
-
-// ----------------------------------------------------------------------
-
-/**
  * Props for the {@link Accordion} component.
  *
  * Extends MUI `AccordionProps` — all expand/collapse controls (`expanded`,

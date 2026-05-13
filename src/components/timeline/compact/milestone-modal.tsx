@@ -14,6 +14,19 @@ import { TaskDetailsRenderer } from './task-details-renderer';
 
 // ----------------------------------------------------------------------
 
+/**
+ * Full-screen (mobile) or fixed-width (desktop) dialog that shows the
+ * detailed content for a single timeline task.
+ *
+ * Controlled externally: the parent supplies `open` and `onClose` —
+ * this component owns no visibility state of its own.
+ *
+ * `fullScreen` is derived from a plain `useMediaQuery` string rather than
+ * a theme callback so the component stays testable without a full theme context.
+ *
+ * **Quality status (13 May 2026):** DoD 9/9 · Best practices 13/13
+ * @internal — used by `TimelineCompact` via `PhaseAccordionRow`.
+ */
 export function TaskDetailsModal({
   task,
   open,

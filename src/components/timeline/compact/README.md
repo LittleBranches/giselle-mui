@@ -75,6 +75,13 @@ compact/
   README.md             — this file
 ```
 
+## Quality status — 13 May 2026
+
+| Dimension        | Score | Open items |
+| ---------------- | ----- | ---------- |
+| DoD (Scenario B) | 20/20 | —          |
+| Best practices   | 13/13 | —          |
+
 ## Related
 
 - [`TimelineTwoColumn`](../two-column/README.md) — full two-column desktop variant

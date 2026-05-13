@@ -1,4 +1,4 @@
-import type { FaqAccordionProps, FaqItem } from './types';
+import type { FaqSectionProps, FaqItem } from './types';
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -27,7 +27,7 @@ import { FaqBottomLines } from './faq-bottom-lines';
 const MotionAccordion = motion(Accordion);
 
 /**
- * `FaqAccordion` renders a full FAQ section with scroll-triggered animated
+ * `FaqSection` renders a full FAQ section with scroll-triggered animated
  * accordions, decorative SVG elements (visible at ≥1440 px), and an optional
  * contact footer.
  *
@@ -36,9 +36,9 @@ const MotionAccordion = motion(Accordion);
  * ## Usage
  *
  * ```tsx
- * import { FaqAccordion } from '@alexrebula/giselle-mui/motion';
+ * import { FaqSection } from '@alexrebula/giselle-mui/motion';
  *
- * <FaqAccordion
+ * <FaqSection
  *   caption="Support"
  *   title="Frequently Asked"
  *   txtGradient="Questions"
@@ -58,8 +58,10 @@ const MotionAccordion = motion(Accordion);
  * Pass a Giselle icon string (e.g. `'solar:letter-bold'`) to `contactIcon`
  * and `GiselleIcon` renders it automatically. Pass a `ReactNode` to supply
  * any custom icon element instead.
+ *
+ * **Quality status (13 May 2026):** DoD 20/20 · Best practices 13/13
  */
-export function FaqAccordion({
+export function FaqSection({
   caption = 'FAQs',
   title = 'Frequently Asked',
   txtGradient = 'Questions',
@@ -71,7 +73,7 @@ export function FaqAccordion({
   contactIcon,
   sx,
   ...other
-}: FaqAccordionProps) {
+}: FaqSectionProps) {
   const [expanded, setExpanded] = useState<string | false>(faqs[0]?.question ?? false);
 
   const handleChange = (panel: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -82,7 +84,7 @@ export function FaqAccordion({
     typeof contactIcon === 'string' ? <GiselleIcon icon={contactIcon} /> : contactIcon;
 
   return (
-    <Box component="section" sx={sx} {...other}>
+    <Box component="section" sx={[...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <FaqMotionViewport sx={{ pt: 10, position: 'relative' }}>
         <FaqTopLines />
 

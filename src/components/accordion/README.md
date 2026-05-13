@@ -84,14 +84,16 @@ src/components/accordion/
   accordion.styles.test.ts  — assertions for every sx constant
   accordion.test.ts         — render, ARIA, interaction, and branch coverage tests
   accordion.stories.tsx     — Storybook: Default, Checklist, TaskList, CheckboxOutsideSummary (WCAG doc), Responsive
-  check-icon-button.tsx     — internal icon-button done toggle sub-component
-  check-icon-button.test.ts — structure, ARIA, and click tests for CheckIconButton
   index.ts                  — barrel export
-  types.ts                  — AccordionProps, CheckIconButtonProps
+  types.ts                  — AccordionProps
   README.md                 — this file
 ```
 
-## Quality status — 8 May 2026
+> **Done-toggle:** the icon-button checklist control previously lived here as `check-icon-button.tsx`.
+> It was extracted into `ToggleIconButton` (`src/components/inputs/button/toggle/icon/`) —
+> a general-purpose binary toggle that `Accordion` now imports from the library barrel.
+
+## Quality status — 13 May 2026
 
 | Dimension        | Score | Open items |
 | ---------------- | ----- | ---------- |
@@ -101,6 +103,6 @@ src/components/accordion/
 ## Related
 
 - `TaskList` — renders a flat list of `done`/`pending` items without expand/collapse
-- `FaqAccordion` — full FAQ section with framer-motion scroll animation, decorative
+- `FaqSection` — full FAQ section with framer-motion scroll animation, decorative
   SVGs, and a contact footer; lives in `faq/accordion/` in the `/motion` subpath
 - `TimelineCompact` — accordion-based timeline with milestone modals

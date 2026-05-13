@@ -40,6 +40,13 @@ section-container/
   README.md                    — this file
 ```
 
+## Quality status — 13 May 2026
+
+| Dimension        | Score | Open items |
+| ---------------- | ----- | ---------- |
+| DoD (Scenario B) | 20/20 | —          |
+| Best practices   | 13/13 | —          |
+
 ## Related
 
 - `SectionTitle` — heading group (caption + h2 + gradient + description) typically rendered

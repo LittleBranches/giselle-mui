@@ -7,7 +7,7 @@ import SvgIcon from '@mui/material/SvgIcon';
 import Typography from '@mui/material/Typography';
 
 import { Accordion } from '../../accordion';
-import { CheckIconButton } from '../../accordion/check-icon-button';
+import { ToggleIconButton } from '../../inputs/button/toggle/icon';
 import { useNestedChecklist } from '../../../utils/use-nested-checklist';
 import { ChevronDownIcon } from './chevron-down-icon';
 import { TaskDetailsModal } from './milestone-modal';
@@ -118,6 +118,8 @@ const accordionSummaryOverrideSx = {
  * - Checking all milestones → parent becomes done.
  * - Unchecking any milestone → parent becomes undone.
  * - Toggling the phase dot → all milestones cascade to the same state.
+ *
+ * **Quality status (13 May 2026):** DoD 9/9 · Best practices 13/13
  */
 export function PhaseAccordionRow({
   phase,
@@ -259,15 +261,16 @@ export function PhaseAccordionRow({
                     >
                       <Box sx={milestoneDotColumnSx}>
                         {checklist && usesMilestoneChildren ? (
-                          <CheckIconButton
-                            done={isDone}
-                            checkIcon={dotNode}
-                            checkDoneIcon={MS_CHECK_DONE_DOT}
-                            checkHoverIcon={MS_CHECK_HOVER_DOT}
-                            onDoneButtonClick={(newDone) => {
+                          <ToggleIconButton
+                            pressed={isDone}
+                            idleIcon={dotNode}
+                            pressedIcon={MS_CHECK_DONE_DOT}
+                            hoverIcon={MS_CHECK_HOVER_DOT}
+                            onPressedChange={(newDone: boolean) => {
                               toggleChild(idx);
                               onToggleMilestoneDone?.(phase.key, idx, newDone);
                             }}
+                            aria-label={isDone ? 'Mark as not done' : 'Mark as done'}
                           />
                         ) : (
                           dotNode

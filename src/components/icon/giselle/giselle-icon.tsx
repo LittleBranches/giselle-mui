@@ -35,6 +35,8 @@ export type { GiselleIconProps } from './types';
  *   icon={<GiselleIcon icon="solar:clock-circle-bold-duotone" width={36} />}
  *   decoration={<MetricCardDecoration color="primary" />}
  * />
+ *
+ * **Quality status (13 May 2026):** DoD 20/20 · Best practices 13/13
  */
 export function GiselleIcon({
   icon,
@@ -45,11 +47,16 @@ export function GiselleIcon({
   style,
   flip,
   rotate,
+  ...other
 }: GiselleIconProps) {
   const h = height ?? width;
 
   return (
-    <Box component="span" sx={[giselleIconRootSx(width, h), ...(Array.isArray(sx) ? sx : [sx])]}>
+    <Box
+      component="span"
+      sx={[giselleIconRootSx(width, h), ...(Array.isArray(sx) ? sx : [sx])]}
+      {...other}
+    >
       <Icon
         icon={icon}
         width="100%"
