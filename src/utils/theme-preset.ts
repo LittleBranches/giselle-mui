@@ -11,6 +11,7 @@
  */
 
 import { extendTheme } from '@mui/material/styles';
+import type { CssVarsThemeOptions } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 // Brand palette constants
@@ -44,39 +45,13 @@ export const GISELLE_SECONDARY_MAIN = '#F5A623';
 // ----------------------------------------------------------------------
 
 /**
- * The Giselle brand theme preset.
+ * The Giselle brand theme options — the raw input to `extendTheme()`.
  *
- * A ready-to-use result of `extendTheme()` carrying the full Giselle palette
- * for both light and dark colour schemes.
- *
- * **Usage — with `ThemeProvider` directly:**
- * ```tsx
- * import { ThemeProvider } from '@mui/material/styles';
- * import { giselleTheme } from '@alexrebula/giselle-mui';
- *
- * <ThemeProvider theme={giselleTheme}>
- *   <App />
- * </ThemeProvider>
- * ```
- *
- * **Usage — via `GiselleThemeProvider` (Phase C, zero-config):**
- * ```tsx
- * import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
- *
- * <GiselleThemeProvider>
- *   <App />
- * </GiselleThemeProvider>
- * ```
- *
- * **Palette decisions:**
- * - `primary`   — Deep grove green / Lime (dark mode): the tree foundation
- * - `secondary` — Mango gold: the fruit accent, unchanged between modes
- * - `info`      — Accessible blue (standard MUI default family)
- * - `success`   — Leaf green `#388E3C` — distinct from primary to avoid ambiguity
- * - `warning`   — Amber orange `#ED6C02` — warm, complements the mango gold family
- * - `error`     — Standard red `#D32F2F`
+ * Use this constant when you need to deep-merge Giselle palette defaults
+ * with consumer overrides before resolving the final theme. Prefer
+ * `giselleTheme` when you only need the already-resolved theme object.
  */
-export const giselleTheme = extendTheme({
+export const giselleThemeOptions: CssVarsThemeOptions = {
   colorSchemes: {
     light: {
       palette: {
@@ -99,4 +74,39 @@ export const giselleTheme = extendTheme({
       },
     },
   },
-});
+};
+
+/**
+ * The Giselle brand theme preset.
+ *
+ * A ready-to-use result of `extendTheme()` carrying the full Giselle palette
+ * for both light and dark colour schemes.
+ *
+ * **Usage — with `ThemeProvider` directly:**
+ * ```tsx
+ * import { ThemeProvider } from '@mui/material/styles';
+ * import { giselleTheme } from '@alexrebula/giselle-mui';
+ *
+ * <ThemeProvider theme={giselleTheme}>
+ *   <App />
+ * </ThemeProvider>
+ * ```
+ *
+ * **Usage — via `GiselleThemeProvider` (zero-config):**
+ * ```tsx
+ * import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
+ *
+ * <GiselleThemeProvider>
+ *   <App />
+ * </GiselleThemeProvider>
+ * ```
+ *
+ * **Palette decisions:**
+ * - `primary`   — Deep grove green / Lime (dark mode): the tree foundation
+ * - `secondary` — Mango gold: the fruit accent, unchanged between modes
+ * - `info`      — Accessible blue (standard MUI default family)
+ * - `success`   — Leaf green `#388E3C` — distinct from primary to avoid ambiguity
+ * - `warning`   — Amber orange `#ED6C02` — warm, complements the mango gold family
+ * - `error`     — Standard red `#D32F2F`
+ */
+export const giselleTheme = extendTheme(giselleThemeOptions);

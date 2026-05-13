@@ -14,7 +14,7 @@ sidebar_label: 'Roadmap'
 `@alexrebula/giselle-mui` uses only standard MUI v7 APIs to set up its theme:
 
 ```ts
-import { extendTheme, CssVarsProvider } from '@mui/material/styles';
+import { extendTheme, ThemeProvider } from '@mui/material/styles';
 ```
 
 There are zero external theme utility imports in this package.
@@ -72,7 +72,7 @@ The default palette decisions (documented in `src/utils/theme-preset.ts` JSDoc):
 | Export `giselleTheme` from `giselle-mui/src/index.ts`                                                  | Theming | ✅     |
 | Document the palette decisions in `theming/nextjs.md`                                                  | Theming | ✅     |
 
-### Phase C — GiselleThemeProvider component — Theming (HIGH priority)
+### Phase C — GiselleThemeProvider component — Theming ✅ Done — 13 May 2026
 
 **Goal:** Expose a `<GiselleThemeProvider>` wrapper from `giselle-mui` that:
 
@@ -88,7 +88,7 @@ This is the DX goal:
   <App />
 </GiselleThemeProvider>
 
-// Consumer overrides specific tokens — still wraps in CssVarsProvider correctly
+// Consumer overrides specific tokens — still wraps in ThemeProvider correctly
 <GiselleThemeProvider themeOverrides={{ palette: { primary: { main: '#1976d2' } } }}>
   <App />
 </GiselleThemeProvider>
@@ -105,28 +105,31 @@ The previous plan required consumers to provide all tokens. This created too muc
 the zero-config case. The revised design ships a real default so consumers can try the library
 immediately without any theme configuration.
 
-**What it wraps:**
+**What it wraps (shipped implementation — simplified):**
 
 ```tsx
-// Internal implementation shape (simplified)
-import { CssVarsProvider, extendTheme } from '@mui/material/styles';
-import { giselleTheme } from '../utils/theme-preset';
+// 'use client' — ThemeProvider is a client component
+import { ThemeProvider, extendTheme } from '@mui/material/styles';
+import { giselleTheme, giselleThemeOptions } from '../utils/theme-preset';
+import { deepMerge } from '../utils/deep-merge'; // internal — not exported from barrel
 
-function GiselleThemeProvider({ children, themeOverrides, theme }: Props) {
-  const resolvedTheme = theme ?? extendTheme(merge(giselleTheme, themeOverrides ?? {}));
-  return <CssVarsProvider theme={resolvedTheme}>{children}</CssVarsProvider>;
+function GiselleThemeProvider({ children, themeOverrides, theme, defaultMode = 'system' }: Props) {
+  const resolvedTheme =
+    theme ??
+    (themeOverrides ? extendTheme(deepMerge(giselleThemeOptions, themeOverrides)) : giselleTheme);
+  return <ThemeProvider theme={resolvedTheme} defaultMode={defaultMode}>{children}</ThemeProvider>;
 }
 ```
 
 | Task                                                                                   | Label   | Status |
 | -------------------------------------------------------------------------------------- | ------- | ------ |
 | Complete Phase B (Giselle theme preset) — this prerequisite is already met             | Theming | ✅     |
-| Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ⬜     |
-| Implement `GiselleThemeProvider` wrapping `CssVarsProvider` with merge logic           | Theming | ⬜     |
-| Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | Theming | ⬜     |
-| Add Storybook story: default palette, with overrides, fully custom                     | Theming | ⬜     |
-| Add Vitest test: renders correctly, passes `data-mui-color-scheme` to DOM              | Theming | ⬜     |
-| Update `theming/nextjs.md` with the new zero-config usage pattern                      | Theming | ⬜     |
+| Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ✅     |
+| Implement `GiselleThemeProvider` wrapping `ThemeProvider` with merge logic             | Theming | ✅     |
+| Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | Theming | ✅     |
+| Add Storybook story: default palette, with overrides, fully custom                     | Theming | ✅     |
+| Add Vitest test: renders correctly, passes `data-mui-color-scheme` to DOM              | Theming | ✅     |
+| Update `theming/nextjs.md` with the new zero-config usage pattern                      | Theming | ✅     |
 
 **Storybook note:** Storybook in `giselle-mui` must be able to test two things:
 

@@ -255,13 +255,38 @@ remToPx(0.875); // 14
 
 ## Giselle brand theme preset
 
-`giselleTheme` is a ready-to-use `extendTheme()` result carrying the full Giselle
-brand palette for both light and dark colour schemes. Pass it directly to
-`ThemeProvider` instead of writing your own palette from scratch.
+### GiselleThemeProvider — zero config (recommended)
+
+`GiselleThemeProvider` is the easiest way to use the Giselle palette. It wraps
+`ThemeProvider` with the Giselle brand theme as the default — no `extendTheme()`
+call required.
+
+```tsx
+// app/layout.tsx
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <AppRouterCacheProvider>
+          <GiselleThemeProvider>{children}</GiselleThemeProvider>
+        </AppRouterCacheProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### Using `giselleTheme` directly
+
+If you prefer to manage `ThemeProvider` yourself, pass the pre-built theme directly:
 
 ```tsx
 import { ThemeProvider } from '@mui/material/styles';
-import { giselleTheme } from '@alexrebula/giselle-mui/utils';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { giselleTheme } from '@alexrebula/giselle-mui';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -294,20 +319,45 @@ fruit and the ecosystem's brand metaphor:
 
 ### Overriding individual palette keys
 
-Spread the preset and override only what you need:
+**Option A — `themeOverrides` prop (recommended):**
+
+Pass a partial `CssVarsThemeOptions` to `GiselleThemeProvider`. Only the keys you
+provide change; all Giselle defaults are preserved.
+
+```tsx
+import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
+
+<GiselleThemeProvider
+  themeOverrides={{
+    colorSchemes: {
+      light: { palette: { primary: { main: '#1976d2' } } },
+      dark:  { palette: { primary: { main: '#90caf9' } } },
+    },
+  }}
+>
+  <App />
+</GiselleThemeProvider>
+```
+
+**Option B — `extendTheme()` with `giselleThemeOptions`:**
+
+Use the exported raw options constant as the base when you need to build your own
+theme object manually:
 
 ```ts
 import { extendTheme } from '@mui/material/styles';
-import { giselleTheme } from '@alexrebula/giselle-mui/utils';
+// giselleThemeOptions is a plain object — import from /utils to avoid the
+// 'use client' banner on the root entry point.
+import { giselleThemeOptions } from '@alexrebula/giselle-mui/utils';
 
 const myTheme = extendTheme({
-  ...giselleTheme,
+  ...giselleThemeOptions,
   colorSchemes: {
-    ...giselleTheme.colorSchemes,
+    ...giselleThemeOptions.colorSchemes,
     light: {
       palette: {
-        ...giselleTheme.colorSchemes?.light?.palette,
-        primary: { main: '#1976d2' }, // override primary only
+        ...giselleThemeOptions.colorSchemes?.light?.palette,
+        primary: { main: '#1976d2' },
       },
     },
   },

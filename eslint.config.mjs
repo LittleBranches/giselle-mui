@@ -79,13 +79,11 @@ export default eslintTs.config(
         },
         {
           selector: 'Identifier[name="varFade"]',
-          message:
-            'Prohibited identifier. Rename to fadeVariants (or similar descriptive name).',
+          message: 'Prohibited identifier. Rename to fadeVariants (or similar descriptive name).',
         },
         {
           selector: 'Identifier[name="varBlur"]',
-          message:
-            'Prohibited identifier. Rename to blurVariants (or similar descriptive name).',
+          message: 'Prohibited identifier. Rename to blurVariants (or similar descriptive name).',
         },
         {
           selector: 'Identifier[name="varContainer"]',
@@ -152,13 +150,11 @@ export default eslintTs.config(
         },
         {
           selector: 'Identifier[name="varFade"]',
-          message:
-            'Prohibited identifier. Rename to fadeVariants (or similar descriptive name).',
+          message: 'Prohibited identifier. Rename to fadeVariants (or similar descriptive name).',
         },
         {
           selector: 'Identifier[name="varBlur"]',
-          message:
-            'Prohibited identifier. Rename to blurVariants (or similar descriptive name).',
+          message: 'Prohibited identifier. Rename to blurVariants (or similar descriptive name).',
         },
         {
           selector: 'Identifier[name="varContainer"]',

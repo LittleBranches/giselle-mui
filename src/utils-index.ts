@@ -11,6 +11,7 @@ export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity-uti
 export { assignMilestoneSidesByDone } from './utils/timeline-utils';
 export {
   giselleTheme,
+  giselleThemeOptions,
   GISELLE_PRIMARY_MAIN,
   GISELLE_PRIMARY_DARK_MAIN,
   GISELLE_SECONDARY_MAIN,
