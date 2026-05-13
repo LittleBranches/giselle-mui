@@ -320,7 +320,7 @@ Currently open (PR 27, not yet merged).
 
 ### [`feature/giselle-theme-provider`](https://github.com/AlexRebula/giselle-mui/tree/feature/giselle-theme-provider)
 
-Phase C implementation branch — ships `GiselleThemeProvider`, the zero-config `CssVarsProvider` wrapper with the Giselle brand palette as the default theme.
+Phase C implementation branch — ships `GiselleThemeProvider`, the zero-config `ThemeProvider` wrapper with the Giselle brand palette as the default theme.
 Introduces `giselleThemeOptions` as a new public export (`CssVarsThemeOptions`) enabling Option B consumers to build their own `extendTheme()` calls on the Giselle base.
 Ships the internal `deepMerge` utility, wires the Giselle preset into the Storybook toolbar as the default entry (`🥭 Giselle`, `defaultMode = 'system'`), and updates `docs/theming/nextjs.md` with the zero-config App Router pattern.
 Phase C was the final prerequisite for Phase D (`GiselleSettingsProvider`). 862 tests pass, 6/6 quality gate. PR opened 13 May 2026.

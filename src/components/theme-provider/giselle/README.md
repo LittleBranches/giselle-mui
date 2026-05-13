@@ -6,13 +6,13 @@ Every MUI v7 application needs a `ThemeProvider` wrapping the component tree, an
 
 1. Import `extendTheme` from `@mui/material/styles`
 2. Create a theme manually, choosing all six palette keys for both colour schemes
-3. Import `CssVarsProvider` and wire everything together
+3. Import `ThemeProvider` and wire everything together
 
 `GiselleThemeProvider` removes all three steps. Wrap your application and every MUI component inherits the correct CSS variable theme — zero configuration required.
 
 ## Why it belongs here
 
-This is the primary DX entry point for the `@alexrebula/giselle-mui` library. The Giselle brand palette (Phase B) and theme utilities (Phase A) are only useful to consumers once there is a zero-config provider that ships them. Without this component, every consumer must wire up `CssVarsProvider`, `extendTheme`, and the palette manually — defeating the purpose of a themed component library.
+This is the primary DX entry point for the `@alexrebula/giselle-mui` library. The Giselle brand palette (Phase B) and theme utilities (Phase A) are only useful to consumers once there is a zero-config provider that ships them. Without this component, every consumer must wire up `ThemeProvider`, `extendTheme`, and the palette manually — defeating the purpose of a themed component library.
 
 ## Design decisions
 
@@ -43,7 +43,7 @@ System preference is the correct default for zero-config usage. Consumers can ov
 
 ```
 src/components/theme-provider/giselle/
-  giselle.tsx               — JSX composition + CssVarsProvider wiring
+  giselle.tsx               — JSX composition + ThemeProvider wiring
   types.ts                  — GiselleThemeProviderProps interface
   giselle.test.ts           — Vitest unit tests
   giselle.stories.tsx       — Storybook: default, overrides, custom, dark mode

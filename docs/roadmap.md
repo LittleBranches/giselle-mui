@@ -14,7 +14,7 @@ sidebar_label: 'Roadmap'
 `@alexrebula/giselle-mui` uses only standard MUI v7 APIs to set up its theme:
 
 ```ts
-import { extendTheme, CssVarsProvider } from '@mui/material/styles';
+import { extendTheme, ThemeProvider } from '@mui/material/styles';
 ```
 
 There are zero external theme utility imports in this package.
@@ -88,7 +88,7 @@ This is the DX goal:
   <App />
 </GiselleThemeProvider>
 
-// Consumer overrides specific tokens — still wraps in CssVarsProvider correctly
+// Consumer overrides specific tokens — still wraps in ThemeProvider correctly
 <GiselleThemeProvider themeOverrides={{ palette: { primary: { main: '#1976d2' } } }}>
   <App />
 </GiselleThemeProvider>
@@ -108,8 +108,8 @@ immediately without any theme configuration.
 **What it wraps (shipped implementation — simplified):**
 
 ```tsx
-// 'use client' — CssVarsProvider is a client component
-import { CssVarsProvider, extendTheme } from '@mui/material/styles';
+// 'use client' — ThemeProvider is a client component
+import { ThemeProvider, extendTheme } from '@mui/material/styles';
 import { giselleTheme, giselleThemeOptions } from '../utils/theme-preset';
 import { deepMerge } from '../utils/deep-merge'; // internal — not exported from barrel
 
@@ -117,7 +117,7 @@ function GiselleThemeProvider({ children, themeOverrides, theme, defaultMode = '
   const resolvedTheme =
     theme ??
     (themeOverrides ? extendTheme(deepMerge(giselleThemeOptions, themeOverrides)) : giselleTheme);
-  return <CssVarsProvider theme={resolvedTheme} defaultMode={defaultMode}>{children}</CssVarsProvider>;
+  return <ThemeProvider theme={resolvedTheme} defaultMode={defaultMode}>{children}</ThemeProvider>;
 }
 ```
 
@@ -125,7 +125,7 @@ function GiselleThemeProvider({ children, themeOverrides, theme, defaultMode = '
 | -------------------------------------------------------------------------------------- | ------- | ------ |
 | Complete Phase B (Giselle theme preset) — this prerequisite is already met             | Theming | ✅     |
 | Define `GiselleThemeProviderProps` interface (`children`, `themeOverrides?`, `theme?`) | Theming | ✅     |
-| Implement `GiselleThemeProvider` wrapping `CssVarsProvider` with merge logic           | Theming | ✅     |
+| Implement `GiselleThemeProvider` wrapping `ThemeProvider` with merge logic           | Theming | ✅     |
 | Export `GiselleThemeProvider` from `giselle-mui/src/index.ts`                          | Theming | ✅     |
 | Add Storybook story: default palette, with overrides, fully custom                     | Theming | ✅     |
 | Add Vitest test: renders correctly, passes `data-mui-color-scheme` to DOM              | Theming | ✅     |

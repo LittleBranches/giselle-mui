@@ -38,7 +38,7 @@ describe('GiselleThemeProvider — defaultMode', () => {
       );
     });
     const schemed = document.documentElement.getAttribute('data-mui-color-scheme');
-    // CssVarsProvider sets data-mui-color-scheme on <html> in light mode
+    // ThemeProvider sets data-mui-color-scheme on <html> in light mode
     expect(['light', null]).toContain(schemed);
   });
 });

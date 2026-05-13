@@ -258,7 +258,7 @@ remToPx(0.875); // 14
 ### GiselleThemeProvider — zero config (recommended)
 
 `GiselleThemeProvider` is the easiest way to use the Giselle palette. It wraps
-`CssVarsProvider` with the Giselle brand theme as the default — no `extendTheme()`
+`ThemeProvider` with the Giselle brand theme as the default — no `extendTheme()`
 call required.
 
 ```tsx

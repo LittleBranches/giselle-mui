@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { getCookieValue, setCookieValue } from '../../utils/cookie';
 import { isDeepEqual } from '../../utils/is-deep-equal';
@@ -80,33 +80,6 @@ function resolveAdapter<TState>(
 // ----------------------------------------------------------------------
 
 /**
- * Resolves the initial settings state on first render.
- *
- * Priority order:
- * 1. `initialState` — pre-resolved server value (RSC / SSR layer)
- * 2. Stored value — read via adapter when the version matches
- * 3. `defaultSettings` — fallback when nothing is stored or the version differs
- *
- * When the stored version differs from `defaultSettings.version`, storage is cleared
- * immediately so the next write starts fresh.
- */
-function resolveInitialState<TState extends BaseSettingsState>(
-  adapter: StorageAdapter<TState>,
-  initialState: TState | undefined,
-  defaultSettings: TState
-): TState {
-  if (initialState !== undefined) return initialState;
-  const stored = adapter.get() ?? defaultSettings;
-  if (stored.version !== defaultSettings.version) {
-    adapter.clear();
-    return defaultSettings;
-  }
-  return stored;
-}
-
-// ----------------------------------------------------------------------
-
-/**
  * Generic settings state provider for MUI applications.
  *
  * Persists UI settings (color mode, font size, direction, etc.) to `localStorage`
@@ -156,9 +129,24 @@ export function GiselleSettingsProvider<TState extends BaseSettingsState>({
   const adapterRef = useRef<StorageAdapter<TState>>(resolveAdapter(storage, storageKey));
   adapterRef.current = resolveAdapter(storage, storageKey);
 
-  const [state, setStateRaw] = useState<TState>(() =>
-    resolveInitialState(adapterRef.current, initialState, defaultSettings)
-  );
+  const [state, setStateRaw] = useState<TState>(initialState ?? defaultSettings);
+
+  // Hydrate from storage after mount when no server-provided initialState.
+  // Initialising from defaults prevents SSR hydration mismatches: the server always
+  // renders with defaults, and this effect picks up the stored value on the client
+  // after the first render. adapterRef is a ref (stable); defaultSettings is treated
+  // as stable at mount (same semantics as the existing onReset callback).
+  useEffect(() => {
+    if (initialState !== undefined) return;
+    const stored = adapterRef.current.get();
+    if (stored === null) return;
+    if (stored.version !== defaultSettings.version) {
+      adapterRef.current.clear();
+      return;
+    }
+    setStateRaw(stored);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // mount-only
 
   const [openDrawer, setOpenDrawer] = useState(false);
 

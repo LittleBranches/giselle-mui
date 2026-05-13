@@ -53,7 +53,7 @@ export function useLocalStorage<T extends object>(
   key: string,
   initialValue: T
 ): UseLocalStorageReturn<T> {
-  const [state, setStateInternal] = useState<T>(() => readFromStorage(key, initialValue));
+  const [state, setStateInternal] = useState<T>(initialValue);
 
   // Sync with storage on mount (handles SSR hydration gap)
   useEffect(() => {

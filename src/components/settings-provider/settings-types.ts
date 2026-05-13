@@ -66,12 +66,12 @@ export type GiselleSettingsContextValue<TState> = {
  * Implement this interface to use a custom storage backend (e.g. IndexedDB,
  * server-synced state, or a cookie library with custom serialisation options).
  *
- * **Example:**
+ * **Example (IndexedDB via a simple wrapper):**
  * ```ts
  * const myAdapter: StorageAdapter<MySettings> = {
- *   get: () => JSON.parse(redis.get('settings') ?? 'null'),
- *   set: (value) => redis.set('settings', JSON.stringify(value)),
- *   clear: () => redis.del('settings'),
+ *   get: () => indexedDBStore.get('settings'),
+ *   set: (value) => indexedDBStore.set('settings', value),
+ *   clear: () => indexedDBStore.delete('settings'),
  * };
  *
  * <GiselleSettingsProvider storage={myAdapter} defaultSettings={defaults}>
@@ -181,3 +181,19 @@ export type GiselleThemeAndSettingsProviderProps<TState extends BaseSettingsStat
      */
     getMode?: (state: TState) => 'light' | 'dark' | 'system' | undefined;
   };
+
+// ----------------------------------------------------------------------
+
+/**
+ * Props for the internal `SettingsThemeBridge` component.
+ *
+ * @internal Not exported from the package barrel — used only by `GiselleThemeAndSettingsProvider`.
+ */
+export interface SettingsThemeBridgeProps<TState extends BaseSettingsState> {
+  /**
+   * Extract a color scheme mode from the current settings state.
+   * When the returned value changes, `useColorScheme().setMode` is called automatically.
+   * Return `undefined` to leave the MUI color scheme unchanged.
+   */
+  getMode?: (state: TState) => 'light' | 'dark' | 'system' | undefined;
+}
