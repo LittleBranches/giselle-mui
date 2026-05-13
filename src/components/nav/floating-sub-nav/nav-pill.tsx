@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Stack from '@mui/material/Stack';
 
 import { pillVariants, pillTransition } from './floating-sub-nav.animations';
+import { PILL_BUTTON_ROW_SPACING } from './floating-sub-nav.const';
 import { pillSx } from './floating-sub-nav.styles';
 import type { NavPillProps } from './types';
 import { SubNavButton } from './sub-nav-button';
