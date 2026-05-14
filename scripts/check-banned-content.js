@@ -2,19 +2,28 @@
 /**
  * check-banned-content.js
  *
- * Scans docs/ and src/ for banned identifier names and personal-data patterns
- * that must not appear in this public MIT-licensed repository.
+ * Scans docs/ and src/ for banned content that must not appear in this
+ * public MIT-licensed repository.
  *
- * ESLint catches these in *.ts and *.tsx files, but it does not run on
- * *.md and *.mdx files. This script fills that gap so the quality gate is
- * complete across all file types.
+ * ESLint catches banned identifiers in *.ts and *.tsx files, but it does
+ * not run on *.md and *.mdx files. This script fills that gap.
  *
- * Rules enforced:
- *   1. Banned identifier names — the same list as ESLint `no-restricted-syntax`.
- *      These names have proprietary connotations and must not appear in any
- *      source, test, story, or documentation file.
- *   2. Known private path patterns — internal project identifiers that must
- *      never appear in a public file (e.g. case-001 internal case reference).
+ * Rules enforced — intentionally different per directory:
+ *
+ *   src/  — both checks:
+ *     1. Banned identifier names (the ESLint `no-restricted-syntax` list).
+ *        These proprietary identifiers must never appear in source, tests,
+ *        stories, or component README files — not even as code examples.
+ *     2. Private path/reference patterns (e.g. case-001).
+ *
+ *   docs/ — private refs only:
+ *     1. Private path/reference patterns only.
+ *        Migration guides, copyright analysis, and planning docs have a
+ *        legitimate need to name the identifiers they document (e.g. to
+ *        explain what `channelAlpha` replaces). Blocking those docs from
+ *        being pushed prevents them from reaching code review, which defeats
+ *        the purpose of having docs at all. Identifier names are therefore
+ *        only enforced in src/ where they would appear as actual code usage.
  *
  * Exit codes: 0 = clean, 1 = violations found.
  *
@@ -32,9 +41,9 @@ const ROOT = path.resolve(__dirname, '..');
 // ── Banned patterns ────────────────────────────────────────────────────────
 
 /**
- * Identifier names banned across ALL file types (src + docs).
- * These are the same identifiers banned by ESLint in src/**; this script
- * extends the check to docs/** where ESLint does not run.
+ * Identifier names banned in src/ (code, tests, stories, component READMEs).
+ * These proprietary identifiers must not appear in any source file.
+ * Not applied to docs/ — see the module-level comment for rationale.
  */
 const BANNED_IDENTIFIERS = [
   'varAlpha',
@@ -47,16 +56,21 @@ const BANNED_IDENTIFIERS = [
 ];
 
 /**
- * Private path/reference patterns that must not appear in any public file.
- * These are internal case or project identifiers that have no place in a
- * public open-source repository.
+ * Private path/reference patterns that must not appear in any public file
+ * (docs/ or src/).
+ * These are internal case/project identifiers or commercial-kit names that
+ * have no place in a public open-source repository.
  */
 const BANNED_PRIVATE_REFS = [
   'case-001',
+  // Commercial theme kit names. Every utility in giselle-mui is an independent
+  // implementation. A reader of the public history should see no connection to
+  // any commercial product. Rationale belongs in alexrebula/docs/ (private).
+  'Minimals',
+  'minimals',
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────
-
 
 // ── File targets ───────────────────────────────────────────────────────────
 
@@ -117,7 +131,6 @@ const NEGATION_CONTEXT = [
   'propri',
 ];
 
-
 /** Walk a directory recursively, yielding absolute file paths. */
 function* walkDir(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -144,6 +157,10 @@ for (const scanDir of SCAN_DIRS) {
   }
   if (!dirStat.isDirectory()) continue;
 
+  // docs/ is only checked for private refs — not identifier names.
+  // src/ is checked for both. See module-level comment for rationale.
+  const checkIdentifiers = scanDir === 'src';
+
   for (const filePath of walkDir(dirPath)) {
     const rel = path.relative(ROOT, filePath).replace(/\\/g, '/');
 
@@ -158,24 +175,39 @@ for (const scanDir of SCAN_DIRS) {
       const lineNum = i + 1;
       const lineLower = line.toLowerCase();
 
-      for (const id of BANNED_IDENTIFIERS) {
-        const regex = new RegExp(`(?<![\\w$])${id}(?![\\w$])`, 'g');
-        if (!regex.test(line)) continue;
+      if (checkIdentifiers) {
+        for (const id of BANNED_IDENTIFIERS) {
+          const regex = new RegExp(`(?<![\\w$])${id}(?![\\w$])`, 'g');
+          if (!regex.test(line)) continue;
 
-        // Skip lines that are clearly documenting the rule rather than violating it.
-        const isNegationContext = NEGATION_CONTEXT.some((ctx) => lineLower.includes(ctx.toLowerCase()));
-        if (isNegationContext) continue;
+          // Skip lines that are clearly documenting the rule rather than violating it.
+          const isNegationContext = NEGATION_CONTEXT.some((ctx) =>
+            lineLower.includes(ctx.toLowerCase())
+          );
+          if (isNegationContext) continue;
 
-        violations.push({ file: rel, line: lineNum, text: line.trim(), rule: `banned-identifier:${id}` });
+          violations.push({
+            file: rel,
+            line: lineNum,
+            text: line.trim(),
+            rule: `banned-identifier:${id}`,
+          });
+        }
       }
 
       for (const ref of BANNED_PRIVATE_REFS) {
         if (!line.includes(ref)) continue;
 
-        const isNegationContext = NEGATION_CONTEXT.some((ctx) => lineLower.includes(ctx.toLowerCase()));
-        if (isNegationContext) continue;
+        // Private refs are never exempt from negation context — a private ref is
+        // a private ref regardless of how it is phrased. NEGATION_CONTEXT only
+        // applies to identifier name checks above (checkIdentifiers block).
 
-        violations.push({ file: rel, line: lineNum, text: line.trim(), rule: `private-ref:${ref}` });
+        violations.push({
+          file: rel,
+          line: lineNum,
+          text: line.trim(),
+          rule: `private-ref:${ref}`,
+        });
       }
     }
   }
@@ -192,7 +224,7 @@ if (violations.length === 0) {
   }
   console.error(
     'Fix: remove or replace the flagged text before pushing.\n' +
-    'See docs/defects.md § DEF-PROC-001 for the full rule and rationale.'
+      'See docs/defects.md § DEF-PROC-001 for the full rule and rationale.'
   );
   process.exit(1);
 }

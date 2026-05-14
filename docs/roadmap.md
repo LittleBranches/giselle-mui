@@ -160,7 +160,7 @@ for the milestone tracking the removal of `minimal-shared/utils` imports from
 
 ---
 
-### Phase D — GiselleSettingsProvider — Theming ✅ Done — 13 May 2026
+### Phase D — GiselleSettingsProvider — Theming ✅ Done — 14 May 2026
 
 **Goal:** Export a framework-agnostic, MIT-safe `GiselleSettingsProvider<TState>` that
 persists user UI preferences (color mode, direction, font size, color presets) with zero

@@ -252,16 +252,16 @@ When a component uses ApexCharts:
 
 ## Tone rule for docs and comments
 
-Do not over-mention Minimals in this package's docs. `giselle-mui` has already credited
-Minimals where appropriate. Repeating it in every doc dilutes the identity of this
-library as its own thing. When updating or writing docs:
+**Hard rule — non-negotiable:** `giselle-mui/docs/` is a **public library documentation site**. It must describe components and utilities on their own terms. It must never document alexrebula's internal migration state, reference files in `alexrebula/src/`, or frame giselle-mui utilities as "replacements for" anything from a third-party kit.
 
-- Do not name-drop Minimals unless directly explaining a credit, a hard constraint,
-  or a copyright boundary.
-- Do not frame utilities or patterns as "what Minimals does" — describe what the
-  utility does, independently.
-- The one-liner `channelAlpha` helper is a standard MUI v7 pattern; it does not need
-  to be attributed to any theme kit every time it appears.
+Migration planning notes, copyright analysis, and "what we still need to fix in alexrebula" tracking belong exclusively in `alexrebula/docs/` — a **private repo**. If that content ends up in `giselle-mui/docs/`, it is in the wrong place and must be moved or removed, regardless of whether the banned-content scan passes.
+
+When updating or writing docs:
+
+- **Never** frame a utility as a "replacement for X" or "clean-room implementation of X from Y". Describe what it does: "`channelAlpha(channel, alpha)` creates an rgba tint from an MUI v7 CSS variable channel string."
+- **Never** reference `alexrebula/src/` paths, alexrebula migration status, or private codebase internals in any `giselle-mui/docs/` file.
+- **Never** write a "Copyright status" or "migration tracker" section in a component plan — that is private planning, not library documentation.
+- **Never** mention Minimals, any commercial MUI kit, or any third-party theme by name anywhere in `giselle-mui` — not in `docs/`, not in `src/`, not in component READMEs. There is nothing to credit: every utility in this library is an independent implementation described on its own terms. A reader of this library's public history should see no connection to any commercial product. If a rationale for a design decision is needed, describe the problem it solves — not what it replaces.
 
 ## Session shorthand commands
 

@@ -26,7 +26,7 @@ Item labels are used as React keys. Labels must be unique within a row. Duplicat
 
 ## Library safety
 
-- Zero proprietary code. No Minimals, no `alexrebula/src/` imports.
+- Zero proprietary code. No third-party theme kit dependencies, no `alexrebula/src/` imports.
 - No hardcoded colors, hex literals, or custom theme tokens.
 - No chart-library dependency in the component file.
 - `GiselleIcon` is imported from within this library — no external icon registry required beyond the consumer's offline registration.
