@@ -56,12 +56,18 @@ const BANNED_IDENTIFIERS = [
 ];
 
 /**
- * Private path/reference patterns that must not appear in any public file.
- * These are internal case or project identifiers that have no place in a
- * public open-source repository.
+ * Private path/reference patterns that must not appear in any public file
+ * (docs/ or src/).
+ * These are internal case/project identifiers or commercial-kit names that
+ * have no place in a public open-source repository.
  */
 const BANNED_PRIVATE_REFS = [
   'case-001',
+  // Commercial theme kit names. Every utility in giselle-mui is an independent
+  // implementation. A reader of the public history should see no connection to
+  // any commercial product. Rationale belongs in alexrebula/docs/ (private).
+  'Minimals',
+  'minimals',
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────

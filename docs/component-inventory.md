@@ -7,33 +7,46 @@ sidebar_label: 'Component Inventory'
 
 > Master inventory across all planning docs. Single source of truth for "what exists, what is planned, and what phase it belongs to."
 >
-> _Last updated: 8 May 2026_
+> _Last updated: 14 May 2026_
 >
-> **Source docs:** `roadmap.mdx`, `standalone-gap-analysis.md`, `components/dashboard-components-plan.md`, `components/home-components-extraction-plan.md`, `components/settings/settings-provider-plan.md`, `alexrebula/docs/todo/giselle-mui.md`
+> **Source docs:** `roadmap.mdx`, `standalone-gap-analysis.md`, `components/dashboard-components-plan.md`, `components/home-components-extraction-plan.md`, `components/settings/settings-provider-plan.md`, `components/trip-planner-components-plan.md`, `alexrebula/docs/todo/giselle-mui.md`
 
 ---
 
 ## Currently shipped ✅
 
-| Component / Export                                   | Location                          | Phase | Notes                                                                    |
-| ---------------------------------------------------- | --------------------------------- | ----- | ------------------------------------------------------------------------ |
-| `GiselleIcon`                                        | `icon/giselle/`                   | —     | Offline Iconify wrapper                                                  |
-| `createIconRegistrar`                                | `utils/`                          | —     | Icon set registration utility                                            |
-| `MetricCard` + `MetricCardDecoration`                | `card/metric/`                    | —     |                                                                          |
-| `QuoteCard`                                          | `card/quote/`                     | —     |                                                                          |
-| `SelectableCard`                                     | `card/selectable/`                | —     |                                                                          |
-| `IconActionBar`                                      | `action-bar/icon/`                | —     |                                                                          |
-| `StatCard`                                           | `card/stat/`                      | E     | Shipped 5 May 2026                                                       |
-| `RadialProgressCard`                                 | `card/radial-progress/`           | E     | Shipped 5 May 2026; in main bundle — should move to `/charts` in Phase H |
-| `TimelineCompact`                                    | `timeline/compact/`               | E     | Shipped 7 May 2026; 29 tests (15 component + 14 styles), 4 stories       |
-| `FloatingSubNav`                                     | `action-bar/floating-sub-nav/`    | —     | In main bundle — should move to `/motion` in Phase H                     |
-| `TwoColumnShowcaseRow`                               | `layout/two-column-showcase-row/` | E     | Shipped — no proprietary deps                                            |
-| `SectionContainer`                                   | `layout/section-container/`       | E     | Shipped — Container + vertical padding + optional title/subtitle slot    |
-| `SectionTitle` + `SectionCaption`                    | `layout/section-title/`           | E     | Shipped — static base; animated `/motion` variants are Phase I           |
-| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `utils/theme-utils.ts`            | A     | Shipped 4 May 2026                                                       |
-| `giselleTheme`                                       | `utils/theme-preset.ts`           | B     | Shipped 5 May 2026                                                       |
+| Component / Export                                                                 | Location                                | Subpath       | Phase | Notes                                                              |
+| ---------------------------------------------------------------------------------- | --------------------------------------- | ------------- | ----- | ------------------------------------------------------------------ |
+| `GiselleIcon`                                                                      | `icon/giselle/`                         | main          | —     | Offline Iconify wrapper                                            |
+| `createIconRegistrar`                                                              | `utils/`                                | main          | —     | Icon set registration utility                                      |
+| `MetricCard` + `MetricCardDecoration`                                              | `card/metric/`                          | main          | —     |                                                                    |
+| `QuoteCard`                                                                        | `card/quote/`                           | main          | —     |                                                                    |
+| `SelectableCard`                                                                   | `card/selectable/`                      | main          | —     |                                                                    |
+| `IconActionBar`                                                                    | `action-bar/icon/`                      | main          | —     |                                                                    |
+| `TimelineTwoColumn`                                                                | `timeline/two-column/`                  | main          | —     | Full two-column phase/milestone timeline                           |
+| `MilestoneBadge`, `PhaseCard`, `TimelineDot`                                       | `timeline/two-column/`                  | main          | —     | Sub-components of `TimelineTwoColumn`; independently exported      |
+| `StatCard`                                                                         | `card/stat/`                            | main          | E     | Shipped 5 May 2026                                                 |
+| `RadialProgressCard`                                                               | `chart/radial-progress/`                | `/charts`     | E     | Shipped 5 May 2026; exported from `/charts` subpath                |
+| `TimelineCompact` + `TaskDetailsRenderer`, `resolveCompactColor`                   | `timeline/compact/`                     | main          | E     | Shipped 7 May 2026; 29 tests (15 component + 14 styles), 4 stories |
+| `FloatingSubNav`                                                                   | `nav/floating-sub-nav/`                 | main          | —     | Should move to `/motion` in Phase H                                |
+| `TwoColumnShowcaseRow`                                                             | `layout/two-column-showcase-row/`       | main          | E     |                                                                    |
+| `SectionContainer`                                                                 | `layout/section-container/`             | main          | E     | `Container` + vertical padding + optional title/subtitle slot      |
+| `SectionTitle` + `SectionCaption`                                                  | `layout/section-title/`                 | main          | E     | Static base; animated `/motion` variants are Phase I               |
+| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx`                               | `utils/theme-utils.ts`                  | main + /utils | A     | Shipped 4 May 2026                                                 |
+| `giselleTheme`, `giselleThemeOptions`, palette constants                           | `utils/theme-preset.ts`                 | main + /utils | B     | Shipped 5 May 2026                                                 |
+| `GiselleThemeProvider`                                                             | `components/theme-provider/`            | main          | C     | Shipped 13 May 2026                                                |
+| `GiselleSettingsProvider`, `GiselleThemeAndSettingsProvider`, `useGiselleSettings` | `components/settings-provider/`         | main          | D     | Shipped 14 May 2026                                                |
+| `useLocalStorage`, `isDeepEqual`, `getCookieValue`, `setCookieValue`               | `utils/`                                | main          | D     | Shipped 14 May 2026                                                |
+| `resolveMaturityColor`, `resolveMaturityLabel`                                     | `utils/maturity-utils.ts`               | main + /utils | —     | Palette-key resolution helpers                                     |
+| `assignMilestoneSidesByDone`                                                       | `utils/timeline-utils.ts`               | main + /utils | —     | Timeline data utility                                              |
+| `useNestedChecklist`                                                               | `utils/use-nested-checklist.ts`         | main          | —     | Checklist state hook                                               |
+| `Accordion`                                                                        | `components/accordion/`                 | main          | E     | Shipped 13 May 2026                                                |
+| `ToggleIconButton`                                                                 | `components/inputs/button/toggle/icon/` | main          | E     | Shipped 13 May 2026; replaces deprecated `CheckIconButton`         |
+| `TaskList`                                                                         | `components/timeline/task-list/`        | main          | E     | Shipped 13 May 2026                                                |
+| `StatCardRow`                                                                      | `components/card/stat-row/`             | main          | H     | Shipped 13 May 2026                                                |
+| `FaqSection` (`FaqAccordion` deprecated alias)                                     | `components/faq/accordion/`             | `/motion`     | E     | Shipped 13 May 2026                                                |
 
-**Shipped count: 16 exports (13 components + 5 utilities)**
+**Shipped count: ~40 named exports across main bundle, `/charts`, `/motion`, and `/utils` subpaths**
 
 ---
 
@@ -60,52 +73,54 @@ sidebar_label: 'Component Inventory'
 | `SectionContainer`                                                   | 20/20 | 13/13          | 13 May 2026  |
 | `IconActionBar`                                                      | 20/20 | 13/13          | 13 May 2026  |
 | `TaskList`                                                           | 20/20 | 13/13          | 13 May 2026  |
-| `FaqAccordion`                                                       | 20/20 | 13/13          | 13 May 2026  |
+| `FaqSection`                                                         | 20/20 | 13/13          | 13 May 2026  |
+| `GiselleThemeProvider`                                               | ⬜    | ⬜             | —            |
+| `GiselleSettingsProvider` + `GiselleThemeAndSettingsProvider`        | ⬜    | ⬜             | —            |
+| `ToggleIconButton`                                                   | ⬜    | ⬜             | —            |
+| `StatCardRow`                                                        | ⬜    | ⬜             | —            |
 
 **DoD scale:** Scenario B = n/20 items · Scenario A (sub-component) = n/10 items  
 **Best practices scale:** 13 items — see `docs/components/cleanup-workflow.md` Step 14 for the rubric
 
 ---
 
-## Phase C — `GiselleThemeProvider`
-
-> **Status: next priority.** Phase B prerequisite is ✅. No other blockers.
+## Phase C — `GiselleThemeProvider` ✅ Done — 13 May 2026
 
 | Component                                                                                                                                                      | Status |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| `GiselleThemeProvider` — wraps MUI `ThemeProvider`, ships Giselle palette as default. Accepts `themeOverrides` for partial overrides, `theme` for full bypass. | ⬜     |
+| `GiselleThemeProvider` — wraps MUI `ThemeProvider`, ships Giselle palette as default. Accepts `themeOverrides` for partial overrides, `theme` for full bypass. | ✅     |
 
 ---
 
-## Phase D — `GiselleSettingsProvider`
+## Phase D — `GiselleSettingsProvider` ✅ Done — 14 May 2026
 
-> **Blocked until Phase C ships.** Full spec: [`components/settings/settings-provider-plan.md`](./components/settings/settings-provider-plan.md)
+> Full spec: [`components/settings/settings-provider-plan.md`](./components/settings/settings-provider-plan.md)
 
 | Component / Export                                                                           | Status | Notes                                                         |
 | -------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------- |
-| `GiselleSettingsProvider<T>` — settings context with localStorage / cookie / custom adapters | ⬜     | Generic over state shape — consumer defines own settings type |
-| `useLocalStorage<T>` utility                                                                 | ⬜     | Internal dep, also exported for consumers                     |
-| `detectGiselleSettings()` — SSR-safe cookie read helper for Next.js App Router               | ⬜     |                                                               |
-| `GiselleThemeAndSettingsProvider` — convenience wrapper combining both providers             | ⬜     |                                                               |
+| `GiselleSettingsProvider<T>` — settings context with localStorage / cookie / custom adapters | ✅     | Generic over state shape — consumer defines own settings type |
+| `useLocalStorage<T>` utility                                                                 | ✅     | Internal dep, also exported for consumers                     |
+| `detectGiselleSettings()` — SSR-safe cookie read helper for Next.js App Router               | ⬜     | Not yet implemented; tracked as Phase D follow-up             |
+| `GiselleThemeAndSettingsProvider` — convenience wrapper combining both providers             | ✅     |                                                               |
 
 ---
 
 ## Phase E — Standalone UI primitives
 
-> Phase E is **partially done** (6 components shipped). Remaining: `HeroSection`, `FAQAccordion`, `OptionWithBlurb`, `SectionPendingLoader`, `FloatingControlBar`.
+> Phase E is **partially done** (7 components shipped). Remaining: `HeroSection`, `OptionWithBlurb`, `SectionPendingLoader`, `FloatingControlBar`.
 
-| Component              | Source                              | Status                | Blocker                           |
-| ---------------------- | ----------------------------------- | --------------------- | --------------------------------- |
-| `StatCard`             | Written from scratch                | ✅ Shipped 5 May 2026 | —                                 |
-| `RadialProgressCard`   | Written from scratch                | ✅ Shipped 5 May 2026 | —                                 |
-| `TimelineCompact`      | Written from scratch                | ✅ Shipped 7 May 2026 | —                                 |
-| `SectionContainer`     | Written from scratch                | ✅ Shipped            | —                                 |
-| `TwoColumnShowcaseRow` | alexrebula                          | ✅ Shipped            | —                                 |
-| `HeroSection`          | Write from scratch                  | ⬜                    | None                              |
-| `FAQAccordion`         | Write from scratch                  | ⬜                    | None                              |
-| `OptionWithBlurb`      | alexrebula (tiny, ready to extract) | ⬜                    | None                              |
-| `SectionPendingLoader` | alexrebula                          | ⬜                    | Replace `Iconify` → `GiselleIcon` |
-| `FloatingControlBar`   | alexrebula                          | ⬜                    | Replace `Iconify` → `GiselleIcon` |
+| Component              | Source                              | Status                 | Blocker                                           |
+| ---------------------- | ----------------------------------- | ---------------------- | ------------------------------------------------- |
+| `StatCard`             | Written from scratch                | ✅ Shipped 5 May 2026  | —                                                 |
+| `RadialProgressCard`   | Written from scratch                | ✅ Shipped 5 May 2026  | —                                                 |
+| `TimelineCompact`      | Written from scratch                | ✅ Shipped 7 May 2026  | —                                                 |
+| `SectionContainer`     | Written from scratch                | ✅ Shipped             | —                                                 |
+| `TwoColumnShowcaseRow` | alexrebula                          | ✅ Shipped             | —                                                 |
+| `HeroSection`          | Write from scratch                  | ⬜                     | None                                              |
+| `FaqSection`           | Write from scratch                  | ✅ Shipped 13 May 2026 | Renamed from `FaqAccordion`; in `/motion` subpath |
+| `OptionWithBlurb`      | alexrebula (tiny, ready to extract) | ⬜                     | None                                              |
+| `SectionPendingLoader` | alexrebula                          | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
+| `FloatingControlBar`   | alexrebula                          | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
 
 ---
 
@@ -140,7 +155,7 @@ sidebar_label: 'Component Inventory'
 
 | Component                                                                 | Status |
 | ------------------------------------------------------------------------- | ------ |
-| `StatCardRow` — responsive `Grid2` of `StatCard` items                    | 🔴     |
+| `StatCardRow` — responsive `Grid2` of `StatCard` items                    | ✅     |
 | `BalanceSummaryCard` — large financial overview card with sparkline slot  | 🔴     |
 | `CreditCardDisplay` — presentational masked card number / holder / expiry | 🔴     |
 
@@ -216,6 +231,52 @@ sidebar_label: 'Component Inventory'
 | 5     | `HeroBackground` — radial gradient backdrop + animated SVG grid layer                                                 | ⬜     | Phases 1, 4                                                              |
 | 6     | `FloatingIconCloud` — floating icon images with seeded pseudo-random positioning                                      | ⬜     | None                                                                     |
 | 7     | `InteractiveHeroLogo` — the most valuable single component in this plan                                               | ⬜     | Move `useImagePreloader` from alexrebula utils → giselle-mui utils first |
+
+---
+
+## Phase I — Period Breakdown component suite (Trip Planner)
+
+> Full spec: [`components/trip-planner-components-plan.md`](./components/trip-planner-components-plan.md)
+>
+> All motion components go in the `/motion` subpath. Atomic building blocks and period cards go in the main bundle.
+
+### Architecture prerequisites
+
+| Task                                                   | Status |
+| ------------------------------------------------------ | ------ |
+| Types file: `src/components/period-breakdown/types.ts` | ⬜     |
+| `/motion` subpath entry point wired                    | ✅     |
+
+### Group A — Atomic building blocks (main bundle)
+
+| Component                                                                             | Status |
+| ------------------------------------------------------------------------------------- | ------ |
+| `ExpenseLineItem` — single expense row: icon + label + amount + optional note         | 🔴     |
+| `ExpenseCategoryGroup` — collapsible group: category chip + list of `ExpenseLineItem` | 🔴     |
+
+### Group B — Period cards (main bundle)
+
+| Component                                                                             | Status |
+| ------------------------------------------------------------------------------------- | ------ |
+| `PeriodSummaryCard` — summary card for one period: title + total + progress bar + CTA | 🔴     |
+
+### Group C — Motion components (`/motion` subpath)
+
+| Component                                                                                     | Status |
+| --------------------------------------------------------------------------------------------- | ------ |
+| `PeriodDetailSheet` — slide-in detail sheet for a single period (framer-motion)               | 🔴     |
+| `HorizontalScrollRail` — smooth horizontal carousel rail (framer-motion drag)                 | 🔴     |
+| `ExpandingPeriodStrip` — compact strip that expands on click (framer-motion layout animation) | 🔴     |
+| `BudgetSummaryDrawer` — bottom/side drawer with totals + category breakdown (framer-motion)   | 🔴     |
+
+### Group D — View containers (`/motion` subpath)
+
+| Component                                                                                     | Status |
+| --------------------------------------------------------------------------------------------- | ------ |
+| `BreakdownCarouselView` — horizontal carousel of `PeriodSummaryCard` + `PeriodDetailSheet`    | 🔴     |
+| `BreakdownExpandingView` — expanding strip view using `ExpandingPeriodStrip`                  | 🔴     |
+| `BreakdownStackedView` — vertical stacked accordion view (MUI `Accordion`)                    | 🔴     |
+| `WeeklyBreakdownPage` — top-level page: view switcher + selected view + `BudgetSummaryDrawer` | 🔴     |
 
 ---
 
@@ -307,16 +368,17 @@ sidebar_label: 'Component Inventory'
 
 ## Summary counts
 
-| Category                                | Count                                                             |
-| --------------------------------------- | ----------------------------------------------------------------- |
-| ✅ Shipped (components + utilities)     | 12                                                                |
-| Phase C — `GiselleThemeProvider`        | 1                                                                 |
-| Phase D — Settings provider + utilities | 4                                                                 |
-| Phase E — UI primitives (remaining)     | 5                                                                 |
-| Phase F + G — Drawer + Details          | 2                                                                 |
-| Phase H — Dashboard suite (new builds)  | 24                                                                |
-| Home components extraction — `/motion`  | 6 components + 3 motion factories (Phase I-2 static base shipped) |
-| **Total not yet built**                 | **~45**                                                           |
+| Category                                  | Count                                                             |
+| ----------------------------------------- | ----------------------------------------------------------------- |
+| ✅ Shipped (components + utilities)       | ~36 exports (see shipped table above)                             |
+| Phase C — `GiselleThemeProvider`          | ✅ Done                                                           |
+| Phase D — Settings provider + utilities   | ✅ Done                                                           |
+| Phase E — UI primitives (remaining)       | 4                                                                 |
+| Phase F + G — Drawer + Details            | 2                                                                 |
+| Phase H — Dashboard suite (remaining)     | 23                                                                |
+| Phase I — Period Breakdown (Trip Planner) | 11                                                                |
+| Home components extraction — `/motion`    | 6 components + 3 motion factories (Phase I-2 static base shipped) |
+| **Total not yet built**                   | **~47**                                                           |
 
 ---
 
@@ -338,5 +400,6 @@ sidebar_label: 'Component Inventory'
 - [`roadmap.mdx`](./roadmap.mdx) — Phase A → H timeline with milestone detail
 - [`standalone-gap-analysis.md`](./standalone-gap-analysis.md) — what a blank Next.js project needs from this library
 - [`components/dashboard-components-plan.md`](./components/dashboard-components-plan.md) — full Phase H spec with build-order tiers
+- [`components/trip-planner-components-plan.md`](./components/trip-planner-components-plan.md) — Phase I period breakdown / trip planner component suite (11 new components)
 - [`components/home-components-extraction-plan.md`](./components/home-components-extraction-plan.md) — home section extraction phases 1–7
 - [`components/settings/settings-provider-plan.md`](./components/settings/settings-provider-plan.md) — Phase D full architecture spec
