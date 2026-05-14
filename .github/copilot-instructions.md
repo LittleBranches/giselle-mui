@@ -268,6 +268,42 @@ library as its own thing. When updating or writing docs:
 | Command | Meaning |
 | ------- | ------- |
 | `cleanup component <Name>` | Read `docs/components/cleanup-workflow.md` and execute the full cleanup workflow on the named component. No further explanation needed. |
+| `review pr <N>` | Run the PR review workflow below on PR #N. |
+
+## PR review workflow — `review pr <N>`
+
+When asked to `review pr <N>`, execute these phases in order:
+
+**Phase 1 — Read the PR**
+`mcp_gitkraken_pull_request_get_detail` — get PR title, branch, description, file list.
+
+**Phase 2 — Read the comments**
+`mcp_gitkraken_pull_request_get_comments` — list all existing review comments and replies.
+Note every unresolved Copilot comment: its `id`, file, and what it flags.
+
+**Phase 3 — Acknowledge in-thread (before fixing)**
+For each unresolved Copilot comment, post a reply in its thread using:
+```sh
+gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies \
+  --method POST -f body="✅ Valid. <one-sentence acknowledgement>. Fixing: <what will change>."
+```
+⚠️ **NEVER use `mcp_gitkraken_pull_request_create_review` for thread replies.**
+That tool creates a top-level review on the main PR thread — not a nested reply.
+`gh api .../replies` is the only correct tool for replying inside an existing thread.
+
+**Phase 4 — Fix the code**
+Apply all fixes. Run `npm run check:verify`. Commit and push.
+
+**Phase 5 — Confirm in-thread (after fixing)**
+For each Copilot comment, post a follow-up reply in the same thread:
+```sh
+gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies \
+  --method POST -f body="Fixed at commit \`<sha>\`: <one sentence describing the change>."
+```
+Use the same `comment_id` as Phase 3 — this nests the reply under the original comment.
+
+**Phase 6 — Branch owner sign-off**
+Prompt the user to resolve the threads in the GitHub PR UI.
 
 ---
 
