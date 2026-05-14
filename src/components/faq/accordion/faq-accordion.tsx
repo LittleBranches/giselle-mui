@@ -13,7 +13,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 
 import { GiselleIcon } from '../../icon/giselle';
-import { SectionTitle } from '../../layout/section-title';
+import { SectionTitle } from '../../layout/section/title/section-title';
 import { fadeVariants } from './utils';
 import { contentBoxSx, accordionItemSx, contactSectionSx } from './faq-accordion.styles';
 import { FaqMotionViewport } from './faq-motion-viewport';

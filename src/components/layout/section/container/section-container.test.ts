@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { SectionContainer } from './section-container';
+import { SectionContainer } from './section-container/section-container';
 
 // ----------------------------------------------------------------------
 

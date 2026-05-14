@@ -7,7 +7,7 @@ import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { TwoColumnShowcaseRow } from './two-column-showcase-row';
+import { TwoColumnShowcaseRow } from '../../../section/two-column-showcase-row/two-column-showcase-row';
 
 // ----------------------------------------------------------------------
 

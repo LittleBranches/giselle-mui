@@ -1,6 +1,6 @@
 import Container from '@mui/material/Container';
 
-import type { SectionContainerProps } from './types';
+import type { SectionContainerProps } from './section-container/types';
 
 // ----------------------------------------------------------------------
 
