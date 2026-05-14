@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 
 import { heroActionsRowSx, heroInnerSx, heroRootSx } from './hero-section.styles';
 import type { HeroSectionProps } from './types';
@@ -17,8 +16,8 @@ import type { HeroSectionProps } from './types';
  * **Usage:**
  * ```tsx
  * <HeroSection
- *   headline="Build something great"
- *   subtitle="A clean, accessible component library for MUI v7."
+ *   headline={<Typography variant="h1">Build something great</Typography>}
+ *   subtitle={<Typography variant="h5" color="text.secondary">A clean, accessible component library for MUI v7.</Typography>}
  *   actions={
  *     <>
  *       <Button variant="contained">Get started</Button>
@@ -46,13 +45,9 @@ export function HeroSection({
   return (
     <Box sx={[heroRootSx(color), ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <Container maxWidth="lg" sx={heroInnerSx}>
-        <Typography variant="h1">{headline}</Typography>
+        {headline}
 
-        {subtitle && (
-          <Typography variant="h5" color="text.secondary">
-            {subtitle}
-          </Typography>
-        )}
+        {subtitle}
 
         {actions && <Box sx={heroActionsRowSx}>{actions}</Box>}
       </Container>

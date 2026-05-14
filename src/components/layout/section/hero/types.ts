@@ -12,13 +12,13 @@ export type HeroColorKey = 'primary' | 'secondary' | 'info' | 'success' | 'warni
 
 export interface HeroSectionProps extends Omit<BoxProps, 'color'> {
   /**
-   * Main headline. Rendered as an `h1` Typography. Accepts any `ReactNode`
-   * so consumers can embed gradient spans or icons.
+   * Heading slot. Render a `<Typography variant="h1">` (or any heading element) here.
+   * The component does not wrap this in any element — whatever you pass is rendered directly.
    */
   headline: ReactNode;
   /**
-   * Optional subtitle rendered below the headline as `body1` text.
-   * Omit to render headline-only hero.
+   * Subtitle slot rendered below the headline. Render a `<Typography variant="h5">` or
+   * similar here. Omit to render a headline-only hero.
    */
   subtitle?: ReactNode;
   /**
