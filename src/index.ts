@@ -133,5 +133,8 @@ export type { FloatingSubNavProps, FloatingSubNavItem } from './components/nav/f
 export { SectionContainer } from './components/layout/section/container';
 export type { SectionContainerProps } from './components/layout/section/container';
 
+export { HeroSection } from './components/layout/section/hero';
+export type { HeroColorKey, HeroSectionProps } from './components/layout/section/hero';
+
 export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity-utils';
 export { assignMilestoneSidesByDone } from './utils/timeline-utils';

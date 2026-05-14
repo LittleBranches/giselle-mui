@@ -218,7 +218,7 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 
 | Task                                                                                              | Label      | Status |
 | ------------------------------------------------------------------------------------------------- | ---------- | ------ |
-| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot     | Components | ⬜     |
+| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot     | Components | ✅     |
 | `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha` | Components | ⬜     |
 | `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand        | Components | ⬜     |
 
