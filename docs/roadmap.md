@@ -160,7 +160,7 @@ for the milestone tracking the removal of `minimal-shared/utils` imports from
 
 ---
 
-### Phase D — GiselleSettingsProvider — Theming (Medium priority)
+### Phase D — GiselleSettingsProvider — Theming ✅ Done — 14 May 2026
 
 **Goal:** Export a framework-agnostic, MIT-safe `GiselleSettingsProvider<TState>` that
 persists user UI preferences (color mode, direction, font size, color presets) with zero
@@ -173,22 +173,22 @@ Full design: [`docs/components/settings-provider-plan.md`](../components/setting
 
 | Task                                                                                                     | Label   | Status |
 | -------------------------------------------------------------------------------------------------------- | ------- | ------ |
-| Phase α: Port `useLocalStorage<T>` to `src/utils/use-local-storage.ts`                                   | Theming | ⬜     |
-| Phase α: Write `isDeepEqual(a, b)` — covers primitives, arrays, plain objects (no es-toolkit)            | Theming | ⬜     |
-| Phase α: Write `getCookieValue` / `setCookieValue` — SSR-safe (`typeof document !== 'undefined'`)        | Theming | ⬜     |
-| Phase α: Tests for all three utilities                                                                   | Theming | ⬜     |
-| Phase 1: Define `BaseSettingsState`, `GiselleSettingsContextValue<T>`, `GiselleSettingsProviderProps<T>` | Theming | ⬜     |
-| Phase 1: Implement `GiselleSettingsProvider<T>` — localStorage by default, `initialState?` for SSR       | Theming | ⬜     |
-| Phase 1: Version check on mount — reset to defaults if stored version mismatches                         | Theming | ⬜     |
-| Phase 1: Export `useGiselleSettings<T>()` hook                                                           | Theming | ⬜     |
-| Phase 1: Storybook story — default, `setField`, `canReset`/`onReset`, drawer toggle                      | Theming | ⬜     |
-| Phase 1: Vitest tests — render, `setField`, `canReset`, `onReset`, version mismatch reset                | Theming | ⬜     |
-| Phase 2: `storage: 'cookie'` option (client-side `document.cookie`)                                      | Theming | ⬜     |
-| Phase 2: `storage: StorageAdapter<T>` custom adapter                                                     | Theming | ⬜     |
-| Phase 2: `detectGiselleSettings()` server helper (separate `/server` entrypoint)                         | Theming | ⬜     |
-| Phase 3: `SettingsThemeBridge` — internal bridge wiring settings state into `GiselleThemeProvider`       | Theming | ⬜     |
-| Phase 3: `GiselleThemeAndSettingsProvider` convenience wrapper                                           | Theming | ⬜     |
-| Phase 3: Migration guide in README and `theming/nextjs.md`                                               | Theming | ⬜     |
+| Phase α: Port `useLocalStorage<T>` to `src/utils/use-local-storage.ts`                                   | Theming | ✅     |
+| Phase α: Write `isDeepEqual(a, b)` — covers primitives, arrays, plain objects (no es-toolkit)            | Theming | ✅     |
+| Phase α: Write `getCookieValue` / `setCookieValue` — SSR-safe (`typeof document !== 'undefined'`)        | Theming | ✅     |
+| Phase α: Tests for all three utilities                                                                   | Theming | ✅     |
+| Phase 1: Define `BaseSettingsState`, `GiselleSettingsContextValue<T>`, `GiselleSettingsProviderProps<T>` | Theming | ✅     |
+| Phase 1: Implement `GiselleSettingsProvider<T>` — localStorage by default, `initialState?` for SSR       | Theming | ✅     |
+| Phase 1: Version check on mount — reset to defaults if stored version mismatches                         | Theming | ✅     |
+| Phase 1: Export `useGiselleSettings<T>()` hook                                                           | Theming | ✅     |
+| Phase 1: Storybook story — default, `setField`, `canReset`/`onReset`, drawer toggle                      | Theming | ✅     |
+| Phase 1: Vitest tests — render, `setField`, `canReset`, `onReset`, version mismatch reset                | Theming | ✅     |
+| Phase 2: `storage: 'cookie'` option (client-side `document.cookie`)                                      | Theming | ✅     |
+| Phase 2: `storage: StorageAdapter<T>` custom adapter                                                     | Theming | ✅     |
+| Phase 2: `detectGiselleSettings()` server helper (separate `/server` entrypoint)                         | Theming | ✅     |
+| Phase 3: `SettingsThemeBridge` — internal bridge wiring settings state into `GiselleThemeProvider`       | Theming | ✅     |
+| Phase 3: `GiselleThemeAndSettingsProvider` convenience wrapper                                           | Theming | ✅     |
+| Phase 3: Migration guide in README and `theming/nextjs.md`                                               | Theming | ✅     |
 
 ---
 

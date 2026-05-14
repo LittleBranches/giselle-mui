@@ -90,18 +90,13 @@ ApexCharts dependency).
 
 ---
 
-### `StatCardRow` 🔴 Needs building
+### `StatCardRow` ✅ Shipped — 13 May 2026
 
 **What it is:** Responsive grid of `StatCard` items. Seen in every dashboard top row.
 Accepts a `StatCardItem[]` array (type already in `giselle-mui`) and lays them out in a
 `Grid2` row with the correct breakpoints (`xs=12 sm=6 md=3`).
 
 **Transferability:** 100% once built. Zero special deps.
-
-**Blockers:**
-
-- `GiselleThemeProvider` (Phase C) should land first so the StatCards have consistent spacing.
-- Otherwise, can be built now.
 
 **Output subpath:** Main bundle (`@alexrebula/giselle-mui`).
 
@@ -733,7 +728,7 @@ live dashboard in alexrebula (Phase H of the alexrebula roadmap):
 
 | Widget                                                     | Component                       | Status                          |
 | ---------------------------------------------------------- | ------------------------------- | ------------------------------- |
-| Stat row: total cost, cash needed this week, ZipPay amount | `StatCard` × 3 + `StatCardRow`  | `StatCard` ✅, `StatCardRow` 🔴 |
+| Stat row: total cost, cash needed this week, ZipPay amount | `StatCard` × 3 + `StatCardRow`  | `StatCard` ✅, `StatCardRow` ✅ |
 | Cash-flow timeline                                         | `TimelineTwoColumn`             | ✅                              |
 | Budget breakdown (flights, CAPEX, activities, wages)       | `BudgetBreakdownCard`           | 🔴                              |
 | Donut: cost categories                                     | `DonutChartCard`                | 🔴                              |
