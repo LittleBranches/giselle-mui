@@ -58,28 +58,28 @@ sidebar_label: 'Component Inventory'
 
 | Component                                                            | DoD   | Best practices | Last audited |
 | -------------------------------------------------------------------- | ----- | -------------- | ------------ |
-| `Accordion`                                                          | 20/20 | 13/13          | 13 May 2026  |
-| `TimelineTwoColumn` (+ `PhaseCard`, `TimelineDot`, `MilestoneBadge`) | 20/20 | 13/13          | 13 May 2026  |
-| `GiselleIcon`                                                        | 20/20 | 13/13          | 13 May 2026  |
-| `MetricCard` + `MetricCardDecoration`                                | 20/20 | 13/13          | 13 May 2026  |
-| `SelectableCard`                                                     | 20/20 | 13/13          | 13 May 2026  |
-| `QuoteCard`                                                          | 20/20 | 13/13          | 13 May 2026  |
-| `StatCard`                                                           | 20/20 | 13/13          | 13 May 2026  |
-| `RadialProgressCard`                                                 | 20/20 | 13/13          | 13 May 2026  |
-| `TimelineCompact`                                                    | 20/20 | 13/13          | 13 May 2026  |
-| `FloatingSubNav`                                                     | 20/20 | 13/13          | 13 May 2026  |
-| `TwoColumnShowcaseRow`                                               | 20/20 | 13/13          | 13 May 2026  |
-| `SectionTitle` + `SectionCaption`                                    | 20/20 | 13/13          | 13 May 2026  |
-| `SectionContainer`                                                   | 20/20 | 13/13          | 13 May 2026  |
-| `IconActionBar`                                                      | 20/20 | 13/13          | 13 May 2026  |
-| `TaskList`                                                           | 20/20 | 13/13          | 13 May 2026  |
-| `FaqSection`                                                         | 20/20 | 13/13          | 13 May 2026  |
+| `Accordion`                                                          | 21/21 | 13/13          | 13 May 2026  |
+| `TimelineTwoColumn` (+ `PhaseCard`, `TimelineDot`, `MilestoneBadge`) | 21/21 | 13/13          | 13 May 2026  |
+| `GiselleIcon`                                                        | 21/21 | 13/13          | 13 May 2026  |
+| `MetricCard` + `MetricCardDecoration`                                | 21/21 | 13/13          | 13 May 2026  |
+| `SelectableCard`                                                     | 21/21 | 13/13          | 13 May 2026  |
+| `QuoteCard`                                                          | 21/21 | 13/13          | 13 May 2026  |
+| `StatCard`                                                           | 21/21 | 13/13          | 13 May 2026  |
+| `RadialProgressCard`                                                 | 21/21 | 13/13          | 13 May 2026  |
+| `TimelineCompact`                                                    | 21/21 | 13/13          | 13 May 2026  |
+| `FloatingSubNav`                                                     | 21/21 | 13/13          | 13 May 2026  |
+| `TwoColumnShowcaseRow`                                               | 21/21 | 13/13          | 13 May 2026  |
+| `SectionTitle` + `SectionCaption`                                    | 21/21 | 13/13          | 13 May 2026  |
+| `SectionContainer`                                                   | 21/21 | 13/13          | 13 May 2026  |
+| `IconActionBar`                                                      | 21/21 | 13/13          | 13 May 2026  |
+| `TaskList`                                                           | 21/21 | 13/13          | 13 May 2026  |
+| `FaqSection`                                                         | 21/21 | 13/13          | 13 May 2026  |
 | `GiselleThemeProvider`                                               | ⬜    | ⬜             | —            |
 | `GiselleSettingsProvider` + `GiselleThemeAndSettingsProvider`        | ⬜    | ⬜             | —            |
 | `ToggleIconButton`                                                   | ⬜    | ⬜             | —            |
 | `StatCardRow`                                                        | ⬜    | ⬜             | —            |
 
-**DoD scale:** Scenario B = n/20 items · Scenario A (sub-component) = n/10 items  
+**DoD scale:** Scenario B = n/21 items · Scenario A (sub-component) = n/10 items  
 **Best practices scale:** 13 items — see `docs/components/cleanup-workflow.md` Step 14 for the rubric
 
 ---
@@ -107,20 +107,24 @@ sidebar_label: 'Component Inventory'
 
 ## Phase E — Standalone UI primitives
 
-> Phase E is **partially done** (7 components shipped). Remaining: `HeroSection`, `OptionWithBlurb`, `SectionPendingLoader`, `FloatingControlBar`.
+> Phase E is **partially done** (remaining: `HeroSection`, `OptionWithBlurb`, `SectionPendingLoader`, `FloatingControlBar`).
 
-| Component              | Source                              | Status                 | Blocker                                           |
-| ---------------------- | ----------------------------------- | ---------------------- | ------------------------------------------------- |
-| `StatCard`             | Written from scratch                | ✅ Shipped 5 May 2026  | —                                                 |
-| `RadialProgressCard`   | Written from scratch                | ✅ Shipped 5 May 2026  | —                                                 |
-| `TimelineCompact`      | Written from scratch                | ✅ Shipped 7 May 2026  | —                                                 |
-| `SectionContainer`     | Written from scratch                | ✅ Shipped             | —                                                 |
-| `TwoColumnShowcaseRow` | alexrebula                          | ✅ Shipped             | —                                                 |
-| `HeroSection`          | Write from scratch                  | ⬜                     | None                                              |
-| `FaqSection`           | Write from scratch                  | ✅ Shipped 13 May 2026 | Renamed from `FaqAccordion`; in `/motion` subpath |
-| `OptionWithBlurb`      | alexrebula (tiny, ready to extract) | ⬜                     | None                                              |
-| `SectionPendingLoader` | alexrebula                          | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
-| `FloatingControlBar`   | alexrebula                          | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
+| Component              | Source                              | Status                  | Blocker                                           |
+| ---------------------- | ----------------------------------- | ----------------------- | ------------------------------------------------- |
+| `StatCard`             | Written from scratch                | ✅ Shipped 5 May 2026   | —                                                 |
+| `RadialProgressCard`   | Written from scratch                | ✅ Shipped 5 May 2026   | —                                                 |
+| `TimelineCompact`      | Written from scratch                | ✅ Shipped 7 May 2026   | —                                                 |
+| `SectionContainer`     | Written from scratch                | ✅ Shipped 13 May 2026  | —                                                 |
+| `TwoColumnShowcaseRow` | alexrebula                          | ✅ Shipped 13 May 2026  | —                                                 |
+| `SectionTitle`         | Written from scratch                | ✅ Shipped 13 May 2026  | Animated `/motion` variant is Phase I item 2      |
+| `Accordion`            | Written from scratch                | ✅ Shipped 13 May 2026  | —                                                 |
+| `ToggleIconButton`     | Written from scratch                | ✅ Shipped 13 May 2026  | Replaces deprecated `CheckIconButton`             |
+| `TaskList`             | Written from scratch                | ✅ Shipped 13 May 2026  | —                                                 |
+| `FaqSection`           | Write from scratch                  | ✅ Shipped 13 May 2026  | Renamed from `FaqAccordion`; in `/motion` subpath |
+| `HeroSection`          | Write from scratch                  | ⬜                      | None                                              |
+| `OptionWithBlurb`      | alexrebula (tiny, ready to extract) | ⬜                      | None                                              |
+| `SectionPendingLoader` | alexrebula                          | ⬜                      | Replace `Iconify` → `GiselleIcon`                 |
+| `FloatingControlBar`   | alexrebula                          | ⬜                      | Replace `Iconify` → `GiselleIcon`                 |
 
 ---
 
@@ -155,8 +159,8 @@ sidebar_label: 'Component Inventory'
 
 | Component                                                                 | Status |
 | ------------------------------------------------------------------------- | ------ |
-| `StatCardRow` — responsive `Grid2` of `StatCard` items                    | ✅     |
-| `BalanceSummaryCard` — large financial overview card with sparkline slot  | 🔴     |
+| `StatCardRow` — responsive `Grid2` of `StatCard` items (Shipped 13 May 2026)  | ✅     |
+| `BalanceSummaryCard` — large financial overview card with sparkline slot       | 🔴     |
 | `CreditCardDisplay` — presentational masked card number / holder / expiry | 🔴     |
 
 ### Group 2 — Chart cards (`/charts` subpath, ApexCharts peer dep)
@@ -370,7 +374,7 @@ sidebar_label: 'Component Inventory'
 
 | Category                                  | Count                                                             |
 | ----------------------------------------- | ----------------------------------------------------------------- |
-| ✅ Shipped (components + utilities)       | ~36 exports (see shipped table above)                             |
+| ✅ Shipped (components + utilities)       | ~40 named exports (see shipped table above)                       |
 | Phase C — `GiselleThemeProvider`          | ✅ Done                                                           |
 | Phase D — Settings provider + utilities   | ✅ Done                                                           |
 | Phase E — UI primitives (remaining)       | 4                                                                 |
