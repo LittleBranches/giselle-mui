@@ -23,7 +23,7 @@ sidebar_label: 'Trip Planner Components Plan'
 ### What the concern was
 
 The initial brainstorm listed MUI `Drawer`, `Chip`, `LinearProgress`, and `Collapse` as
-"from Minimals / alexrebula (private — consume here, never copy to giselle-mui)". This
+"from a proprietary theme kit / alexrebula (private — consume here, never copy to giselle-mui)". This
 framing was misleading. Those components are from **`@mui/material`** — Apache 2.0 / MIT
 licensed. The copyright constraint never applied to them.
 
@@ -31,47 +31,47 @@ licensed. The copyright constraint never applied to them.
 
 The **only** copyright-sensitive code in the current codebase is:
 
-| Location | What it is | Risk |
-|---|---|---|
-| `alexrebula/src/theme/` | Imports from the Minimals utility package (proprietary color helpers — replaced by `channelAlpha` etc.) | Must not be copied to any public package |
-| `alexrebula/src/components/iconify/` | `Iconify` component uses the Minimals shared utilities package | Must stay in alexrebula; not portable as-is |
-| `alexrebula/src/components/settings/` | `SettingsDrawer` and `SettingsContext` from Minimals | Proprietary pattern — must be replaced by `GiselleSettingsProvider` (Phase D) |
+| Location                              | What it is                                                                                         | Risk                                                                          |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `alexrebula/src/theme/`               | Imports from `minimal-shared/utils` (`varAlpha`, `varFade`, etc.)                                  | Proprietary utilities — must not be copied to any public package              |
+| `alexrebula/src/components/iconify/`  | `Iconify` component uses `minimal-shared`                                                          | Must stay in alexrebula; not portable as-is                                   |
+| `alexrebula/src/components/settings/` | `SettingsDrawer` and `SettingsContext` from the proprietary kit                                    | Proprietary pattern — must be replaced by `GiselleSettingsProvider` (Phase D) |
 
 ### What is already done
 
-| Migration | Status |
-|---|---|
-| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` — clean-room replacements for `varAlpha` etc. | ✅ Shipped Phase A |
-| `giselleTheme` — MIT-safe brand palette (replaces Minimals theme tokens) | ✅ Shipped Phase B |
-| `GiselleThemeProvider` — replaces `ThemeProvider` wrapper from Minimals | ✅ Shipped Phase C |
-| `GiselleSettingsProvider` — replaces `SettingsProvider` from Minimals | ⬜ Phase D (tracked) |
-| ThemeProvider decoupling in alexrebula `src/theme/` (remove `minimal-shared/utils` imports) | ⬜ alexrebula Phase 1.5 (tracked) |
+| Migration                                                                                                    | Status                            |
+| ------------------------------------------------------------------------------------------------------------ | --------------------------------- |
+| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` — clean-room replacements for `varAlpha` etc. | ✅ Shipped Phase A                |
+| `giselleTheme` — MIT-safe brand palette                                                                      | ✅ Shipped Phase B                |
+| `GiselleThemeProvider` — MIT-safe `ThemeProvider` wrapper                                                    | ✅ Shipped Phase C                |
+| `GiselleSettingsProvider` — MIT-safe settings context                                                        | ✅ Shipped Phase D                |
+| ThemeProvider decoupling in alexrebula `src/theme/` (remove `minimal-shared/utils` imports)                     | ⬜ alexrebula Phase 1.5 (tracked) |
 
 ### What this means for new components
 
 **Any component that wraps MUI primitives (Drawer, Chip, LinearProgress, Tabs, Collapse,
 Paper, etc.) can be built in giselle-mui today, with zero copyright risk.** MUI is the
 dependency — it is MIT/Apache 2.0 and fully allowed. The rule is only that the component
-implementation must not call proprietary Minimals color helpers — the clean-room equivalents
-(`channelAlpha` etc.) are already in giselle-mui for that purpose.
+implementation must not call `varAlpha`, `varFade`, `varBlur`, or `minimal-shared/*` — and
+the clean-room equivalents (`channelAlpha` etc.) are already in giselle-mui for that purpose.
 
-**Estimated effort to reach full copyright independence:** The remaining Minimals utility imports
-in `alexrebula/src/theme/` are 3–5 calls (the proprietary color helper → `channelAlpha`
+**Estimated effort to reach full copyright independence:** The remaining `minimal-shared/utils`
+usage in `alexrebula/src/theme/` is 3–5 utility calls (the `varAlpha`→`channelAlpha`
 substitution pattern). That is a 1–2 hour migration task, already tracked. The
-`GiselleSettingsProvider` (Phase D) is the larger item — estimated 3–5 days including tests.
-Once Phase D ships, `alexrebula` can remove `minimal-shared` from its `package.json` entirely.
+`GiselleSettingsProvider` (Phase D) is now shipped — `alexrebula` can remove `minimal-shared`
+from its `package.json` once the theme utilities are swapped.
 
 ---
 
 ## Blocker key
 
-| Symbol | Meaning |
-|---|---|
-| ✅ | Already shipped in giselle-mui |
-| 🟨 | Shipped but in wrong subpath or needs adjustment |
-| 🔴 | Does not exist — must be written from scratch |
-| 📋 | Already planned in `dashboard-components-plan.md` |
-| 📦 | Depends on `/motion` or `/charts` subpath (both already wired — 7 May 2026) |
+| Symbol | Meaning                                                                     |
+| ------ | --------------------------------------------------------------------------- |
+| ✅     | Already shipped in giselle-mui                                              |
+| 🟨     | Shipped but in wrong subpath or needs adjustment                            |
+| 🔴     | Does not exist — must be written from scratch                               |
+| 📋     | Already planned in `dashboard-components-plan.md`                           |
+| 📦     | Depends on `/motion` or `/charts` subpath (both already wired — 7 May 2026) |
 
 ---
 
@@ -86,10 +86,10 @@ wiring change.
 import { WeeklyBreakdownPage } from '@alexrebula/giselle-mui/motion';
 
 <WeeklyBreakdownPage
-  periods={tripWeeks}          // PeriodData[] — the one and only data prop
+  periods={tripWeeks} // PeriodData[] — the one and only data prop
   currency="AUD"
-  view="carousel"              // 'carousel' | 'expanding-strip' | 'stacked' | 'table'
-/>
+  view="carousel" // 'carousel' | 'expanding-strip' | 'stacked' | 'table'
+/>;
 ```
 
 The `view` prop can be driven by a `useState` toggle — a tab strip, a button group, or a
@@ -173,10 +173,10 @@ export type PeriodData = {
 
 /** The visual layout variant for the breakdown page. */
 export type BreakdownViewVariant =
-  | 'carousel'          // horizontal scroll rail — one card partially visible at edges
-  | 'expanding-strip'   // all periods in a flex row; non-selected compress; selected expands
-  | 'stacked'           // vertical accordion — default mobile fallback
-  | 'table';            // tabular layout — all periods as rows, categories as columns
+  | 'carousel' // horizontal scroll rail — one card partially visible at edges
+  | 'expanding-strip' // all periods in a flex row; non-selected compress; selected expands
+  | 'stacked' // vertical accordion — default mobile fallback
+  | 'table'; // tabular layout — all periods as rows, categories as columns
 
 // ─── Summary drawer ───────────────────────────────────────────────────────────
 
@@ -198,19 +198,19 @@ export type PeriodSummary = {
 The initial brainstorm used informal names. The plan below renames them to be generic (no
 trip-specific nouns). This table maps the two so nothing appears "missing".
 
-| Brainstorm name | Plan name | Group |
-|---|---|---|
-| `WeekPlannerCard` | `PeriodSummaryCard` | Group B |
-| `WeekDetailSheet` | `PeriodDetailSheet` | Group C |
-| `HorizontalScrollRail` | `HorizontalScrollRail` | Group C |
-| `BudgetSummaryDrawer` | `BudgetSummaryDrawer` | Group C |
-| `ExpandingPeriodStrip` (horizontal accordion) | `ExpandingPeriodStrip` | Group C |
-| `ExpenseCategoryGroup` | `ExpenseCategoryGroup` | Group A |
-| `ExpenseLineItem` | `ExpenseLineItem` | Group A |
-| `BreakdownCarouselView` (carousel container) | `BreakdownCarouselView` | Group D |
+| Brainstorm name                                      | Plan name                | Group   |
+| ---------------------------------------------------- | ------------------------ | ------- |
+| `WeekPlannerCard`                                    | `PeriodSummaryCard`      | Group B |
+| `WeekDetailSheet`                                    | `PeriodDetailSheet`      | Group C |
+| `HorizontalScrollRail`                               | `HorizontalScrollRail`   | Group C |
+| `BudgetSummaryDrawer`                                | `BudgetSummaryDrawer`    | Group C |
+| `ExpandingPeriodStrip` (horizontal accordion)        | `ExpandingPeriodStrip`   | Group C |
+| `ExpenseCategoryGroup`                               | `ExpenseCategoryGroup`   | Group A |
+| `ExpenseLineItem`                                    | `ExpenseLineItem`        | Group A |
+| `BreakdownCarouselView` (carousel container)         | `BreakdownCarouselView`  | Group D |
 | `BreakdownExpandingView` (expanding strip container) | `BreakdownExpandingView` | Group D |
-| `BreakdownStackedView` (vertical fallback) | `BreakdownStackedView` | Group D |
-| `WeeklyBreakdownPage` (top-level page) | `WeeklyBreakdownPage` | Group D |
+| `BreakdownStackedView` (vertical fallback)           | `BreakdownStackedView`   | Group D |
+| `WeeklyBreakdownPage` (top-level page)               | `WeeklyBreakdownPage`    | Group D |
 
 All eleven "build from scratch" components are present. None were dropped.
 
@@ -223,28 +223,28 @@ All eleven "build from scratch" components are present. None were dropped.
 These are Apache 2.0 / MIT licensed `@mui/material` primitives. They are not components to
 build — they are the building blocks that our new components wrap and compose. They are listed
 here explicitly because the brainstorm originally listed them under a misleading
-"from Minimals / alexrebula" heading. That framing was wrong. They belong to MUI, not Minimals.
+"from a proprietary theme kit / alexrebula" heading. That framing was wrong. They belong to MUI, not any proprietary kit.
 
 **Copyright status of all items in this group: zero risk.** `@mui/material` is Apache 2.0.
 Using any of these primitives in a giselle-mui component is unconditionally allowed.
 
-| MUI primitive | Used in | Role |
-|---|---|---|
-| `Accordion` + `AccordionSummary` | `BreakdownStackedView` | Period rows in the vertical fallback view. Already also shipped as giselle-mui's own `Accordion` wrapper (Group E). |
-| `Drawer` (`anchor="bottom"`) | `BudgetSummaryDrawer` | The MUI Drawer provides the accessible focus trap, backdrop, and portal. The framer-motion animation replaces MUI's built-in transition — `transitionDuration={0}` disables MUI's transition so framer-motion owns it. |
-| `Chip` | `PeriodSummaryCard`, `ExpenseCategoryGroup` | Highlight tags on collapsed card; category label pill in group header. |
-| `LinearProgress` | `ExpenseCategoryGroup`, `BudgetSummaryDrawer` | Budget-used bar per category (`value` = percentage of period budget consumed). Uses `theme.vars.palette[color].main` — no hardcoded hex. |
-| `Tooltip` | `ExpenseLineItem`, `PeriodSummaryCard` | Hover detail on a cost line (e.g. full note text when truncated); period total tooltip on compressed tiles in `ExpandingPeriodStrip`. |
-| `Collapse` | `ExpenseCategoryGroup` | Simple CSS-height transition for expanding a category group's item list. Alternative to framer-motion `AnimatePresence` for the basic (no-motion) version of the component. |
-| `Paper` | `PeriodDetailSheet`, `BudgetSummaryDrawer`, `PeriodSummaryCard` | Surface layer with elevation and border-radius. |
-| `Tabs` + `Tab` | `WeeklyBreakdownPage` (view switcher) | The view-variant selector bar (`carousel / expanding / stacked`). |
+| MUI primitive                    | Used in                                                         | Role                                                                                                                                                                                                                   |
+| -------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Accordion` + `AccordionSummary` | `BreakdownStackedView`                                          | Period rows in the vertical fallback view. Already also shipped as giselle-mui's own `Accordion` wrapper (Group E).                                                                                                    |
+| `Drawer` (`anchor="bottom"`)     | `BudgetSummaryDrawer`                                           | The MUI Drawer provides the accessible focus trap, backdrop, and portal. The framer-motion animation replaces MUI's built-in transition — `transitionDuration={0}` disables MUI's transition so framer-motion owns it. |
+| `Chip`                           | `PeriodSummaryCard`, `ExpenseCategoryGroup`                     | Highlight tags on collapsed card; category label pill in group header.                                                                                                                                                 |
+| `LinearProgress`                 | `ExpenseCategoryGroup`, `BudgetSummaryDrawer`                   | Budget-used bar per category (`value` = percentage of period budget consumed). Uses `theme.vars.palette[color].main` — no hardcoded hex.                                                                               |
+| `Tooltip`                        | `ExpenseLineItem`, `PeriodSummaryCard`                          | Hover detail on a cost line (e.g. full note text when truncated); period total tooltip on compressed tiles in `ExpandingPeriodStrip`.                                                                                  |
+| `Collapse`                       | `ExpenseCategoryGroup`                                          | Simple CSS-height transition for expanding a category group's item list. Alternative to framer-motion `AnimatePresence` for the basic (no-motion) version of the component.                                            |
+| `Paper`                          | `PeriodDetailSheet`, `BudgetSummaryDrawer`, `PeriodSummaryCard` | Surface layer with elevation and border-radius.                                                                                                                                                                        |
+| `Tabs` + `Tab`                   | `WeeklyBreakdownPage` (view switcher)                           | The view-variant selector bar (`carousel / expanding / stacked`).                                                                                                                                                      |
 
 ### ApexCharts primitives (via `/charts` subpath — optional peer dep)
 
-| Chart type | Used in | Role |
-|---|---|---|
-| `radialBar` (`RadialProgressCard` — ✅ already shipped) | `PeriodSummaryCard` (optional) | Per-period budget-consumed ring in the corner of the collapsed tile. Consumer passes it as a `chart?: ReactNode` slot — `PeriodSummaryCard` itself has zero ApexCharts dep. |
-| `donut` / `pie` (`DonutChartCard` — 🔴 planned Phase H) | `PeriodDetailSheet chart` slot, `BudgetSummaryDrawer chart` slot | Category split as a donut. Passed as `chart?: ReactNode` — same zero-dep slot pattern. |
+| Chart type                                              | Used in                                                          | Role                                                                                                                                                                        |
+| ------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `radialBar` (`RadialProgressCard` — ✅ already shipped) | `PeriodSummaryCard` (optional)                                   | Per-period budget-consumed ring in the corner of the collapsed tile. Consumer passes it as a `chart?: ReactNode` slot — `PeriodSummaryCard` itself has zero ApexCharts dep. |
+| `donut` / `pie` (`DonutChartCard` — 🔴 planned Phase H) | `PeriodDetailSheet chart` slot, `BudgetSummaryDrawer chart` slot | Category split as a donut. Passed as `chart?: ReactNode` — same zero-dep slot pattern.                                                                                      |
 
 ---
 
@@ -278,7 +278,7 @@ Uses MUI `Collapse` — no framer-motion required for the basic version.
 **Accepts:** `category: ExpenseCategoryDef`, `items: ExpenseItem[]`, `currency: string`,
 `defaultExpanded?: boolean`, `sx?`
 
-**Copyright status:** Zero risk. MUI `Collapse` + `Stack` + `GiselleIcon`. No Minimals.
+**Copyright status:** Zero risk. MUI `Collapse` + `Stack` + `GiselleIcon`. No proprietary utilities.
 
 **Output subpath:** Main bundle.
 
@@ -344,7 +344,7 @@ sheet (Apple-style). Shows:
 - Scroll lock on `<body>` when open — standard `overflow: hidden` on mount, restored on close.
 - Backdrop uses `motion.div` with `opacity` 0→0.5.
 
-**Copyright status:** Uses framer-motion (MIT licensed, allowed peer dep). Zero Minimals risk.
+**Copyright status:** Uses framer-motion (MIT licensed, allowed peer dep). Zero proprietary risk.
 
 **Blockers:** 📦 `/motion` subpath — already wired (7 May 2026).
 
@@ -402,7 +402,7 @@ a single animated reflow — no overlay.
 `categories: ExpenseCategoryDef[]`, `selectedId?: string`,
 `onSelect?: (id: string) => void`, `sx?`
 
-**Copyright status:** framer-motion is MIT. Zero Minimals risk.
+**Copyright status:** framer-motion is MIT. Zero proprietary risk.
 
 **Blockers:** 📦 `/motion` subpath.
 
@@ -438,7 +438,7 @@ summary content.
 - Z-index: `theme.zIndex.snackbar - 1` so it stays below modals.
 - Close via chevron click or drag-down gesture (`useDragControls` from framer-motion).
 
-**Copyright status:** MUI `Paper` + framer-motion (both MIT). No Minimals pattern copied.
+**Copyright status:** MUI `Paper` + framer-motion (both MIT). No proprietary patterns copied.
 
 **Blockers:** 📦 `/motion` subpath. Reuses `PeriodSummary` type.
 
@@ -527,16 +527,16 @@ type WeeklyBreakdownPageProps = {
 
 ### Group E — Reused from existing giselle-mui (no new work)
 
-| Component | Status | Role in this page |
-|---|---|---|
-| `StatCard` | ✅ Shipped | Per-category subtotal tile inside `PeriodDetailSheet` |
-| `StatCardRow` | ✅ Shipped | Responsive grid of category subtotals |
-| `MetricCard` + `MetricCardDecoration` | ✅ Shipped | Grand total display in `BudgetSummaryDrawer` |
-| `GiselleIcon` | ✅ Shipped | Category icons throughout |
-| `SectionTitle` | ✅ Shipped | Page heading |
-| `SectionContainer` | ✅ Shipped | Page-level padding |
-| `Accordion` | ✅ Shipped | `BreakdownStackedView` period rows |
-| `FaqSection` (in `/motion`) | ✅ Shipped | Reference pattern for `BudgetSummaryDrawer` expand mechanic |
+| Component                             | Status     | Role in this page                                           |
+| ------------------------------------- | ---------- | ----------------------------------------------------------- |
+| `StatCard`                            | ✅ Shipped | Per-category subtotal tile inside `PeriodDetailSheet`       |
+| `StatCardRow`                         | ✅ Shipped | Responsive grid of category subtotals                       |
+| `MetricCard` + `MetricCardDecoration` | ✅ Shipped | Grand total display in `BudgetSummaryDrawer`                |
+| `GiselleIcon`                         | ✅ Shipped | Category icons throughout                                   |
+| `SectionTitle`                        | ✅ Shipped | Page heading                                                |
+| `SectionContainer`                    | ✅ Shipped | Page-level padding                                          |
+| `Accordion`                           | ✅ Shipped | `BreakdownStackedView` period rows                          |
+| `FaqSection` (in `/motion`)           | ✅ Shipped | Reference pattern for `BudgetSummaryDrawer` expand mechanic |
 
 ---
 
@@ -546,13 +546,13 @@ These are fully specified in [`dashboard-components-plan.md`](./dashboard-compon
 They are used as optional slots (`chart?: ReactNode`) in the components above, keeping
 this component group free of ApexCharts as a direct dependency.
 
-| Component | Plan status | Slot it fills |
-|---|---|---|
-| `DonutChartCard` | 🔴 Planned (Phase H) | `PeriodDetailSheet chart` slot, `BudgetSummaryDrawer chart` slot |
-| `BudgetVsActualChartCard` | 🔴 Planned (Phase H) | `PeriodDetailSheet budgetChart` slot |
-| `ProgressStatsList` | 🔴 Planned (Phase H) | `BudgetSummaryDrawer` category totals body |
-| `BudgetBreakdownCard` | 🔴 Planned (Phase H) | Stand-alone alternative to `PeriodDetailSheet` for simple cases |
-| `SparklineBar` | 🔴 Planned (Phase H) | `StatCard chart` slot inside `StatCardRow` in drawer |
+| Component                 | Plan status          | Slot it fills                                                    |
+| ------------------------- | -------------------- | ---------------------------------------------------------------- |
+| `DonutChartCard`          | 🔴 Planned (Phase H) | `PeriodDetailSheet chart` slot, `BudgetSummaryDrawer chart` slot |
+| `BudgetVsActualChartCard` | 🔴 Planned (Phase H) | `PeriodDetailSheet budgetChart` slot                             |
+| `ProgressStatsList`       | 🔴 Planned (Phase H) | `BudgetSummaryDrawer` category totals body                       |
+| `BudgetBreakdownCard`     | 🔴 Planned (Phase H) | Stand-alone alternative to `PeriodDetailSheet` for simple cases  |
+| `SparklineBar`            | 🔴 Planned (Phase H) | `StatCard chart` slot inside `StatCardRow` in drawer             |
 
 ---
 
@@ -585,43 +585,43 @@ WeeklyBreakdownPage
 Define all shared types in `src/components/period-breakdown/types.ts` and export from
 `src/index.ts`. This unblocks every component below in parallel.
 
-| Task | Effort |
-|---|---|
+| Task                                                                                                            | Effort    |
+| --------------------------------------------------------------------------------------------------------------- | --------- |
 | Define `ExpenseItem`, `ExpenseCategoryDef`, `PeriodData`, `PeriodSummary`, `BreakdownViewVariant` in `types.ts` | 1–2 hours |
-| Export from `src/index.ts` | 15 min |
-| Write `src/components/period-breakdown/utils.ts` — `deriveSummary(periods)` pure helper | 1 hour |
+| Export from `src/index.ts`                                                                                      | 15 min    |
+| Write `src/components/period-breakdown/utils.ts` — `deriveSummary(periods)` pure helper                         | 1 hour    |
 
 ---
 
 ### Tier 1 — Atomic building blocks (MUI only, no blockers)
 
-| Component | Estimated effort | Subpath |
-|---|---|---|
-| `ExpenseLineItem` | 1–2 hours | Main bundle |
-| `ExpenseCategoryGroup` | 2–3 hours | Main bundle |
-| `PeriodSummaryCard` | 2–4 hours | Main bundle |
+| Component              | Estimated effort | Subpath     |
+| ---------------------- | ---------------- | ----------- |
+| `ExpenseLineItem`      | 1–2 hours        | Main bundle |
+| `ExpenseCategoryGroup` | 2–3 hours        | Main bundle |
+| `PeriodSummaryCard`    | 2–4 hours        | Main bundle |
 
 ---
 
 ### Tier 2 — Motion components (requires `/motion` subpath — already wired)
 
-| Component | Estimated effort | Subpath | Depends on |
-|---|---|---|---|
-| `HorizontalScrollRail` | 3–4 hours | `/motion` | Nothing |
-| `PeriodDetailSheet` | 4–6 hours | `/motion` | Tier 1 components, StatCardRow (existing) |
-| `BudgetSummaryDrawer` | 3–4 hours | `/motion` | MetricCard (existing), ProgressStatsList (Phase H) |
-| `ExpandingPeriodStrip` | 4–6 hours | `/motion` | Tier 1 components |
+| Component              | Estimated effort | Subpath   | Depends on                                         |
+| ---------------------- | ---------------- | --------- | -------------------------------------------------- |
+| `HorizontalScrollRail` | 3–4 hours        | `/motion` | Nothing                                            |
+| `PeriodDetailSheet`    | 4–6 hours        | `/motion` | Tier 1 components, StatCardRow (existing)          |
+| `BudgetSummaryDrawer`  | 3–4 hours        | `/motion` | MetricCard (existing), ProgressStatsList (Phase H) |
+| `ExpandingPeriodStrip` | 4–6 hours        | `/motion` | Tier 1 components                                  |
 
 ---
 
 ### Tier 3 — View containers (depends on Tier 2)
 
-| Component | Estimated effort | Subpath | Depends on |
-|---|---|---|---|
-| `BreakdownCarouselView` | 2–3 hours | `/motion` | Scroll Rail + Detail Sheet |
-| `BreakdownExpandingView` | 2–3 hours | `/motion` | Expanding Strip |
-| `BreakdownStackedView` | 1–2 hours | `/motion` | Accordion (existing) |
-| `WeeklyBreakdownPage` | 3–4 hours | `/motion` | All Tier 3 + Summary Drawer |
+| Component                | Estimated effort | Subpath   | Depends on                  |
+| ------------------------ | ---------------- | --------- | --------------------------- |
+| `BreakdownCarouselView`  | 2–3 hours        | `/motion` | Scroll Rail + Detail Sheet  |
+| `BreakdownExpandingView` | 2–3 hours        | `/motion` | Expanding Strip             |
+| `BreakdownStackedView`   | 1–2 hours        | `/motion` | Accordion (existing)        |
+| `WeeklyBreakdownPage`    | 3–4 hours        | `/motion` | All Tier 3 + Summary Drawer |
 
 **Total estimated build time (Tier 0 through Tier 3):** 28–44 hours (without chart slots).
 Chart slot components from `dashboard-components-plan.md` are independent — they slot in via
@@ -641,10 +641,10 @@ import { deriveSummary } from '@alexrebula/giselle-mui'; // pure util
 
 export const TRIP_CATEGORIES: ExpenseCategoryDef[] = [
   { key: 'accommodation', label: 'Accommodation', color: 'primary', iconId: 'solar:home-bold' },
-  { key: 'food',          label: 'Food & Dining',  color: 'success', iconId: 'solar:chef-hat-bold' },
-  { key: 'transport',     label: 'Transport',       color: 'info',    iconId: 'solar:bus-bold' },
-  { key: 'activities',    label: 'Activities',      color: 'warning', iconId: 'solar:ticket-bold' },
-  { key: 'misc',          label: 'Miscellaneous',   color: 'secondary', iconId: 'solar:tag-bold' },
+  { key: 'food', label: 'Food & Dining', color: 'success', iconId: 'solar:chef-hat-bold' },
+  { key: 'transport', label: 'Transport', color: 'info', iconId: 'solar:bus-bold' },
+  { key: 'activities', label: 'Activities', color: 'warning', iconId: 'solar:ticket-bold' },
+  { key: 'misc', label: 'Miscellaneous', color: 'secondary', iconId: 'solar:tag-bold' },
 ];
 
 export const TRIP_WEEKS: PeriodData[] = [
