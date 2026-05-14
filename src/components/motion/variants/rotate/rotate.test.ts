@@ -29,7 +29,7 @@ describe('rotate factory', () => {
     expect((rotate('out').initial as Record<string, unknown>).rotate).toBe(0);
   });
 
-  it("custom degrees override default", () => {
+  it('custom degrees override default', () => {
     expect((rotate('in', { deg: 180 }).initial as Record<string, unknown>).rotate).toBe(-180);
   });
 });

@@ -27,27 +27,29 @@ describe('container constants', () => {
 describe('container factory', () => {
   it('animate.transition.staggerChildren equals constant', () => {
     const result = container();
-    expect((result.animate as { transition: Record<string, unknown> }).transition.staggerChildren).toBe(
-      CONTAINER_STAGGER_CHILDREN,
-    );
+    expect(
+      (result.animate as { transition: Record<string, unknown> }).transition.staggerChildren
+    ).toBe(CONTAINER_STAGGER_CHILDREN);
   });
 
   it('animate.transition.delayChildren equals constant', () => {
     const result = container();
-    expect((result.animate as { transition: Record<string, unknown> }).transition.delayChildren).toBe(
-      CONTAINER_DELAY_CHILDREN,
-    );
+    expect(
+      (result.animate as { transition: Record<string, unknown> }).transition.delayChildren
+    ).toBe(CONTAINER_DELAY_CHILDREN);
   });
 
   it('exit.transition.staggerDirection equals constant', () => {
     const result = container();
-    expect((result.exit as { transition: Record<string, unknown> }).transition.staggerDirection).toBe(
-      CONTAINER_EXIT_STAGGER_DIRECTION,
-    );
+    expect(
+      (result.exit as { transition: Record<string, unknown> }).transition.staggerDirection
+    ).toBe(CONTAINER_EXIT_STAGGER_DIRECTION);
   });
 
   it('custom transitionIn overrides staggerChildren', () => {
     const result = container({ transitionIn: { staggerChildren: 0.1 } });
-    expect((result.animate as { transition: Record<string, unknown> }).transition.staggerChildren).toBe(0.1);
+    expect(
+      (result.animate as { transition: Record<string, unknown> }).transition.staggerChildren
+    ).toBe(0.1);
   });
 });

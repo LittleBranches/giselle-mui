@@ -138,3 +138,13 @@ export type { HeroColorKey, HeroSectionProps } from './components/layout/section
 
 export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity-utils';
 export { assignMilestoneSidesByDone } from './utils/timeline-utils';
+
+// --- Phase I: Main bundle additions ---
+export { AnimatedGradientText } from './components/animated-gradient-text';
+export type {
+  AnimatedGradientTextProps,
+  PaletteColorKey,
+} from './components/animated-gradient-text';
+
+export { TechIconStrip } from './components/tech-icon-strip';
+export type { TechIconStripProps, TechIconItem } from './components/tech-icon-strip';

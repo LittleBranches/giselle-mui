@@ -503,12 +503,12 @@ Each subfolder follows the full component convention: `<name>.ts(x)`, `<name>.co
 
 | Task                                                                                                                                                                                | Label      | Status |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------ |
-| `AnimatedGradientText` — cycling gradient `<span>` using CSS `backgroundPosition` animation and `theme.vars.palette` color tokens; accepts `color1`, `color2`, and `duration` props | Components | ⬜     |
-| `TechIconStrip` — horizontal icon + label row; accepts an array of `{ icon: ReactNode; label: string }` items, optional `title`, optional `centeredWrap`                            | Components | ⬜     |
-| Export both from `src/index.ts`                                                                                                                                                     | Core       | ⬜     |
-| Storybook stories for both (all six palette keys for `AnimatedGradientText`; Responsive story for `TechIconStrip`)                                                                  | Components | ⬜     |
-| Vitest tests for both                                                                                                                                                               | Components | ⬜     |
-| README for each component folder                                                                                                                                                    | Components | ⬜     |
+| `AnimatedGradientText` — cycling gradient `<span>` using CSS `backgroundPosition` animation and `theme.vars.palette` color tokens; accepts `color1`, `color2`, and `duration` props | Components | ✅     |
+| `TechIconStrip` — horizontal icon + label row; accepts an array of `{ icon: ReactNode; label: string }` items, optional `title`, optional `centeredWrap`                            | Components | ✅     |
+| Export both from `src/index.ts`                                                                                                                                                     | Core       | ✅     |
+| Storybook stories for both (all six palette keys for `AnimatedGradientText`; Responsive story for `TechIconStrip`)                                                                  | Components | ✅     |
+| Vitest tests for both                                                                                                                                                               | Components | ✅     |
+| README for each component folder                                                                                                                                                    | Components | ✅     |
 
 ---
 

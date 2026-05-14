@@ -42,7 +42,7 @@ describe('bounce factory', () => {
     expect((animate.y as number[])[0]).toBe(-BOUNCE_DEFAULT_DISTANCE);
   });
 
-  it("custom distance overrides default", () => {
+  it('custom distance overrides default', () => {
     const animate = bounce('inUp', { distance: 100 }).animate as Record<string, unknown>;
     expect((animate.y as number[])[0]).toBe(100);
   });

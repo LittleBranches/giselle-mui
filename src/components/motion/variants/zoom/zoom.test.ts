@@ -24,19 +24,27 @@ describe('zoom factory', () => {
   });
 
   it("'inUp' initial.translateY equals ZOOM_DEFAULT_DISTANCE", () => {
-    expect((zoom('inUp').initial as Record<string, unknown>).translateY).toBe(ZOOM_DEFAULT_DISTANCE);
+    expect((zoom('inUp').initial as Record<string, unknown>).translateY).toBe(
+      ZOOM_DEFAULT_DISTANCE
+    );
   });
 
   it("'inDown' initial.translateY is negative ZOOM_DEFAULT_DISTANCE", () => {
-    expect((zoom('inDown').initial as Record<string, unknown>).translateY).toBe(-ZOOM_DEFAULT_DISTANCE);
+    expect((zoom('inDown').initial as Record<string, unknown>).translateY).toBe(
+      -ZOOM_DEFAULT_DISTANCE
+    );
   });
 
   it("'inLeft' initial.translateX is negative ZOOM_DEFAULT_DISTANCE", () => {
-    expect((zoom('inLeft').initial as Record<string, unknown>).translateX).toBe(-ZOOM_DEFAULT_DISTANCE);
+    expect((zoom('inLeft').initial as Record<string, unknown>).translateX).toBe(
+      -ZOOM_DEFAULT_DISTANCE
+    );
   });
 
-  it("custom distance overrides default", () => {
-    expect((zoom('inUp', { distance: 200 }).initial as Record<string, unknown>).translateY).toBe(200);
+  it('custom distance overrides default', () => {
+    expect((zoom('inUp', { distance: 200 }).initial as Record<string, unknown>).translateY).toBe(
+      200
+    );
   });
 
   it("'out' initial: scale=1, opacity=1", () => {
