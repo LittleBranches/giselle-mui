@@ -3,6 +3,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+import { AnimatedGradientText } from '../../../animated-gradient-text';
+import { GiselleIcon } from '../../../icon/giselle';
+import { TechIconStrip } from '../../../tech-icon-strip';
+import type { TechIconItem } from '../../../tech-icon-strip/types';
 import { SectionTitle } from '../title';
 import { HeroSection } from './hero-section';
 
@@ -15,8 +19,9 @@ const meta: Meta<typeof HeroSection> = {
   argTypes: {
     sx: { control: false },
     actions: { control: false },
-    headline: { control: false },
-    subtitle: { control: false },
+    heading: { control: false },
+    text: { control: false },
+    icons: { control: false },
   },
 };
 
@@ -26,14 +31,14 @@ type Story = StoryObj<typeof HeroSection>;
 // ----------------------------------------------------------------------
 
 /**
- * Default hero: headline, subtitle, and two CTA buttons.
+ * Default hero: heading, text, and two CTA buttons.
  * Background tint is `primary` (Giselle deep grove green) at 8% alpha.
  */
 export const Default: Story = {
   render: () => (
     <HeroSection
-      headline={<Typography variant="h1">Build something great</Typography>}
-      subtitle={
+      heading={<Typography variant="h1">Build something great</Typography>}
+      text={
         <Typography variant="h5" color="text.secondary">
           A clean, accessible, and fully typed component library for MUI v7.
         </Typography>
@@ -49,19 +54,19 @@ export const Default: Story = {
 };
 
 /**
- * Headline only — no subtitle, no actions.
+ * Heading only — no text, no actions.
  * The simplest valid configuration.
  */
 export const HeadlineOnly: Story = {
   render: () => (
     <HeroSection
-      headline={<Typography variant="h1">Just a headline — no subtitle or actions.</Typography>}
+      heading={<Typography variant="h1">Just a heading — no text or actions.</Typography>}
     />
   ),
 };
 
 /**
- * The `headline` slot accepts any `ReactNode` — `SectionTitle` is the natural fit
+ * The `heading` slot accepts any `ReactNode` — `SectionTitle` is the natural fit
  * for a section-level hero (renders `h2`, includes caption, gradient accent, and description).
  *
  * **title + caption** — the most common pairing.
@@ -70,7 +75,7 @@ export const SectionTitleBasic: Story = {
   render: () => (
     <HeroSection
       color="secondary"
-      headline={<SectionTitle caption="What we offer" title="A focused component library" />}
+      heading={<SectionTitle caption="What we offer" title="A focused component library" />}
     />
   ),
 };
@@ -83,7 +88,7 @@ export const SectionTitleWithGradient: Story = {
   render: () => (
     <HeroSection
       color="info"
-      headline={<SectionTitle caption="Open source" title="Built for" txtGradient="everyone" />}
+      heading={<SectionTitle caption="Open source" title="Built for" txtGradient="everyone" />}
     />
   ),
 };
@@ -96,7 +101,7 @@ export const SectionTitleFull: Story = {
   render: () => (
     <HeroSection
       color="success"
-      headline={
+      heading={
         <SectionTitle
           caption="Component library"
           title="Everything you need to"
@@ -109,21 +114,21 @@ export const SectionTitleFull: Story = {
 };
 
 /**
- * `SectionTitle` inside a hero that also has a `subtitle` slot and CTA actions.
- * Shows all three slots in use together: headline (SectionTitle), subtitle, actions.
+ * `SectionTitle` inside a hero that also has a `text` slot and CTA actions.
+ * Shows all three slots in use together: heading (SectionTitle), text, actions.
  */
 export const SectionTitleWithSubtitleAndActions: Story = {
   render: () => (
     <HeroSection
       color="warning"
-      headline={
+      heading={
         <SectionTitle
           caption="Get started"
           title="Zero boilerplate."
           txtGradient="Just components."
         />
       }
-      subtitle={
+      text={
         <Typography variant="body1" color="text.secondary">
           Install, import, and render. No theme setup required beyond MUI v7.
         </Typography>
@@ -150,8 +155,8 @@ export const ColorVariants: Story = {
         <HeroSection
           key={color}
           color={color}
-          headline={<Typography variant="h1">{color} tint</Typography>}
-          subtitle={
+          heading={<Typography variant="h1">{color} tint</Typography>}
+          text={
             <Typography variant="h5" color="text.secondary">
               Background is channelAlpha at 8% opacity — works in light and dark mode.
             </Typography>
@@ -175,8 +180,8 @@ export const Responsive: Story = {
           <p style={{ fontSize: 12, margin: '0 0 4px', color: '#666' }}>{width}px</p>
           <div style={{ width, margin: '0 auto', border: '1px dashed #ccc', overflow: 'hidden' }}>
             <HeroSection
-              headline={<Typography variant="h1">Responsive hero</Typography>}
-              subtitle={
+              heading={<Typography variant="h1">Responsive hero</Typography>}
+              text={
                 <Typography variant="h5" color="text.secondary">
                   Padding and font scale adjust at each MUI breakpoint.
                 </Typography>
@@ -187,5 +192,56 @@ export const Responsive: Story = {
         </div>
       ))}
     </div>
+  ),
+};
+
+/** Icons used in the LibraryHero tech strip. */
+const libraryIcons: TechIconItem[] = [
+  { icon: <GiselleIcon icon="logos:react" width={32} />, label: 'React' },
+  { icon: <GiselleIcon icon="logos:typescript-icon" width={32} />, label: 'TypeScript' },
+  { icon: <GiselleIcon icon="logos:mui" width={32} />, label: 'MUI v7' },
+  { icon: <GiselleIcon icon="logos:storybook-icon" width={32} />, label: 'Storybook' },
+  { icon: <GiselleIcon icon="logos:vitest" width={32} />, label: 'Vitest' },
+];
+
+/**
+ * **`LibraryHero`** — demonstrates the composition potential of the `heading` and `icons` slots.
+ *
+ * This story is both a visual demonstration and a self-referential doc:
+ * - `heading` uses `AnimatedGradientText` — the MUI gradient text component from this library
+ * - `icons` uses `TechIconStrip` with `centeredWrap` — the tech-icons component from this library
+ *
+ * Both components exist in `giselle-mui` and have no natural home in isolation — they are
+ * compositional. `HeroSection` is the natural integration point and makes their purpose clear.
+ */
+export const LibraryHero: Story = {
+  render: () => (
+    <HeroSection
+      heading={
+        <Typography variant="h1">
+          Components that{' '}
+          <AnimatedGradientText color1="primary" color2="secondary">
+            ship faster
+          </AnimatedGradientText>
+        </Typography>
+      }
+      text={
+        <Typography variant="h5" color="text.secondary">
+          Focused MUI wrapper components with non-obvious design and accessibility decisions baked
+          in.
+        </Typography>
+      }
+      actions={
+        <>
+          <Button variant="contained" size="large">
+            Get started
+          </Button>
+          <Button variant="outlined" size="large">
+            View source
+          </Button>
+        </>
+      }
+      icons={<TechIconStrip title="Built with" centeredWrap items={libraryIcons} />}
+    />
   ),
 };

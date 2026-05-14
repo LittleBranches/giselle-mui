@@ -18,18 +18,46 @@ vi.mock('framer-motion', () => ({
 vi.mock('@mui/material/useMediaQuery', () => ({ default: vi.fn(() => false) }));
 
 vi.mock('@mui/material/Box', () => ({
-  default: ({ children, sx: _sx, component, ref: _ref, ...props }: Record<string, unknown>) =>
-    React.createElement((component as string) ?? 'div', props, children),
+  default: ({
+    children,
+    sx: _sx,
+    component,
+    ref: _ref,
+    ...props
+  }: {
+    children?: React.ReactNode;
+    sx?: unknown;
+    component?: string;
+    ref?: unknown;
+    [key: string]: unknown;
+  }) =>
+    React.createElement(component ?? 'div', props as React.HTMLAttributes<HTMLElement>, children),
 }));
 
 vi.mock('@mui/material/Stack', () => ({
-  default: ({ children, sx: _sx, spacing: _s, ...props }: Record<string, unknown>) =>
-    React.createElement('div', props, children),
+  default: ({
+    children,
+    sx: _sx,
+    spacing: _s,
+    ...props
+  }: {
+    children?: React.ReactNode;
+    sx?: unknown;
+    spacing?: unknown;
+    [key: string]: unknown;
+  }) => React.createElement('div', props as React.HTMLAttributes<HTMLDivElement>, children),
 }));
 
 vi.mock('@mui/material/Container', () => ({
-  default: ({ children, sx: _sx, ...props }: Record<string, unknown>) =>
-    React.createElement('div', props, children),
+  default: ({
+    children,
+    sx: _sx,
+    ...props
+  }: {
+    children?: React.ReactNode;
+    sx?: unknown;
+    [key: string]: unknown;
+  }) => React.createElement('div', props as React.HTMLAttributes<HTMLDivElement>, children),
 }));
 
 // ----------------------------------------------------------------------

@@ -103,7 +103,7 @@ export const headingH1Sx: SxProps<Theme> = (theme) => ({
  * is visible on Safari where `-webkit-background-clip: text` requires it.
  */
 export const headingHighlightSx: SxProps<Theme> = (theme) => ({
-  backgroundImage: `linear-gradient(300deg, ${theme.vars.palette.primary.main} 0%, ${theme.vars.palette.warning.main} 25%, ${theme.vars.palette.primary.main} 50%, ${theme.vars.palette.warning.main} 75%, ${theme.vars.palette.primary.main} 100%)`,
+  backgroundImage: `linear-gradient(300deg, ${theme.vars!.palette.primary.main} 0%, ${theme.vars!.palette.warning.main} 25%, ${theme.vars!.palette.primary.main} 50%, ${theme.vars!.palette.warning.main} 75%, ${theme.vars!.palette.primary.main} 100%)`,
   backgroundSize: '400%',
   backgroundClip: 'text',
   WebkitBackgroundClip: 'text',

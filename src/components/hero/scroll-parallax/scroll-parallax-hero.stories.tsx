@@ -85,7 +85,7 @@ function GradientBackground() {
         position: 'absolute',
         inset: 0,
         background: (theme) =>
-          `linear-gradient(135deg, ${theme.vars.palette.primary.dark} 0%, ${theme.vars.palette.secondary.dark} 100%)`,
+          `linear-gradient(135deg, ${theme.vars!.palette.primary.dark} 0%, ${theme.vars!.palette.secondary.dark} 100%)`,
         opacity: 0.12,
         zIndex: 0,
       }}
@@ -177,7 +177,7 @@ export const LogoSlot: Story = {
           height: 180,
           borderRadius: 3,
           background: (theme) =>
-            `linear-gradient(135deg, ${theme.vars.palette.primary.main}, ${theme.vars.palette.secondary.main})`,
+            `linear-gradient(135deg, ${theme.vars!.palette.primary.main}, ${theme.vars!.palette.secondary.main})`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

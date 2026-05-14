@@ -3,6 +3,10 @@ import type { ReactNode } from 'react';
 import type { MotionProps, MotionValue } from 'framer-motion';
 import type { BoxProps } from '@mui/material/Box';
 
+import type { HeroSlotProps } from '../../hero/types';
+
+export type { HeroSlotProps } from '../../hero/types';
+
 // ----------------------------------------------------------------------
 
 /** Parallax depth multipliers for each slot layer. Negative values move the layer upward on scroll. */
@@ -18,47 +22,28 @@ export type ParallaxMultipliers = {
 };
 
 /** Props for `ScrollParallaxHero`. */
-export type ScrollParallaxHeroProps = Omit<BoxProps, 'children'> & {
-  /**
-   * Logo slot — wrapped in the deepest parallax layer (y1).
-   *
-   * Recommended: `<InteractiveHeroLogo>` with an `<img>` or SVG logo as the child.
-   */
-  logo?: ReactNode;
-  /**
-   * Heading slot — wrapped in y2 parallax layer.
-   *
-   * Recommended: `<AnimatedHeroHeading subheading="..." highlight="..." />`.
-   */
-  heading?: ReactNode;
-  /** Text/description slot — wrapped in y3 parallax layer. */
-  text?: ReactNode;
-  /**
-   * Actions slot (buttons, CTAs) — wrapped in the shallowest parallax layer (y4).
-   *
-   * Recommended: `<HeroButtonsRow items={[...]} />`.
-   */
-  actions?: ReactNode;
-  /**
-   * Icons/platform strip slot — shares the y4 parallax layer with `actions`.
-   *
-   * Recommended: a strip of platform or technology icons.
-   */
-  icons?: ReactNode;
-  /**
-   * Background slot — renders below the content layer, not parallaxed.
-   *
-   * Fills the entire hero area. Use for gradient panels, blurred images, or animated shapes.
-   */
-  background?: ReactNode;
-  /**
-   * Parallax depth multipliers for each slot layer.
-   *
-   * Defaults: `{ logo: -7, heading: -6, text: -5, actions: -4 }`.
-   * Negative values move the layer upward as the user scrolls down.
-   */
-  parallax?: ParallaxMultipliers;
-};
+export type ScrollParallaxHeroProps = Omit<BoxProps, 'children'> &
+  HeroSlotProps & {
+    /**
+     * Logo slot — wrapped in the deepest parallax layer (y1).
+     *
+     * Recommended: `<InteractiveHeroLogo>` with an `<img>` or SVG logo as the child.
+     */
+    logo?: ReactNode;
+    /**
+     * Background slot — renders below the content layer, not parallaxed.
+     *
+     * Fills the entire hero area. Use for gradient panels, blurred images, or animated shapes.
+     */
+    background?: ReactNode;
+    /**
+     * Parallax depth multipliers for each slot layer.
+     *
+     * Defaults: `{ logo: -7, heading: -6, text: -5, actions: -4 }`.
+     * Negative values move the layer upward as the user scrolls down.
+     */
+    parallax?: ParallaxMultipliers;
+  };
 
 /** Props for `AnimatedHeroHeading`. */
 export type AnimatedHeroHeadingProps = {
@@ -88,7 +73,7 @@ export type AnimatedHeroHeadingProps = {
 /** Return value of `useScrollPercent`. */
 export type UseScrollPercentResult = {
   /** Ref to attach to the hero section root element (measures height for percent calculation). */
-  elementRef: RefObject<HTMLDivElement>;
+  elementRef: RefObject<HTMLDivElement | null>;
   /**
    * Scroll progress through the hero as a clamped integer in [0, 100].
    * Updated on every scroll event via `useMotionValueEvent`.

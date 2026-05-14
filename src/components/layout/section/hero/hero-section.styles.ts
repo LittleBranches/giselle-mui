@@ -40,3 +40,11 @@ export const heroActionsRowSx: SxProps<Theme> = {
   gap: 2,
   mt: 1,
 };
+
+/**
+ * Icons slot wrapper — full-width container for the `icons` slot (e.g. `TechIconStrip`).
+ * Width 100% lets centred-wrap strips span the full container.
+ */
+export const heroIconsSlotSx: SxProps<Theme> = {
+  width: '100%',
+};

@@ -8,4 +8,5 @@ export type {
   AnimatedHeroHeadingProps,
   UseScrollPercentResult,
   ParallaxMultipliers,
+  HeroSlotProps,
 } from './types';

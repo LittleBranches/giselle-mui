@@ -35,7 +35,7 @@ const mockTheme = {
   },
   vars: {
     palette: {
-      primary: { main: 'var(--mui-palette-primary-main)' },
+      primary: { main: 'var(--mui-palette-primary-main)', dark: 'var(--mui-palette-primary-dark)' },
       warning: { main: 'var(--mui-palette-warning-main)' },
     },
   },
@@ -52,7 +52,7 @@ describe('heroRootSx', () => {
 
   it('applies full-viewport height on md+', () => {
     const styles = (heroRootSx as SxFn)(mockTheme);
-    const mdStyles = styles[mockTheme.breakpoints.up('md')];
+    const mdStyles = styles[mockTheme.breakpoints.up('md')] as Record<string, unknown>;
     expect(mdStyles.height).toBe('100vh');
     expect(mdStyles.minHeight).toBe(760);
     expect(mdStyles.maxHeight).toBe(1440);
@@ -60,7 +60,7 @@ describe('heroRootSx', () => {
 
   it('adds willChange opacity hint on md+ for compositing', () => {
     const styles = (heroRootSx as SxFn)(mockTheme);
-    const mdStyles = styles[mockTheme.breakpoints.up('md')];
+    const mdStyles = styles[mockTheme.breakpoints.up('md')] as Record<string, unknown>;
     expect(mdStyles.willChange).toBe('opacity');
   });
 });
@@ -75,7 +75,7 @@ describe('heroInnerWrapSx', () => {
 
   it('applies position fixed on md+ for the scroll-fixed panel', () => {
     const styles = (heroInnerWrapSx as SxFn)(mockTheme);
-    const mdStyles = styles[mockTheme.breakpoints.up('md')];
+    const mdStyles = styles[mockTheme.breakpoints.up('md')] as Record<string, unknown>;
     expect(mdStyles.position).toBe('fixed');
     expect(mdStyles.height).toBe(1);
     expect(mdStyles.minHeight).toBe('300px');
@@ -133,7 +133,7 @@ describe('headingH1Sx', () => {
 
   it('bumps font size to 72px equivalent on lg+ via pxToRem', () => {
     const styles = (headingH1Sx as SxFn)(mockTheme);
-    const lgStyles = styles[mockTheme.breakpoints.up('lg')];
+    const lgStyles = styles[mockTheme.breakpoints.up('lg')] as Record<string, unknown>;
     expect(lgStyles.fontSize).toBe('4.5000rem');
   });
 });
