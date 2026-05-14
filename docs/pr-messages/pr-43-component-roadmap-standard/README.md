@@ -100,7 +100,7 @@ Two new rows:
 - [x] `npm run check:verify` — 6/6 green (Prettier · ESLint · tsc · Vitest · tsup · Storybook)
 - [x] Docs-only branch — no component code changed, component rules N/A
 - [x] All 9 commits are `chore(docs):` — all directly related to this branch's stated purpose
-- [x] No personal content, no Minimals identifiers, no `any`, no `React.FC`
+- [x] No personal content, no banned identifiers, no `any`, no `React.FC`
 
 ---
 
