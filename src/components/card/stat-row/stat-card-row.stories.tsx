@@ -78,21 +78,18 @@ function RowWithSparklines({ items }: { items: StatCardItem[] }) {
     <StatCardRow
       items={items}
       renderChart={(item) =>
-        item.sparkline
-          ? ReactApexChart &&
-            ReactApexChart !== null && (
-              <ReactApexChart
-                type="line"
-                series={[{ data: item.sparkline }]}
-                options={{
-                  ...STAT_CARD_SPARKLINE_OPTIONS,
-                  colors: [theme.palette[item.color].dark],
-                }}
-                width={84}
-                height={56}
-              />
-            )
-          : null
+        item.sparkline ? (
+          <ReactApexChart
+            type="line"
+            series={[{ data: item.sparkline }]}
+            options={{
+              ...STAT_CARD_SPARKLINE_OPTIONS,
+              colors: [theme.palette[item.color].dark],
+            }}
+            width={84}
+            height={56}
+          />
+        ) : null
       }
     />
   );

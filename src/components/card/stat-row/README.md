@@ -22,7 +22,7 @@ The default breakpoints (`xs=12 sm=6 md=3`) are intentional and cover the standa
 
 ### `items` drives layout via `key={item.label}`
 
-Item labels are used as React keys. Labels must be unique within a row. If two items share a label, React will silently de-duplicate them — use distinct labels.
+Item labels are used as React keys. Labels must be unique within a row. Duplicate labels cause React to emit a `console.error` warning in development, and the reconciliation result is undefined — items may be duplicated in the DOM rather than de-duplicated. Use distinct labels, or add an explicit `id` field to `StatCardItem` if labels need not be unique.
 
 ## Library safety
 
