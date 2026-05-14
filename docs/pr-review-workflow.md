@@ -105,20 +105,19 @@ PR title format: `<type>(<scope>): <short description>` — mirrors the commit c
 
 ### 1.3 — Trigger a Copilot review
 
-After the PR is created, trigger a Copilot code review immediately. If the repository is
-configured to do this automatically, verify that it fired. If it did not, trigger it manually:
+After the PR is created, check whether Copilot was already added as a reviewer automatically:
 
 ```sh
-gh pr review <PR-number> --repo <owner>/<repo>  # only works for human accounts
-# For Copilot review, use the GitHub UI: PR → "Request review" → Copilot
+gh pr view <PR-number> --json reviewRequests --jq '.reviewRequests[].login'
 ```
 
-Or via the API:
+If `github-copilot[bot]` appears in the output, the review was auto-requested — do nothing.
 
-```sh
-gh api --method POST /repos/<owner>/<repo>/pulls/<PR-number>/requested_reviewers \
-  -f "reviewers[]=github-copilot[bot]"
-```
+If it does **not** appear, trigger it manually via the GitHub UI:
+**PR → "Reviewers" → "Request" → Copilot**
+
+Do not attempt the API trigger below unless the UI path fails — the API reviewer endpoint
+for bot accounts is unreliable and the `gh pr review` command only works for human accounts.
 
 Do not proceed to Phase 2 until the Copilot review has been submitted and threads are visible.
 
