@@ -443,6 +443,74 @@ consumer boilerplate.
 
 ---
 
+### Phase I — Motion & Animation Primitives — Components + `/motion` subpath (Medium priority)
+
+**Goal:** Export the animation building blocks that every animated section or hero needs,
+as independently importable utilities and components. Consuming the main bundle is unaffected —
+all framer-motion-dependent code goes into the `/motion` subpath.
+
+**Why this belongs in giselle-mui:**
+
+Every portfolio site, product landing page, and application shell uses the same small set of
+motion patterns: fade-in on enter, stagger children, parallax on scroll. The variant factories
+and transition defaults are non-trivial to tune (easing curve, duration, stagger interval),
+and the same wrong defaults appear in project after project. Encoding them here means no
+consumer ever re-discovers the 0.64s ease-in-out cubic — they import it.
+
+**What `ArHomeHero` currently uses from `alexrebula/src/components/animate/`:**
+- `varFade('inUp', { distance: 24 })` — motion variants for each content layer
+- `MotionContainer` — stagger wrapper using `varContainer()`
+- `m.*` API — must be rewritten as `motion.*` before any of this is portable
+
+**Copyright note:** The variant factories and transition defaults in this phase are
+independently implemented in giselle-mui. The shape (`initial`, `animate`, `exit` keyed
+framer-motion `Variants`) is a standard framer-motion API pattern — not proprietary to any
+theme. No code is copied from `alexrebula/src/components/animate/`.
+
+---
+
+**`/motion` subpath additions** (`src/motion-index.ts`):
+
+| Task | Label | Status |
+| --- | --- | --- |
+| `transitionEnter(opts?)` — enter transition defaults: 0.64s, cubic `[0.43, 0.13, 0.23, 0.96]` | Motion | ⬜ |
+| `transitionExit(opts?)` — exit transition defaults: 0.48s, same easing | Motion | ⬜ |
+| `varFade(direction, opts?)` — fade `Variants` factory, 10 directions (`in`, `inUp`, `inDown`, `inLeft`, `inRight`, `out`, `outUp`, `outDown`, `outLeft`, `outRight`) | Motion | ⬜ |
+| `varSlide(direction, opts?)` — slide `Variants` factory | Motion | ⬜ |
+| `varScale(direction, opts?)` — scale `Variants` factory | Motion | ⬜ |
+| `varBounce(direction, opts?)` — bounce `Variants` factory | Motion | ⬜ |
+| `varRotate(direction, opts?)` — rotate `Variants` factory | Motion | ⬜ |
+| `varContainer(opts?)` — stagger container `Variants` factory: `staggerChildren: 0.05`, `delayChildren: 0.05` | Motion | ⬜ |
+| `MotionContainer` — `motion.div` wrapper with `varContainer()` variants and `initial`/`animate`/`exit` wiring; accepts `animate?: boolean` and `action?: boolean` props | Motion | ⬜ |
+| `useScrollParallax(count, scrollY?)` — returns N layered `y` spring motion values from a scroll ref; encodes the `mass: 0.1, damping: 20, stiffness: 300` physics that `ArHomeHero` uses | Motion | ⬜ |
+| Export all motion utilities and components from `src/motion-index.ts` | Motion | ⬜ |
+| Tests for all variant factories — assert `initial`, `animate`, `exit` keys are present | Motion | ⬜ |
+| Tests for `transitionEnter` / `transitionExit` — assert duration and ease values | Motion | ⬜ |
+| Storybook story: `MotionContainer` with child items fading in on load | Motion | ⬜ |
+| README for `src/motion/` explaining the variant factory pattern and the `motion.*` vs `m.*` rule | Motion | ⬜ |
+
+**Main bundle additions** (`src/index.ts`):
+
+| Task | Label | Status |
+| --- | --- | --- |
+| `AnimatedGradientText` — cycling gradient `<span>` using CSS `backgroundPosition` animation and `theme.vars.palette` color tokens; accepts `color1`, `color2`, and `duration` props | Components | ⬜ |
+| `TechIconStrip` — horizontal icon + label row (the "Technologies I Use" pattern); accepts an array of `{ icon: ReactNode; label: string }` items, optional `title`, optional `centeredWrap` | Components | ⬜ |
+| Export both from `src/index.ts` | Core | ⬜ |
+| Storybook stories for both (all six palette keys for `AnimatedGradientText`; Responsive story for `TechIconStrip`) | Components | ⬜ |
+| Vitest tests for both | Components | ⬜ |
+| README for each component folder | Components | ⬜ |
+
+**alexrebula refactor (unblocked after Phase I ships):**
+
+| Task | Label | Status |
+| --- | --- | --- |
+| `ArHomeHero` — replace local `varFade`/`MotionContainer` imports with `@alexrebula/giselle-mui/motion` | Refactor | ⬜ |
+| `ArHomeHero` — replace `m.div`/`m.span` with `motion.div`/`motion.span` throughout | Refactor | ⬜ |
+| `ArHomeHero` — replace the inline `theme.mixins.textGradient(...)` call with `<AnimatedGradientText>` from `@alexrebula/giselle-mui` | Refactor | ⬜ |
+| Verify `ArHomeHero` has zero remaining imports from `alexrebula/src/components/animate/` | Refactor | ⬜ |
+
+---
+
 ## Phase L — Quality Infrastructure
 
 | Task                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Label | Status                |

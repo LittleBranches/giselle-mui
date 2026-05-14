@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import type { FaqMotionViewportProps } from './types';
-import { containerVariants } from './utils';
+import { container } from '../../motion/container';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ export function FaqMotionViewport({ children, sx }: FaqMotionViewportProps) {
     <MotionBox
       initial="initial"
       whileInView="animate"
-      variants={containerVariants()}
+      variants={container()}
       viewport={{ once: true, amount: 0.3 }}
       sx={sx}
     >

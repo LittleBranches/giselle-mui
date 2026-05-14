@@ -14,7 +14,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 
 import { GiselleIcon } from '../../icon/giselle';
 import { SectionTitle } from '../../layout/section/title/section-title';
-import { fadeVariants } from './utils';
+import { fade } from '../../motion/fade';
 import { contentBoxSx, accordionItemSx, contactSectionSx } from './faq-accordion.styles';
 import { FaqMotionViewport } from './faq-motion-viewport';
 import { FaqTopLines } from './faq-top-lines';
@@ -101,7 +101,7 @@ export function FaqSection({
               <MotionAccordion
                 key={item.question}
                 disableGutters
-                variants={fadeVariants('inUp', 24)}
+                variants={fade('inUp', { distance: 24 })}
                 expanded={expanded === item.question}
                 onChange={handleChange(item.question)}
                 sx={accordionItemSx}
@@ -125,17 +125,17 @@ export function FaqSection({
 
           {contactHref && (
             <Box sx={contactSectionSx}>
-              <motion.div variants={fadeVariants('in')}>
+              <motion.div variants={fade('in')}>
                 <Typography variant="h4">{contactTitle}</Typography>
               </motion.div>
 
-              <motion.div variants={fadeVariants('in')}>
+              <motion.div variants={fade('in')}>
                 <Typography sx={{ mt: 2, mb: 3, color: 'text.secondary' }}>
                   {contactDescription}
                 </Typography>
               </motion.div>
 
-              <motion.div variants={fadeVariants('in')}>
+              <motion.div variants={fade('in')}>
                 <Button
                   color="inherit"
                   variant="contained"
