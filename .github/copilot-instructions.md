@@ -269,6 +269,7 @@ When updating or writing docs:
 | ------- | ------- |
 | `cleanup component <Name>` | Read `docs/components/cleanup-workflow.md` and execute the full cleanup workflow on the named component. No further explanation needed. |
 | `review pr <N>` | Run the PR review workflow below on PR #N. |
+| `create pr <branch>` | Execute Phase 0 + Phase 1 of `docs/pr-review-workflow.md` for `<branch>`; stop after Copilot review is confirmed triggered. |
 
 ## PR review workflow — `review pr <N>`
 

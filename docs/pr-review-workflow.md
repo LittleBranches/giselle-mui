@@ -1,7 +1,7 @@
 # PR Review Workflow
 
 > Last updated: 14 May 2026 (improvements integrated)
-> Session trigger: `review pr <N>` — type this in any new Copilot chat session to execute the full workflow for PR number `<N>`.
+> Session trigger: `review pr <N>` — type this in any new Copilot chat session to execute Phases 2–5 of this workflow for PR number `<N>`.
 
 This document defines the end-to-end pull request workflow used across all repos in this
 workspace (`giselle-mui`, `alexrebula`, `first-branch`, `giselle-sections-sdk`, `giselle-ui`).
@@ -116,8 +116,8 @@ If `github-copilot[bot]` appears in the output, the review was auto-requested �
 If it does **not** appear, trigger it manually via the GitHub UI:
 **PR → "Reviewers" → "Request" → Copilot**
 
-Do not attempt the API trigger below unless the UI path fails — the API reviewer endpoint
-for bot accounts is unreliable and the `gh pr review` command only works for human accounts.
+Do not attempt to trigger the review via the API — the reviewer endpoint for bot accounts
+is unreliable and there is no supported CLI path for requesting a bot review.
 
 Do not proceed to Phase 2 until the Copilot review has been submitted and threads are visible.
 
@@ -130,8 +130,8 @@ Do not proceed to Phase 2 until the Copilot review has been submitted and thread
 Before writing any response, collect the full list of open review threads:
 
 ```sh
-gh api /repos/<owner>/<repo>/pulls/<PR-number>/comments --jq \
-  '[.[] | {id, path, line, body: .body[0:120]}]'
+gh api --paginate /repos/<owner>/<repo>/pulls/<PR-number>/comments --jq \
+  '[.[] | {id, path, line, body: .body[0:120]}] | sort_by(.path, .line)'
 ```
 
 Read every thread body in full. Do not respond to any thread before reading all of them —

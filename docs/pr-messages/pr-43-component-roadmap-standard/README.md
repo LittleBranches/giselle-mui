@@ -30,8 +30,8 @@ improvements in session notes or the global `docs/todo/` tree.
 document: branch hygiene (commit relatedness rule, quality gate), PR creation (via `gh pr create`
 only — both GitHub UI hazards explicitly named and prohibited), Copilot review response
 (gather all threads before replying, valid/not-valid/needs-owner format), fix batch commit,
-and branch owner sign-off. Session shorthands `review pr <N>` and `create pr <branch>` in
-`copilot-instructions.md` make the workflow invocable in any future Copilot session.
+and branch owner sign-off. Session shorthand `review pr <N>` in `copilot-instructions.md` makes the workflow invocable
+in any future Copilot session. `create pr <branch>` was added as part of this PR's fix pass.
 
 **This is the milestone where ad-hoc process became repeatable, self-documenting infrastructure.**
 The workflow document now describes how to use the workflow document.
@@ -46,8 +46,8 @@ Added between Step 10 (README) and Step 11 (quality gate). Defines:
 
 - **When:** mandatory for every standalone component exported from `src/index.ts`. Sub-components
   (flat in parent folder, not independently exported) are optional but encouraged.
-- **Template:** Status (ripeness label + date), Open Improvements (priority table with Priority /
-  Task / Notes columns), Known Gaps (bullet list), Completed (two-column date + task table).
+- **Template:** Status (ripeness label + date), Open Improvements (priority table with Task /
+  Priority / Status columns), Known Gaps (bullet list), Completed (two-column date + task table).
 - **Rules:** move completed tasks from Open to Completed — never delete; update `Last updated`
   on every edit; no personal content; file is always named `roadmap.md`.
 - **Quick Reference:** `roadmap.md` added to the companion-files checklist.
@@ -66,7 +66,7 @@ End-to-end PR workflow covering:
   `gh pr view --json reviewRequests` check-first (skip if already auto-requested).
 - **Phase 2 — Copilot review response:** gather all threads before replying; respond to every
   thread in document order using the reply API; four response categories: ✅ valid,
-  ❌ not valid, ⚠️ tbd-needs-research, ⏸️ needs-owner-input; § 2.3 security/WCAG findings
+  ❌ not valid, ⚠️ partially-valid, ⏸️ needs-owner-input; § 2.3 security/WCAG findings
   always valid regardless of context; § 2.4 owner-input flag pauses automation; § 2.5 inline
   suggestion blocks must be accepted/rejected individually.
 - **Phase 3 — Fix batch commit:** one commit, quality gate before push, commit message lists

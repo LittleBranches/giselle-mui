@@ -199,15 +199,15 @@ Every standalone component folder must contain a `roadmap.md` file. Create it if
 
 ## Status
 
-`alpha` | `beta` | `stable` | `lts`
+`alpha` *(replace with your status: `alpha` · `beta` · `stable` · `lts`)*
 
 One sentence on the current state of the component.
 
 ## Open improvements
 
-| Task                               | Priority            | Status       |
-| ---------------------------------- | ------------------- | ------------ |
-| Description of planned improvement | High / Medium / Low | ⬜ / 🔄 / ✅ |
+| Task                               | Priority | Status |
+| ---------------------------------- | -------- | ------ |
+| Description of planned improvement | Medium   | ⬜     |
 
 ## Known gaps
 
