@@ -278,7 +278,7 @@ After all other DoD items are checked, record the final score in two places.
 /**
  * Existing description...
  *
- * **Quality status (DD Mon YYYY):** DoD n/20 · Best practices n/13
+ * **Quality status (DD Mon YYYY):** DoD n/21 · Best practices n/13
  */
 export function MyComponent(...) {}
 ```
