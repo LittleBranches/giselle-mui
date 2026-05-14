@@ -23,7 +23,7 @@ import type { SectionContainerProps } from './types';
  * </SectionContainer>
  * ```
  *
- * **Quality status (13 May 2026):** DoD 20/20 · Best practices 13/13
+ * **Quality status (14 May 2026):** DoD 21/21 · Best practices 13/13
  */
 export function SectionContainer({
   children,

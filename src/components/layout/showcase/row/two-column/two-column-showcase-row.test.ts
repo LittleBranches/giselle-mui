@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import { TwoColumnShowcaseRow } from '../../../section/two-column-showcase-row/two-column-showcase-row';
+import { TwoColumnShowcaseRow } from './two-column-showcase-row';
 
 // ----------------------------------------------------------------------
 

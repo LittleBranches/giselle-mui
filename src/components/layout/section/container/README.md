@@ -32,20 +32,21 @@ page end up with slightly different horizontal constraints and vertical rhythm.
 
 ```
 section-container/
-  section-container.tsx        — SectionContainer component
+  section-container.tsx         — SectionContainer component
   section-container.stories.tsx — Default, MediumWidth, TightSpacing, Responsive
-  section-container.test.ts    — renderToStaticMarkup tests
-  types.ts                     — SectionContainerProps
-  index.ts                     — barrel
-  README.md                    — this file
+  section-container.test.ts     — renderToStaticMarkup tests
+  types.ts                      — SectionContainerProps
+  index.ts                      — barrel
+  README.md                     — this file
+  roadmap.md                    — planned improvements and known gaps
 ```
 
-## Quality status — 13 May 2026
+## Quality status — 14 May 2026
 
 | Dimension        | Score | Open items |
 | ---------------- | ----- | ---------- |
-| DoD (Scenario B) | 20/20 | —          |
-| Best practices   | 13/13 | —          |
+| DoD (Scenario B) | 21/21 | —          |
+| Best practices   | 13/13 | —          |}
 
 ## Related
 
