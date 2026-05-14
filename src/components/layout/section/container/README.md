@@ -44,9 +44,9 @@ section-container/
 ## Quality status — 14 May 2026
 
 | Dimension        | Score | Open items |
-| ---------------- | ----- | ---------- |
+| ---------------- | ----- | ---------- | --- |
 | DoD (Scenario B) | 21/21 | —          |
-| Best practices   | 13/13 | —          |}
+| Best practices   | 13/13 | —          | }   |
 
 ## Related
 
