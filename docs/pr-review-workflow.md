@@ -74,6 +74,13 @@ creation and do not request a Copilot review.
 "Green light" means a clear instruction such as: "create the PR", "open it", "go ahead".
 A general instruction to finish a task does not constitute a green light for PR creation.
 
+**Never use the GitHub UI "Compare & pull request" button to create a PR for this workflow.**
+The button pre-fills the description from `.github/pull_request_template.md` (the structure
+is correct) but leaves all sections empty — the branch owner would have to write the content
+manually, which defeats the purpose of this workflow. All PRs must be created by Copilot via
+`gh pr create`, which fills every section with actual content derived from the branch commits
+and conversation context.
+
 ### 1.2 — PR description conventions
 
 Follow the template in `.github/pull_request_template.md` (present in all repos). Every PR must include:
