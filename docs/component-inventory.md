@@ -227,36 +227,36 @@ sidebar_label: 'Component Inventory'
 
 ### Tier 0 — Types and utilities (main bundle)
 
-| Export | Status |
-| --- | --- |
-| `ExpenseItem`, `ExpenseCategoryDef`, `PeriodData`, `PeriodSummary`, `BreakdownViewVariant` — in `src/components/period-breakdown/types.ts` | 🔴 |
-| `deriveSummary(periods: PeriodData[]): PeriodSummary` — pure utility, `src/components/period-breakdown/utils.ts` | 🔴 |
+| Export                                                                                                                                     | Status |
+| ------------------------------------------------------------------------------------------------------------------------------------------ | ------ |
+| `ExpenseItem`, `ExpenseCategoryDef`, `PeriodData`, `PeriodSummary`, `BreakdownViewVariant` — in `src/components/period-breakdown/types.ts` | 🔴     |
+| `deriveSummary(periods: PeriodData[]): PeriodSummary` — pure utility, `src/components/period-breakdown/utils.ts`                           | 🔴     |
 
 ### Tier 1 — Atomic building blocks (main bundle)
 
-| Component | Status |
-| --- | --- |
-| `ExpenseLineItem` — single expense row: icon · label · optional note · amount | 🔴 |
-| `ExpenseCategoryGroup` — collapsible group of `ExpenseLineItem` rows; MUI `Collapse`, no framer-motion | 🔴 |
-| `PeriodSummaryCard` — collapsed tile: period number badge, date range, label, total cost, highlight chips | 🔴 |
+| Component                                                                                                 | Status |
+| --------------------------------------------------------------------------------------------------------- | ------ |
+| `ExpenseLineItem` — single expense row: icon · label · optional note · amount                             | 🔴     |
+| `ExpenseCategoryGroup` — collapsible group of `ExpenseLineItem` rows; MUI `Collapse`, no framer-motion    | 🔴     |
+| `PeriodSummaryCard` — collapsed tile: period number badge, date range, label, total cost, highlight chips | 🔴     |
 
 ### Tier 2 — Motion components (`/motion` subpath)
 
-| Component | Status | Depends on |
-| --- | --- | --- |
-| `HorizontalScrollRail` — scroll-snap rail with prev/next arrows and dot indicator | 🔴 | Nothing |
-| `PeriodDetailSheet` — full-screen overlay with framer-motion `layoutId` shared layout animation | 🔴 | Tier 1, `StatCardRow` |
-| `BudgetSummaryDrawer` — fixed bottom handle → animated expand; drag-to-close | 🔴 | `MetricCard`, `ProgressStatsList` (Phase H) |
-| `ExpandingPeriodStrip` — flex row; non-selected tiles compress; selected expands via framer-motion `layout` | 🔴 | Tier 1 |
+| Component                                                                                                   | Status | Depends on                                  |
+| ----------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------- |
+| `HorizontalScrollRail` — scroll-snap rail with prev/next arrows and dot indicator                           | 🔴     | Nothing                                     |
+| `PeriodDetailSheet` — full-screen overlay with framer-motion `layoutId` shared layout animation             | 🔴     | Tier 1, `StatCardRow`                       |
+| `BudgetSummaryDrawer` — fixed bottom handle → animated expand; drag-to-close                                | 🔴     | `MetricCard`, `ProgressStatsList` (Phase H) |
+| `ExpandingPeriodStrip` — flex row; non-selected tiles compress; selected expands via framer-motion `layout` | 🔴     | Tier 1                                      |
 
 ### Tier 3 — View containers (`/motion` subpath)
 
-| Component | Status | Depends on |
-| --- | --- | --- |
-| `BreakdownCarouselView` — `HorizontalScrollRail` + `PeriodSummaryCard[]` + `PeriodDetailSheet` + state | 🔴 | Scroll Rail, Detail Sheet |
-| `BreakdownExpandingView` — `ExpandingPeriodStrip` + inline detail panel | 🔴 | Expanding Strip |
-| `BreakdownStackedView` — vertical `Accordion` rows, mobile fallback for all views | 🔴 | `Accordion` (existing) |
-| `WeeklyBreakdownPage` — top-level composition: view switcher + selected view + `BudgetSummaryDrawer` | 🔴 | All Tier 3 + Summary Drawer |
+| Component                                                                                              | Status | Depends on                  |
+| ------------------------------------------------------------------------------------------------------ | ------ | --------------------------- |
+| `BreakdownCarouselView` — `HorizontalScrollRail` + `PeriodSummaryCard[]` + `PeriodDetailSheet` + state | 🔴     | Scroll Rail, Detail Sheet   |
+| `BreakdownExpandingView` — `ExpandingPeriodStrip` + inline detail panel                                | 🔴     | Expanding Strip             |
+| `BreakdownStackedView` — vertical `Accordion` rows, mobile fallback for all views                      | 🔴     | `Accordion` (existing)      |
+| `WeeklyBreakdownPage` — top-level composition: view switcher + selected view + `BudgetSummaryDrawer`   | 🔴     | All Tier 3 + Summary Drawer |
 
 ---
 
