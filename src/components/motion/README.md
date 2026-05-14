@@ -159,10 +159,11 @@ import { motion } from 'framer-motion';
 <MotionContainer>
   <motion.div variants={fade('inUp')}>Item 1</motion.div>
   <motion.div variants={fade('inUp')}>Item 2</motion.div>
-</MotionContainer>
+</MotionContainer>;
 ```
 
 **Props:**
+
 - `action?: boolean` — when `true`, use `animate` prop to toggle states manually
 - `animate?: boolean` — effective only when `action={true}`; `true` → `'animate'`, `false` → `'exit'`
 - All other `BoxProps` (minus `animate`) and framer-motion `MotionProps`
@@ -181,10 +182,11 @@ import { motion } from 'framer-motion';
 <MotionViewport>
   <motion.div variants={fade('inUp')}>Title</motion.div>
   <motion.div variants={fade('inUp')}>Body</motion.div>
-</MotionViewport>
+</MotionViewport>;
 ```
 
 **Props:**
+
 - `disableAnimateOnMobile?: boolean` — default `true`; disables animation on `sm` and below
 - `viewport?` — forwarded to framer-motion's `viewport` option (default: `{ once: true, amount: 0.3 }`)
 - All other `BoxProps`

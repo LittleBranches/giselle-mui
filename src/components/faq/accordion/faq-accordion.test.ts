@@ -2,8 +2,8 @@
 import React from 'react';
 import { describe, it, expect } from 'vitest';
 
-import { fade } from '../../motion/fade';
-import { container } from '../../motion/container';
+import { fade } from '../../motion/variants/fade';
+import { container } from '../../motion/variants/container';
 import {
   FAQ_CONTENT_MAX_WIDTH,
   FAQ_FLOAT_LINE_LEFT,

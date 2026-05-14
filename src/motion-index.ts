@@ -12,26 +12,26 @@
 // apps not using lazy motion (including Storybook). motion.* works without a provider.
 
 // --- Phase I: Transition defaults ---
-export { transitionEnter, transitionExit } from './components/motion/transition';
+export { transitionEnter, transitionExit } from './components/motion/variants/transition';
 
 // --- Phase I: Variant factories ---
-export { fade } from './components/motion/fade';
-export { container } from './components/motion/container';
-export { slide } from './components/motion/slide';
-export { scale } from './components/motion/scale';
-export { bounce } from './components/motion/bounce';
-export { rotate } from './components/motion/rotate';
-export { flip } from './components/motion/flip';
-export { zoom } from './components/motion/zoom';
+export { fade } from './components/motion/variants/fade';
+export { container } from './components/motion/variants/container';
+export { slide } from './components/motion/variants/slide';
+export { scale } from './components/motion/variants/scale';
+export { bounce } from './components/motion/variants/bounce';
+export { rotate } from './components/motion/variants/rotate';
+export { flip } from './components/motion/variants/flip';
+export { zoom } from './components/motion/variants/zoom';
 
 // --- Phase I: Interaction helpers ---
-export { hover, tap, transitionHover, transitionTap } from './components/motion/actions';
+export { hover, tap, transitionHover, transitionTap } from './components/motion/variants/actions';
 
 // --- Phase I: Components ---
-export { MotionContainer } from './components/motion/motion-container';
-export type { MotionContainerProps } from './components/motion/motion-container';
-export { MotionViewport } from './components/motion/motion-viewport';
-export type { MotionViewportProps } from './components/motion/motion-viewport';
+export { MotionContainer } from './components/motion/container';
+export type { MotionContainerProps } from './components/motion/container';
+export { MotionViewport } from './components/motion/viewport';
+export type { MotionViewportProps } from './components/motion/viewport';
 
 // --- Phase I: Hooks ---
 export { useScrollParallax } from './components/motion/use-scroll-parallax';

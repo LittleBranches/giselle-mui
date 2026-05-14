@@ -409,14 +409,6 @@ no imports from `alexrebula` or any client project.
 
 ---
 
-## Corresponding alexrebula milestone
-
-See [alexrebula `docs/roadmap.md`](https://github.com/AlexRebula/rm/blob/main/presentation/alexrebula/docs/roadmap.md)
-for the milestone tracking the removal of `minimal-shared/utils` imports from
-`alexrebula/src/theme/`.
-
----
-
 ### Phase D — GiselleSettingsProvider — Theming (Medium priority)
 
 **Goal:** Export a framework-agnostic, MIT-safe `GiselleSettingsProvider<TState>` that
@@ -773,7 +765,7 @@ Full spec: [`components/dashboard-components-plan.md`](./components/dashboard-co
 
 ### Phase I — Home section extraction (`/motion` subpath) — Sep 2026
 
-**Goal:** Extract seven animation-dependent components from `alexrebula/src/sections/home/components/` into the `/motion` subpath. All require `framer-motion`. All must be rewritten from scratch — no proprietary utilities, no code copied from the private repo.
+**Goal:** Extract seven animation-dependent components into the `/motion` subpath. All require `framer-motion`. All must be rewritten from scratch — no proprietary utilities, no code copied from any private repository.
 
 Full spec: [`components/home-components-extraction-plan.md`](./components/home-components-extraction-plan.md)
 
@@ -787,7 +779,7 @@ Full spec: [`components/home-components-extraction-plan.md`](./components/home-c
 | I-4 | SVG animation primitives — `FloatLine`, `FloatTriangle`, `FloatDot` (internal, not exported) | Phase I-1 | ⬜ |
 | I-5 | `HeroBackground` — radial gradient backdrop + animated SVG grid | Phases I-1, I-4 | ⬜ |
 | I-6 | `FloatingIconCloud` — floating icon images with seeded pseudo-random positioning | None | ⬜ |
-| I-7 | `InteractiveHeroLogo` | Move `useImagePreloader` from alexrebula → giselle-mui utils | ⬜ |
+| I-7 | `InteractiveHeroLogo` | Requires `useImagePreloader` utility (not yet in giselle-mui) | ⬜ |
 
 ---
 

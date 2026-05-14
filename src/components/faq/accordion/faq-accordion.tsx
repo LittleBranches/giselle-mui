@@ -14,7 +14,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 
 import { GiselleIcon } from '../../icon/giselle';
 import { SectionTitle } from '../../layout/section/title/section-title';
-import { fade } from '../../motion/fade';
+import { fade } from '../../motion/variants/fade';
 import { contentBoxSx, accordionItemSx, contactSectionSx } from './faq-accordion.styles';
 import { FaqMotionViewport } from './faq-motion-viewport';
 import { FaqTopLines } from './faq-top-lines';

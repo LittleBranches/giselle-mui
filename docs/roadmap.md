@@ -148,15 +148,6 @@ no imports from `alexrebula` or any client project.
 
 - Writing authoritative dev.to articles about MUI v7 CSS variables (`GiselleThemeProvider` is the worked example)
 - The premium template (the template's look is the default Giselle palette, consumers override it)
-- Replacing `minimal-shared/utils` in the portfolio's theme setup
-
----
-
-## Corresponding alexrebula milestone
-
-See [alexrebula `docs/roadmap.md`](https://github.com/AlexRebula/rm/blob/main/presentation/alexrebula/docs/roadmap.md)
-for the milestone tracking the removal of `minimal-shared/utils` imports from
-`alexrebula/src/theme/`.
 
 ---
 
@@ -417,7 +408,7 @@ the private `alexrebula` repo.
 
 **Copyright rule — non-negotiable:**
 Every component in Phase H is written independently from scratch. No JSX, logic, or styling
-is copied or adapted from `alexrebula/src/`. The public MIT boundary must not be crossed.
+is copied from any private or proprietary source. The public MIT boundary must not be crossed.
 
 **Blocked on:** Phases C + D (GiselleThemeProvider + GiselleSettingsProvider) — application
 shell components depend on a theme context and settings context being available without
@@ -443,7 +434,7 @@ consumer boilerplate.
 
 ---
 
-### Phase I — Motion & Animation Primitives — Components + `/motion` subpath (Medium priority)
+### Phase I — Motion & Animation Primitives — `/motion` subpath ✅ Done — 15 May 2026
 
 **Goal:** Export the animation building blocks that every animated section or hero needs,
 as independently importable utilities and components. Consuming the main bundle is unaffected —
@@ -457,57 +448,67 @@ and transition defaults are non-trivial to tune (easing curve, duration, stagger
 and the same wrong defaults appear in project after project. Encoding them here means no
 consumer ever re-discovers the 0.64s ease-in-out cubic — they import it.
 
-**What `ArHomeHero` currently uses from `alexrebula/src/components/animate/`:**
-- `varFade('inUp', { distance: 24 })` — motion variants for each content layer
-- `MotionContainer` — stagger wrapper using `varContainer()`
-- `m.*` API — must be rewritten as `motion.*` before any of this is portable
+**Folder structure:**
 
-**Copyright note:** The variant factories and transition defaults in this phase are
-independently implemented in giselle-mui. The shape (`initial`, `animate`, `exit` keyed
-framer-motion `Variants`) is a standard framer-motion API pattern — not proprietary to any
-theme. No code is copied from `alexrebula/src/components/animate/`.
+```
+src/components/motion/
+  variants/             ← variant factories (one subfolder per variant type)
+    transition/         ← transitionEnter, transitionExit
+    container/          ← container() stagger factory
+    fade/               ← fade() — 10 directions
+    slide/              ← slide() — 8 directions
+    scale/              ← scale() — 6 directions
+    bounce/             ← bounce() — 10 directions
+    rotate/             ← rotate() — in/out
+    flip/               ← flip() — inX/inY/outX/outY
+    zoom/               ← zoom() — 10 directions
+    actions/            ← hover(), tap(), transitionHover(), transitionTap()
+  container/            ← MotionContainer component
+  viewport/             ← MotionViewport component
+  use-scroll-parallax/  ← useScrollParallax hook
+  README.md
+```
+
+Each subfolder follows the full component convention: `<name>.ts(x)`, `<name>.const.ts`,
+`types.ts`, `<name>.test.ts`, `index.ts`.
 
 ---
 
-**`/motion` subpath additions** (`src/motion-index.ts`):
+**`/motion` subpath** (`src/motion-index.ts`):
 
-| Task | Label | Status |
-| --- | --- | --- |
-| `transitionEnter(opts?)` — enter transition defaults: 0.64s, cubic `[0.43, 0.13, 0.23, 0.96]` | Motion | ⬜ |
-| `transitionExit(opts?)` — exit transition defaults: 0.48s, same easing | Motion | ⬜ |
-| `varFade(direction, opts?)` — fade `Variants` factory, 10 directions (`in`, `inUp`, `inDown`, `inLeft`, `inRight`, `out`, `outUp`, `outDown`, `outLeft`, `outRight`) | Motion | ⬜ |
-| `varSlide(direction, opts?)` — slide `Variants` factory | Motion | ⬜ |
-| `varScale(direction, opts?)` — scale `Variants` factory | Motion | ⬜ |
-| `varBounce(direction, opts?)` — bounce `Variants` factory | Motion | ⬜ |
-| `varRotate(direction, opts?)` — rotate `Variants` factory | Motion | ⬜ |
-| `varContainer(opts?)` — stagger container `Variants` factory: `staggerChildren: 0.05`, `delayChildren: 0.05` | Motion | ⬜ |
-| `MotionContainer` — `motion.div` wrapper with `varContainer()` variants and `initial`/`animate`/`exit` wiring; accepts `animate?: boolean` and `action?: boolean` props | Motion | ⬜ |
-| `useScrollParallax(count, scrollY?)` — returns N layered `y` spring motion values from a scroll ref; encodes the `mass: 0.1, damping: 20, stiffness: 300` physics that `ArHomeHero` uses | Motion | ⬜ |
-| Export all motion utilities and components from `src/motion-index.ts` | Motion | ⬜ |
-| Tests for all variant factories — assert `initial`, `animate`, `exit` keys are present | Motion | ⬜ |
-| Tests for `transitionEnter` / `transitionExit` — assert duration and ease values | Motion | ⬜ |
-| Storybook story: `MotionContainer` with child items fading in on load | Motion | ⬜ |
-| README for `src/motion/` explaining the variant factory pattern and the `motion.*` vs `m.*` rule | Motion | ⬜ |
+| Task                                                                                                        | Label  | Status |
+| ----------------------------------------------------------------------------------------------------------- | ------ | ------ |
+| `transitionEnter(opts?)` — enter transition defaults: 0.64s, cubic `[0.43, 0.13, 0.23, 0.96]`               | Motion | ✅     |
+| `transitionExit(opts?)` — exit transition defaults: 0.48s, same easing                                      | Motion | ✅     |
+| `fade(direction, opts?)` — fade `Variants` factory, 10 directions                                           | Motion | ✅     |
+| `slide(direction, opts?)` — slide `Variants` factory, 8 directions                                          | Motion | ✅     |
+| `scale(direction, opts?)` — scale `Variants` factory, 6 directions                                          | Motion | ✅     |
+| `bounce(direction, opts?)` — bounce `Variants` factory, 10 directions                                       | Motion | ✅     |
+| `rotate(direction, opts?)` — rotate `Variants` factory, in/out                                              | Motion | ✅     |
+| `flip(direction, opts?)` — flip `Variants` factory, inX/inY/outX/outY                                       | Motion | ✅     |
+| `zoom(direction, opts?)` — zoom `Variants` factory, 10 directions                                           | Motion | ✅     |
+| `container(opts?)` — stagger container `Variants` factory: `staggerChildren: 0.05`, `delayChildren: 0.05`   | Motion | ✅     |
+| `hover(scale?)`, `tap(scale?)` — `whileHover`/`whileTap` prop factories                                     | Motion | ✅     |
+| `transitionHover(props?)`, `transitionTap(props?)` — transition config helpers                              | Motion | ✅     |
+| `MotionContainer` — `motion.div` stagger wrapper; `action`/`animate` props for toggle mode                  | Motion | ✅     |
+| `MotionViewport` — scroll-triggered stagger wrapper; auto-disables animation on mobile                      | Motion | ✅     |
+| `useScrollParallax()` — 5 spring-smoothed parallax `y` values driven by element scroll                      | Motion | ✅     |
+| Export all from `src/motion-index.ts`                                                                       | Motion | ✅     |
+| Vitest tests for all variant factories — per-subfolder `.test.ts` files                                     | Motion | ✅     |
+| Storybook story: `MotionContainer` with child items fading/sliding in                                       | Motion | ✅     |
+| README for `src/components/motion/`                                                                         | Motion | ✅     |
+| Subfolder restructure: flat files → `variants/<name>/` per factory, component convention applied throughout | Motion | ✅     |
 
 **Main bundle additions** (`src/index.ts`):
 
-| Task | Label | Status |
-| --- | --- | --- |
-| `AnimatedGradientText` — cycling gradient `<span>` using CSS `backgroundPosition` animation and `theme.vars.palette` color tokens; accepts `color1`, `color2`, and `duration` props | Components | ⬜ |
-| `TechIconStrip` — horizontal icon + label row (the "Technologies I Use" pattern); accepts an array of `{ icon: ReactNode; label: string }` items, optional `title`, optional `centeredWrap` | Components | ⬜ |
-| Export both from `src/index.ts` | Core | ⬜ |
-| Storybook stories for both (all six palette keys for `AnimatedGradientText`; Responsive story for `TechIconStrip`) | Components | ⬜ |
-| Vitest tests for both | Components | ⬜ |
-| README for each component folder | Components | ⬜ |
-
-**alexrebula refactor (unblocked after Phase I ships):**
-
-| Task | Label | Status |
-| --- | --- | --- |
-| `ArHomeHero` — replace local `varFade`/`MotionContainer` imports with `@alexrebula/giselle-mui/motion` | Refactor | ⬜ |
-| `ArHomeHero` — replace `m.div`/`m.span` with `motion.div`/`motion.span` throughout | Refactor | ⬜ |
-| `ArHomeHero` — replace the inline `theme.mixins.textGradient(...)` call with `<AnimatedGradientText>` from `@alexrebula/giselle-mui` | Refactor | ⬜ |
-| Verify `ArHomeHero` has zero remaining imports from `alexrebula/src/components/animate/` | Refactor | ⬜ |
+| Task                                                                                                                                                                                | Label      | Status |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------ |
+| `AnimatedGradientText` — cycling gradient `<span>` using CSS `backgroundPosition` animation and `theme.vars.palette` color tokens; accepts `color1`, `color2`, and `duration` props | Components | ⬜     |
+| `TechIconStrip` — horizontal icon + label row; accepts an array of `{ icon: ReactNode; label: string }` items, optional `title`, optional `centeredWrap`                            | Components | ⬜     |
+| Export both from `src/index.ts`                                                                                                                                                     | Core       | ⬜     |
+| Storybook stories for both (all six palette keys for `AnimatedGradientText`; Responsive story for `TechIconStrip`)                                                                  | Components | ⬜     |
+| Vitest tests for both                                                                                                                                                               | Components | ⬜     |
+| README for each component folder                                                                                                                                                    | Components | ⬜     |
 
 ---
 

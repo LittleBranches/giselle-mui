@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import type { FaqMotionViewportProps } from './types';
-import { container } from '../../motion/container';
+import { container } from '../../motion/variants/container';
 
 // ----------------------------------------------------------------------
 
