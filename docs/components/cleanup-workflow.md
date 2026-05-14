@@ -283,7 +283,7 @@ After all other DoD items are checked, record the final score in two places.
 export function MyComponent(...) {}
 ```
 
-- `n/20` = number of Scenario B DoD checklist items met (use `n/9` for Scenario A sub-components)
+- `n/21` = number of Scenario B DoD checklist items met (use `n/10` for Scenario A sub-components)
 - `n/13` = number of best-practices items met
 - The date is the date the cleanup was completed — update it when the component is significantly changed
 

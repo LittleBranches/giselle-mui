@@ -399,35 +399,6 @@ sidebar_label: 'Component Inventory'
 
 ---
 
-## Transfer candidates from alexrebula
-
-> These are components that exist in the `alexrebula` private portfolio and are candidates for
-> extraction into `giselle-mui`. All five groups below are **blocked** — they contain proprietary
-> theme identifiers (`varAlpha`, `varFade`, `varBlur`, `customShadows`, `_mock`) in multiple
-> source files. They cannot be copied. Each must be **rewritten from scratch** independently.
-
-| Component group    | Location in alexrebula        | Files with proprietary identifiers | Transfer status | Action required                                          |
-| ------------------ | ----------------------------- | ------------------------------- | --------------- | -------------------------------------------------------- |
-| `animate/`         | `src/components/animate/`     | 6 files                         | ❌ BLOCKED      | Rewrite from scratch in `/motion` subpath (Phase H / I)  |
-| `nav-basic/`       | `src/components/nav-basic/`   | 6 files                         | ❌ BLOCKED      | Rewrite from scratch                                     |
-| `nav-section/`     | `src/components/nav-section/` | 10+ files                       | ❌ BLOCKED      | Rewrite from scratch                                     |
-| `mega-menu/`       | `src/components/mega-menu/`   | 10+ files                       | ❌ BLOCKED      | Rewrite from scratch                                     |
-| `layouts/`         | `src/layouts/`                | 20+ files                       | ❌ BLOCKED      | Core layout primitives only — rewrite from scratch       |
-
-**Transfer workflow** (when a group is unblocked):
-1. Write the component from scratch in `giselle-mui` — zero proprietary identifiers.
-2. Update `alexrebula` to import from `@alexrebula/giselle-mui` instead of the local file.
-3. Delete the local copy from `alexrebula`.
-4. The giselle-mui API must be a superset of the local API so nothing in `alexrebula` breaks.
-
-**Priority notes:**
-- `animate/` overlaps with Phase H Group 6 (`FloatingSubNav` + `AnimatedTabPanel`) and Phase I (Home components). High value — unblock first.
-- `nav-basic/` and `nav-section/` are portfolio-specific; lower priority unless building a product nav kit.
-- `mega-menu/` — lowest priority; highly specialised.
-- `layouts/` — some layout patterns are already extracted (`SectionContainer`). Only the reusable primitives (sidebar + main grid, auth shell) are worth extracting; the full proprietary layout shell is not.
-
----
-
 ## Related
 
 - [`roadmap.mdx`](./roadmap.mdx) — Phase A → H timeline with milestone detail
