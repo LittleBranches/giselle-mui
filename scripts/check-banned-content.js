@@ -198,10 +198,9 @@ for (const scanDir of SCAN_DIRS) {
       for (const ref of BANNED_PRIVATE_REFS) {
         if (!line.includes(ref)) continue;
 
-        const isNegationContext = NEGATION_CONTEXT.some((ctx) =>
-          lineLower.includes(ctx.toLowerCase())
-        );
-        if (isNegationContext) continue;
+        // Private refs are never exempt from negation context — a private ref is
+        // a private ref regardless of how it is phrased. NEGATION_CONTEXT only
+        // applies to identifier name checks above (checkIdentifiers block).
 
         violations.push({
           file: rel,

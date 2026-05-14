@@ -9,7 +9,7 @@ sidebar_label: 'Component Inventory'
 >
 > _Last updated: 14 May 2026_
 >
-> **Source docs:** `roadmap.mdx`, `standalone-gap-analysis.md`, `components/dashboard-components-plan.md`, `components/home-components-extraction-plan.md`, `components/settings/settings-provider-plan.md`, `components/trip-planner-components-plan.md`, `alexrebula/docs/todo/giselle-mui.md`
+> **Source docs:** `roadmap.mdx`, `standalone-gap-analysis.md`, `components/dashboard-components-plan.md`, `components/home-components-extraction-plan.md`, `components/settings/settings-provider-plan.md`, `components/trip-planner-components-plan.md`
 
 ---
 
