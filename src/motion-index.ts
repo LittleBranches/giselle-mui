@@ -37,6 +37,18 @@ export type { MotionViewportProps } from './components/motion/viewport';
 export { useScrollParallax } from './components/motion/use-scroll-parallax';
 export type { UseScrollParallaxResult } from './components/motion/use-scroll-parallax';
 
+// --- Hero components (framer-motion) ---
+export { InteractiveHeroLogo } from './components/hero/interactive-logo';
+export type {
+  InteractiveHeroLogoProps,
+  HoverPhase,
+  PortraitDirection,
+  PortraitSource,
+  FadeTransition,
+} from './components/hero/interactive-logo';
+export { HeroButtonsRow } from './components/hero/buttons-row';
+export type { HeroButtonsRowProps, HeroButtonItem } from './components/hero/buttons-row';
+
 // --- Phase D: FAQ Section ---
 export { FaqSection } from './components/faq/accordion';
 export type { FaqSectionProps, FaqItem } from './components/faq/accordion';
