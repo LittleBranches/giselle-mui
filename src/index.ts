@@ -70,6 +70,9 @@ export type { QuoteCardProps } from './components/card/quote';
 export { StatCard, STAT_CARD_SPARKLINE_OPTIONS } from './components/card/stat';
 export type { StatCardProps, StatCardColor, StatCardItem } from './components/card/stat';
 
+export { StatCardRow } from './components/card/stat-row';
+export type { StatCardRowProps } from './components/card/stat-row';
+
 export {
   MilestoneBadge,
   PhaseCard,
