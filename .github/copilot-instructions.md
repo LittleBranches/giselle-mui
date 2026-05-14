@@ -269,6 +269,7 @@ library as its own thing. When updating or writing docs:
 | ------- | ------- |
 | `cleanup component <Name>` | Read `docs/components/cleanup-workflow.md` and execute the full cleanup workflow on the named component. No further explanation needed. |
 | `review pr <N>` | Read `docs/pr-review-workflow.md` and execute the full PR review workflow for PR number `<N>`. No further explanation needed. |
+| `create pr <branch>` | Read `docs/pr-review-workflow.md` and execute Phase 0 (branch hygiene + quality gate) and Phase 1 (PR creation + Copilot review trigger) for the named branch. Stop after Phase 1 — do not proceed to Phase 2 until the Copilot review threads are visible and the branch owner continues. |
 
 ---
 
