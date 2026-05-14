@@ -72,7 +72,6 @@ const BANNED_PRIVATE_REFS = [
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
-
 // ── File targets ───────────────────────────────────────────────────────────
 
 const SCAN_DIRS = ['docs', 'src'];
@@ -132,7 +131,6 @@ const NEGATION_CONTEXT = [
   'propri',
 ];
 
-
 /** Walk a directory recursively, yielding absolute file paths. */
 function* walkDir(dir) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -183,20 +181,34 @@ for (const scanDir of SCAN_DIRS) {
           if (!regex.test(line)) continue;
 
           // Skip lines that are clearly documenting the rule rather than violating it.
-          const isNegationContext = NEGATION_CONTEXT.some((ctx) => lineLower.includes(ctx.toLowerCase()));
+          const isNegationContext = NEGATION_CONTEXT.some((ctx) =>
+            lineLower.includes(ctx.toLowerCase())
+          );
           if (isNegationContext) continue;
 
-          violations.push({ file: rel, line: lineNum, text: line.trim(), rule: `banned-identifier:${id}` });
+          violations.push({
+            file: rel,
+            line: lineNum,
+            text: line.trim(),
+            rule: `banned-identifier:${id}`,
+          });
         }
       }
 
       for (const ref of BANNED_PRIVATE_REFS) {
         if (!line.includes(ref)) continue;
 
-        const isNegationContext = NEGATION_CONTEXT.some((ctx) => lineLower.includes(ctx.toLowerCase()));
+        const isNegationContext = NEGATION_CONTEXT.some((ctx) =>
+          lineLower.includes(ctx.toLowerCase())
+        );
         if (isNegationContext) continue;
 
-        violations.push({ file: rel, line: lineNum, text: line.trim(), rule: `private-ref:${ref}` });
+        violations.push({
+          file: rel,
+          line: lineNum,
+          text: line.trim(),
+          rule: `private-ref:${ref}`,
+        });
       }
     }
   }
@@ -213,7 +225,7 @@ if (violations.length === 0) {
   }
   console.error(
     'Fix: remove or replace the flagged text before pushing.\n' +
-    'See docs/defects.md § DEF-PROC-001 for the full rule and rationale.'
+      'See docs/defects.md § DEF-PROC-001 for the full rule and rationale.'
   );
   process.exit(1);
 }
