@@ -18,51 +18,6 @@ sidebar_label: 'Trip Planner Components Plan'
 
 ---
 
-## Copyright status — the definitive answer
-
-### What the concern was
-
-The initial brainstorm listed MUI `Drawer`, `Chip`, `LinearProgress`, and `Collapse` as
-"from Minimals / alexrebula (private — consume here, never copy to giselle-mui)". This
-framing was misleading. Those components are from **`@mui/material`** — Apache 2.0 / MIT
-licensed. The copyright constraint never applied to them.
-
-### The actual constraint (narrow and already tracked)
-
-The **only** copyright-sensitive code in the current codebase is:
-
-| Location | What it is | Risk |
-|---|---|---|
-| `alexrebula/src/theme/` | Imports from the Minimals utility package (proprietary color helpers — replaced by `channelAlpha` etc.) | Must not be copied to any public package |
-| `alexrebula/src/components/iconify/` | `Iconify` component uses the Minimals shared utilities package | Must stay in alexrebula; not portable as-is |
-| `alexrebula/src/components/settings/` | `SettingsDrawer` and `SettingsContext` from Minimals | Proprietary pattern — must be replaced by `GiselleSettingsProvider` (Phase D) |
-
-### What is already done
-
-| Migration | Status |
-|---|---|
-| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` — clean-room replacements for `varAlpha` etc. | ✅ Shipped Phase A |
-| `giselleTheme` — MIT-safe brand palette (replaces Minimals theme tokens) | ✅ Shipped Phase B |
-| `GiselleThemeProvider` — replaces `ThemeProvider` wrapper from Minimals | ✅ Shipped Phase C |
-| `GiselleSettingsProvider` — replaces `SettingsProvider` from Minimals | ⬜ Phase D (tracked) |
-| ThemeProvider decoupling in alexrebula `src/theme/` (remove `minimal-shared/utils` imports) | ⬜ alexrebula Phase 1.5 (tracked) |
-
-### What this means for new components
-
-**Any component that wraps MUI primitives (Drawer, Chip, LinearProgress, Tabs, Collapse,
-Paper, etc.) can be built in giselle-mui today, with zero copyright risk.** MUI is the
-dependency — it is MIT/Apache 2.0 and fully allowed. The rule is only that the component
-implementation must not call proprietary Minimals color helpers — the clean-room equivalents
-(`channelAlpha` etc.) are already in giselle-mui for that purpose.
-
-**Estimated effort to reach full copyright independence:** The remaining Minimals utility imports
-in `alexrebula/src/theme/` are 3–5 calls (the proprietary color helper → `channelAlpha`
-substitution pattern). That is a 1–2 hour migration task, already tracked. The
-`GiselleSettingsProvider` (Phase D) is the larger item — estimated 3–5 days including tests.
-Once Phase D ships, `alexrebula` can remove `minimal-shared` from its `package.json` entirely.
-
----
-
 ## Blocker key
 
 | Symbol | Meaning |
@@ -222,8 +177,8 @@ All eleven "build from scratch" components are present. None were dropped.
 
 These are Apache 2.0 / MIT licensed `@mui/material` primitives. They are not components to
 build — they are the building blocks that our new components wrap and compose. They are listed
-here explicitly because the brainstorm originally listed them under a misleading
-"from Minimals / alexrebula" heading. That framing was wrong. They belong to MUI, not Minimals.
+here explicitly because early brainstorm notes grouped them incorrectly.
+They are standard `@mui/material` primitives (Apache 2.0) — no new components to build.
 
 **Copyright status of all items in this group: zero risk.** `@mui/material` is Apache 2.0.
 Using any of these primitives in a giselle-mui component is unconditionally allowed.
@@ -278,7 +233,7 @@ Uses MUI `Collapse` — no framer-motion required for the basic version.
 **Accepts:** `category: ExpenseCategoryDef`, `items: ExpenseItem[]`, `currency: string`,
 `defaultExpanded?: boolean`, `sx?`
 
-**Copyright status:** Zero risk. MUI `Collapse` + `Stack` + `GiselleIcon`. No Minimals.
+**Copyright status:** Zero risk. MUI `Collapse` + `Stack` + `GiselleIcon`. Apache 2.0.
 
 **Output subpath:** Main bundle.
 
@@ -344,7 +299,7 @@ sheet (Apple-style). Shows:
 - Scroll lock on `<body>` when open — standard `overflow: hidden` on mount, restored on close.
 - Backdrop uses `motion.div` with `opacity` 0→0.5.
 
-**Copyright status:** Uses framer-motion (MIT licensed, allowed peer dep). Zero Minimals risk.
+**Copyright status:** Uses framer-motion (MIT licensed, allowed peer dep). Zero proprietary deps.
 
 **Blockers:** 📦 `/motion` subpath — already wired (7 May 2026).
 
@@ -402,7 +357,7 @@ a single animated reflow — no overlay.
 `categories: ExpenseCategoryDef[]`, `selectedId?: string`,
 `onSelect?: (id: string) => void`, `sx?`
 
-**Copyright status:** framer-motion is MIT. Zero Minimals risk.
+**Copyright status:** framer-motion is MIT. Zero proprietary deps.
 
 **Blockers:** 📦 `/motion` subpath.
 
@@ -438,7 +393,7 @@ summary content.
 - Z-index: `theme.zIndex.snackbar - 1` so it stays below modals.
 - Close via chevron click or drag-down gesture (`useDragControls` from framer-motion).
 
-**Copyright status:** MUI `Paper` + framer-motion (both MIT). No Minimals pattern copied.
+**Copyright status:** MUI `Paper` + framer-motion (both MIT). Zero proprietary deps.
 
 **Blockers:** 📦 `/motion` subpath. Reuses `PeriodSummary` type.
 

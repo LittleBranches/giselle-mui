@@ -37,7 +37,7 @@ System preference is the correct default for zero-config usage. Consumers can ov
 
 - No hardcoded hex or rgba literals in the component file — all palette values live in `src/utils/theme-preset.ts`
 - No personal data in stories (generic placeholder content only)
-- No imports from `alexrebula` or Minimals
+- No imports from any external private or proprietary codebase
 
 ## File structure
 
