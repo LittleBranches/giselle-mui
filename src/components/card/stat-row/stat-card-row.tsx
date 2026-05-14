@@ -48,7 +48,7 @@ export type { StatCardRowProps } from './types';
  */
 export function StatCardRow({ items, renderChart, sx, ...other }: StatCardRowProps) {
   return (
-    <Grid container spacing={3} sx={[{}, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
+    <Grid container spacing={3} sx={[...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       {items.map((item) => (
         <Grid key={item.label} size={{ xs: 12, sm: 6, md: 3 }}>
           <StatCard
