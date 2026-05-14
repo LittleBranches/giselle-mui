@@ -19,12 +19,12 @@ branch owner. Copilot does not merge, close, or resolve threads without explicit
 
 Branch naming encodes the type of work:
 
-| Prefix | Category |
-| --------- | ------------------------------------------- |
-| `feature/` | New functionality |
-| `fix/` | Bug fixes |
-| `chore/` | Tooling, config, dependencies, docs |
-| `data/` | Data-only changes (`tasks.json`) |
+| Prefix      | Category                                  |
+| ----------- | ----------------------------------------- |
+| `feature/`  | New functionality                         |
+| `fix/`      | Bug fixes                                 |
+| `chore/`    | Tooling, config, dependencies, docs       |
+| `data/`     | Data-only changes (`tasks.json`)          |
 | `refactor/` | Code restructure with no behaviour change |
 
 **Rule:** every commit on a branch must be related to the branch's stated purpose. Commit
@@ -156,18 +156,21 @@ Every response must:
 3. If the fix will be made: describe **what** will change and **where**.
 
 **Valid comment response format:**
+
 ```
 ✅ Valid. [One sentence confirming the issue and why it matters.] Will fix in the batch
 commit — [brief description of the fix].
 ```
 
 **Not valid comment response format:**
+
 ```
 ❌ Not valid. [One sentence explaining why the concern does not apply here.] [Optional:
 what the code is actually doing and why it is correct.]
 ```
 
 **Partially valid comment format:**
+
 ```
 ⚠️ Partially valid. [The issue is real / the concern is right] but [the suggested fix
 is wrong / the scope is narrower than described because ...]. Will fix [what is actually wrong].
@@ -259,6 +262,7 @@ gh api --method POST \
 ```
 
 Follow-up format:
+
 ```
 Fixed in <commit-SHA> — <one sentence describing exactly what changed and in which file/line>.
 ```

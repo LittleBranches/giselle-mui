@@ -205,8 +205,8 @@ One sentence on the current state of the component.
 
 ## Open improvements
 
-| Task | Priority | Status |
-| ---- | -------- | ------ |
+| Task                               | Priority            | Status       |
+| ---------------------------------- | ------------------- | ------------ |
 | Description of planned improvement | High / Medium / Low | ⬜ / 🔄 / ✅ |
 
 ## Known gaps
@@ -217,12 +217,13 @@ Write "None" if there are no known gaps.
 
 ## Completed
 
-| Task | Completed |
-| ---- | --------- |
+| Task                                 | Completed   |
+| ------------------------------------ | ----------- |
 | Description of completed improvement | DD Mon YYYY |
 ```
 
 **Rules:**
+
 - Status values: `⬜` not started · `🔄` in progress · `✅` done
 - When a task from "Open improvements" is completed, move it to the "Completed" table with the date — do not delete it.
 - The "Status" line must be one of the four ripeness labels used across the Giselle ecosystem: `alpha`, `beta`, `stable`, `lts`.

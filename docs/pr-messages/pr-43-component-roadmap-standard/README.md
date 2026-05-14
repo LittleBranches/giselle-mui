@@ -81,9 +81,9 @@ End-to-end PR workflow covering:
 
 Added two entries to the Session shorthand commands table:
 
-| Shorthand | Behaviour |
-|---|---|
-| `review pr <N>` | Execute Phases 2–5 of `docs/pr-review-workflow.md` for PR `<N>` |
+| Shorthand            | Behaviour                                                                        |
+| -------------------- | -------------------------------------------------------------------------------- |
+| `review pr <N>`      | Execute Phases 2–5 of `docs/pr-review-workflow.md` for PR `<N>`                  |
 | `create pr <branch>` | Execute Phase 0 + Phase 1 only; stop after Copilot review is confirmed triggered |
 
 ### `docs/roadmap.md` — Phase L
