@@ -7,7 +7,7 @@ sidebar_label: 'Component Inventory'
 
 > Master inventory across all planning docs. Single source of truth for "what exists, what is planned, and what phase it belongs to."
 >
-> _Last updated: 8 May 2026_
+> _Last updated: 14 May 2026_
 >
 > **Source docs:** `roadmap.mdx`, `standalone-gap-analysis.md`, `components/dashboard-components-plan.md`, `components/home-components-extraction-plan.md`, `components/settings/settings-provider-plan.md`, `alexrebula/docs/todo/giselle-mui.md`
 
@@ -219,6 +219,47 @@ sidebar_label: 'Component Inventory'
 
 ---
 
+## Phase I — Period Breakdown suite
+
+> Full spec: `alexrebula/docs/fab/ideas/trip-planner-components-plan.md` (private consumer plan — full types, architecture, and build order)
+>
+> All types belong in `src/components/period-breakdown/types.ts` and are exported from `src/index.ts`. Motion components export from `/motion`. No ApexCharts in any component directly — chart slots accept `ReactNode`.
+
+### Tier 0 — Types and utilities (main bundle)
+
+| Export | Status |
+| --- | --- |
+| `ExpenseItem`, `ExpenseCategoryDef`, `PeriodData`, `PeriodSummary`, `BreakdownViewVariant` — in `src/components/period-breakdown/types.ts` | 🔴 |
+| `deriveSummary(periods: PeriodData[]): PeriodSummary` — pure utility, `src/components/period-breakdown/utils.ts` | 🔴 |
+
+### Tier 1 — Atomic building blocks (main bundle)
+
+| Component | Status |
+| --- | --- |
+| `ExpenseLineItem` — single expense row: icon · label · optional note · amount | 🔴 |
+| `ExpenseCategoryGroup` — collapsible group of `ExpenseLineItem` rows; MUI `Collapse`, no framer-motion | 🔴 |
+| `PeriodSummaryCard` — collapsed tile: period number badge, date range, label, total cost, highlight chips | 🔴 |
+
+### Tier 2 — Motion components (`/motion` subpath)
+
+| Component | Status | Depends on |
+| --- | --- | --- |
+| `HorizontalScrollRail` — scroll-snap rail with prev/next arrows and dot indicator | 🔴 | Nothing |
+| `PeriodDetailSheet` — full-screen overlay with framer-motion `layoutId` shared layout animation | 🔴 | Tier 1, `StatCardRow` |
+| `BudgetSummaryDrawer` — fixed bottom handle → animated expand; drag-to-close | 🔴 | `MetricCard`, `ProgressStatsList` (Phase H) |
+| `ExpandingPeriodStrip` — flex row; non-selected tiles compress; selected expands via framer-motion `layout` | 🔴 | Tier 1 |
+
+### Tier 3 — View containers (`/motion` subpath)
+
+| Component | Status | Depends on |
+| --- | --- | --- |
+| `BreakdownCarouselView` — `HorizontalScrollRail` + `PeriodSummaryCard[]` + `PeriodDetailSheet` + state | 🔴 | Scroll Rail, Detail Sheet |
+| `BreakdownExpandingView` — `ExpandingPeriodStrip` + inline detail panel | 🔴 | Expanding Strip |
+| `BreakdownStackedView` — vertical `Accordion` rows, mobile fallback for all views | 🔴 | `Accordion` (existing) |
+| `WeeklyBreakdownPage` — top-level composition: view switcher + selected view + `BudgetSummaryDrawer` | 🔴 | All Tier 3 + Summary Drawer |
+
+---
+
 ## Quality bar / npm publish blockers
 
 > These are not new components — they are fixes to already-shipped components. All must be ✅ before Route B (npm publish).
@@ -316,7 +357,8 @@ sidebar_label: 'Component Inventory'
 | Phase F + G — Drawer + Details          | 2                                                                 |
 | Phase H — Dashboard suite (new builds)  | 24                                                                |
 | Home components extraction — `/motion`  | 6 components + 3 motion factories (Phase I-2 static base shipped) |
-| **Total not yet built**                 | **~45**                                                           |
+| Phase I — Period Breakdown suite        | 11 components + 2 utilities (types + `deriveSummary`)             |
+| **Total not yet built**                 | **~56**                                                           |
 
 ---
 
