@@ -74,12 +74,22 @@ creation and do not request a Copilot review.
 "Green light" means a clear instruction such as: "create the PR", "open it", "go ahead".
 A general instruction to finish a task does not constitute a green light for PR creation.
 
-**Never use the GitHub UI "Compare & pull request" button to create a PR for this workflow.**
-The button pre-fills the description from `.github/pull_request_template.md` (the structure
-is correct) but leaves all sections empty — the branch owner would have to write the content
-manually, which defeats the purpose of this workflow. All PRs must be created by Copilot via
-`gh pr create`, which fills every section with actual content derived from the branch commits
-and conversation context.
+**Never use the GitHub UI to create a PR for this workflow.** Two hazards apply:
+
+1. **"Compare & pull request" button** — pre-fills the description with the
+   `.github/pull_request_template.md` structure but leaves every section empty. The branch
+   owner would have to fill in the content manually, producing inconsistent PR descriptions.
+
+2. **GitHub Copilot "generate description" button** (the Copilot icon inside the PR
+   description WYSIWYG editor) — generates a free-form AI summary from the diff and
+   **replaces the template entirely**. The section headings, checkboxes, and conventions
+   defined in `pull_request_template.md` are discarded. There is no repo-level setting
+   that prevents this button from overriding the template.
+
+Both paths produce descriptions that do not match the required format. All PRs must be
+created by Copilot in the VS Code chat via `gh pr create`, which fills every section with
+actual content derived from the branch commits and conversation context. The GitHub UI is
+not used for PR creation in this workflow — not even with the Copilot button.
 
 ### 1.2 — PR description conventions
 
