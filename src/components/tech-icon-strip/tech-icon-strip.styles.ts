@@ -4,7 +4,16 @@ import { TECH_ICON_STRIP_ICON_SIZE } from './tech-icon-strip.const';
 
 // ----------------------------------------------------------------------
 
-/** Styles for the optional overline title above the strip. */
+/**
+ * Root container styles for `TechIconStrip`.
+ * Stacks the optional heading above the icon row.
+ */
+export const stripRootSx: SxProps<Theme> = {
+  display: 'flex',
+  flexDirection: 'column',
+};
+
+/** Styles for the optional overline heading above the strip. */
 export const titleSx: SxProps<Theme> = {
   display: 'block',
   mb: 2,
@@ -37,13 +46,13 @@ export const itemSx: SxProps<Theme> = {
 
 /**
  * Styles for the icon slot wrapper.
- * Forces all `<svg>` children to the minimum decorative icon size (32 px).
+ * Forces all `<svg>` and `<img>` children to the minimum decorative icon size (32 px).
  */
 export const iconSlotSx: SxProps<Theme> = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  '& svg': {
+  '& svg, & img': {
     width: TECH_ICON_STRIP_ICON_SIZE,
     height: TECH_ICON_STRIP_ICON_SIZE,
   },

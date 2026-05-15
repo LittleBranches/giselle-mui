@@ -48,7 +48,7 @@ export const Default: Story = {};
 /** With an overline section title above the strip. */
 export const WithTitle: Story = {
   args: {
-    title: 'Technologies',
+    heading: 'Technologies',
     items: DEMO_ITEMS,
   },
 };
@@ -62,7 +62,7 @@ export const WithTitle: Story = {
  */
 export const CenteredWrap: Story = {
   args: {
-    title: 'Built with',
+    heading: 'Built with',
     items: DEMO_ITEMS,
     centeredWrap: true,
   },
@@ -87,7 +87,7 @@ function ResponsiveDemo() {
             {width}px
           </Typography>
           <Box sx={{ width, border: '1px dashed', borderColor: 'divider', p: 2 }}>
-            <TechIconStrip title="Stack" items={DEMO_ITEMS} />
+            <TechIconStrip heading="Stack" items={DEMO_ITEMS} />
           </Box>
         </div>
       ))}

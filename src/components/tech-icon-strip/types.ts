@@ -15,11 +15,11 @@ export interface TechIconItem {
   label: string;
 }
 
-export interface TechIconStripProps extends Omit<BoxProps, 'children'> {
+export interface TechIconStripProps extends Omit<BoxProps, 'children' | 'title'> {
   /** Array of icon + label pairs to display. */
   items: TechIconItem[];
-  /** Optional section title rendered above the strip as `overline` text. */
-  title?: string;
+  /** Optional section heading rendered above the strip as `overline` text. */
+  heading?: string;
   /**
    * When `true`, items wrap around the horizontal centre rather than
    * left-aligning to the container edge.
