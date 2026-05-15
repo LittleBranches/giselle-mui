@@ -1,4 +1,4 @@
-import type { StatCardColor } from '../components/card/stat/types';
+import type { StatCardColor } from '../cards/stat/types';
 
 // ----------------------------------------------------------------------
 

@@ -12,42 +12,42 @@
 // apps not using lazy motion (including Storybook). motion.* works without a provider.
 
 // --- Phase I: Transition defaults ---
-export { transitionEnter, transitionExit } from './components/motion/variants/transition';
+export { transitionEnter, transitionExit } from './motion/variants/transition';
 
 // --- Phase I: Variant factories ---
-export { fade } from './components/motion/variants/fade';
-export { container } from './components/motion/variants/container';
-export { slide } from './components/motion/variants/slide';
-export { scale } from './components/motion/variants/scale';
-export { bounce } from './components/motion/variants/bounce';
-export { rotate } from './components/motion/variants/rotate';
-export { flip } from './components/motion/variants/flip';
-export { zoom } from './components/motion/variants/zoom';
+export { fade } from './motion/variants/fade';
+export { container } from './motion/variants/container';
+export { slide } from './motion/variants/slide';
+export { scale } from './motion/variants/scale';
+export { bounce } from './motion/variants/bounce';
+export { rotate } from './motion/variants/rotate';
+export { flip } from './motion/variants/flip';
+export { zoom } from './motion/variants/zoom';
 
 // --- Phase I: Interaction helpers ---
-export { hover, tap, transitionHover, transitionTap } from './components/motion/variants/actions';
+export { hover, tap, transitionHover, transitionTap } from './motion/variants/actions';
 
 // --- Phase I: Components ---
-export { MotionContainer } from './components/motion/container';
-export type { MotionContainerProps } from './components/motion/container';
-export { MotionViewport } from './components/motion/viewport';
-export type { MotionViewportProps } from './components/motion/viewport';
+export { MotionContainer } from './motion/container';
+export type { MotionContainerProps } from './motion/container';
+export { MotionViewport } from './motion/viewport';
+export type { MotionViewportProps } from './motion/viewport';
 
 // --- Phase I: Hooks ---
-export { useScrollParallax } from './components/motion/use-scroll-parallax';
-export type { UseScrollParallaxResult } from './components/motion/use-scroll-parallax';
+export { useScrollParallax } from './motion/use-scroll-parallax';
+export type { UseScrollParallaxResult } from './motion/use-scroll-parallax';
 
 // --- Hero components (framer-motion) ---
-export { InteractiveHeroLogo } from './components/hero/interactive-logo';
+export { InteractiveHeroLogo } from './sections/hero/interactive-logo';
 export type {
   InteractiveHeroLogoProps,
   HoverPhase,
   PortraitDirection,
   PortraitSource,
   FadeTransition,
-} from './components/hero/interactive-logo';
-export { HeroButtonsRow } from './components/hero/buttons-row';
-export type { HeroButtonsRowProps, HeroButtonItem } from './components/hero/buttons-row';
+} from './sections/hero/interactive-logo';
+export { HeroButtonsRow } from './sections/hero/buttons-row';
+export type { HeroButtonsRowProps, HeroButtonItem } from './sections/hero/buttons-row';
 
 // --- Hero: ScrollParallaxHero ---
 export {
@@ -55,19 +55,19 @@ export {
   AnimatedHeroHeading,
   useScrollPercent,
   useTransformY,
-} from './components/hero/scroll-parallax';
+} from './sections/hero/scroll-parallax';
 export type {
   ScrollParallaxHeroProps,
   AnimatedHeroHeadingProps,
   UseScrollPercentResult,
   ParallaxMultipliers,
-} from './components/hero/scroll-parallax';
+} from './sections/hero/scroll-parallax';
 
 // --- Phase D: FAQ Section ---
-export { FaqSection } from './components/faq/accordion';
-export type { FaqSectionProps, FaqItem } from './components/faq/accordion';
+export { FaqSection } from './sections/faq/accordion';
+export type { FaqSectionProps, FaqItem } from './sections/faq/accordion';
 // @deprecated — FaqAccordion was renamed to FaqSection in 0.1.x.
 /** @deprecated Use {@link FaqSection} instead. */
-export { FaqSection as FaqAccordion } from './components/faq/accordion';
+export { FaqSection as FaqAccordion } from './sections/faq/accordion';
 /** @deprecated Use {@link FaqSectionProps} instead. */
-export type { FaqSectionProps as FaqAccordionProps } from './components/faq/accordion';
+export type { FaqSectionProps as FaqAccordionProps } from './sections/faq/accordion';
