@@ -2,6 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SxProps } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+
+import {
+  buildBreakpointPaddedWidthSx,
+  breakpointLabelSx,
+  responsiveWrapperSx,
+  BREAKPOINTS,
+} from '../../../stories-defaults';
 import { QuoteCard } from './quote-card';
 
 // ----------------------------------------------------------------------
@@ -10,8 +19,14 @@ type QuoteColor = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'er
 
 const ALL_COLORS: QuoteColor[] = ['primary', 'secondary', 'info', 'success', 'warning', 'error'];
 
+const allColorsGridSx: SxProps<Theme> = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(2, 380px)',
+  gap: 2,
+};
+
 const SAMPLE_QUOTE =
-  'Alex transformed our legacy system into a maintainable, modern React platform. The quality of the architecture and the attention to detail were exceptional.';
+  'The team modernised our legacy system into a maintainable, modern React platform. The architecture quality and attention to detail were exceptional.';
 
 const SHORT_QUOTE = 'Excellent work, delivered on time.';
 
@@ -42,7 +57,7 @@ export const Default: Story = {
 /** All six palette color variants — light/dark mode adaptive. */
 export const AllColors: Story = {
   render: () => (
-    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 380px)', gap: 2 }}>
+    <Box sx={allColorsGridSx}>
       {ALL_COLORS.map((color) => (
         <QuoteCard
           key={color}
@@ -83,24 +98,17 @@ export const AuthorOnly: Story = {
 
 // ----------------------------------------------------------------------
 
-const BREAKPOINTS = [
-  { label: 'xs — 360px', width: 360 },
-  { label: 'sm — 600px', width: 600 },
-  { label: 'md — 900px', width: 900 },
-  { label: 'lg — 1200px', width: 1200 },
-];
-
 /** Card rendered at each MUI standard breakpoint container width (xs → lg). */
 export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {BREAKPOINTS.map(({ label, width }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
-          <Box sx={{ width, border: '1px dashed', borderColor: 'divider', p: 1 }}>
+          <Box sx={buildBreakpointPaddedWidthSx(width)}>
             <QuoteCard quote={SAMPLE_QUOTE} author="Jane Smith" source="Platform Team" />
           </Box>
         </div>

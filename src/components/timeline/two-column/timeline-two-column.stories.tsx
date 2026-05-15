@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { TimelineTwoColumn } from './two-column';
 import type { TimelinePhase } from './types';
+import { BREAKPOINTS, breakpointLabelSx, timelineStoryWrapperSx } from '../../../stories-defaults';
 import {
   storyColumnIndicatorSx,
   storyOverlineSx,
@@ -319,7 +320,7 @@ const CHECKLIST_PHASES: TimelinePhase[] = [
  */
 export const ReadOnly: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+    <Box sx={timelineStoryWrapperSx}>
       <TimelineTwoColumn phases={CAREER_PHASES} />
     </Box>
   ),
@@ -368,7 +369,7 @@ export const ReadOnly: Story = {
  */
 export const ColumnPlacementInvariant: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+    <Box sx={timelineStoryWrapperSx}>
       <Box sx={{ display: 'flex', gap: 4, mb: 3 }}>
         <Box sx={storyColumnIndicatorSx('info.main')}>
           <Typography variant="caption" color="info.main" fontWeight={700}>
@@ -426,7 +427,7 @@ export const ColumnPlacementInvariant: Story = {
  */
 export const MarkerVariant: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+    <Box sx={timelineStoryWrapperSx}>
       <TimelineTwoColumn
         phases={[
           {
@@ -550,7 +551,7 @@ export const MarkerVariant: Story = {
  */
 export const LifeEventVsMarker: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+    <Box sx={timelineStoryWrapperSx}>
       <TimelineTwoColumn
         phases={[
           {
@@ -699,7 +700,7 @@ export const LifeEventVsMarker: Story = {
  */
 export const ScenarioVariant: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+    <Box sx={timelineStoryWrapperSx}>
       <TimelineTwoColumn
         phases={[
           {
@@ -835,7 +836,7 @@ export const DotTooltipAddedValue: Story = {
  */
 export const ChecklistMode: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+    <Box sx={timelineStoryWrapperSx}>
       <TimelineTwoColumn phases={CHECKLIST_PHASES} checklist />
     </Box>
   ),
@@ -875,7 +876,7 @@ function ViewedStateDemo() {
   }
 
   return (
-    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+    <Box sx={timelineStoryWrapperSx}>
       <TimelineTwoColumn
         phases={CAREER_PHASES}
         viewedKeys={viewedKeys}
@@ -897,13 +898,6 @@ export const ViewedState: Story = {
 
 // ----------------------------------------------------------------------
 
-const BREAKPOINTS = [
-  { label: 'xs — 360px', width: 360 },
-  { label: 'sm — 600px', width: 600 },
-  { label: 'md — 900px', width: 900 },
-  { label: 'lg — 1200px', width: 1200 },
-];
-
 /**
  * **Responsive** — the layout at each MUI standard breakpoint.
  *
@@ -919,7 +913,7 @@ export const Responsive: Story = {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       {BREAKPOINTS.map(({ label, width }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
           <Box sx={storyResponsiveBoxSx(width)}>
@@ -1252,7 +1246,7 @@ export const PhotosArraySlot: Story = {
  */
 export const MarkerLabelSidePlacement: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+    <Box sx={timelineStoryWrapperSx}>
       <Box sx={{ display: 'flex', gap: 4, mb: 3 }}>
         <Box sx={storyColumnIndicatorSx('info.main')}>
           <Typography variant="caption" color="info.main" fontWeight={700}>
@@ -1335,7 +1329,7 @@ export const MarkerLabelSidePlacement: Story = {
  */
 export const MarkerMobileCollapse: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 960, mx: 'auto', p: 3 }}>
+    <Box sx={timelineStoryWrapperSx}>
       <Typography variant="caption" sx={{ display: 'block', mb: 2, color: 'text.secondary' }}>
         Resize below 900 px — both labels shift to the right of the spine.
       </Typography>

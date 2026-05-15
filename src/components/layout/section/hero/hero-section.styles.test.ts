@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { Theme } from '@mui/material/styles';
 
-import { heroActionsRowSx, heroInnerSx, heroRootSx } from './hero-section.styles';
+import { heroActionsRowSx, heroIconsSlotSx, heroInnerSx, heroRootSx } from './hero-section.styles';
 
 // ----------------------------------------------------------------------
 
@@ -79,5 +79,16 @@ describe('heroActionsRowSx', () => {
     expect(sx['flexDirection']).toBe('row');
     expect(sx['flexWrap']).toBe('wrap');
     expect(sx['justifyContent']).toBe('center');
+  });
+});
+
+describe('heroIconsSlotSx', () => {
+  it('is a static object', () => {
+    expect(typeof heroIconsSlotSx).toBe('object');
+  });
+
+  it('spans the full container width', () => {
+    const sx = heroIconsSlotSx as Record<string, unknown>;
+    expect(sx['width']).toBe('100%');
   });
 });

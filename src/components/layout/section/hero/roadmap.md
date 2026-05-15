@@ -1,6 +1,6 @@
 # HeroSection — Roadmap
 
-> Last updated: 14 May 2026
+> Last updated: 15 May 2026
 
 ## Status
 

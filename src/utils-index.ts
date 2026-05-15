@@ -19,3 +19,6 @@ export {
   GISELLE_PRIMARY_DARK_MAIN,
   GISELLE_SECONDARY_MAIN,
 } from './utils/theme-preset';
+export { BREAKPOINTS, BREAKPOINTS_GRID } from './utils/breakpoints';
+export type { BreakpointEntry, BreakpointGridEntry } from './utils/breakpoints';
+export { preloadImages } from './utils/use-image-preloader';

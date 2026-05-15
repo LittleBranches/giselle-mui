@@ -17,6 +17,24 @@ import type { CssVarsThemeOptions } from '@mui/material/styles';
 // Brand palette constants
 // ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
+// Mango brand-identity palette (not mapped to MUI palette roles)
+// Used in story scaffold chrome and brand-specific UI elements.
+// ----------------------------------------------------------------------
+
+/** Ripe mango flesh — warm cream for light backgrounds (`#FFF3CD`). */
+export const MANGO_RIPE_FLESH = '#FFF3CD';
+
+/** Dark grove — near-black for dark-mode canvas backgrounds (`#1A2B1A`). */
+export const MANGO_DARK_GROVE = '#1A2B1A';
+
+/** Warm tan — light neutral for warm canvas contexts (`#F5EDDC`). */
+export const MANGO_WARM_TAN = '#F5EDDC';
+
+// ----------------------------------------------------------------------
+// MUI palette role constants
+// ----------------------------------------------------------------------
+
 /**
  * Giselle brand primary colour — Deep grove green `#2E7D32`.
  *

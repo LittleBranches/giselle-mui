@@ -5,6 +5,9 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Icon } from '@iconify/react';
 
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
 import { FloatingSubNav } from './floating-sub-nav';
 
 // ----------------------------------------------------------------------
@@ -23,6 +26,13 @@ export default meta;
 type Story = StoryObj<typeof FloatingSubNav>;
 
 // ----------------------------------------------------------------------
+
+const demoContainerSx: SystemStyleObject<Theme> = {
+  height: 400,
+  position: 'relative',
+  width: 600,
+  maxWidth: '100%',
+};
 
 const ITEMS = [
   {
@@ -56,7 +66,7 @@ export const Fixed: Story = {
     sticky: false,
   },
   render: (args) => (
-    <Box sx={{ height: 400, position: 'relative', width: 600, maxWidth: '100%' }}>
+    <Box sx={demoContainerSx}>
       <FloatingSubNav {...args} />
     </Box>
   ),

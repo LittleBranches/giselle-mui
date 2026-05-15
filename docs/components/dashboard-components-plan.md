@@ -13,7 +13,7 @@ sidebar_label: 'Dashboard Components Plan'
 > trip-cost-specific belongs in giselle-mui.
 >
 > Every component listed here must be built independently from scratch in `giselle-mui` — no
-> proprietary code, no `varAlpha`, no `minimal-shared` imports.
+> proprietary utilities, no unauthorized imports.
 >
 > _Last updated: 12 May 2026_
 

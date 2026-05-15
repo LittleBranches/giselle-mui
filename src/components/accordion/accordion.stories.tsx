@@ -1,11 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import type { SxProps } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+
+import { buildBreakpointMaxWidthSx, breakpointLabelSx, BREAKPOINTS } from '../../stories-defaults';
+
 import { Accordion } from './accordion';
 import type { AccordionProps } from './types';
+
+// ----------------------------------------------------------------------
+
+const demoGroupLabelMbSx: SxProps<Theme> = { mb: 1 };
 
 // ----------------------------------------------------------------------
 
@@ -225,7 +235,7 @@ function TaskListDemo() {
 
   return (
     <Stack spacing={0.5}>
-      <Typography variant="overline" color="text.secondary" sx={{ mb: 1 }}>
+      <Typography variant="overline" color="text.secondary" sx={demoGroupLabelMbSx}>
         Sprint tasks — {tasks.filter((t) => t.done).length}/{tasks.length} done
       </Typography>
       {tasks.map((task) => (
@@ -369,7 +379,7 @@ function CheckIconTaskListDemo() {
 
   return (
     <Stack spacing={0.5}>
-      <Typography variant="overline" color="text.secondary" sx={{ mb: 1 }}>
+      <Typography variant="overline" color="text.secondary" sx={demoGroupLabelMbSx}>
         Project tasks — {tasks.filter((t) => t.done).length}/{tasks.length} done
       </Typography>
       {tasks.map((task) => (
@@ -545,12 +555,12 @@ the wrapper Box is invisible to MUI's internal logic.
 function ResponsiveDemo() {
   return (
     <Stack spacing={3}>
-      {[360, 600, 900, 1200].map((width) => (
+      {BREAKPOINTS.map(({ label, width }) => (
         <div key={width}>
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
-            {width}px
+          <Typography variant="caption" sx={breakpointLabelSx}>
+            {label}
           </Typography>
-          <div style={{ width, maxWidth: '100%', border: '1px dashed #ccc' }}>
+          <Box sx={buildBreakpointMaxWidthSx(width)}>
             <Accordion
               title="Task with a reasonably long title that may wrap on small screens"
               checklist
@@ -559,7 +569,7 @@ function ResponsiveDemo() {
             >
               <Typography variant="body2">Details content.</Typography>
             </Accordion>
-          </div>
+          </Box>
         </div>
       ))}
     </Stack>

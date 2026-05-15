@@ -43,33 +43,33 @@ vi.mock('@mui/material/Typography', () => ({
 // ----------------------------------------------------------------------
 
 describe('HeroSection — rendering', () => {
-  it('renders the headline', () => {
+  it('renders the heading', () => {
     const html = renderToStaticMarkup(
-      React.createElement(HeroSection, { headline: 'Build something great' })
+      React.createElement(HeroSection, { heading: 'Build something great' })
     );
     expect(html).toContain('Build something great');
   });
 
-  it('renders the subtitle when provided', () => {
+  it('renders the text slot when provided', () => {
     const html = renderToStaticMarkup(
       React.createElement(HeroSection, {
-        headline: 'Hero',
-        subtitle: 'A subtitle for the hero',
+        heading: 'Hero',
+        text: 'A subtitle for the hero',
       })
     );
     expect(html).toContain('A subtitle for the hero');
   });
 
-  it('omits the subtitle slot when not provided', () => {
-    const html = renderToStaticMarkup(React.createElement(HeroSection, { headline: 'Hero' }));
-    // No extra Typography element — only the headline
+  it('omits the text slot when not provided', () => {
+    const html = renderToStaticMarkup(React.createElement(HeroSection, { heading: 'Hero' }));
+    // No extra Typography element — only the heading
     expect(html.match(/A subtitle/)).toBeNull();
   });
 
   it('renders actions when provided', () => {
     const html = renderToStaticMarkup(
       React.createElement(HeroSection, {
-        headline: 'Hero',
+        heading: 'Hero',
         actions: React.createElement('button', null, 'Get started'),
       })
     );
@@ -77,14 +77,29 @@ describe('HeroSection — rendering', () => {
   });
 
   it('omits the actions slot when not provided', () => {
-    const html = renderToStaticMarkup(React.createElement(HeroSection, { headline: 'Hero' }));
+    const html = renderToStaticMarkup(React.createElement(HeroSection, { heading: 'Hero' }));
     expect(html).not.toContain('Get started');
+  });
+
+  it('renders icons when provided', () => {
+    const html = renderToStaticMarkup(
+      React.createElement(HeroSection, {
+        heading: 'Hero',
+        icons: React.createElement('span', null, 'Tech strip'),
+      })
+    );
+    expect(html).toContain('Tech strip');
+  });
+
+  it('omits the icons slot when not provided', () => {
+    const html = renderToStaticMarkup(React.createElement(HeroSection, { heading: 'Hero' }));
+    expect(html).not.toContain('Tech strip');
   });
 
   it('spreads ...other onto the root element (data-testid)', () => {
     const html = renderToStaticMarkup(
       React.createElement(HeroSection, {
-        headline: 'Hero',
+        heading: 'Hero',
         'data-testid': 'hero-root',
       } as Parameters<typeof HeroSection>[0])
     );
@@ -95,7 +110,7 @@ describe('HeroSection — rendering', () => {
     expect(() =>
       renderToStaticMarkup(
         React.createElement(HeroSection, {
-          headline: 'Hero',
+          heading: 'Hero',
           sx: { mt: 2 },
         })
       )
@@ -106,7 +121,7 @@ describe('HeroSection — rendering', () => {
     expect(() =>
       renderToStaticMarkup(
         React.createElement(HeroSection, {
-          headline: 'Hero',
+          heading: 'Hero',
           sx: [{ mt: 2 }, { mb: 2 }],
         })
       )

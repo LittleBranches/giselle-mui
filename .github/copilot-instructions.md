@@ -261,7 +261,8 @@ When updating or writing docs:
 - **Never** frame a utility as a "replacement for X" or "clean-room implementation of X from Y". Describe what it does: "`channelAlpha(channel, alpha)` creates an rgba tint from an MUI v7 CSS variable channel string."
 - **Never** reference `alexrebula/src/` paths, alexrebula migration status, or private codebase internals in any `giselle-mui/docs/` file.
 - **Never** write a "Copyright status" or "migration tracker" section in a component plan — that is private planning, not library documentation.
-- **Never** mention Minimals, any commercial MUI kit, or any third-party theme by name anywhere in `giselle-mui` — not in `docs/`, not in `src/`, not in component READMEs. There is nothing to credit: every utility in this library is an independent implementation described on its own terms. A reader of this library's public history should see no connection to any commercial product. If a rationale for a design decision is needed, describe the problem it solves — not what it replaces.
+- **Never** mention proprietary, copyrighted, or internal libraries by name in `giselle-mui/docs/` — this is a public library, not an internal migration. No "replaces X from Y" statements anywhere in `giselle-mui/docs/`, `src/`, or component READMEs.
+- **Describe components on their own terms.** Document the problem each component solves and the decisions it encodes — not what preceded it or what inspired it. This is standard practice for any library: React docs do not cite Angular; MUI docs do not cite Bootstrap. A `channelAlpha` entry should read "`channelAlpha(channel, alpha)` builds an rgba tint from an MUI v7 CSS variable channel string" — full stop. No "replaces X", no "unlike Y", no third-party theme names anywhere in `docs/`, `src/`, or component READMEs.
 
 ## Session shorthand commands
 
@@ -667,9 +668,41 @@ Every exported component must have a `Responsive` story that renders the compone
 
 **No hardcoded hex, rgb, or rgba literals in any story file — non-negotiable.** Story scaffold chrome (breakpoint labels, dashed borders, dividers) must use MUI theme tokens via `sx` on MUI components. Never use `style={{ color: '#666' }}` or `style={{ border: '1px dashed #ccc' }}`; use `sx={{ color: 'text.secondary' }}` and `sx={{ border: '1px dashed', borderColor: 'divider' }}` instead. This ensures story chrome respects dark mode automatically. Enforce this on every story file touched — not just new ones.
 
+**Zero inline `sx={{}}` in story files — non-negotiable.** Every `sx` object in a story file — regardless of property count — must be extracted to a module-level named constant before the first story export. Reasoning: (1) consistent discoverability — all styles are grep-findable at file top, (2) no per-render object allocations for static styles, (3) uniform enforcement avoids "is 2 properties ok?" debates. The `~3 properties` threshold does not apply to story files. There are **no exceptions** — not even single-property objects or `{ width }` loop variables.
+
+**Use shared story scaffold constants from `src/stories-defaults.ts`** — never re-define equivalent patterns inline. Import the relevant constant instead:
+
+| Constant                          | Usage                                                                         |
+| --------------------------------- | ----------------------------------------------------------------------------- |
+| `responsiveWrapperSx`             | Outer `<Box>` in `Responsive` stories (`flex`, `column`, `gap: 4`)            |
+| `breakpointLabelSx`               | `<Typography variant="caption">` breakpoint width label                       |
+| `breakpointContainerSx`           | Static `<Box>` styles (border, overflow) — use via one of the factories below |
+| `buildBreakpointWidthSx(w)`       | Standard container at pixel width `w` — use in all Responsive stories         |
+| `buildBreakpointPaddedWidthSx(w)` | Like above with `p: 1` — for stories that need inner padding                  |
+| `buildBreakpointMaxWidthSx(w)`    | Like above with `maxWidth: '100%'` — for responsive-capped stories            |
+| `variantGridSx`                   | `<Box>` wrapping a row of colour variant cards (`flex`, `wrap`, `gap: 2`)     |
+| `dotColumnSx`                     | `<Box>` stacking dot demos vertically with centre alignment                   |
+| `timelineStoryWrapperSx`          | `<Box>` wrapper for timeline stories (`maxWidth: 960`, `mx: 'auto'`, `p: 3`)  |
+| `MANGO_*` constants               | Giselle brand palette tokens for any story that needs brand colours           |
+
 ### `*.styles.ts` companion files for sx extraction (enforce always)
 
 Inline `sx` objects that span more than ~3 properties must be extracted to a co-located `<component-name>.styles.ts` file. This makes components scannable and the style logic independently testable.
+
+**`style={{}}` on `motion.*` elements — no inline object literals, ever.** Every `style` prop on a `motion.*` component must reference a named export from `<component-name>.styles.ts`, regardless of property count. `MotionValue`-based styles use a factory function defined in `*.styles.ts`; the call happens in JSX:
+
+```ts
+// scroll-parallax-hero.styles.ts
+import type { MotionValue } from 'framer-motion';
+export const parallaxYStyle = (y: MotionValue<number>) => ({ y });
+export const parallaxOpacityStyle = (opacity: MotionValue<number>) => ({ opacity });
+```
+
+```tsx
+// in JSX — never inline { y: y1 } here
+<motion.div style={parallaxYStyle(y1)}>
+<motion.div style={parallaxOpacityStyle(opacity)}>
+```
 
 **Pattern — non-negotiable:**
 
@@ -732,10 +765,11 @@ describe('paperSx', () => {
 **Enforcement checklist — run whenever a component file is edited:**
 
 1. Any new `sx={}` with more than ~3 properties → move to the styles file immediately
-2. Any existing inline `sx={}` touched during the edit → extract it at the same time (no mixed state)
-3. After extraction → run the styles test file to confirm the mock-theme assertions still pass
-4. **Name by structural role, not by child content.** A Box that positions a label is a _slot_ — name it `*SlotSx` or `*WrapperSx`, not `*LabelSx`. The name describes what the element _is_ structurally; naming it after what currently lives inside it becomes wrong the moment the child changes. Full rule: `docs/components/cleanup-workflow.md` Step 3.
-5. **Merge parallel variants into a factory.** Two constants that share the same structure and differ only by one argument (e.g. `side: 'left' | 'right'`) must be a single factory — never two separate exports. Separate constants diverge silently under refactoring. Canonical examples: `timelineColumnSx`, `msColumnBoxSx`, `markerLabelSlotSx`. Full rule: `docs/components/cleanup-workflow.md` Step 3.
+2. Any `style={{...}}` on a `motion.*` element (any property count) → move to the styles file immediately; use a factory if the values are `MotionValue` instances
+3. Any existing inline `sx={}` or `style={{}}` touched during the edit → extract it at the same time (no mixed state)
+4. After extraction → run the styles test file to confirm the mock-theme assertions still pass
+5. **Name by structural role, not by child content.** A Box that positions a label is a _slot_ — name it `*SlotSx` or `*WrapperSx`, not `*LabelSx`. The name describes what the element _is_ structurally; naming it after what currently lives inside it becomes wrong the moment the child changes. Full rule: `docs/components/cleanup-workflow.md` Step 3.
+6. **Merge parallel variants into a factory.** Two constants that share the same structure and differ only by one argument (e.g. `side: 'left' | 'right'`) must be a single factory — never two separate exports. Separate constants diverge silently under refactoring. Canonical examples: `timelineColumnSx`, `msColumnBoxSx`, `markerLabelSlotSx`. Full rule: `docs/components/cleanup-workflow.md` Step 3.
 
 ### `*.const.ts` companion files for constants (enforce always)
 
@@ -1010,6 +1044,7 @@ Use `cleanup component <Name>` to trigger the full workflow (`docs/components/cl
 
 - [ ] No `type`/`interface` in `.tsx` — all in parent `types.ts`
 - [ ] No sx with more than ~3 properties inline — all in parent `*.styles.ts`
+- [ ] No `style={{}}` on `motion.*` elements — all in parent `*.styles.ts` (factory pattern for MotionValues)
 - [ ] No duplicated JSX blocks — extracted to helper or util
 - [ ] All inline conditional logic that produces a derived value is in `utils.ts`
 - [ ] JSDoc covers all props including behaviour flags
@@ -1024,6 +1059,7 @@ Use `cleanup component <Name>` to trigger the full workflow (`docs/components/cl
 - [ ] Own subfolder created with all companion files present
 - [ ] No `type`/`interface` in `.tsx` — all in `types.ts`
 - [ ] No sx with more than ~3 properties inline — all in `<name>.styles.ts`
+- [ ] No `style={{}}` on `motion.*` elements — all in `<name>.styles.ts` (factory pattern for MotionValues)
 - [ ] `<name>.styles.test.ts` covers every exported factory
 - [ ] No named constants for sizes inline — all in `<name>.const.ts`
 - [ ] Regression tests for every size constant with a safety minimum

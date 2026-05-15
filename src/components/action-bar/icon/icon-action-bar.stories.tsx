@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import {
+  buildBreakpointPaddedWidthSx,
+  breakpointLabelSx,
+  responsiveWrapperSx,
+  BREAKPOINTS,
+} from '../../../stories-defaults';
 import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { IconActionBar } from './icon-action-bar';
 
@@ -14,6 +20,8 @@ const meta: Meta<typeof IconActionBar> = {
 
 export default meta;
 type Story = StoryObj<typeof IconActionBar>;
+
+// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 
@@ -61,13 +69,6 @@ export const WithDisabled: Story = {
 
 // ----------------------------------------------------------------------
 
-const BREAKPOINTS = [
-  { label: 'xs — 360px', width: 360 },
-  { label: 'sm — 600px', width: 600 },
-  { label: 'md — 900px', width: 900 },
-  { label: 'lg — 1200px', width: 1200 },
-];
-
 /**
  * Bar inside labeled containers at each MUI standard breakpoint width.
  * Demonstrates that the bar fills available space (`flexGrow: 1`).
@@ -75,13 +76,13 @@ const BREAKPOINTS = [
 export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {BREAKPOINTS.map(({ label, width }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
-          <Box sx={{ width, border: '1px dashed', borderColor: 'divider', p: 1 }}>
+          <Box sx={buildBreakpointPaddedWidthSx(width)}>
             <IconActionBar />
           </Box>
         </div>
