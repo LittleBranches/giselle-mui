@@ -4,15 +4,13 @@ import { motion } from 'framer-motion';
 
 import Box from '@mui/material/Box';
 
-import { fade } from '../../motion/variants/fade';
+import {
+  gradientHighlightAnimate,
+  gradientHighlightTransition,
+  headingMotionProps,
+} from './scroll-parallax-hero.animations';
 import { headingH1Sx, headingHighlightSx } from './scroll-parallax-hero.styles';
 import type { AnimatedHeroHeadingProps } from './types';
-
-// ----------------------------------------------------------------------
-
-const DEFAULT_MOTION_PROPS = {
-  variants: fade('inUp', { distance: 24 }),
-};
 
 // ----------------------------------------------------------------------
 
@@ -26,22 +24,22 @@ const DEFAULT_MOTION_PROPS = {
  * **Usage:**
  * ```tsx
  * <AnimatedHeroHeading
- *   subheading="The portfolio of"
- *   highlight="Alex Rebula"
+ *   subheading="The work of"
+ *   highlight="Platform Team"
  * />
  * ```
  *
  * **Custom font family:**
  * ```tsx
  * <AnimatedHeroHeading
- *   subheading="The portfolio of"
- *   highlight="Alex Rebula"
+ *   subheading="The work of"
+ *   highlight="Platform Team"
  *   sx={(theme) => ({ fontFamily: theme.typography.fontSecondaryFamily })}
  * />
  * ```
  *
- * **Note:** `fontFamily` is not baked in — it is intentionally left to the consumer
- * because `theme.typography.fontSecondaryFamily` is portfolio-specific. Override via `sx`.
+ * **Note:** `fontFamily` is not baked in — it is intentionally left to the consumer.
+ * Override via `sx` to apply any custom typeface from the active theme.
  *
  * **Quality status (May 2026):** implementation complete, styles tested.
  */
@@ -51,7 +49,7 @@ export function AnimatedHeroHeading({
   motionProps,
   sx,
 }: AnimatedHeroHeadingProps) {
-  const resolvedMotionProps = motionProps ?? DEFAULT_MOTION_PROPS;
+  const resolvedMotionProps = motionProps ?? headingMotionProps;
 
   return (
     <motion.div {...resolvedMotionProps}>
@@ -59,13 +57,8 @@ export function AnimatedHeroHeading({
         {subheading}{' '}
         <Box
           component={motion.span as React.ElementType}
-          animate={{ backgroundPosition: '200% center' }}
-          transition={{
-            duration: 20,
-            ease: 'linear',
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
+          animate={gradientHighlightAnimate}
+          transition={gradientHighlightTransition}
           sx={headingHighlightSx}
         >
           {highlight}

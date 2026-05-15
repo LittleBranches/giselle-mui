@@ -1,3 +1,4 @@
+import type { MotionValue } from 'framer-motion';
 import type { SxProps, Theme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
@@ -72,6 +73,24 @@ export const heroLogoBoxSx: SxProps<Theme> = {
 export const heroStackSx: SxProps<Theme> = {
   textAlign: 'center',
 };
+
+// ----------------------------------------------------------------------
+// MotionValue style factories — parallax layers
+// ----------------------------------------------------------------------
+
+/**
+ * Y-axis parallax layer style. Accepts a `MotionValue<number>` produced by `useTransformY`
+ * and returns the `style` object for a `motion.div` parallax wrapper.
+ *
+ * Extracted as a factory so no `style={{...}}` object literal ever appears inline in JSX.
+ */
+export const parallaxYStyle = (y: MotionValue<number>) => ({ y });
+
+/**
+ * Opacity fade layer style. Accepts a `MotionValue<number>` produced by `useTransform`
+ * and returns the `style` object for the outermost `motion.div` opacity wrapper.
+ */
+export const parallaxOpacityStyle = (opacity: MotionValue<number>) => ({ opacity });
 
 // ----------------------------------------------------------------------
 // AnimatedHeroHeading — sx constants and factories

@@ -75,7 +75,10 @@ export function InteractiveHeroLogo({
     () => buildPortraitSourceMap(portraitSrc, portraitSources),
     [portraitSrc, portraitSources]
   );
-  const hasPortrait = Object.values(portraitSourceMap).some(Boolean);
+  const hasPortrait = useMemo(
+    () => Object.values(portraitSourceMap).some(Boolean),
+    [portraitSourceMap]
+  );
 
   // Preload every portrait image so direction changes render without flicker.
   const allPortraitSrcs = useMemo(
@@ -246,6 +249,7 @@ export function InteractiveHeroLogo({
             logoFadeTransition={logoFadeTransition}
             activeFrame={activeFrame}
             logoAlt={logoAlt}
+            hasArtisticContent={Boolean(artisticLogoSrc)}
           >
             {children}
           </OriginalLogoLayer>

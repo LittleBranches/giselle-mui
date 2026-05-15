@@ -13,14 +13,13 @@ import {
   heroLogoBoxSx,
   heroRootSx,
   heroStackSx,
+  parallaxOpacityStyle,
+  parallaxYStyle,
 } from './scroll-parallax-hero.styles';
+import { DEFAULT_PARALLAX_MULTIPLIERS } from './scroll-parallax-hero.const';
 import { useScrollPercent } from './use-scroll-percent';
 import { useTransformY } from './use-transform-y';
-import type { ScrollParallaxHeroProps } from './types';
-
-// ----------------------------------------------------------------------
-
-const DEFAULT_PARALLAX = { logo: -7, heading: -6, text: -5, actions: -4 };
+import type { ParallaxMultipliers, ScrollParallaxHeroProps } from './types';
 
 // ----------------------------------------------------------------------
 
@@ -38,20 +37,18 @@ const DEFAULT_PARALLAX = { logo: -7, heading: -6, text: -5, actions: -4 };
  * **Usage:**
  * ```tsx
  * <ScrollParallaxHero
- *   logo={<InteractiveHeroLogo ...><Logo /></InteractiveHeroLogo>}
- *   heading={<AnimatedHeroHeading subheading="The portfolio of" highlight="Alex Rebula" />}
- *   text={<Typography variant="body2">Building scalable UIs since 2007.</Typography>}
+ *   logo={<InteractiveHeroLogo><YourLogo /></InteractiveHeroLogo>}
+ *   heading={<AnimatedHeroHeading subheading="Welcome to" highlight="Platform Name" />}
+ *   text={<Typography variant="body2">A short description of what you build.</Typography>}
  *   actions={<HeroButtonsRow items={buttons} />}
- *   icons={<PlatformIconStrip platforms={icons} />}
- *   background={<HeroBackground />}
+ *   background={<YourBackground />}
  * />
  * ```
  *
- * **Portfolio-specific layout variables:** `--layout-header-desktop-height` is not referenced
- * here — apply it via the `sx` prop in your portfolio layout:
+ * **Custom layout offset:** to push the hero beneath a sticky header, use the `sx` prop:
  * ```tsx
  * <ScrollParallaxHero
- *   sx={{ mt: 'calc(var(--layout-header-desktop-height) * -1)' }}
+ *   sx={{ mt: 'calc(var(--your-header-height) * -1)' }}
  *   ...
  * />
  * ```
@@ -70,9 +67,9 @@ export function ScrollParallaxHero({
   ...other
 }: ScrollParallaxHeroProps) {
   const scrollProgress = useScrollPercent();
-  const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
+  const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'), { noSsr: true });
 
-  const pm = { ...DEFAULT_PARALLAX, ...parallax };
+  const pm = { ...DEFAULT_PARALLAX_MULTIPLIERS, ...parallax } as Required<ParallaxMultipliers>;
   const multiplier = mdUp ? 1 : 0;
 
   // All four useTransformY calls are unconditional — hook call order must be stable.
@@ -104,24 +101,24 @@ export function ScrollParallaxHero({
       {...other}
     >
       {/* opacity layer — CSS opacity does not affect fixed-position descendants */}
-      <motion.div style={{ opacity }}>
+      <motion.div style={parallaxOpacityStyle(opacity)}>
         <Box sx={heroInnerWrapSx}>
           {/* stagger parent — propagates initial/animate to slot children via React Context */}
           <motion.div initial="initial" animate="animate">
             <Container sx={heroContainerSx}>
               {logo && (
-                <motion.div style={{ y: y1 }}>
+                <motion.div style={parallaxYStyle(y1)}>
                   <Box sx={heroLogoBoxSx}>{logo}</Box>
                 </motion.div>
               )}
 
               <Stack spacing={1} sx={heroStackSx}>
-                {heading && <motion.div style={{ y: y2 }}>{heading}</motion.div>}
-                {text && <motion.div style={{ y: y3 }}>{text}</motion.div>}
+                {heading && <motion.div style={parallaxYStyle(y2)}>{heading}</motion.div>}
+                {text && <motion.div style={parallaxYStyle(y3)}>{text}</motion.div>}
               </Stack>
 
-              {actions && <motion.div style={{ y: y4 }}>{actions}</motion.div>}
-              {icons && <motion.div style={{ y: y4 }}>{icons}</motion.div>}
+              {actions && <motion.div style={parallaxYStyle(y4)}>{actions}</motion.div>}
+              {icons && <motion.div style={parallaxYStyle(y4)}>{icons}</motion.div>}
             </Container>
           </motion.div>
 

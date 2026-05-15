@@ -70,6 +70,18 @@ Answer these in order. Stop at the first yes.
 ### Step 3 — Styles
 
 - Move every `sx={}` object with more than ~3 properties out of `.tsx` files and into `<component-name>.styles.ts`.
+- **`style={{}}` on `motion.*` elements: no inline object literals, ever.** Every `style` prop on a `motion.*` component must reference a named export from `<component-name>.styles.ts`, regardless of property count.
+  - Static `style` objects → module-level `const` in styles.ts.
+  - `MotionValue`-based `style` objects → factory function in styles.ts that accepts the `MotionValue` args and returns the style object. The factory is defined in styles.ts; the _call_ happens in JSX (identical pattern to dynamic `sx` factories):
+    ```ts
+    // scroll-parallax-hero.styles.ts
+    export const parallaxYStyle = (y: MotionValue<number>) => ({ y });
+    ```
+    ```tsx
+    // in component JSX
+    <motion.div style={parallaxYStyle(y1)}>
+    ```
+    This keeps every `style` object creation in one place, auditable and grepped easily.
 - Static sx → module-level `const` (created once at load time).
 - Dynamic sx that depends on props → factory function `(prop: T): SxProps<Theme> => (theme) => ({...})`.
 - Create or update `<component-name>.styles.test.ts`: call each exported factory with a minimal mock theme, assert the returned object values.
@@ -100,6 +112,8 @@ Applies to any component exported from `src/motion-index.ts` (compiled to `dist/
   export const MY_DURATION = 0.28;
   ```
 - Use the named variants API in JSX: `variants={myVariants} initial="initial" animate="animate" exit="exit"` — never inline objects.
+- **`animate={{}}` and `transition={{}}` props on `motion.*` elements are config objects — extract them** to `*.animations.ts` the same way `sx` objects are extracted to `*.styles.ts`. One-property objects (e.g. `animate={{ backgroundPosition: '200% center' }}`) may stay inline only if they are trivially obvious; anything with two or more keys must be extracted.
+- **`style={{}}` on `motion.*` elements — no inline object literals, ever.** See Step 3 for the full rule and the factory pattern for `MotionValue`-based styles.
 - No mock-theme test file is required (animations have no theme dependency), but add at least one smoke assertion in the component's `*.test.ts` if any variant value encodes a non-obvious design decision (e.g. `y` offsets for enter vs. exit differ intentionally).
 
 ### Step 4 — Utils

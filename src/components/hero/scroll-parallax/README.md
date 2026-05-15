@@ -54,14 +54,14 @@ CSS `opacity` does **not** establish a new stacking context or affect `position:
 descendants. The outer `motion.div style={{ opacity }}` safely fades the entire hero without
 disrupting the inner `Box sx={{ position: 'fixed' }}` layout.
 
-### Portfolio-specific CSS variables excluded
+### Header offset via `sx`
 
-`--layout-header-desktop-height` (used in alexrebula to offset the hero beneath the sticky
-header) is not referenced here. Apply it via the `sx` prop:
+Custom layout variables (for example, a sticky header height token) are not referenced
+here. Apply them via the `sx` prop:
 
 ```tsx
 <ScrollParallaxHero
-  sx={{ mt: 'calc(var(--layout-header-desktop-height) * -1)' }}
+  sx={{ mt: 'calc(var(--your-header-height) * -1)' }}
   ...
 />
 ```
@@ -70,18 +70,42 @@ header) is not referenced here. Apply it via the `sx` prop:
 
 ```
 scroll-parallax/
-  scroll-parallax-hero.tsx           — pure JSX composition (slots + parallax wiring)
-  animated-hero-heading.tsx          — sub-component: animated h1 with gradient highlight span
-  use-scroll-percent.ts              — hook: tracks scroll position as 0–100 percent
-  use-transform-y.ts                 — hook: spring-physics y-offset from scroll MotionValue
-  scroll-parallax-hero.styles.ts     — all sx constants and factories
+  scroll-parallax-hero.tsx            — pure JSX composition (slots + parallax wiring)
+  animated-hero-heading.tsx           — sub-component: animated h1 with gradient highlight span
+  use-scroll-percent.ts               — hook: tracks scroll position as 0–100 percent
+  use-transform-y.ts                  — hook: spring-physics y-offset from scroll MotionValue
+  scroll-parallax-hero.animations.ts  — framer-motion Variants and Transition constants
+  scroll-parallax-hero.styles.ts      — all sx constants and factories
   scroll-parallax-hero.styles.test.ts — mock-theme assertions for every factory
-  scroll-parallax-hero.test.ts       — Vitest unit tests (slots, AnimatedHeroHeading, useScrollPercent)
-  scroll-parallax-hero.stories.tsx   — Storybook: Default, HeadingOnly, LogoSlot, CustomParallax, NoParallax
-  types.ts                           — ScrollParallaxHeroProps, AnimatedHeroHeadingProps, UseScrollPercentResult, ParallaxMultipliers
-  index.ts                           — barrel export
-  README.md                          — this file
+  scroll-parallax-hero.test.ts        — Vitest unit tests (slots, AnimatedHeroHeading, useScrollPercent)
+  scroll-parallax-hero.stories.tsx    — Storybook: Default, HeadingOnly, LogoSlot, CustomParallax, NoParallax
+  types.ts                            — ScrollParallaxHeroProps, AnimatedHeroHeadingProps, UseScrollPercentResult, ParallaxMultipliers
+  index.ts                            — barrel export
+  README.md                           — this file
 ```
+
+## Library safety
+
+This component is exported from the `/motion` subpath (`@alexrebula/giselle-mui/motion`),
+not the main bundle. Consumers who do not import from `/motion` pay zero bytes for
+framer-motion.
+
+- **No hardcoded content.** All visible text comes from slot props — zero strings are
+  defined inside the component.
+- **No personal data.** Stories, tests, and JSDoc examples use generic placeholders only
+  (`highlight="Platform Team"`, `subheading="The work of"`).
+- **Only allowed dependencies.** `framer-motion` and `@mui/material` — both declared as
+  peer dependencies and marked external in `tsup.config.ts`.
+
+## Quality status
+
+**May 2026** — shipped and tested.
+
+- `npm run check:verify` ✅
+- Vitest unit tests: slots, `AnimatedHeroHeading`, `useScrollPercent` ✅
+- `*.styles.test.ts` covers every exported sx factory ✅
+- SonarQube: zero violations ✅
+- Storybook: Default, HeadingOnly, LogoSlot, CustomParallax, NoParallax ✅
 
 ## Related
 

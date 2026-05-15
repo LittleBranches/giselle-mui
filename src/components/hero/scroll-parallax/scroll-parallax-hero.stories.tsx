@@ -59,12 +59,11 @@ type Story = StoryObj<typeof ScrollParallaxHero>;
 // Shared slot content
 // ----------------------------------------------------------------------
 
-const SampleHeading = <AnimatedHeroHeading subheading="The portfolio of" highlight="Alex Rebula" />;
+const SampleHeading = <AnimatedHeroHeading subheading="The work of" highlight="Platform Team" />;
 
 const SampleText = (
   <Typography variant="body2" sx={{ maxWidth: 480, textAlign: 'center', color: 'text.secondary' }}>
-    Full-stack developer building scalable, accessible UIs since 2007. React, TypeScript, MUI,
-    Next.js.
+    Building scalable, accessible UIs with React, TypeScript, MUI, and Next.js.
   </Typography>
 );
 
@@ -96,7 +95,7 @@ function GradientBackground() {
 /** Scroll wrapper so the hero has room to scroll through in Storybook. */
 function ScrollWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ minHeight: '250vh', background: '#0f0f0f' }}>
+    <Box sx={{ minHeight: '250vh', bgcolor: 'grey.900' }}>
       {children}
       <Box
         sx={{
@@ -110,7 +109,7 @@ function ScrollWrapper({ children }: { children: React.ReactNode }) {
       >
         ↑ Scroll up to see the parallax hero
       </Box>
-    </div>
+    </Box>
   );
 }
 
@@ -181,12 +180,12 @@ export const LogoSlot: Story = {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'white',
+          color: 'common.white',
           typography: 'h4',
           fontWeight: 'bold',
         }}
       >
-        AR
+        G
       </Box>
     ),
     heading: SampleHeading,
@@ -255,5 +254,72 @@ export const NoParallax: Story = {
           'The opacity fade still activates on md+. Use this as a baseline comparison.',
       },
     },
+  },
+};
+
+/**
+ * Responsive: the hero rendered at each MUI standard breakpoint width.
+ *
+ * On `< md` (xs, sm) parallax and opacity-fade are disabled — the hero renders
+ * as a static full-width section. On `md+` the fixed-panel and parallax layers
+ * activate. The breakpoint boundary is the key visual difference to verify here.
+ */
+export const Responsive: Story = {
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        story:
+          'Rendered inside labelled containers at xs (360px), sm (600px), md (900px), ' +
+          'lg (1200px). On xs/sm the parallax is disabled and the section renders statically. ' +
+          'On md+ the fixed-panel layout activates.',
+      },
+    },
+  },
+  render: () => {
+    const breakpoints: Array<{ label: string; width: number }> = [
+      { label: 'xs — 360px', width: 360 },
+      { label: 'sm — 600px', width: 600 },
+      { label: 'md — 900px', width: 900 },
+      { label: 'lg — 1200px', width: 1200 },
+    ];
+
+    return (
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {breakpoints.map(({ label, width }) => (
+          <Box key={label}>
+            <Box
+              sx={{
+                typography: 'caption',
+                color: 'text.secondary',
+                mb: 1,
+                pl: 1,
+                borderLeft: '2px solid',
+                borderColor: 'divider',
+              }}
+            >
+              {label}
+            </Box>
+            <Box
+              sx={{
+                width,
+                border: '1px dashed',
+                borderColor: 'divider',
+                overflow: 'hidden',
+                position: 'relative',
+                height: 320,
+              }}
+            >
+              <ScrollParallaxHero
+                heading={SampleHeading}
+                text={SampleText}
+                actions={SampleActions}
+                background={React.createElement(GradientBackground)}
+              />
+            </Box>
+          </Box>
+        ))}
+      </Box>
+    );
   },
 };

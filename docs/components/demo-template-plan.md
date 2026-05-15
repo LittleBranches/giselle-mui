@@ -10,7 +10,7 @@
 
 ## Why this component exists
 
-The alexrebula portfolio needs 30+ individual component showcase pages — one per
+A component showcase site needs many individual component demo pages — one per
 giselle-mui component. Each page shares the same three-column shell:
 
 - left sidebar: primary component nav (all groups)
@@ -125,7 +125,7 @@ type GiselleDemoHeroProps = {
 
 ```ts
 type GiselleDemoPrimaryNavProps = {
-  navData: GiselleNavSection[]; // from nav-config.ts in alexrebula
+  navData: GiselleNavSection[]; // component navigation data from your app's nav config
   sx?: SxProps<Theme>;
 };
 ```
@@ -170,7 +170,7 @@ type GiselleDemoSectionProps = {
 
 ---
 
-## Calling pattern (in alexrebula View)
+## Calling pattern (in your application)
 
 The View owns:
 
@@ -181,7 +181,7 @@ The View owns:
 The template and organisms are pure layout/display — no data wiring inside them.
 
 ```tsx
-// GiselleAccordionView.tsx (alexrebula)
+// GiselleAccordionView.tsx
 'use client';
 
 import { useCallback } from 'react';
@@ -192,8 +192,8 @@ import {
   GiselleDemoSecondaryNav,
   GiselleDemoSection,
 } from '@alexrebula/giselle-mui';
-import { allGiselleComponents } from '../nav-config';
-import { useGiselleDemoScroll } from '../hooks/use-giselle-demo-scroll';
+import { allGiselleComponents } from './nav-config';
+import { useGiselleDemoScroll } from './hooks/use-giselle-demo-scroll';
 
 const SECTIONS = [
   {
@@ -242,13 +242,13 @@ export function GiselleAccordionView() {
 
 ---
 
-## Scroll-spy hook (in alexrebula — not in giselle-mui)
+## Scroll-spy hook (in your application — not in giselle-mui)
 
 The scroll-spy hook is app-specific and uses `IntersectionObserver`. It does NOT belong
 in giselle-mui because it is tied to the specific DOM query class used by the showcase pages.
 
 ```ts
-// src/sections/little-branches/giselle/mui/hooks/use-giselle-demo-scroll.ts
+// your-app/src/hooks/use-giselle-demo-scroll.ts
 'use client';
 export function useGiselleDemoScroll(sectionCount: number) {
   // IntersectionObserver watching .giselle-demo-section elements

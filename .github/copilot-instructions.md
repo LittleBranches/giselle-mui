@@ -672,6 +672,21 @@ Every exported component must have a `Responsive` story that renders the compone
 
 Inline `sx` objects that span more than ~3 properties must be extracted to a co-located `<component-name>.styles.ts` file. This makes components scannable and the style logic independently testable.
 
+**`style={{}}` on `motion.*` elements — no inline object literals, ever.** Every `style` prop on a `motion.*` component must reference a named export from `<component-name>.styles.ts`, regardless of property count. `MotionValue`-based styles use a factory function defined in `*.styles.ts`; the call happens in JSX:
+
+```ts
+// scroll-parallax-hero.styles.ts
+import type { MotionValue } from 'framer-motion';
+export const parallaxYStyle = (y: MotionValue<number>) => ({ y });
+export const parallaxOpacityStyle = (opacity: MotionValue<number>) => ({ opacity });
+```
+
+```tsx
+// in JSX — never inline { y: y1 } here
+<motion.div style={parallaxYStyle(y1)}>
+<motion.div style={parallaxOpacityStyle(opacity)}>
+```
+
 **Pattern — non-negotiable:**
 
 ```ts
@@ -733,10 +748,11 @@ describe('paperSx', () => {
 **Enforcement checklist — run whenever a component file is edited:**
 
 1. Any new `sx={}` with more than ~3 properties → move to the styles file immediately
-2. Any existing inline `sx={}` touched during the edit → extract it at the same time (no mixed state)
-3. After extraction → run the styles test file to confirm the mock-theme assertions still pass
-4. **Name by structural role, not by child content.** A Box that positions a label is a _slot_ — name it `*SlotSx` or `*WrapperSx`, not `*LabelSx`. The name describes what the element _is_ structurally; naming it after what currently lives inside it becomes wrong the moment the child changes. Full rule: `docs/components/cleanup-workflow.md` Step 3.
-5. **Merge parallel variants into a factory.** Two constants that share the same structure and differ only by one argument (e.g. `side: 'left' | 'right'`) must be a single factory — never two separate exports. Separate constants diverge silently under refactoring. Canonical examples: `timelineColumnSx`, `msColumnBoxSx`, `markerLabelSlotSx`. Full rule: `docs/components/cleanup-workflow.md` Step 3.
+2. Any `style={{...}}` on a `motion.*` element (any property count) → move to the styles file immediately; use a factory if the values are `MotionValue` instances
+3. Any existing inline `sx={}` or `style={{}}` touched during the edit → extract it at the same time (no mixed state)
+4. After extraction → run the styles test file to confirm the mock-theme assertions still pass
+5. **Name by structural role, not by child content.** A Box that positions a label is a _slot_ — name it `*SlotSx` or `*WrapperSx`, not `*LabelSx`. The name describes what the element _is_ structurally; naming it after what currently lives inside it becomes wrong the moment the child changes. Full rule: `docs/components/cleanup-workflow.md` Step 3.
+6. **Merge parallel variants into a factory.** Two constants that share the same structure and differ only by one argument (e.g. `side: 'left' | 'right'`) must be a single factory — never two separate exports. Separate constants diverge silently under refactoring. Canonical examples: `timelineColumnSx`, `msColumnBoxSx`, `markerLabelSlotSx`. Full rule: `docs/components/cleanup-workflow.md` Step 3.
 
 ### `*.const.ts` companion files for constants (enforce always)
 
@@ -1011,6 +1027,7 @@ Use `cleanup component <Name>` to trigger the full workflow (`docs/components/cl
 
 - [ ] No `type`/`interface` in `.tsx` — all in parent `types.ts`
 - [ ] No sx with more than ~3 properties inline — all in parent `*.styles.ts`
+- [ ] No `style={{}}` on `motion.*` elements — all in parent `*.styles.ts` (factory pattern for MotionValues)
 - [ ] No duplicated JSX blocks — extracted to helper or util
 - [ ] All inline conditional logic that produces a derived value is in `utils.ts`
 - [ ] JSDoc covers all props including behaviour flags
@@ -1025,6 +1042,7 @@ Use `cleanup component <Name>` to trigger the full workflow (`docs/components/cl
 - [ ] Own subfolder created with all companion files present
 - [ ] No `type`/`interface` in `.tsx` — all in `types.ts`
 - [ ] No sx with more than ~3 properties inline — all in `<name>.styles.ts`
+- [ ] No `style={{}}` on `motion.*` elements — all in `<name>.styles.ts` (factory pattern for MotionValues)
 - [ ] `<name>.styles.test.ts` covers every exported factory
 - [ ] No named constants for sizes inline — all in `<name>.const.ts`
 - [ ] Regression tests for every size constant with a safety minimum

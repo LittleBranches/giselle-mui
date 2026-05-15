@@ -177,21 +177,21 @@ describe('AnimatedHeroHeading', () => {
   it('renders the subheading text', () => {
     const html = renderToStaticMarkup(
       React.createElement(AnimatedHeroHeading, {
-        subheading: 'The portfolio of',
-        highlight: 'Alex Rebula',
+        subheading: 'The work of',
+        highlight: 'Platform Team',
       })
     );
-    expect(html).toContain('The portfolio of');
+    expect(html).toContain('The work of');
   });
 
   it('renders the highlight text', () => {
     const html = renderToStaticMarkup(
       React.createElement(AnimatedHeroHeading, {
-        subheading: 'The portfolio of',
-        highlight: 'Alex Rebula',
+        subheading: 'The work of',
+        highlight: 'Platform Team',
       })
     );
-    expect(html).toContain('Alex Rebula');
+    expect(html).toContain('Platform Team');
   });
 
   it('renders subheading and highlight in the same element', () => {
@@ -249,5 +249,39 @@ describe('useScrollPercent', () => {
     renderToStaticMarkup(React.createElement(TestHarness));
     expect(result?.scrollY).toBeDefined();
     expect(result?.scrollY).toHaveProperty('get');
+  });
+});
+
+// ----------------------------------------------------------------------
+
+import { DEFAULT_PARALLAX_MULTIPLIERS } from './scroll-parallax-hero.const';
+
+describe('DEFAULT_PARALLAX_MULTIPLIERS — regression', () => {
+  it('logo multiplier is negative (moves upward on scroll)', () => {
+    expect(DEFAULT_PARALLAX_MULTIPLIERS.logo).toBeLessThan(0);
+  });
+
+  it('heading multiplier is negative', () => {
+    expect(DEFAULT_PARALLAX_MULTIPLIERS.heading).toBeLessThan(0);
+  });
+
+  it('text multiplier is negative', () => {
+    expect(DEFAULT_PARALLAX_MULTIPLIERS.text).toBeLessThan(0);
+  });
+
+  it('actions multiplier is negative', () => {
+    expect(DEFAULT_PARALLAX_MULTIPLIERS.actions).toBeLessThan(0);
+  });
+
+  it('logo moves further than heading (deeper parallax layer)', () => {
+    expect(DEFAULT_PARALLAX_MULTIPLIERS.logo).toBeLessThan(DEFAULT_PARALLAX_MULTIPLIERS.heading);
+  });
+
+  it('heading moves further than text', () => {
+    expect(DEFAULT_PARALLAX_MULTIPLIERS.heading).toBeLessThan(DEFAULT_PARALLAX_MULTIPLIERS.text);
+  });
+
+  it('text moves further than actions', () => {
+    expect(DEFAULT_PARALLAX_MULTIPLIERS.text).toBeLessThan(DEFAULT_PARALLAX_MULTIPLIERS.actions);
   });
 });
