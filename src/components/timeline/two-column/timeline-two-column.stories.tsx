@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { TimelineTwoColumn } from './two-column';
 import type { TimelinePhase } from './types';
-import { breakpointLabelSx, timelineStoryWrapperSx } from '../../../stories-defaults';
+import { BREAKPOINTS, breakpointLabelSx, timelineStoryWrapperSx } from '../../../stories-defaults';
 import {
   storyColumnIndicatorSx,
   storyOverlineSx,
@@ -897,13 +897,6 @@ export const ViewedState: Story = {
 };
 
 // ----------------------------------------------------------------------
-
-const BREAKPOINTS = [
-  { label: 'xs — 360px', width: 360 },
-  { label: 'sm — 600px', width: 600 },
-  { label: 'md — 900px', width: 900 },
-  { label: 'lg — 1200px', width: 1200 },
-];
 
 /**
  * **Responsive** — the layout at each MUI standard breakpoint.

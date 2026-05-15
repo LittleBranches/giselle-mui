@@ -6,6 +6,7 @@ import {
   breakpointContainerSx,
   breakpointLabelSx,
   responsiveWrapperSx,
+  BREAKPOINTS,
 } from '../../../stories-defaults';
 import { QuoteCard } from './quote-card';
 
@@ -87,13 +88,6 @@ export const AuthorOnly: Story = {
 };
 
 // ----------------------------------------------------------------------
-
-const BREAKPOINTS = [
-  { label: 'xs — 360px', width: 360 },
-  { label: 'sm — 600px', width: 600 },
-  { label: 'md — 900px', width: 900 },
-  { label: 'lg — 1200px', width: 1200 },
-];
 
 /** Card rendered at each MUI standard breakpoint container width (xs → lg). */
 export const Responsive: Story = {

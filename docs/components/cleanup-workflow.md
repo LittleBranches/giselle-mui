@@ -164,7 +164,21 @@ Review or create `<component-name>.stories.tsx`:
 - [ ] A `Responsive` story rendering the component at xs/sm/md/lg breakpoint widths
 - [ ] Decision-doc stories added for every non-obvious design or accessibility rule in this component
 - [ ] Named component helpers used for any story render function that uses React hooks
-- [ ] **No hardcoded hex, rgb, or rgba literals in any story file.** Story scaffold chrome (breakpoint labels, dashed borders, dividers) must use MUI theme tokens via `sx` on MUI components (`<Typography>`, `<Box>`). Never use `style={{ color: '#666' }}` or `style={{ border: '1px dashed #ccc' }}`; use `sx={{ color: 'text.secondary' }}` and `sx={{ border: '1px dashed', borderColor: 'divider' }}` instead. This ensures story chrome respects dark mode automatically. **Use the shared constants from `src/stories-defaults.ts`** (`responsiveWrapperSx`, `breakpointLabelSx`, `breakpointContainerSx`, `variantGridSx`, `dotColumnSx`, `timelineStoryWrapperSx`) rather than re-defining equivalent patterns inline.
+- [ ] **No hardcoded hex, rgb, or rgba literals in any story file.** Story scaffold chrome (breakpoint labels, dashed borders, dividers) must use MUI theme tokens via `sx` on MUI components (`<Typography>`, `<Box>`). Never use `style={{ color: '#666' }}` or `style={{ border: '1px dashed #ccc' }}`; use `sx={{ color: 'text.secondary' }}` and `sx={{ border: '1px dashed', borderColor: 'divider' }}` instead. This ensures story chrome respects dark mode automatically. **Use the shared constants from `src/stories-defaults.ts`** — never re-define equivalent patterns inline:
+
+  | Constant                 | Usage                                                                                        |
+  | ------------------------ | -------------------------------------------------------------------------------------------- |
+  | `BREAKPOINTS`            | Standard xs/sm/md/lg breakpoint array `{ label, width }` — use in every `Responsive` story   |
+  | `BREAKPOINTS_GRID`       | Same array with `cols` added — use in grid-layout `Responsive` stories                       |
+  | `responsiveWrapperSx`    | Outer `<Box>` in `Responsive` stories (flex column, gap 4)                                   |
+  | `breakpointLabelSx`      | `<Typography>` caption label above each breakpoint container                                 |
+  | `breakpointContainerSx`  | Dashed-border container at each breakpoint width (merge with `{ width }`)                    |
+  | `variantGridSx`          | Flex-wrap row for colour-variant tile grids                                                  |
+  | `dotColumnSx`            | Vertical centre-aligned column for dot/icon stacks                                           |
+  | `timelineStoryWrapperSx` | Max-width centred wrapper for timeline stories                                               |
+  | `MANGO_*` / `GISELLE_*`  | Giselle brand palette tokens — use instead of hardcoded hex when a story needs brand colours |
+
+  `BREAKPOINTS` and `BREAKPOINTS_GRID` are also exported from `@alexrebula/giselle-mui/utils` for use in component utilities and tests.
 
 ### Step 9 — Barrel (`index.ts`)
 

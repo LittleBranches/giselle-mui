@@ -6,6 +6,7 @@ import {
   breakpointContainerSx,
   breakpointLabelSx,
   responsiveWrapperSx,
+  BREAKPOINTS,
 } from '../../../stories-defaults';
 import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { IconActionBar } from './icon-action-bar';
@@ -65,13 +66,6 @@ export const WithDisabled: Story = {
 };
 
 // ----------------------------------------------------------------------
-
-const BREAKPOINTS = [
-  { label: 'xs — 360px', width: 360 },
-  { label: 'sm — 600px', width: 600 },
-  { label: 'md — 900px', width: 900 },
-  { label: 'lg — 1200px', width: 1200 },
-];
 
 /**
  * Bar inside labeled containers at each MUI standard breakpoint width.

@@ -26,8 +26,11 @@ import {
   GISELLE_PRIMARY_DARK_MAIN,
   GISELLE_SECONDARY_MAIN,
 } from './utils/theme-preset';
+import { BREAKPOINTS, BREAKPOINTS_GRID } from './utils/breakpoints';
+export type { BreakpointEntry, BreakpointGridEntry } from './utils/breakpoints';
 
 export { GISELLE_PRIMARY_MAIN, GISELLE_PRIMARY_DARK_MAIN, GISELLE_SECONDARY_MAIN };
+export { BREAKPOINTS, BREAKPOINTS_GRID };
 
 /** Deep grove green — primary in light mode. Alias of `GISELLE_PRIMARY_MAIN`. */
 export const MANGO_DEEP_GROVE = GISELLE_PRIMARY_MAIN;

@@ -5,7 +5,11 @@ import Typography from '@mui/material/Typography';
 import type { SystemStyleObject } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
 
-import { breakpointLabelSx, responsiveWrapperSx } from '../../../stories-defaults';
+import {
+  BREAKPOINTS_GRID,
+  breakpointLabelSx,
+  responsiveWrapperSx,
+} from '../../../stories-defaults';
 import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { MetricCard, MetricCardDecoration } from './metric-card';
 import type { MetricCardColor } from './types';
@@ -93,13 +97,6 @@ export const NoIconNoDecoration: Story = {
 };
 
 // ----------------------------------------------------------------------
-
-const BREAKPOINTS_GRID = [
-  { label: 'xs — 360px', width: 360, cols: 1 },
-  { label: 'sm — 600px', width: 600, cols: 2 },
-  { label: 'md — 900px', width: 900, cols: 3 },
-  { label: 'lg — 1200px', width: 1200, cols: 4 },
-];
 
 /**
  * Six metric cards in a responsive grid — column count grows with available width
