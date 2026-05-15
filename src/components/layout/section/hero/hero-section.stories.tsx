@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
@@ -7,6 +8,7 @@ import { AnimatedGradientText } from '../../../animated-gradient-text';
 import { GiselleIcon } from '../../../icon/giselle';
 import { TechIconStrip } from '../../../tech-icon-strip';
 import type { TechIconItem } from '../../../tech-icon-strip/types';
+
 import { SectionTitle } from '../title';
 import { HeroSection } from './hero-section';
 
@@ -177,8 +179,18 @@ export const Responsive: Story = {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {([360, 600, 900, 1200] as const).map((width) => (
         <div key={width}>
-          <p style={{ fontSize: 12, margin: '0 0 4px', color: '#666' }}>{width}px</p>
-          <div style={{ width, margin: '0 auto', border: '1px dashed #ccc', overflow: 'hidden' }}>
+          <Typography variant="caption" sx={{ display: 'block', mb: 0.5, color: 'text.secondary' }}>
+            {width}px
+          </Typography>
+          <Box
+            sx={{
+              width,
+              mx: 'auto',
+              border: '1px dashed',
+              borderColor: 'divider',
+              overflow: 'hidden',
+            }}
+          >
             <HeroSection
               heading={<Typography variant="h1">Responsive hero</Typography>}
               text={
@@ -188,7 +200,7 @@ export const Responsive: Story = {
               }
               actions={<Button variant="contained">Action</Button>}
             />
-          </div>
+          </Box>
         </div>
       ))}
     </div>

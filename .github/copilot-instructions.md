@@ -85,7 +85,7 @@ Never use bare indented code lines — they do not render as code blocks in Mark
    import { createIconRegistrar } from '@alexrebula/giselle-mui';
    export const registerIcons = createIconRegistrar({
      solar: { icons: { 'star-bold': { body: '<path ...>' } } },
-     logos: { icons: { 'react': { body: '<path ...>', width: 256, height: 256 } } },
+     logos: { icons: { react: { body: '<path ...>', width: 256, height: 256 } } },
    });
    ```
 
@@ -266,11 +266,11 @@ When updating or writing docs:
 
 ## Session shorthand commands
 
-| Command | Meaning |
-| ------- | ------- |
+| Command                    | Meaning                                                                                                                                 |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `cleanup component <Name>` | Read `docs/components/cleanup-workflow.md` and execute the full cleanup workflow on the named component. No further explanation needed. |
-| `review pr <N>` | Run the PR review workflow below on PR #N. |
-| `create pr <branch>` | Execute Phase 0 + Phase 1 of `docs/pr-review-workflow.md` for `<branch>`; stop after Copilot review is confirmed triggered. |
+| `review pr <N>`            | Run the PR review workflow below on PR #N.                                                                                              |
+| `create pr <branch>`       | Execute Phase 0 + Phase 1 of `docs/pr-review-workflow.md` for `<branch>`; stop after Copilot review is confirmed triggered.             |
 
 ## PR review workflow — `review pr <N>`
 
@@ -285,10 +285,12 @@ Note every unresolved Copilot comment: its `id`, file, and what it flags.
 
 **Phase 3 — Acknowledge in-thread (before fixing)**
 For each unresolved Copilot comment, post a reply in its thread using:
+
 ```sh
 gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies \
   --method POST -f body="✅ Valid. <one-sentence acknowledgement>. Fixing: <what will change>."
 ```
+
 ⚠️ **NEVER use `mcp_gitkraken_pull_request_create_review` for thread replies.**
 That tool creates a top-level review on the main PR thread — not a nested reply.
 `gh api .../replies` is the only correct tool for replying inside an existing thread.
@@ -298,10 +300,12 @@ Apply all fixes. Run `npm run check:verify`. Commit and push.
 
 **Phase 5 — Confirm in-thread (after fixing)**
 For each Copilot comment, post a follow-up reply in the same thread:
+
 ```sh
 gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies \
   --method POST -f body="Fixed at commit \`<sha>\`: <one sentence describing the change>."
 ```
+
 Use the same `comment_id` as Phase 3 — this nests the reply under the original comment.
 
 **Phase 6 — Branch owner sign-off**
@@ -313,12 +317,12 @@ Prompt the user to resolve the threads in the GitHub PR UI.
 
 At the start of every new Copilot session in this package, read these files:
 
-| File                                                                                    | Purpose                                                                                                        |
-| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [`docs/roadmap.md`](../docs/roadmap.md)                                                 | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
-| [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md)               | Full plan for `RoadmapTimeline` — next component to build                                                      |
-| [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                                   | How to wire this library into a Next.js app                                                                    |
-| [`docs/components/cleanup-workflow.md`](../docs/components/cleanup-workflow.md)         | Step-by-step playbook for creating or cleaning up any component — Definitions of Done for Scenario A and B    |
+| File                                                                            | Purpose                                                                                                        |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [`docs/roadmap.md`](../docs/roadmap.md)                                         | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
+| [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md)       | Full plan for `RoadmapTimeline` — next component to build                                                      |
+| [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                           | How to wire this library into a Next.js app                                                                    |
+| [`docs/components/cleanup-workflow.md`](../docs/components/cleanup-workflow.md) | Step-by-step playbook for creating or cleaning up any component — Definitions of Done for Scenario A and B     |
 
 ### Current components (shipped)
 
@@ -379,6 +383,7 @@ data files. Define once in giselle-mui, import everywhere.
 **The rule in one sentence:** if a component imports `framer-motion`, it goes in `src/motion-index.ts` → `dist/motion.js`. If it imports `apexcharts` or `react-apexcharts`, it goes in `src/charts-index.ts` → `dist/charts.js`. Everything else goes in `src/index.ts` → `dist/index.js`.
 
 **Consumer contract:**
+
 - A project that imports only from `@alexrebula/giselle-mui` never needs ApexCharts or framer-motion installed.
 - A project that imports from `.../charts` must have `apexcharts` + `react-apexcharts` as deps.
 - A project that imports from `.../motion` must have `framer-motion` as a dep.
@@ -661,6 +666,8 @@ Use `argTypes: { control: false }` for `ReactNode` and `SxProps` slots. Every st
 
 Every exported component must have a `Responsive` story that renders the component inside labeled containers at each MUI standard breakpoint width: xs (360px), sm (600px), md (900px), lg (1200px). Use `parameters: { layout: 'padded' }` on these stories. For grid-based components (cards in a collection), the column count should increase with width. Named component helpers are required when the story uses React hooks.
 
+**No hardcoded hex, rgb, or rgba literals in any story file — non-negotiable.** Story scaffold chrome (breakpoint labels, dashed borders, dividers) must use MUI theme tokens via `sx` on MUI components. Never use `style={{ color: '#666' }}` or `style={{ border: '1px dashed #ccc' }}`; use `sx={{ color: 'text.secondary' }}` and `sx={{ border: '1px dashed', borderColor: 'divider' }}` instead. This ensures story chrome respects dark mode automatically. Enforce this on every story file touched — not just new ones.
+
 ### `*.styles.ts` companion files for sx extraction (enforce always)
 
 Inline `sx` objects that span more than ~3 properties must be extracted to a co-located `<component-name>.styles.ts` file. This makes components scannable and the style logic independently testable.
@@ -728,7 +735,7 @@ describe('paperSx', () => {
 1. Any new `sx={}` with more than ~3 properties → move to the styles file immediately
 2. Any existing inline `sx={}` touched during the edit → extract it at the same time (no mixed state)
 3. After extraction → run the styles test file to confirm the mock-theme assertions still pass
-4. **Name by structural role, not by child content.** A Box that positions a label is a *slot* — name it `*SlotSx` or `*WrapperSx`, not `*LabelSx`. The name describes what the element *is* structurally; naming it after what currently lives inside it becomes wrong the moment the child changes. Full rule: `docs/components/cleanup-workflow.md` Step 3.
+4. **Name by structural role, not by child content.** A Box that positions a label is a _slot_ — name it `*SlotSx` or `*WrapperSx`, not `*LabelSx`. The name describes what the element _is_ structurally; naming it after what currently lives inside it becomes wrong the moment the child changes. Full rule: `docs/components/cleanup-workflow.md` Step 3.
 5. **Merge parallel variants into a factory.** Two constants that share the same structure and differ only by one argument (e.g. `side: 'left' | 'right'`) must be a single factory — never two separate exports. Separate constants diverge silently under refactoring. Canonical examples: `timelineColumnSx`, `msColumnBoxSx`, `markerLabelSlotSx`. Full rule: `docs/components/cleanup-workflow.md` Step 3.
 
 ### `*.const.ts` companion files for constants (enforce always)
@@ -769,6 +776,7 @@ Then in the component: `width={PHASE_EYE_ICON_SIZE}` — named, testable, grep-f
 > **Scope of this rule:** `*.const.ts` is for **primitive constants only** — numbers, strings, booleans. Things like `ICON_SIZE = 20`, `FONT_SIZE = '0.75rem'`, `MIN_TOUCH_TARGET = 24`. Default value arrays that contain JSX (e.g. `DEFAULT_ICON_ACTIONS`) are **not** primitive constants — they belong in a separate `<component-name>.defaults.tsx` file instead. Never contort JSX into `createElement` calls just to satisfy a `.ts` extension.
 
 **Barrel export:** The const file must be added to the folder's `index.ts`:
+
 ```ts
 export * from './phase-card.const';
 ```
@@ -776,10 +784,7 @@ export * from './phase-card.const';
 **Regression tests — mandatory:** The component's `*.test.ts` must include a `describe('readability — minimum size constants', ...)` block that imports each constant and asserts it is at or above its minimum:
 
 ```ts
-import {
-  PHASE_EYE_ICON_SIZE,
-  CORNER_ALERT_ICON_SIZE,
-} from './phase-card.const';
+import { PHASE_EYE_ICON_SIZE, CORNER_ALERT_ICON_SIZE } from './phase-card.const';
 
 describe('readability — minimum size constants', () => {
   it('[regression] PHASE_EYE_ICON_SIZE >= 20px', () => {
@@ -815,11 +820,12 @@ Internal sub-components — functions that start with a capital letter and retur
 - A 600-line `.tsx` mixing 5 components is not maintainable. Finding a bug means searching the entire file.
 - Sub-components defined inline are untestable in isolation. After extraction, each gets its own focused test.
 - Even if a sub-component looks "internal today", it almost always becomes reusable later. Extracting now costs 2 minutes; extracting during a refactor costs much more.
-- The fact that a function is only *used* by one parent does not mean it should *live inside* that parent.
+- The fact that a function is only _used_ by one parent does not mean it should _live inside_ that parent.
 
 **What belongs in its own file:**
 
 Any function that:
+
 - starts with a capital letter (React component convention), OR
 - returns JSX (`ReactNode`), OR
 - has its own prop type in `types.ts`
@@ -832,10 +838,12 @@ Any function that:
 - Helper render variables (e.g. `const badge = <GiselleIcon ... />`) that do not have their own props.
 
 **File naming:** Use kebab-case matching the component's PascalCase name:
+
 - `CardCornerAlertBadge` → `card-corner-alert-badge.tsx`
 - `LabeledIconStrip` → `labeled-icon-strip.tsx`
 
 **Barrel export:** Every sub-component file must be added to the folder's `index.ts`:
+
 ```ts
 export * from './card-corner-alert-badge';
 export * from './labeled-icon-strip';
