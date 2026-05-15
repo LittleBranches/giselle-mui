@@ -64,6 +64,7 @@ src/components/layout/section/hero/
   hero-section.test.ts       — Vitest: rendering, slot behaviour, sx branch coverage
   hero-section.stories.tsx   — Default, HeadlineOnly, ColorVariants, Responsive
   index.ts                   — barrel
+  roadmap.md                 — quality scorecard and open improvements
   README.md                  — this file
 ```
 
