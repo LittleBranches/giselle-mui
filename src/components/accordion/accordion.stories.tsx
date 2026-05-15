@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+
+import { breakpointContainerSx, breakpointLabelSx } from '../../stories-defaults';
 
 import { Accordion } from './accordion';
 import type { AccordionProps } from './types';
@@ -547,10 +550,10 @@ function ResponsiveDemo() {
     <Stack spacing={3}>
       {[360, 600, 900, 1200].map((width) => (
         <div key={width}>
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 0.5 }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
-          <div style={{ width, maxWidth: '100%', border: '1px dashed #ccc' }}>
+          <Box sx={[breakpointContainerSx, { width, maxWidth: '100%' }]}>
             <Accordion
               title="Task with a reasonably long title that may wrap on small screens"
               checklist
@@ -559,7 +562,7 @@ function ResponsiveDemo() {
             >
               <Typography variant="body2">Details content.</Typography>
             </Accordion>
-          </div>
+          </Box>
         </div>
       ))}
     </Stack>

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import { breakpointLabelSx, responsiveWrapperSx } from '../../../stories-defaults';
 import { GiselleIcon } from './giselle-icon';
 
 // ----------------------------------------------------------------------
@@ -83,10 +84,10 @@ export const FlipAndRotate: Story = {
 export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {[360, 600, 900, 1200].map((width) => (
         <Box key={width}>
-          <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
           <Box sx={{ width, maxWidth: '100%', display: 'flex', alignItems: 'center', gap: 2 }}>

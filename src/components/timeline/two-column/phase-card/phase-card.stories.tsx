@@ -3,6 +3,15 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
+import {
+  breakpointContainerSx,
+  breakpointLabelSx,
+  responsiveWrapperSx,
+  variantGridSx,
+} from '../../../../stories-defaults';
 import { GiselleIcon } from '../../../icon/giselle/giselle-icon';
 import { PhaseCard } from './phase-card';
 import type { TimelinePhase } from '../types';
@@ -79,6 +88,13 @@ const LIFE_EVENT_PHASE: TimelinePhase = {
   color: 'secondary',
   icon: icon('solar:airplane-bold'),
   variant: 'life-event',
+};
+
+const variantRowSx: SystemStyleObject<Theme> = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: 3,
+  alignItems: 'flex-start',
 };
 
 /**
@@ -323,10 +339,10 @@ export const IsViewed: Story = {
 export const AllColors: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+    <Box sx={variantGridSx}>
       {(['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const).map((color) => (
         <Box key={color} sx={{ width: 240 }}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 0.5, color: 'text.secondary' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {color}
           </Typography>
           <PhaseCard
@@ -359,13 +375,13 @@ export const AllColors: Story = {
 export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {CARD_COLUMN_WIDTHS.map(({ label, width }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
-          <Box sx={{ width, border: '1px dashed', borderColor: 'divider' }}>
+          <Box sx={[breakpointContainerSx, { width }]}>
             <PhaseCard phase={BASE_PHASE} />
           </Box>
         </div>
@@ -393,9 +409,9 @@ export const Responsive: Story = {
 export const StatusBadgeVariants: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, alignItems: 'flex-start' }}>
+    <Box sx={variantRowSx}>
       <Box sx={{ width: 280 }}>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+        <Typography variant="caption" sx={breakpointLabelSx}>
           Active — "Now" pulsing badge
         </Typography>
         <PhaseCard
@@ -408,7 +424,7 @@ export const StatusBadgeVariants: Story = {
         />
       </Box>
       <Box sx={{ width: 280, pt: 1 }}>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+        <Typography variant="caption" sx={breakpointLabelSx}>
           Overdue — red corner badge
         </Typography>
         <PhaseCard
@@ -422,7 +438,7 @@ export const StatusBadgeVariants: Story = {
         />
       </Box>
       <Box sx={{ width: 280 }}>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+        <Typography variant="caption" sx={breakpointLabelSx}>
           Scenario — planning option badge
         </Typography>
         <PhaseCard phase={SCENARIO_PHASE} />
@@ -443,15 +459,15 @@ export const StatusBadgeVariants: Story = {
 export const WithAndWithoutDetails: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+    <Box sx={variantRowSx}>
       <Box sx={{ width: 320 }}>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+        <Typography variant="caption" sx={breakpointLabelSx}>
           With details (4 tasks)
         </Typography>
         <PhaseCard phase={BASE_PHASE} />
       </Box>
       <Box sx={{ width: 320 }}>
-        <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+        <Typography variant="caption" sx={breakpointLabelSx}>
           Without details — no count pill
         </Typography>
         <PhaseCard phase={SIMPLE_PHASE} />

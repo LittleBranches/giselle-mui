@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import {
+  breakpointContainerSx,
+  breakpointLabelSx,
+  responsiveWrapperSx,
+  variantGridSx,
+} from '../../../../stories-defaults';
 import { GiselleIcon } from '../../../icon/giselle/giselle-icon';
 import { MilestoneBadge } from './milestone-badge';
 import type { TimelineMilestone } from '../types';
@@ -215,7 +221,7 @@ function ColorVariantItem({ color }: { color: string }) {
   const handleExpand = useCallback(() => setExpanded((v) => !v), []);
   return (
     <Box sx={{ width: 240 }}>
-      <Typography variant="caption" sx={{ display: 'block', mb: 0.5, color: 'text.secondary' }}>
+      <Typography variant="caption" sx={breakpointLabelSx}>
         {color}
       </Typography>
       <MilestoneBadge
@@ -236,7 +242,7 @@ function ColorVariantItem({ color }: { color: string }) {
 
 function AllColorsDemo() {
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+    <Box sx={variantGridSx}>
       {(['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const).map((color) => (
         <ColorVariantItem key={color} color={color} />
       ))}
@@ -251,13 +257,13 @@ function ResponsiveDemo() {
     []
   );
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {CARD_COLUMN_WIDTHS.map(({ label, width }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
-          <Box sx={{ width, border: '1px dashed', borderColor: 'divider' }}>
+          <Box sx={[breakpointContainerSx, { width }]}>
             <MilestoneBadge
               milestone={BASE_MILESTONE}
               isExpanded={expandedWidth === width}

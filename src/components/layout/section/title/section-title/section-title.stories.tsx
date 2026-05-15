@@ -78,7 +78,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mb: 1 }}>
             {width}px
           </Typography>
-          <Box style={{ width, maxWidth: '100%' }}>
+          <Box sx={{ width, maxWidth: '100%' }}>
             <SectionTitle
               caption="Giselle MUI"
               title="Build better"

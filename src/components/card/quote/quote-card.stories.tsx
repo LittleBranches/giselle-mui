@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import {
+  breakpointContainerSx,
+  breakpointLabelSx,
+  responsiveWrapperSx,
+} from '../../../stories-defaults';
 import { QuoteCard } from './quote-card';
 
 // ----------------------------------------------------------------------
@@ -94,13 +99,13 @@ const BREAKPOINTS = [
 export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {BREAKPOINTS.map(({ label, width }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
-          <Box sx={{ width, border: '1px dashed', borderColor: 'divider', p: 1 }}>
+          <Box sx={[breakpointContainerSx, { width, p: 1 }]}>
             <QuoteCard quote={SAMPLE_QUOTE} author="Jane Smith" source="Platform Team" />
           </Box>
         </div>

@@ -3,6 +3,10 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
+import { dotColumnSx } from '../../../../stories-defaults';
 import { GiselleIcon } from '../../../icon/giselle/giselle-icon';
 import { TimelineDot } from './timeline-dot';
 import type { HighlightedPaletteKey } from '../types';
@@ -31,6 +35,21 @@ const ALL_COLORS: HighlightedPaletteKey[] = [
 const PHASE_ICON = <GiselleIcon icon="solar:code-bold-duotone" width={18} />;
 const MILESTONE_ICON = <GiselleIcon icon="solar:flag-bold" width={14} />;
 
+const colorRowSx: SystemStyleObject<Theme> = {
+  display: 'flex',
+  gap: 3,
+  flexWrap: 'wrap',
+  alignItems: 'center',
+};
+
+const colorRowActiveSx: SystemStyleObject<Theme> = {
+  display: 'flex',
+  gap: 4,
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  p: 3,
+};
+
 // ----------------------------------------------------------------------
 
 /** Named helper so useState inside the render function is a valid hook call. */
@@ -38,7 +57,7 @@ function ChecklistPhaseDemo() {
   const [done, setDone] = useState(false);
   const [animKey, setAnimKey] = useState(0);
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+    <Box sx={dotColumnSx}>
       <TimelineDot
         icon={PHASE_ICON}
         color="primary"
@@ -72,7 +91,7 @@ function ChecklistMilestoneDemo() {
   const [done, setDone] = useState(false);
   const [animKey, setAnimKey] = useState(0);
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+    <Box sx={dotColumnSx}>
       <TimelineDot
         icon={MILESTONE_ICON}
         color="success"
@@ -199,12 +218,9 @@ export const ChecklistMilestone: Story = {
  */
 export const AllColors: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', alignItems: 'center' }}>
+    <Box sx={colorRowSx}>
       {ALL_COLORS.map((color) => (
-        <Box
-          key={color}
-          sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}
-        >
+        <Box key={color} sx={dotColumnSx}>
           <TimelineDot icon={PHASE_ICON} color={color} />
           <Typography variant="caption" color="text.secondary">
             {color}
@@ -220,12 +236,9 @@ export const AllColors: Story = {
  */
 export const AllColorsActive: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', alignItems: 'center', p: 3 }}>
+    <Box sx={colorRowActiveSx}>
       {ALL_COLORS.map((color) => (
-        <Box
-          key={color}
-          sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}
-        >
+        <Box key={color} sx={dotColumnSx}>
           <TimelineDot icon={PHASE_ICON} color={color} active />
           <Typography variant="caption" color="text.secondary">
             {color}

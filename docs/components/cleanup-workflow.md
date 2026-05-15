@@ -164,7 +164,7 @@ Review or create `<component-name>.stories.tsx`:
 - [ ] A `Responsive` story rendering the component at xs/sm/md/lg breakpoint widths
 - [ ] Decision-doc stories added for every non-obvious design or accessibility rule in this component
 - [ ] Named component helpers used for any story render function that uses React hooks
-- [ ] **No hardcoded hex, rgb, or rgba literals in any story file.** Story scaffold chrome (breakpoint labels, dashed borders, dividers) must use MUI theme tokens via `sx` on MUI components (`<Typography>`, `<Box>`). Never use `style={{ color: '#666' }}` or `style={{ border: '1px dashed #ccc' }}`; use `sx={{ color: 'text.secondary' }}` and `sx={{ border: '1px dashed', borderColor: 'divider' }}` instead. This ensures story chrome respects dark mode automatically.
+- [ ] **No hardcoded hex, rgb, or rgba literals in any story file.** Story scaffold chrome (breakpoint labels, dashed borders, dividers) must use MUI theme tokens via `sx` on MUI components (`<Typography>`, `<Box>`). Never use `style={{ color: '#666' }}` or `style={{ border: '1px dashed #ccc' }}`; use `sx={{ color: 'text.secondary' }}` and `sx={{ border: '1px dashed', borderColor: 'divider' }}` instead. This ensures story chrome respects dark mode automatically. **Use the shared constants from `src/stories-defaults.ts`** (`responsiveWrapperSx`, `breakpointLabelSx`, `breakpointContainerSx`, `variantGridSx`, `dotColumnSx`, `timelineStoryWrapperSx`) rather than re-defining equivalent patterns inline.
 
 ### Step 9 — Barrel (`index.ts`)
 

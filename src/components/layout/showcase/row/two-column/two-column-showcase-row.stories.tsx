@@ -7,6 +7,7 @@ import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import { breakpointContainerSx, breakpointLabelSx } from '../../../../../stories-defaults';
 import { TwoColumnShowcaseRow } from './two-column-showcase-row';
 
 // ----------------------------------------------------------------------
@@ -118,10 +119,10 @@ export const Responsive: Story = {
     <Stack spacing={4}>
       {([360, 600, 900, 1200] as const).map((width) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mb: 1 }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
-          <div style={{ width, maxWidth: '100%', border: '1px dashed rgba(128,128,128,0.3)' }}>
+          <Box sx={[breakpointContainerSx, { width, maxWidth: '100%' }]}>
             <TwoColumnShowcaseRow
               text={{
                 overline: 'Appearance',
@@ -130,7 +131,7 @@ export const Responsive: Story = {
               }}
               controls={<SampleControls />}
             />
-          </div>
+          </Box>
         </div>
       ))}
     </Stack>

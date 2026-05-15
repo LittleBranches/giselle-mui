@@ -3,6 +3,11 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import {
+  breakpointContainerSx,
+  breakpointLabelSx,
+  responsiveWrapperSx,
+} from '../../../stories-defaults';
 import { GiselleIcon } from '../../icon/giselle';
 import type { TimelinePhase } from '../two-column/types';
 import { TimelineCompact } from './compact';
@@ -294,16 +299,13 @@ export const Responsive: Story = {
       { label: 'lg — 1200px', width: 1200 },
     ];
     return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <Box sx={responsiveWrapperSx}>
         {breakpoints.map(({ label, width }) => (
           <div key={label}>
-            <Typography
-              variant="overline"
-              sx={{ display: 'block', mb: 1, color: 'text.secondary' }}
-            >
+            <Typography variant="overline" sx={breakpointLabelSx}>
               {label}
             </Typography>
-            <Box sx={{ width, border: '1px dashed', borderColor: 'divider', p: 1 }}>
+            <Box sx={[breakpointContainerSx, { width, p: 1 }]}>
               <TimelineCompact phases={SAMPLE_PHASES.slice(0, 3)} />
             </Box>
           </div>

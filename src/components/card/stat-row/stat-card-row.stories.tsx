@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
+
+import { breakpointLabelSx, responsiveWrapperSx } from '../../../stories-defaults';
 
 import { STAT_CARD_SPARKLINE_OPTIONS } from '../stat/stat-card';
 import type { StatCardItem } from '../stat/types';
@@ -141,10 +144,12 @@ export const WithSparklines: Story = {
  */
 export const Responsive: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {([360, 600, 900, 1200] as const).map((width) => (
         <div key={width}>
-          <Box sx={{ mb: 0.5, fontSize: '0.75rem', color: 'text.secondary' }}>{width}px</Box>
+          <Typography variant="caption" sx={breakpointLabelSx}>
+            {width}px
+          </Typography>
           <Box sx={{ width }}>
             <StatCardRow items={SAMPLE_ITEMS} />
           </Box>

@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import { contentPlaceholderSx } from '../../../../stories-defaults';
 import { SectionContainer } from './section-container';
 
 // ----------------------------------------------------------------------
@@ -26,7 +27,7 @@ type Story = StoryObj<typeof SectionContainer>;
 export const Default: Story = {
   render: () => (
     <SectionContainer>
-      <Box sx={{ bgcolor: 'action.hover', p: 3, borderRadius: 1 }}>
+      <Box sx={contentPlaceholderSx}>
         <Typography variant="h4">Section content</Typography>
         <Typography variant="body2" color="text.secondary">
           This box is constrained to `maxWidth="lg"` with default vertical padding.
@@ -40,7 +41,7 @@ export const Default: Story = {
 export const MediumWidth: Story = {
   render: () => (
     <SectionContainer maxWidth="md">
-      <Box sx={{ bgcolor: 'action.hover', p: 3, borderRadius: 1 }}>
+      <Box sx={contentPlaceholderSx}>
         <Typography variant="h4">Narrower section</Typography>
         <Typography variant="body2" color="text.secondary">
           Constrained to `maxWidth="md"`.
@@ -54,7 +55,7 @@ export const MediumWidth: Story = {
 export const TightSpacing: Story = {
   render: () => (
     <SectionContainer py={{ xs: 4, md: 6 }}>
-      <Box sx={{ bgcolor: 'action.hover', p: 3, borderRadius: 1 }}>
+      <Box sx={contentPlaceholderSx}>
         <Typography variant="h4">Tight spacing</Typography>
         <Typography variant="body2" color="text.secondary">
           {'`py={{ xs: 4, md: 6 }}`'} — half the default vertical padding.
@@ -74,9 +75,9 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mb: 1 }}>
             {width}px
           </Typography>
-          <Box style={{ width, maxWidth: '100%' }}>
+          <Box sx={{ width, maxWidth: '100%' }}>
             <SectionContainer py={{ xs: 4 }}>
-              <Box sx={{ bgcolor: 'action.hover', p: 2, borderRadius: 1 }}>
+              <Box sx={[contentPlaceholderSx, { p: 2 }]}>
                 <Typography variant="body2">
                   maxWidth=&quot;lg&quot; at {width}px viewport
                 </Typography>
