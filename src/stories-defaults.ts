@@ -25,11 +25,15 @@ import {
   GISELLE_PRIMARY_MAIN,
   GISELLE_PRIMARY_DARK_MAIN,
   GISELLE_SECONDARY_MAIN,
+  MANGO_RIPE_FLESH,
+  MANGO_DARK_GROVE,
+  MANGO_WARM_TAN,
 } from './utils/theme-preset';
 import { BREAKPOINTS, BREAKPOINTS_GRID } from './utils/breakpoints';
 export type { BreakpointEntry, BreakpointGridEntry } from './utils/breakpoints';
 
 export { GISELLE_PRIMARY_MAIN, GISELLE_PRIMARY_DARK_MAIN, GISELLE_SECONDARY_MAIN };
+export { MANGO_RIPE_FLESH, MANGO_DARK_GROVE, MANGO_WARM_TAN };
 export { BREAKPOINTS, BREAKPOINTS_GRID };
 
 /** Deep grove green — primary in light mode. Alias of `GISELLE_PRIMARY_MAIN`. */
@@ -40,15 +44,6 @@ export const MANGO_LIME = GISELLE_PRIMARY_DARK_MAIN;
 
 /** Mango gold — secondary / brand accent. Alias of `GISELLE_SECONDARY_MAIN`. */
 export const MANGO_GOLD = GISELLE_SECONDARY_MAIN;
-
-/** Ripe flesh — warm cream tint used for light backgrounds (`#FFF3CD`). */
-export const MANGO_RIPE_FLESH = '#FFF3CD';
-
-/** Dark grove — near-black for dark-mode backgrounds (`#1A2B1A`). */
-export const MANGO_DARK_GROVE = '#1A2B1A';
-
-/** Warm tan — light neutral for warm canvas contexts (`#F5EDDC`). */
-export const MANGO_WARM_TAN = '#F5EDDC';
 
 // ----------------------------------------------------------------------
 // Story scaffold sx constants

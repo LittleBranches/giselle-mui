@@ -81,6 +81,7 @@ describe('heroActionsRowSx', () => {
     expect(sx['justifyContent']).toBe('center');
   });
 });
+
 describe('heroIconsSlotSx', () => {
   it('is a static object', () => {
     expect(typeof heroIconsSlotSx).toBe('object');

@@ -97,6 +97,17 @@ const variantRowSx: SystemStyleObject<Theme> = {
   alignItems: 'flex-start',
 };
 
+// Wrapper sizes for single-card stories
+const cardWrapperSx: SystemStyleObject<Theme> = { maxWidth: 440 };
+const cardWrapperViewedSx: SystemStyleObject<Theme> = { maxWidth: 440, pb: 5 };
+const cardWrapperOverdueSx: SystemStyleObject<Theme> = { maxWidth: 440, pt: 1 };
+
+// Column item sizes for multi-card variant stories
+const colorVariantItemSx: SystemStyleObject<Theme> = { width: 240 };
+const statusBadgeItemSx: SystemStyleObject<Theme> = { width: 280 };
+const statusBadgeItemTopSx: SystemStyleObject<Theme> = { width: 280, pt: 1 };
+const withDetailsItemSx: SystemStyleObject<Theme> = { width: 320 };
+
 /**
  * Realistic card-column widths that simulate the space available to a PhaseCard
  * at common screen sizes. A card occupies roughly half the screen minus the spine (~30 px).
@@ -173,7 +184,7 @@ function ExpandedStateDemo() {
   const [expanded, setExpanded] = useState(true);
   const handleExpand = useCallback(() => setExpanded((v) => !v), []);
   return (
-    <Box sx={{ maxWidth: 440 }}>
+    <Box sx={cardWrapperSx}>
       <PhaseCard phase={BASE_PHASE} isExpanded={expanded} onRequestExpand={handleExpand} />
     </Box>
   );
@@ -189,7 +200,7 @@ function IsViewedDemo() {
   const [viewed, setViewed] = useState(false);
   const handleMarkViewed = useCallback(() => setViewed((v) => !v), []);
   return (
-    <Box sx={{ maxWidth: 440, pb: 5 }}>
+    <Box sx={cardWrapperViewedSx}>
       <PhaseCard phase={BASE_PHASE} isViewed={viewed} onMarkViewed={handleMarkViewed} />
     </Box>
   );
@@ -207,7 +218,7 @@ function IsViewedDemo() {
  */
 export const Default: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 440 }}>
+    <Box sx={cardWrapperSx}>
       <PhaseCard phase={BASE_PHASE} />
     </Box>
   ),
@@ -238,7 +249,7 @@ export const ExpandedState: Story = {
  */
 export const LeftColumn: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 440 }}>
+    <Box sx={cardWrapperSx}>
       <PhaseCard phase={LEFT_PHASE} columnSide="left" />
     </Box>
   ),
@@ -255,7 +266,7 @@ export const LeftColumn: Story = {
  */
 export const DoneState: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 440 }}>
+    <Box sx={cardWrapperSx}>
       <PhaseCard phase={BASE_PHASE} done />
     </Box>
   ),
@@ -270,7 +281,7 @@ export const DoneState: Story = {
  */
 export const OverdueState: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 440, pt: 1 }}>
+    <Box sx={cardWrapperOverdueSx}>
       <PhaseCard phase={BASE_PHASE} overdue />
     </Box>
   ),
@@ -285,7 +296,7 @@ export const OverdueState: Story = {
  */
 export const Scenario: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 440 }}>
+    <Box sx={cardWrapperSx}>
       <PhaseCard phase={SCENARIO_PHASE} />
     </Box>
   ),
@@ -299,7 +310,7 @@ export const Scenario: Story = {
  */
 export const LifeEvent: Story = {
   render: () => (
-    <Box sx={{ maxWidth: 440 }}>
+    <Box sx={cardWrapperSx}>
       <PhaseCard phase={LIFE_EVENT_PHASE} />
     </Box>
   ),
@@ -341,7 +352,7 @@ export const AllColors: Story = {
   render: () => (
     <Box sx={variantGridSx}>
       {(['primary', 'secondary', 'info', 'success', 'warning', 'error'] as const).map((color) => (
-        <Box key={color} sx={{ width: 240 }}>
+        <Box key={color} sx={colorVariantItemSx}>
           <Typography variant="caption" sx={breakpointLabelSx}>
             {color}
           </Typography>
@@ -410,7 +421,7 @@ export const StatusBadgeVariants: Story = {
   parameters: { layout: 'padded' },
   render: () => (
     <Box sx={variantRowSx}>
-      <Box sx={{ width: 280 }}>
+      <Box sx={statusBadgeItemSx}>
         <Typography variant="caption" sx={breakpointLabelSx}>
           Active — "Now" pulsing badge
         </Typography>
@@ -423,7 +434,7 @@ export const StatusBadgeVariants: Story = {
           }}
         />
       </Box>
-      <Box sx={{ width: 280, pt: 1 }}>
+      <Box sx={statusBadgeItemTopSx}>
         <Typography variant="caption" sx={breakpointLabelSx}>
           Overdue — red corner badge
         </Typography>
@@ -437,7 +448,7 @@ export const StatusBadgeVariants: Story = {
           overdue
         />
       </Box>
-      <Box sx={{ width: 280 }}>
+      <Box sx={statusBadgeItemSx}>
         <Typography variant="caption" sx={breakpointLabelSx}>
           Scenario — planning option badge
         </Typography>
@@ -460,13 +471,13 @@ export const WithAndWithoutDetails: Story = {
   parameters: { layout: 'padded' },
   render: () => (
     <Box sx={variantRowSx}>
-      <Box sx={{ width: 320 }}>
+      <Box sx={withDetailsItemSx}>
         <Typography variant="caption" sx={breakpointLabelSx}>
           With details (4 tasks)
         </Typography>
         <PhaseCard phase={BASE_PHASE} />
       </Box>
-      <Box sx={{ width: 320 }}>
+      <Box sx={withDetailsItemSx}>
         <Typography variant="caption" sx={breakpointLabelSx}>
           Without details — no count pill
         </Typography>

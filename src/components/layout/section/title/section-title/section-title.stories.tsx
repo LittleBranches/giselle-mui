@@ -4,6 +4,11 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import {
+  breakpointContainerSx,
+  breakpointLabelSx,
+  BREAKPOINTS,
+} from '../../../../../stories-defaults';
 import { SectionTitle, SectionCaption } from './section-title';
 
 // ----------------------------------------------------------------------
@@ -73,12 +78,12 @@ export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
     <Stack spacing={4}>
-      {([360, 600, 900, 1200] as const).map((width) => (
+      {BREAKPOINTS.map(({ label, width }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mb: 1 }}>
-            {width}px
+          <Typography variant="caption" sx={breakpointLabelSx}>
+            {label}
           </Typography>
-          <Box sx={{ width, maxWidth: '100%' }}>
+          <Box sx={[breakpointContainerSx, { width }]}>
             <SectionTitle
               caption="Giselle MUI"
               title="Build better"

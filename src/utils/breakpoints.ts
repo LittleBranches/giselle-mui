@@ -1,13 +1,15 @@
 /**
- * Standard MUI breakpoint reference data for stories and components.
+ * Storybook/demo breakpoint widths for visual tests and responsive stories.
  *
- * These values mirror MUI's default breakpoint widths (xs=360, sm=600, md=900, lg=1200)
- * and are the single source of truth for any code that needs to render or test at
- * those widths — Storybook responsive stories, unit tests, and component utilities.
+ * **These are NOT MUI's default breakpoint values.** MUI's xs starts at 0px.
+ * These arrays start xs at 360px — the smallest practical device width — which
+ * is the correct lower bound for visual demos. xl is intentionally omitted
+ * (no common device cap exists at a single fixed width above 1200px).
  *
  * **Why not `theme.breakpoints.values`?**
- * `theme.breakpoints.values` starts xs at 0. These arrays start xs at 360px — the
- * smallest practical device width — which is the right lower bound for visual demos.
+ * `theme.breakpoints.values` is not available at module scope without a theme
+ * instance. These constants are resolvable at import time, making them safe to
+ * use in test files, story scaffold, and any non-component context.
  */
 
 // ----------------------------------------------------------------------
@@ -32,9 +34,15 @@ export interface BreakpointGridEntry extends BreakpointEntry {
 // ----------------------------------------------------------------------
 
 /**
- * Standard MUI breakpoints for single-column responsive demos.
+ * Storybook/demo breakpoints for single-column responsive stories.
  *
- * Use in Storybook `Responsive` stories:
+ * Provides the four Storybook breakpoints (xs/sm/md/lg) in two shapes:
+ * - `BREAKPOINTS` — for single-component responsive containers (no `cols`)
+ * - `BREAKPOINTS_GRID` — for card/grid responsive containers (with `cols`)
+ *
+ * Import from `src/stories-defaults.ts` — not from here directly.
+ *
+ * Usage in Storybook `Responsive` stories:
  * ```tsx
  * {BREAKPOINTS.map(({ label, width }) => (
  *   <Box key={label} sx={[breakpointContainerSx, { width }]}>
@@ -43,31 +51,10 @@ export interface BreakpointGridEntry extends BreakpointEntry {
  *   </Box>
  * ))}
  * ```
- * Shared breakpoint constants for Storybook Responsive stories.
- *
- * Provides the four MUI standard breakpoints (xs/sm/md/lg) in two shapes:
- * - `BREAKPOINTS` — for single-component responsive containers (no `cols`)
- * - `BREAKPOINTS_GRID` — for card/grid responsive containers (with `cols`)
- *
- * Import from `src/stories-defaults.ts` — not from here directly.
  */
 
-/** One entry in a simple responsive breakpoint list (no grid columns). */
-export interface BreakpointEntry {
-  /** Human-readable label, e.g. `'xs — 360px'`. */
-  label: string;
-  /** Pixel width of the constrained container. */
-  width: number;
-}
-
-/** One entry in a grid-based responsive breakpoint list (with column count). */
-export interface BreakpointGridEntry extends BreakpointEntry {
-  /** Number of grid columns at this breakpoint. */
-  cols: number;
-}
-
 /**
- * MUI standard breakpoints for single-component Responsive stories.
+ * Storybook demo breakpoints for single-component Responsive stories.
  * xs (360px), sm (600px), md (900px), lg (1200px).
  */
 export const BREAKPOINTS: BreakpointEntry[] = [

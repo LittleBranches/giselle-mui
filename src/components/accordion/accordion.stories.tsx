@@ -5,10 +5,21 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { breakpointContainerSx, breakpointLabelSx } from '../../stories-defaults';
+import type { SxProps } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+
+import { breakpointContainerSx, breakpointLabelSx, BREAKPOINTS } from '../../stories-defaults';
 
 import { Accordion } from './accordion';
 import type { AccordionProps } from './types';
+
+// ----------------------------------------------------------------------
+
+const demoGroupLabelMbSx: SxProps<Theme> = { mb: 1 };
+const buildBreakpointMaxWidthSx = (width: number): SxProps<Theme> => [
+  breakpointContainerSx,
+  { maxWidth: '100%', width },
+];
 
 // ----------------------------------------------------------------------
 
@@ -228,7 +239,7 @@ function TaskListDemo() {
 
   return (
     <Stack spacing={0.5}>
-      <Typography variant="overline" color="text.secondary" sx={{ mb: 1 }}>
+      <Typography variant="overline" color="text.secondary" sx={demoGroupLabelMbSx}>
         Sprint tasks — {tasks.filter((t) => t.done).length}/{tasks.length} done
       </Typography>
       {tasks.map((task) => (
@@ -372,7 +383,7 @@ function CheckIconTaskListDemo() {
 
   return (
     <Stack spacing={0.5}>
-      <Typography variant="overline" color="text.secondary" sx={{ mb: 1 }}>
+      <Typography variant="overline" color="text.secondary" sx={demoGroupLabelMbSx}>
         Project tasks — {tasks.filter((t) => t.done).length}/{tasks.length} done
       </Typography>
       {tasks.map((task) => (
@@ -548,12 +559,12 @@ the wrapper Box is invisible to MUI's internal logic.
 function ResponsiveDemo() {
   return (
     <Stack spacing={3}>
-      {[360, 600, 900, 1200].map((width) => (
+      {BREAKPOINTS.map(({ label, width }) => (
         <div key={width}>
           <Typography variant="caption" sx={breakpointLabelSx}>
-            {width}px
+            {label}
           </Typography>
-          <Box sx={[breakpointContainerSx, { width, maxWidth: '100%' }]}>
+          <Box sx={buildBreakpointMaxWidthSx(width)}>
             <Accordion
               title="Task with a reasonably long title that may wrap on small screens"
               checklist

@@ -4,7 +4,10 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { contentPlaceholderSx } from '../../../../stories-defaults';
+import type { SxProps } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+
+import { breakpointLabelSx, contentPlaceholderSx, BREAKPOINTS } from '../../../../stories-defaults';
 import { SectionContainer } from './section-container';
 
 // ----------------------------------------------------------------------
@@ -20,6 +23,12 @@ const meta: Meta<typeof SectionContainer> = {
 
 export default meta;
 type Story = StoryObj<typeof SectionContainer>;
+
+// ----------------------------------------------------------------------
+
+const responsiveWidthSx = (width: number): SxProps<Theme> => ({ width, maxWidth: '100%' });
+
+const compactPlaceholderSx: SxProps<Theme> = [contentPlaceholderSx, { p: 2 }];
 
 // ----------------------------------------------------------------------
 
@@ -70,14 +79,14 @@ export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
     <Stack spacing={4}>
-      {([360, 600, 900, 1200] as const).map((width) => (
+      {BREAKPOINTS.map(({ label, width }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mb: 1 }}>
-            {width}px
+          <Typography variant="caption" sx={breakpointLabelSx}>
+            {label}
           </Typography>
-          <Box sx={{ width, maxWidth: '100%' }}>
+          <Box sx={responsiveWidthSx(width)}>
             <SectionContainer py={{ xs: 4 }}>
-              <Box sx={[contentPlaceholderSx, { p: 2 }]}>
+              <Box sx={compactPlaceholderSx}>
                 <Typography variant="body2">
                   maxWidth=&quot;lg&quot; at {width}px viewport
                 </Typography>

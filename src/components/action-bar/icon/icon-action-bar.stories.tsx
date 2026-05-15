@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SxProps } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+
 import {
   breakpointContainerSx,
   breakpointLabelSx,
@@ -20,6 +23,13 @@ const meta: Meta<typeof IconActionBar> = {
 
 export default meta;
 type Story = StoryObj<typeof IconActionBar>;
+
+// ----------------------------------------------------------------------
+
+const breakpointPaddedSx = (width: number): SxProps<Theme> => [
+  breakpointContainerSx,
+  { p: 1, width },
+];
 
 // ----------------------------------------------------------------------
 
@@ -80,7 +90,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
-          <Box sx={[breakpointContainerSx, { width, p: 1 }]}>
+          <Box sx={breakpointPaddedSx(width)}>
             <IconActionBar />
           </Box>
         </div>

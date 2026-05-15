@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SxProps } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+
 import {
   breakpointContainerSx,
   breakpointLabelSx,
@@ -15,6 +18,17 @@ import { QuoteCard } from './quote-card';
 type QuoteColor = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
 
 const ALL_COLORS: QuoteColor[] = ['primary', 'secondary', 'info', 'success', 'warning', 'error'];
+
+const allColorsGridSx: SxProps<Theme> = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(2, 380px)',
+  gap: 2,
+};
+
+const breakpointPaddedSx = (width: number): SxProps<Theme> => [
+  breakpointContainerSx,
+  { p: 1, width },
+];
 
 const SAMPLE_QUOTE =
   'Alex transformed our legacy system into a maintainable, modern React platform. The quality of the architecture and the attention to detail were exceptional.';
@@ -48,7 +62,7 @@ export const Default: Story = {
 /** All six palette color variants — light/dark mode adaptive. */
 export const AllColors: Story = {
   render: () => (
-    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 380px)', gap: 2 }}>
+    <Box sx={allColorsGridSx}>
       {ALL_COLORS.map((color) => (
         <QuoteCard
           key={color}
@@ -99,7 +113,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
-          <Box sx={[breakpointContainerSx, { width, p: 1 }]}>
+          <Box sx={breakpointPaddedSx(width)}>
             <QuoteCard quote={SAMPLE_QUOTE} author="Jane Smith" source="Platform Team" />
           </Box>
         </div>
