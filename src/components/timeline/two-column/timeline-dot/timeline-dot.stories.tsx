@@ -33,7 +33,7 @@ const ALL_COLORS: HighlightedPaletteKey[] = [
 ];
 
 const PHASE_ICON = <GiselleIcon icon="solar:code-bold-duotone" width={18} />;
-const MILESTONE_ICON = <GiselleIcon icon="solar:flag-bold" width={14} />;
+const MILESTONE_ICON = <GiselleIcon icon="solar:flag-bold" width={16} />;
 
 const colorRowSx: SystemStyleObject<Theme> = {
   display: 'flex',

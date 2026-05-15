@@ -11,7 +11,7 @@ import type { SxProps } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 
 import {
-  breakpointContainerSx,
+  buildBreakpointMaxWidthSx,
   breakpointLabelSx,
   BREAKPOINTS,
 } from '../../../../../stories-defaults';
@@ -20,7 +20,7 @@ import { TwoColumnShowcaseRow } from './two-column-showcase-row';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof TwoColumnShowcaseRow> = {
-  title: 'Layout/TwoColumnShowcaseRow',
+  title: 'Layout/Two Column Showcase Row',
   component: TwoColumnShowcaseRow,
   parameters: { layout: 'padded' },
   argTypes: {
@@ -45,10 +45,6 @@ const previewPlaceholderBoxSx: SxProps<Theme> = {
   alignItems: 'center',
   justifyContent: 'center',
 };
-const buildBreakpointMaxWidthSx = (width: number): SxProps<Theme> => [
-  breakpointContainerSx,
-  { maxWidth: '100%', width },
-];
 
 // ----------------------------------------------------------------------
 

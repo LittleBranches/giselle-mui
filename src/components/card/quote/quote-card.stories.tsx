@@ -6,7 +6,7 @@ import type { SxProps } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 
 import {
-  breakpointContainerSx,
+  buildBreakpointPaddedWidthSx,
   breakpointLabelSx,
   responsiveWrapperSx,
   BREAKPOINTS,
@@ -25,13 +25,8 @@ const allColorsGridSx: SxProps<Theme> = {
   gap: 2,
 };
 
-const breakpointPaddedSx = (width: number): SxProps<Theme> => [
-  breakpointContainerSx,
-  { p: 1, width },
-];
-
 const SAMPLE_QUOTE =
-  'Alex transformed our legacy system into a maintainable, modern React platform. The quality of the architecture and the attention to detail were exceptional.';
+  'The team modernised our legacy system into a maintainable, modern React platform. The architecture quality and attention to detail were exceptional.';
 
 const SHORT_QUOTE = 'Excellent work, delivered on time.';
 
@@ -113,7 +108,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
-          <Box sx={breakpointPaddedSx(width)}>
+          <Box sx={buildBreakpointPaddedWidthSx(width)}>
             <QuoteCard quote={SAMPLE_QUOTE} author="Jane Smith" source="Platform Team" />
           </Box>
         </div>

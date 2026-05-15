@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import {
-  breakpointContainerSx,
+  buildBreakpointWidthSx,
   breakpointLabelSx,
   BREAKPOINTS,
 } from '../../../../../stories-defaults';
@@ -83,7 +83,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
-          <Box sx={[breakpointContainerSx, { width }]}>
+          <Box sx={buildBreakpointWidthSx(width)}>
             <SectionTitle
               caption="Giselle MUI"
               title="Build better"

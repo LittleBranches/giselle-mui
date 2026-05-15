@@ -7,7 +7,7 @@ import type { SystemStyleObject } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
 
 import {
-  breakpointContainerSx,
+  buildBreakpointWidthSx,
   breakpointLabelSx,
   responsiveWrapperSx,
   variantGridSx,
@@ -392,7 +392,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
-          <Box sx={[breakpointContainerSx, { width }]}>
+          <Box sx={buildBreakpointWidthSx(width)}>
             <PhaseCard phase={BASE_PHASE} />
           </Box>
         </div>

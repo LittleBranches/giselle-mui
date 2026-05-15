@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import type { SxProps } from '@mui/material/styles';
 import type { Theme } from '@mui/material/styles';
 
-import { breakpointContainerSx, breakpointLabelSx, BREAKPOINTS } from '../../stories-defaults';
+import { buildBreakpointMaxWidthSx, breakpointLabelSx, BREAKPOINTS } from '../../stories-defaults';
 
 import { Accordion } from './accordion';
 import type { AccordionProps } from './types';
@@ -16,10 +16,6 @@ import type { AccordionProps } from './types';
 // ----------------------------------------------------------------------
 
 const demoGroupLabelMbSx: SxProps<Theme> = { mb: 1 };
-const buildBreakpointMaxWidthSx = (width: number): SxProps<Theme> => [
-  breakpointContainerSx,
-  { maxWidth: '100%', width },
-];
 
 // ----------------------------------------------------------------------
 

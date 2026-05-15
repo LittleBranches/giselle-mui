@@ -74,9 +74,9 @@ export const breakpointLabelSx: SystemStyleObject<Theme> = {
 /**
  * Dashed border container that constrains a component to a specific breakpoint width.
  *
- * Merge with `{ width }` for the specific pixel value:
+ * Use with a factory for the pixel value — never inline `sx={[breakpointContainerSx, { width }]}`:
  * ```tsx
- * <Box sx={[breakpointContainerSx, { width }]}>
+ * <Box sx={buildBreakpointWidthSx(width)}>
  * ```
  *
  * Uses `borderColor: 'divider'` (MUI theme token) — never a hardcoded colour.
@@ -86,6 +86,41 @@ export const breakpointContainerSx: SystemStyleObject<Theme> = {
   borderColor: 'divider',
   overflow: 'hidden',
 };
+
+/**
+ * Factory for a breakpoint container at a specific pixel width.
+ * Use instead of `sx={[breakpointContainerSx, { width }]}` in Responsive stories.
+ *
+ * @example
+ * ```tsx
+ * {BREAKPOINTS.map(({ label, width }) => (
+ *   <Box key={width} sx={buildBreakpointWidthSx(width)}>
+ * ```
+ */
+export const buildBreakpointWidthSx = (width: number): SystemStyleObject<Theme> => ({
+  ...breakpointContainerSx,
+  width,
+});
+
+/**
+ * Like `buildBreakpointWidthSx` but adds `p: 1` padding inside the container —
+ * for stories whose component needs inner breathing room.
+ */
+export const buildBreakpointPaddedWidthSx = (width: number): SystemStyleObject<Theme> => ({
+  ...breakpointContainerSx,
+  p: 1,
+  width,
+});
+
+/**
+ * Like `buildBreakpointWidthSx` but adds `maxWidth: '100%'` —
+ * for components that must not exceed the viewport width on small screens.
+ */
+export const buildBreakpointMaxWidthSx = (width: number): SystemStyleObject<Theme> => ({
+  ...breakpointContainerSx,
+  maxWidth: '100%',
+  width,
+});
 
 /**
  * Flex row that wraps variant tiles (colour-variant grids, state-comparison grids).

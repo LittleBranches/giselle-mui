@@ -1,16 +1,73 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import type { CSSProperties } from 'react';
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import type { MotionValue } from 'framer-motion';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
+import { MANGO_DARK_GROVE, MANGO_GOLD } from '../../../stories-defaults';
 import { useScrollParallax } from './use-scroll-parallax';
 
 // ----------------------------------------------------------------------
 
 const LAYER_SIZES = [220, 170, 120, 76, 36];
 const LAYER_OPACITIES = [0.07, 0.13, 0.22, 0.38, 0.72];
+
+/** Demo container — deep-grove dark background with rounded corners. */
+const parallaxContainerStyle: CSSProperties = {
+  position: 'relative',
+  height: 400,
+  overflow: 'hidden',
+  background: MANGO_DARK_GROVE,
+  borderRadius: 12,
+};
+
+/** Overlay Box centred over the parallax layers — pointer-events disabled. */
+const parallaxContentBoxSx: SystemStyleObject<Theme> = {
+  position: 'absolute',
+  inset: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 1,
+  pointerEvents: 'none',
+};
+
+/** White title text on the dark demo background. */
+const parallaxTitleSx: SystemStyleObject<Theme> = {
+  color: 'common.white',
+  fontWeight: 700,
+};
+
+/** Subdued white caption text — 60 % opacity — for dark demo backgrounds. */
+const parallaxCaptionSx: SystemStyleObject<Theme> = {
+  color: 'rgba(255, 255, 255, 0.6)',
+};
+
+/** Factory for a single floating parallax circle. */
+function buildLayerStyle(
+  y: MotionValue<number>,
+  size: number,
+  opacity: number
+): Record<string, unknown> {
+  return {
+    y,
+    position: 'absolute',
+    width: size,
+    height: size,
+    borderRadius: '50%',
+    backgroundColor: MANGO_GOLD,
+    opacity,
+    top: `calc(50% - ${size / 2}px)`,
+    left: `calc(50% - ${size / 2}px)`,
+  };
+}
 
 /**
  * Parallax demo rendered as a named component so the hook can be called
@@ -20,49 +77,19 @@ function ScrollParallaxDemo() {
   const { ref, layers } = useScrollParallax();
 
   return (
-    <div
-      ref={ref}
-      style={{
-        position: 'relative',
-        height: 400,
-        overflow: 'hidden',
-        background: '#1A2B1A',
-        borderRadius: 12,
-      }}
-    >
+    <div ref={ref} style={parallaxContainerStyle}>
       {layers.map((y, i) => (
         <motion.div
           key={i}
-          style={{
-            y,
-            position: 'absolute',
-            width: LAYER_SIZES[i],
-            height: LAYER_SIZES[i],
-            borderRadius: '50%',
-            backgroundColor: '#F5A623',
-            opacity: LAYER_OPACITIES[i],
-            top: `calc(50% - ${(LAYER_SIZES[i] ?? 0) / 2}px)`,
-            left: `calc(50% - ${(LAYER_SIZES[i] ?? 0) / 2}px)`,
-          }}
+          style={buildLayerStyle(y, LAYER_SIZES[i] ?? 0, LAYER_OPACITIES[i] ?? 0)}
         />
       ))}
 
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 1,
-          pointerEvents: 'none',
-        }}
-      >
-        <Typography variant="h6" sx={{ color: 'white', fontWeight: 700 }}>
+      <Box sx={parallaxContentBoxSx}>
+        <Typography variant="h6" sx={parallaxTitleSx}>
           Scroll to see layers shift
         </Typography>
-        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.6)' }}>
+        <Typography variant="caption" sx={parallaxCaptionSx}>
           layers[0] ±40 px · · · layers[4] ±200 px
         </Typography>
       </Box>
