@@ -311,5 +311,4 @@ The corner badge, tooltip, detection, and the full repair UI are functional and 
 ## Related
 
 - [roadmap.md](../roadmap.md) — Phase A (`channelAlpha` utility) shipped 4 May 2026; Phases B/C pending
-- `alexrebula/docs/roadmap.md` — milestone tracking (private companion repo — not linkable from here)
-- `alexrebula/src/sections/career-timeline/` — reference implementation in production (private repo, do not copy code)
+- Reference implementation — available in a production consumer project (private — do not copy code)

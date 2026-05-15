@@ -116,7 +116,7 @@ cards without backgrounds, icons without tint.
 This is intentional: the library delegates theme ownership to the consuming application,
 so it can integrate into any existing MUI theme without conflict.
 
-**Minimal setup:**
+**Basic setup:**
 
 ```tsx
 import { ThemeProvider, createTheme } from '@mui/material/styles';

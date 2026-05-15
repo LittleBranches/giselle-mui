@@ -2,7 +2,8 @@
 import React from 'react';
 import { describe, it, expect } from 'vitest';
 
-import { fadeVariants, containerVariants } from './utils';
+import { fade } from '../../motion/variants/fade';
+import { container } from '../../motion/variants/container';
 import {
   FAQ_CONTENT_MAX_WIDTH,
   FAQ_FLOAT_LINE_LEFT,
@@ -11,50 +12,50 @@ import {
 
 // ----------------------------------------------------------------------
 
-describe('fadeVariants', () => {
+describe('fade', () => {
   it('returns initial, animate, exit keys', () => {
-    const variants = fadeVariants('inUp');
+    const variants = fade('inUp');
     expect(variants).toHaveProperty('initial');
     expect(variants).toHaveProperty('animate');
     expect(variants).toHaveProperty('exit');
   });
 
   it('inUp sets positive y on initial state', () => {
-    const variants = fadeVariants('inUp', 24);
+    const variants = fade('inUp', { distance: 24 });
     expect((variants.initial as Record<string, unknown>)['y']).toBe(24);
     expect((variants.animate as Record<string, unknown>)['y']).toBe(0);
   });
 
   it('in uses opacity only (no y/x translation)', () => {
-    const variants = fadeVariants('in');
+    const variants = fade('in');
     expect((variants.initial as Record<string, unknown>)['opacity']).toBe(0);
     expect((variants.initial as Record<string, unknown>)['y']).toBeUndefined();
     expect((variants.initial as Record<string, unknown>)['x']).toBeUndefined();
   });
 
-  it('respects custom distance parameter', () => {
-    const variants = fadeVariants('inUp', 48);
+  it('respects custom distance option', () => {
+    const variants = fade('inUp', { distance: 48 });
     expect((variants.initial as Record<string, unknown>)['y']).toBe(48);
   });
 });
 
 // ----------------------------------------------------------------------
 
-describe('containerVariants', () => {
+describe('container', () => {
   it('returns animate and exit keys', () => {
-    const variants = containerVariants();
+    const variants = container();
     expect(variants).toHaveProperty('animate');
     expect(variants).toHaveProperty('exit');
   });
 
   it('animate transition has staggerChildren', () => {
-    const variants = containerVariants();
+    const variants = container();
     const animate = variants.animate as { transition: Record<string, unknown> };
     expect(animate.transition.staggerChildren).toBeGreaterThan(0);
   });
 
   it('exit transition has negative staggerDirection', () => {
-    const variants = containerVariants();
+    const variants = container();
     const exit = variants.exit as { transition: Record<string, unknown> };
     expect(exit.transition.staggerDirection).toBe(-1);
   });
