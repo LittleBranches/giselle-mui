@@ -60,7 +60,7 @@ vi.mock('../stat/stat-card', () => ({
     ),
 }));
 
-vi.mock('../../icons/giselle', () => ({
+vi.mock('../../../data-display/icon/giselle', () => ({
   GiselleIcon: ({ icon }: { icon: string }) => React.createElement('span', { 'data-icon': icon }),
 }));
 

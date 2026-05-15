@@ -28,9 +28,9 @@ import {
   MANGO_RIPE_FLESH,
   MANGO_DARK_GROVE,
   MANGO_WARM_TAN,
-} from './utils/theme-preset';
-import { BREAKPOINTS, BREAKPOINTS_GRID } from './utils/breakpoints';
-export type { BreakpointEntry, BreakpointGridEntry } from './utils/breakpoints';
+} from './utils/theme/preset/theme-preset';
+import { BREAKPOINTS, BREAKPOINTS_GRID } from './utils/breakpoints/breakpoints';
+export type { BreakpointEntry, BreakpointGridEntry } from './utils/breakpoints/breakpoints';
 
 export { GISELLE_PRIMARY_MAIN, GISELLE_PRIMARY_DARK_MAIN, GISELLE_SECONDARY_MAIN };
 export { MANGO_RIPE_FLESH, MANGO_DARK_GROVE, MANGO_WARM_TAN };
