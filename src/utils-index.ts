@@ -19,3 +19,4 @@ export {
   GISELLE_PRIMARY_DARK_MAIN,
   GISELLE_SECONDARY_MAIN,
 } from './utils/theme-preset';
+export { useImagePreloader } from './utils/use-image-preloader';

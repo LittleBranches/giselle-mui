@@ -261,7 +261,8 @@ When updating or writing docs:
 - **Never** frame a utility as a "replacement for X" or "clean-room implementation of X from Y". Describe what it does: "`channelAlpha(channel, alpha)` creates an rgba tint from an MUI v7 CSS variable channel string."
 - **Never** reference `alexrebula/src/` paths, alexrebula migration status, or private codebase internals in any `giselle-mui/docs/` file.
 - **Never** write a "Copyright status" or "migration tracker" section in a component plan — that is private planning, not library documentation.
-- **Never** mention Minimals, any commercial MUI kit, or any third-party theme by name anywhere in `giselle-mui` — not in `docs/`, not in `src/`, not in component READMEs. There is nothing to credit: every utility in this library is an independent implementation described on its own terms. A reader of this library's public history should see no connection to any commercial product. If a rationale for a design decision is needed, describe the problem it solves — not what it replaces.
+- **Never** mention proprietary, copyrighted, or internal libraries by name in `giselle-mui/docs/` — this is a public library, not an internal migration. No "replaces X from Y" statements anywhere in `giselle-mui/docs/`, `src/`, or component READMEs.
+- **Describe components on their own terms.** Document the problem each component solves and the decisions it encodes — not what preceded it or what inspired it. This is standard practice for any library: React docs do not cite Angular; MUI docs do not cite Bootstrap. A `channelAlpha` entry should read "`channelAlpha(channel, alpha)` builds an rgba tint from an MUI v7 CSS variable channel string" — full stop. No "replaces X", no "unlike Y", no third-party theme names anywhere in `docs/`, `src/`, or component READMEs.
 
 ## Session shorthand commands
 
