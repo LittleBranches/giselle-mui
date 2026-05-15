@@ -15,9 +15,9 @@ decisions that are easy to get wrong:
 
 ## Why it belongs here
 
-This is a high-frequency layout pattern — not specific to any one project. Every page in
-`alexrebula` and in `first-branch` that has a landing area follows this exact structure.
-Encoding it in `giselle-mui` means it is available to any project with zero reimplementation.
+This is a high-frequency layout pattern — not specific to any one project. Any portfolio,
+product site, or landing page that has a hero area follows this exact structure. Encoding it in
+`giselle-mui` means it is available to any consumer with zero reimplementation.
 
 ## Design decisions
 
@@ -50,7 +50,7 @@ other markup without fighting the component.
 ## Library safety
 
 - Zero proprietary dependencies. Uses only `@mui/material` and the library's own `channelAlpha`.
-- Written from scratch — no code derived from `alexrebula/src/` or any third-party theme.
+- Written from scratch — no code derived from any proprietary source or third-party theme.
 - CSS-variable tint works correctly in both light and dark mode.
 
 ## File structure
@@ -63,6 +63,7 @@ src/components/layout/section/hero/
   hero-section.styles.test.ts — mock-theme assertions for all exported sx functions
   hero-section.test.ts       — Vitest: rendering, slot behaviour, sx branch coverage
   hero-section.stories.tsx   — Default, HeadlineOnly, ColorVariants, Responsive
+  roadmap.md                 — open improvements and known gaps
   index.ts                   — barrel
   README.md                  — this file
 ```

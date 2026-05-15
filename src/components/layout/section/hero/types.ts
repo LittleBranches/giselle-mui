@@ -6,10 +6,22 @@ import type { SxProps, Theme } from '@mui/material/styles';
 // ----------------------------------------------------------------------
 
 /**
- * Palette color key for the `HeroSection` background tint.
+ * MUI palette colour key used to derive the `HeroSection` background tint.
+ * Maps directly to `theme.vars.palette[color].mainChannel`.
  */
 export type HeroColorKey = 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
 
+/**
+ * Props for `HeroSection`.
+ *
+ * Provides a full-width tinted hero layout with three content slots:
+ * - `headline` — primary heading (any `ReactNode`; `<Typography variant="h1">` is typical)
+ * - `subtitle` — secondary text below the headline
+ * - `actions` — CTA row (centred, wrapping flex; pass one or more `<Button>` elements)
+ *
+ * The background tint is derived from `channelAlpha(theme.vars.palette[color].mainChannel, 0.08)`,
+ * which resolves correctly in both light and dark mode.
+ */
 export interface HeroSectionProps extends Omit<BoxProps, 'color'> {
   /**
    * Heading slot. Render a `<Typography variant="h1">` (or any heading element) here.
