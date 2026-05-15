@@ -670,15 +670,15 @@ Every exported component must have a `Responsive` story that renders the compone
 
 **Use shared story scaffold constants from `src/stories-defaults.ts`** — never re-define equivalent patterns inline. Import the relevant constant instead:
 
-| Constant | Usage |
-|---|---|
-| `responsiveWrapperSx` | Outer `<Box>` in `Responsive` stories (`flex`, `column`, `gap: 4`) |
-| `breakpointLabelSx` | `<Typography variant="caption">` breakpoint width label |
-| `breakpointContainerSx` | `<Box>` container with `border: '1px dashed'` at each breakpoint |
-| `variantGridSx` | `<Box>` wrapping a row of colour variant cards (`flex`, `wrap`, `gap: 2`) |
-| `dotColumnSx` | `<Box>` stacking dot demos vertically with centre alignment |
+| Constant                 | Usage                                                                        |
+| ------------------------ | ---------------------------------------------------------------------------- |
+| `responsiveWrapperSx`    | Outer `<Box>` in `Responsive` stories (`flex`, `column`, `gap: 4`)           |
+| `breakpointLabelSx`      | `<Typography variant="caption">` breakpoint width label                      |
+| `breakpointContainerSx`  | `<Box>` container with `border: '1px dashed'` at each breakpoint             |
+| `variantGridSx`          | `<Box>` wrapping a row of colour variant cards (`flex`, `wrap`, `gap: 2`)    |
+| `dotColumnSx`            | `<Box>` stacking dot demos vertically with centre alignment                  |
 | `timelineStoryWrapperSx` | `<Box>` wrapper for timeline stories (`maxWidth: 960`, `mx: 'auto'`, `p: 3`) |
-| `MANGO_*` constants | Giselle brand palette tokens for any story that needs brand colours |
+| `MANGO_*` constants      | Giselle brand palette tokens for any story that needs brand colours          |
 
 ### `*.styles.ts` companion files for sx extraction (enforce always)
 
