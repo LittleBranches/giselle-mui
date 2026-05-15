@@ -2,11 +2,28 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
+import {
+  BREAKPOINTS_GRID,
+  breakpointLabelSx,
+  responsiveWrapperSx,
+} from '../../../stories-defaults';
 import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { MetricCard, MetricCardDecoration } from './metric-card';
 import type { MetricCardColor } from './types';
 
 // ----------------------------------------------------------------------
+
+const decorationOffsetSx: SystemStyleObject<Theme> = {
+  width: 180,
+  height: 180,
+  top: 'auto',
+  bottom: -60,
+  right: 'auto',
+  left: -60,
+};
 
 const ALL_COLORS: MetricCardColor[] = [
   'primary',
@@ -81,13 +98,6 @@ export const NoIconNoDecoration: Story = {
 
 // ----------------------------------------------------------------------
 
-const BREAKPOINTS_GRID = [
-  { label: 'xs — 360px', width: 360, cols: 1 },
-  { label: 'sm — 600px', width: 600, cols: 2 },
-  { label: 'md — 900px', width: 900, cols: 3 },
-  { label: 'lg — 1200px', width: 1200, cols: 4 },
-];
-
 /**
  * Six metric cards in a responsive grid — column count grows with available width
  * at each MUI standard breakpoint.
@@ -95,10 +105,10 @@ const BREAKPOINTS_GRID = [
 export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {BREAKPOINTS_GRID.map(({ label, width, cols }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
           <Box
@@ -163,12 +173,7 @@ export const DecorationCustomSx: Story = {
       label="Uptime"
       color="success"
       icon={<GiselleIcon icon="solar:shield-check-bold-duotone" width={36} />}
-      decoration={
-        <MetricCardDecoration
-          color="success"
-          sx={{ width: 180, height: 180, top: 'auto', bottom: -60, right: 'auto', left: -60 }}
-        />
-      }
+      decoration={<MetricCardDecoration color="success" sx={decorationOffsetSx} />}
       sx={{ width: 240 }}
     />
   ),

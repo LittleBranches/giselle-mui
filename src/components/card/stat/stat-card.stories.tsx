@@ -8,10 +8,11 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
 
+import { breakpointLabelSx, responsiveWrapperSx } from '../../../stories-defaults';
 import { resolveMaturityColor, resolveMaturityLabel } from '../../../utils/maturity-utils';
 import { GiselleIcon } from '../../icon/giselle';
-import type { StatCardColor } from './types';
 import { StatCard, STAT_CARD_SPARKLINE_OPTIONS } from './stat-card';
+import type { StatCardColor } from './types';
 
 // ----------------------------------------------------------------------
 
@@ -166,10 +167,12 @@ export const AllColors: Story = {
  */
 export const Responsive: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+    <Box sx={responsiveWrapperSx}>
       {([360, 600, 900, 1200] as const).map((width) => (
         <div key={width}>
-          <Box sx={{ mb: 0.5, fontSize: '0.75rem', color: 'text.secondary' }}>{width}px</Box>
+          <Typography variant="caption" sx={breakpointLabelSx}>
+            {width}px
+          </Typography>
           <Box sx={{ width }}>
             <StatCard
               label="Purchase orders"

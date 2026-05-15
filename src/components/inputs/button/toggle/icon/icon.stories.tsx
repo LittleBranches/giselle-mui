@@ -4,6 +4,10 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import SvgIcon from '@mui/material/SvgIcon';
 import Typography from '@mui/material/Typography';
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
+import { BREAKPOINTS } from '../../../../../stories-defaults';
 
 import { ToggleIconButton } from './icon';
 
@@ -123,30 +127,22 @@ export const ControlledToggle: Story = {
 // Responsive — component at each MUI breakpoint width
 // ---------------------------------------------------------------------------
 
-const BREAKPOINTS: Array<{ label: string; width: number }> = [
-  { label: 'xs — 360px', width: 360 },
-  { label: 'sm — 600px', width: 600 },
-  { label: 'md — 900px', width: 900 },
-  { label: 'lg — 1200px', width: 1200 },
-];
+const responsiveRowSx = (width: number): SystemStyleObject<Theme> => ({
+  width,
+  display: 'flex',
+  alignItems: 'center',
+  gap: 2,
+  p: 1,
+  border: '1px dashed',
+  borderColor: 'divider',
+});
 
 function ResponsiveDemo() {
   const [pressed, setPressed] = useState(false);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       {BREAKPOINTS.map(({ label, width }) => (
-        <Box
-          key={label}
-          sx={{
-            width,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            p: 1,
-            border: '1px dashed',
-            borderColor: 'divider',
-          }}
-        >
+        <Box key={label} sx={responsiveRowSx(width)}>
           <Typography variant="caption" sx={{ width: 120, flexShrink: 0 }}>
             {label}
           </Typography>

@@ -2,9 +2,21 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
+import { breakpointLabelSx, responsiveWrapperSx } from '../../../stories-defaults';
 import { GiselleIcon } from './giselle-icon';
 
 // ----------------------------------------------------------------------
+
+const sizeDemoRowSx = (width: number): SystemStyleObject<Theme> => ({
+  width,
+  maxWidth: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 2,
+});
 
 const meta: Meta<typeof GiselleIcon> = {
   component: GiselleIcon,
@@ -83,13 +95,13 @@ export const FlipAndRotate: Story = {
 export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {[360, 600, 900, 1200].map((width) => (
         <Box key={width}>
-          <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
-          <Box sx={{ width, maxWidth: '100%', display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={sizeDemoRowSx(width)}>
             {([16, 20, 24, 32, 48] as const).map((size) => (
               <GiselleIcon key={size} icon="solar:rocket-bold-duotone" width={size} />
             ))}

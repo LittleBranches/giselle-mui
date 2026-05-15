@@ -668,6 +668,23 @@ Every exported component must have a `Responsive` story that renders the compone
 
 **No hardcoded hex, rgb, or rgba literals in any story file — non-negotiable.** Story scaffold chrome (breakpoint labels, dashed borders, dividers) must use MUI theme tokens via `sx` on MUI components. Never use `style={{ color: '#666' }}` or `style={{ border: '1px dashed #ccc' }}`; use `sx={{ color: 'text.secondary' }}` and `sx={{ border: '1px dashed', borderColor: 'divider' }}` instead. This ensures story chrome respects dark mode automatically. Enforce this on every story file touched — not just new ones.
 
+**Zero inline `sx={{}}` in story files — non-negotiable.** Every `sx` object in a story file — regardless of property count — must be extracted to a module-level named constant before the first story export. Reasoning: (1) consistent discoverability — all styles are grep-findable at file top, (2) no per-render object allocations for static styles, (3) uniform enforcement avoids "is 2 properties ok?" debates. The `~3 properties` threshold does not apply to story files. There are **no exceptions** — not even single-property objects or `{ width }` loop variables.
+
+**Use shared story scaffold constants from `src/stories-defaults.ts`** — never re-define equivalent patterns inline. Import the relevant constant instead:
+
+| Constant                          | Usage                                                                         |
+| --------------------------------- | ----------------------------------------------------------------------------- |
+| `responsiveWrapperSx`             | Outer `<Box>` in `Responsive` stories (`flex`, `column`, `gap: 4`)            |
+| `breakpointLabelSx`               | `<Typography variant="caption">` breakpoint width label                       |
+| `breakpointContainerSx`           | Static `<Box>` styles (border, overflow) — use via one of the factories below |
+| `buildBreakpointWidthSx(w)`       | Standard container at pixel width `w` — use in all Responsive stories         |
+| `buildBreakpointPaddedWidthSx(w)` | Like above with `p: 1` — for stories that need inner padding                  |
+| `buildBreakpointMaxWidthSx(w)`    | Like above with `maxWidth: '100%'` — for responsive-capped stories            |
+| `variantGridSx`                   | `<Box>` wrapping a row of colour variant cards (`flex`, `wrap`, `gap: 2`)     |
+| `dotColumnSx`                     | `<Box>` stacking dot demos vertically with centre alignment                   |
+| `timelineStoryWrapperSx`          | `<Box>` wrapper for timeline stories (`maxWidth: 960`, `mx: 'auto'`, `p: 3`)  |
+| `MANGO_*` constants               | Giselle brand palette tokens for any story that needs brand colours           |
+
 ### `*.styles.ts` companion files for sx extraction (enforce always)
 
 Inline `sx` objects that span more than ~3 properties must be extracted to a co-located `<component-name>.styles.ts` file. This makes components scannable and the style logic independently testable.

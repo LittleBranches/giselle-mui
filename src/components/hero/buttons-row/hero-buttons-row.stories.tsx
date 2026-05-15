@@ -1,5 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+
+import {
+  BREAKPOINTS,
+  breakpointLabelSx,
+  buildBreakpointWidthSx,
+  responsiveWrapperSx,
+} from '../../../stories-defaults';
 import { HeroButtonsRow } from './hero-buttons-row';
 
 // ----------------------------------------------------------------------
@@ -59,16 +68,18 @@ export const ThreeButtons: Story = {
  */
 export const Responsive: Story = {
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-      {[360, 600, 900, 1200].map((width) => (
+    <Box sx={responsiveWrapperSx}>
+      {BREAKPOINTS.map(({ label, width }) => (
         <div key={width}>
-          <div style={{ fontSize: 12, marginBottom: 8, color: '#666' }}>{width}px</div>
-          <div style={{ width }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
+            {label}
+          </Typography>
+          <Box sx={buildBreakpointWidthSx(width)}>
             <HeroButtonsRow items={SAMPLE_ITEMS} />
-          </div>
+          </Box>
         </div>
       ))}
-    </div>
+    </Box>
   ),
   parameters: { layout: 'padded' },
 };

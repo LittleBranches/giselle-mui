@@ -7,12 +7,20 @@ import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import type { SxProps } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+
+import {
+  buildBreakpointMaxWidthSx,
+  breakpointLabelSx,
+  BREAKPOINTS,
+} from '../../../../../stories-defaults';
 import { TwoColumnShowcaseRow } from './two-column-showcase-row';
 
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof TwoColumnShowcaseRow> = {
-  title: 'Layout/TwoColumnShowcaseRow',
+  title: 'Layout/Two Column Showcase Row',
   component: TwoColumnShowcaseRow,
   parameters: { layout: 'padded' },
   argTypes: {
@@ -28,11 +36,23 @@ type Story = StoryObj<typeof TwoColumnShowcaseRow>;
 
 // ----------------------------------------------------------------------
 
+const sampleControlsWrapperSx: SxProps<Theme> = { maxWidth: 360 };
+const previewPlaceholderBoxSx: SxProps<Theme> = {
+  height: 200,
+  borderRadius: 1,
+  bgcolor: 'action.hover',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+// ----------------------------------------------------------------------
+
 const SampleControls = () => (
-  <Stack spacing={2} sx={{ maxWidth: 360 }}>
+  <Stack spacing={2} sx={sampleControlsWrapperSx}>
     <FormControlLabel control={<Switch defaultChecked />} label="Dark mode" />
     <FormControlLabel control={<Switch />} label="Compact layout" />
-    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+    <Typography variant="caption" color="text.secondary">
       Font size
     </Typography>
     <Slider defaultValue={14} min={12} max={20} step={1} marks valueLabelDisplay="auto" />
@@ -79,17 +99,8 @@ export const Column: Story = {
       heading: 'Live dashboard',
     },
     controls: (
-      <Box
-        sx={{
-          height: 200,
-          borderRadius: 1,
-          bgcolor: 'action.hover',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+      <Box sx={previewPlaceholderBoxSx}>
+        <Typography variant="body2" color="text.disabled">
           Dashboard preview placeholder
         </Typography>
       </Box>
@@ -116,12 +127,12 @@ export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
     <Stack spacing={4}>
-      {([360, 600, 900, 1200] as const).map((width) => (
+      {BREAKPOINTS.map(({ label, width }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mb: 1 }}>
-            {width}px
+          <Typography variant="caption" sx={breakpointLabelSx}>
+            {label}
           </Typography>
-          <div style={{ width, maxWidth: '100%', border: '1px dashed rgba(128,128,128,0.3)' }}>
+          <Box sx={buildBreakpointMaxWidthSx(width)}>
             <TwoColumnShowcaseRow
               text={{
                 overline: 'Appearance',
@@ -130,7 +141,7 @@ export const Responsive: Story = {
               }}
               controls={<SampleControls />}
             />
-          </div>
+          </Box>
         </div>
       ))}
     </Stack>

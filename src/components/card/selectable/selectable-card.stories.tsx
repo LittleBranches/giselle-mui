@@ -3,6 +3,11 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import {
+  BREAKPOINTS_GRID,
+  breakpointLabelSx,
+  responsiveWrapperSx,
+} from '../../../stories-defaults';
 import { SelectableCard } from './selectable-card';
 
 // ----------------------------------------------------------------------
@@ -88,20 +93,13 @@ export const Disabled: Story = {
 
 const OPTION_LABELS = ['Starter', 'Pro', 'Enterprise', 'Team', 'Custom', 'Business'] as const;
 
-const BREAKPOINTS_GRID = [
-  { label: 'xs — 360px', width: 360, cols: 1 },
-  { label: 'sm — 600px', width: 600, cols: 2 },
-  { label: 'md — 900px', width: 900, cols: 3 },
-  { label: 'lg — 1200px', width: 1200, cols: 4 },
-];
-
 function ResponsiveDemo() {
   const [active, setActive] = useState<string>('Pro');
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {BREAKPOINTS_GRID.map(({ label, width, cols }) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 1, color: 'text.secondary' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {label}
           </Typography>
           <Box

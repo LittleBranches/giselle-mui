@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
+import { breakpointLabelSx, responsiveWrapperSx } from '../../../../stories-defaults';
 import { AnimatedGradientText } from '../../../animated-gradient-text';
 import { GiselleIcon } from '../../../icon/giselle';
 import { TechIconStrip } from '../../../tech-icon-strip';
@@ -176,10 +177,10 @@ export const ColorVariants: Story = {
 export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <Box sx={responsiveWrapperSx}>
       {([360, 600, 900, 1200] as const).map((width) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 0.5, color: 'text.secondary' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
           <Box
@@ -203,7 +204,7 @@ export const Responsive: Story = {
           </Box>
         </div>
       ))}
-    </div>
+    </Box>
   ),
 };
 
