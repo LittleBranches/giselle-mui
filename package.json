@@ -54,6 +54,7 @@
     "build-storybook": "storybook build",
     "check": "node scripts/quality-gate.js --fix",
     "check:verify": "node scripts/quality-gate.js --verify",
+    "check:verify:fast": "node scripts/quality-gate.js --verify --no-storybook",
     "clean": "rm -rf dist storybook-static",
     "postinstall": "node --input-type=module -e \"import('./scripts/setup-hooks.js').catch((error)=>{const msg=String(error?.message??'');const isMissingSetupHooks=error?.code==='ERR_MODULE_NOT_FOUND'&&(msg.includes('scripts/setup-hooks.js')||msg.includes('scripts\\\\setup-hooks.js'));if(!isMissingSetupHooks){console.error('Failed to run scripts/setup-hooks.js during postinstall.');console.error(error);process.exitCode=1;}})\""
   },
