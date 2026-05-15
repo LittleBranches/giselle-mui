@@ -2,12 +2,24 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
 import { breakpointLabelSx, responsiveWrapperSx } from '../../../stories-defaults';
 import { GiselleIcon } from '../../icon/giselle/giselle-icon';
 import { MetricCard, MetricCardDecoration } from './metric-card';
 import type { MetricCardColor } from './types';
 
 // ----------------------------------------------------------------------
+
+const decorationOffsetSx: SystemStyleObject<Theme> = {
+  width: 180,
+  height: 180,
+  top: 'auto',
+  bottom: -60,
+  right: 'auto',
+  left: -60,
+};
 
 const ALL_COLORS: MetricCardColor[] = [
   'primary',
@@ -164,12 +176,7 @@ export const DecorationCustomSx: Story = {
       label="Uptime"
       color="success"
       icon={<GiselleIcon icon="solar:shield-check-bold-duotone" width={36} />}
-      decoration={
-        <MetricCardDecoration
-          color="success"
-          sx={{ width: 180, height: 180, top: 'auto', bottom: -60, right: 'auto', left: -60 }}
-        />
-      }
+      decoration={<MetricCardDecoration color="success" sx={decorationOffsetSx} />}
       sx={{ width: 240 }}
     />
   ),

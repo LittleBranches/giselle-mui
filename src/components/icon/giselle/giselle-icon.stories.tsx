@@ -2,10 +2,21 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
 import { breakpointLabelSx, responsiveWrapperSx } from '../../../stories-defaults';
 import { GiselleIcon } from './giselle-icon';
 
 // ----------------------------------------------------------------------
+
+const sizeDemoRowSx = (width: number): SystemStyleObject<Theme> => ({
+  width,
+  maxWidth: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  gap: 2,
+});
 
 const meta: Meta<typeof GiselleIcon> = {
   component: GiselleIcon,
@@ -90,7 +101,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
-          <Box sx={{ width, maxWidth: '100%', display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={sizeDemoRowSx(width)}>
             {([16, 20, 24, 32, 48] as const).map((size) => (
               <GiselleIcon key={size} icon="solar:rocket-bold-duotone" width={size} />
             ))}
