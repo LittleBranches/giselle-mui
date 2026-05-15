@@ -23,6 +23,10 @@ export type HeroSlotProps = {
    * Primary headline slot.
    *
    * Render a `<Typography variant="h1">` or `<SectionTitle>` here.
+   *
+   * Optional here — this base interface allows heading-less hero variants.
+   * Subclasses (e.g. `HeroSectionProps`) narrow this to **required** when the
+   * component contract demands a heading be supplied by the consumer.
    */
   heading?: ReactNode;
   /**

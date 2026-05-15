@@ -65,6 +65,7 @@ vi.mock('@mui/material/Container', () => ({
 import { ScrollParallaxHero } from './scroll-parallax-hero';
 import { AnimatedHeroHeading } from './animated-hero-heading';
 import { useScrollPercent } from './use-scroll-percent';
+import { DEFAULT_PARALLAX_MULTIPLIERS } from './scroll-parallax-hero.const';
 
 // ----------------------------------------------------------------------
 
@@ -254,8 +255,6 @@ describe('useScrollPercent', () => {
 
 // ----------------------------------------------------------------------
 
-import { DEFAULT_PARALLAX_MULTIPLIERS } from './scroll-parallax-hero.const';
-
 describe('DEFAULT_PARALLAX_MULTIPLIERS — regression', () => {
   it('logo multiplier is negative (moves upward on scroll)', () => {
     expect(DEFAULT_PARALLAX_MULTIPLIERS.logo).toBeLessThan(0);
@@ -283,5 +282,13 @@ describe('DEFAULT_PARALLAX_MULTIPLIERS — regression', () => {
 
   it('text moves further than actions', () => {
     expect(DEFAULT_PARALLAX_MULTIPLIERS.text).toBeLessThan(DEFAULT_PARALLAX_MULTIPLIERS.actions);
+  });
+
+  it('icons multiplier is negative', () => {
+    expect(DEFAULT_PARALLAX_MULTIPLIERS.icons).toBeLessThan(0);
+  });
+
+  it('icons and actions share the same default plane', () => {
+    expect(DEFAULT_PARALLAX_MULTIPLIERS.icons).toBe(DEFAULT_PARALLAX_MULTIPLIERS.actions);
   });
 });

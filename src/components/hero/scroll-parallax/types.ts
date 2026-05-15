@@ -16,8 +16,10 @@ export type ParallaxMultipliers = {
   heading?: number;
   /** Text/description layer multiplier. Default: `-5`. */
   text?: number;
-  /** Actions and icons layer multiplier. Default: `-4` (moves least — shallowest depth). */
+  /** Actions layer multiplier. Default: `-4` (moves least — shallowest depth). */
   actions?: number;
+  /** Icons strip layer multiplier. Default: `-4` (same plane as actions). */
+  icons?: number;
 };
 
 /** Props for `ScrollParallaxHero`. */

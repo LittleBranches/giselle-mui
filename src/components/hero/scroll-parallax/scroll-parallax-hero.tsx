@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import { motion, useTransform } from 'framer-motion';
 
 import Box from '@mui/material/Box';
@@ -67,12 +69,21 @@ export function ScrollParallaxHero({
   ...other
 }: ScrollParallaxHeroProps) {
   const scrollProgress = useScrollPercent();
-  const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'), { noSsr: true });
+  const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
+
+  // Gate parallax behind a `mounted` flag so server render and the first client
+  // render both produce `multiplier = 0`. Without this, `useMediaQuery` returns
+  // the real `matchMedia` value on the first client render (e.g. `true` on a wide
+  // viewport), causing a hydration mismatch with the server-rendered `false`.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const pm = { ...DEFAULT_PARALLAX_MULTIPLIERS, ...parallax } as Required<ParallaxMultipliers>;
-  const multiplier = mdUp ? 1 : 0;
+  const multiplier = mounted && mdUp ? 1 : 0;
 
-  // All four useTransformY calls are unconditional — hook call order must be stable.
+  // All five useTransformY calls are unconditional — hook call order must be stable.
   const y1 = useTransformY(scrollProgress.scrollY, scrollProgress.elementRef, multiplier * pm.logo);
   const y2 = useTransformY(
     scrollProgress.scrollY,
@@ -84,6 +95,11 @@ export function ScrollParallaxHero({
     scrollProgress.scrollY,
     scrollProgress.elementRef,
     multiplier * pm.actions
+  );
+  const y5 = useTransformY(
+    scrollProgress.scrollY,
+    scrollProgress.elementRef,
+    multiplier * pm.icons
   );
 
   const opacity = useTransform(scrollProgress.scrollY, (scrollY: number) => {
@@ -118,7 +134,7 @@ export function ScrollParallaxHero({
               </Stack>
 
               {actions && <motion.div style={parallaxYStyle(y4)}>{actions}</motion.div>}
-              {icons && <motion.div style={parallaxYStyle(y4)}>{icons}</motion.div>}
+              {icons && <motion.div style={parallaxYStyle(y5)}>{icons}</motion.div>}
             </Container>
           </motion.div>
 

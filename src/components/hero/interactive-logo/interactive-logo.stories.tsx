@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { InteractiveHeroLogo } from './interactive-logo';
+import { PLACEHOLDER_ART_SRC, PLACEHOLDER_PORTRAIT_SRC } from '../../../stories-defaults';
 
 // ----------------------------------------------------------------------
 
@@ -86,7 +87,7 @@ export const Default: Story = {
 export const WithArtisticLogo: Story = {
   render: () => (
     <Box sx={{ width: LOGO_SIZE, height: LOGO_SIZE }}>
-      <InteractiveHeroLogo artisticLogoSrc="https://via.placeholder.com/240/F5A623/fff?text=art">
+      <InteractiveHeroLogo artisticLogoSrc={PLACEHOLDER_ART_SRC}>
         <PlaceholderLogo />
       </InteractiveHeroLogo>
     </Box>
@@ -110,7 +111,7 @@ export const WithPortrait: Story = {
   render: () => (
     <Box sx={{ width: LOGO_SIZE, height: LOGO_SIZE }}>
       <InteractiveHeroLogo
-        portraitSrc="https://via.placeholder.com/480/2E7D32/fff?text=portrait"
+        portraitSrc={PLACEHOLDER_PORTRAIT_SRC}
         portraitAlt="Placeholder portrait"
       >
         <PlaceholderLogo />
@@ -136,8 +137,8 @@ export const AllPhases: Story = {
   render: () => (
     <Box sx={{ width: LOGO_SIZE, height: LOGO_SIZE }}>
       <InteractiveHeroLogo
-        artisticLogoSrc="https://via.placeholder.com/240/F5A623/fff?text=art"
-        portraitSrc="https://via.placeholder.com/480/2E7D32/fff?text=portrait"
+        artisticLogoSrc={PLACEHOLDER_ART_SRC}
+        portraitSrc={PLACEHOLDER_PORTRAIT_SRC}
         portraitAlt="Placeholder portrait"
       >
         <PlaceholderLogo />

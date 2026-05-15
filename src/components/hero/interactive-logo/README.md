@@ -28,6 +28,18 @@ Each layer is a dedicated sub-component so opacity and blur transitions can be c
 
 This library always uses `motion.*` — never `m.*`. The `m.*` API requires `LazyMotion` in the consumer tree; `motion.*` works standalone. Consumers of this library should not need to know about `LazyMotion`.
 
+### `'use client'` boundary required
+
+`InteractiveHeroLogo` uses React state, refs, effects, and framer-motion — all client-only APIs. It must always be rendered inside a `'use client'` boundary in Next.js App Router (or any RSC environment).
+
+**Always import from the `/motion` subpath:**
+
+```ts
+import { InteractiveHeroLogo } from '@alexrebula/giselle-mui/motion';
+```
+
+The `/motion` entry carries `'use client'` at the bundle boundary, so the component and all its sub-components are treated as client modules automatically. Importing from the root `@alexrebula/giselle-mui` entry in an RSC tree will cause a runtime error.
+
 ### `useImagePreloader` call site
 
 Portrait images are preloaded via `react-dom` `preload()` hints during render so the browser begins fetching all portrait variants before the first direction change. This prevents the flicker on initial portrait phase entry.

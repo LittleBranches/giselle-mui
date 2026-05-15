@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import { HeroButtonsRow } from '../buttons-row';
 import { AnimatedHeroHeading } from './animated-hero-heading';
 import { ScrollParallaxHero } from './scroll-parallax-hero';
+import { gradientBackgroundSx } from './scroll-parallax-hero.stories.styles';
 
 // ----------------------------------------------------------------------
 // Storybook metadata
@@ -78,18 +79,7 @@ const SampleActions = (
 
 /** Simple gradient background fill — consumers supply their own background slot. */
 function GradientBackground() {
-  return (
-    <Box
-      sx={{
-        position: 'absolute',
-        inset: 0,
-        background: (theme) =>
-          `linear-gradient(135deg, ${theme.vars!.palette.primary.dark} 0%, ${theme.vars!.palette.secondary.dark} 100%)`,
-        opacity: 0.12,
-        zIndex: 0,
-      }}
-    />
-  );
+  return <Box sx={gradientBackgroundSx} />;
 }
 
 /** Scroll wrapper so the hero has room to scroll through in Storybook. */
@@ -308,6 +298,9 @@ export const Responsive: Story = {
                 overflow: 'hidden',
                 position: 'relative',
                 height: 320,
+                // CSS transform creates a new containing block for position:fixed
+                // descendants, so each hero instance is confined to its wrapper box.
+                transform: 'translateZ(0)',
               }}
             >
               <ScrollParallaxHero
