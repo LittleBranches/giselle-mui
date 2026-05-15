@@ -65,6 +65,7 @@ src/components/layout/section/hero/
   hero-section.stories.tsx   — Default, HeadlineOnly, ColorVariants, Responsive
   roadmap.md                 — open improvements and known gaps
   index.ts                   — barrel
+  roadmap.md                 — quality scorecard and open improvements
   README.md                  — this file
 ```
 

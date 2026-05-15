@@ -29,7 +29,7 @@ package that must remain free of MUI.
 
 This package must not import:
 
-- the `minimal-shared` package (hooks or utils subpaths) — **must not import**
+- any proprietary or third-party hook/util package — **must not import**
 - `es-toolkit`
 - Any other proprietary or non-MIT dependency
 
@@ -143,8 +143,7 @@ All live in `src/utils/`:
 | `is-deep-equal.ts`     | `isDeepEqual(a, b): boolean` — covers primitives, arrays, objects | None         |
 | `cookie.ts`            | `getCookieValue(name)`, `setCookieValue(name, value, options)`    | None         |
 
-All three files must be written independently — do not copy from `minimal-shared`,
-`es-toolkit`, or any other package.
+All three files must be written independently — do not copy from any third-party or proprietary package.
 
 ### `isDeepEqual` contract
 

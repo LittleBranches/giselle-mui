@@ -1,6 +1,6 @@
 # Home Components — giselle-mui Extraction Plan
 
-Seven components from `alexrebula/src/sections/home/components/` are prime candidates
+Seven animation-dependent components are prime candidates
 for extraction into giselle-mui. Once extracted, they will be:
 
 - **Framework-agnostic by contract** — no alexrebula data deps

@@ -3,28 +3,44 @@
 // framer-motion components (optional peer dep: framer-motion).
 // Import from '@alexrebula/giselle-mui/motion' — NOT from the root import.
 //
-// Why a separate entry?
-// Importing framer-motion in src/index.ts would impose it on every consumer, including
-// server-side contexts where it is unnecessary. The subpath isolates it so only projects
-// that explicitly import from '/motion' need framer-motion installed.
-//
 // Consumer contract:
-//   import { FaqSection } from '@alexrebula/giselle-mui/motion';
+//   import { MotionContainer, fade, slide } from '@alexrebula/giselle-mui/motion';
 //   // requires: framer-motion in the consumer's own deps
 //
 // Important: always use motion.div, never m.div.
 // m.* requires LazyMotion in the consumer's tree — an invisible requirement that breaks
 // apps not using lazy motion (including Storybook). motion.* works without a provider.
-//
-// Phase H: FloatingSubNav will move here from src/index.ts (breaking change — re-export
-// shim or minor version bump required for existing consumers).
-// Phase H components will be exported from here.
 
+// --- Phase I: Transition defaults ---
+export { transitionEnter, transitionExit } from './components/motion/variants/transition';
+
+// --- Phase I: Variant factories ---
+export { fade } from './components/motion/variants/fade';
+export { container } from './components/motion/variants/container';
+export { slide } from './components/motion/variants/slide';
+export { scale } from './components/motion/variants/scale';
+export { bounce } from './components/motion/variants/bounce';
+export { rotate } from './components/motion/variants/rotate';
+export { flip } from './components/motion/variants/flip';
+export { zoom } from './components/motion/variants/zoom';
+
+// --- Phase I: Interaction helpers ---
+export { hover, tap, transitionHover, transitionTap } from './components/motion/variants/actions';
+
+// --- Phase I: Components ---
+export { MotionContainer } from './components/motion/container';
+export type { MotionContainerProps } from './components/motion/container';
+export { MotionViewport } from './components/motion/viewport';
+export type { MotionViewportProps } from './components/motion/viewport';
+
+// --- Phase I: Hooks ---
+export { useScrollParallax } from './components/motion/use-scroll-parallax';
+export type { UseScrollParallaxResult } from './components/motion/use-scroll-parallax';
+
+// --- Phase D: FAQ Section ---
 export { FaqSection } from './components/faq/accordion';
 export type { FaqSectionProps, FaqItem } from './components/faq/accordion';
 // @deprecated — FaqAccordion was renamed to FaqSection in 0.1.x.
-// These aliases re-export the renamed symbols so existing consumers don't break.
-// Remove in the next minor version.
 /** @deprecated Use {@link FaqSection} instead. */
 export { FaqSection as FaqAccordion } from './components/faq/accordion';
 /** @deprecated Use {@link FaqSectionProps} instead. */
