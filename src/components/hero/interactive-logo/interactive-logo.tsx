@@ -15,7 +15,7 @@ import {
 
 import Box from '@mui/material/Box';
 
-import { useImagePreloader } from '../../../utils/use-image-preloader';
+import { preloadImages } from '../../../utils/use-image-preloader';
 import { PortraitLayer } from './portrait-layer';
 import { OriginalLogoLayer } from './original-logo-layer';
 import { ArtisticLogoLayer } from './artistic-logo-layer';
@@ -85,7 +85,9 @@ export function InteractiveHeroLogo({
       ),
     [portraitSourceMap]
   );
-  useImagePreloader(allPortraitSrcs);
+  useEffect(() => {
+    preloadImages(allPortraitSrcs);
+  }, [allPortraitSrcs]);
 
   const [activePortraitSrcResolved, setActivePortraitSrcResolved] = useState<string>('');
   const frameCount = validFrames.length;

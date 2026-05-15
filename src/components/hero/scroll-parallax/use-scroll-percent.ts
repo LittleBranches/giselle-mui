@@ -27,10 +27,10 @@ export function useScrollPercent(): UseScrollPercentResult {
   const [percent, setPercent] = useState(0);
 
   useMotionValueEvent(scrollY, 'change', (scrollHeight) => {
-    let heroHeight = 0;
-    if (elementRef.current) heroHeight = elementRef.current.offsetHeight;
+    if (!elementRef.current || elementRef.current.offsetHeight === 0) return;
+    const heroHeight = elementRef.current.offsetHeight;
     const scrollPercent = Math.floor((scrollHeight / heroHeight) * 100);
-    setPercent(scrollPercent >= 100 ? 100 : Math.floor(scrollPercent));
+    setPercent(Math.min(scrollPercent, 100));
   });
 
   return { elementRef, percent, scrollY };

@@ -5,7 +5,7 @@ import {
   TECH_ICON_STRIP_ICON_SIZE,
   TECH_ICON_STRIP_LABEL_FONT_SIZE,
 } from './tech-icon-strip.const';
-import { stripWrapperSx, itemSx, iconSlotSx } from './tech-icon-strip.styles';
+import { stripRootSx, stripWrapperSx, itemSx, iconSlotSx } from './tech-icon-strip.styles';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +18,12 @@ describe('TECH_ICON_STRIP_ICON_SIZE', () => {
 describe('TECH_ICON_STRIP_LABEL_FONT_SIZE', () => {
   it('[regression] is 0.75rem (minimum badge/pill label size)', () => {
     expect(TECH_ICON_STRIP_LABEL_FONT_SIZE).toBe('0.75rem');
+  });
+});
+
+describe('stripRootSx', () => {
+  it('uses column flex layout to stack heading above the strip', () => {
+    expect((stripRootSx as Record<string, unknown>).flexDirection).toBe('column');
   });
 });
 
@@ -50,13 +56,19 @@ describe('itemSx', () => {
 });
 
 describe('iconSlotSx', () => {
-  it('enforces TECH_ICON_STRIP_ICON_SIZE on svg width', () => {
-    const svgStyles = (iconSlotSx as Record<string, unknown>)['& svg'] as Record<string, unknown>;
-    expect(svgStyles.width).toBe(TECH_ICON_STRIP_ICON_SIZE);
+  it('enforces TECH_ICON_STRIP_ICON_SIZE on svg and img width', () => {
+    const childStyles = (iconSlotSx as Record<string, unknown>)['& svg, & img'] as Record<
+      string,
+      unknown
+    >;
+    expect(childStyles.width).toBe(TECH_ICON_STRIP_ICON_SIZE);
   });
 
-  it('enforces TECH_ICON_STRIP_ICON_SIZE on svg height', () => {
-    const svgStyles = (iconSlotSx as Record<string, unknown>)['& svg'] as Record<string, unknown>;
-    expect(svgStyles.height).toBe(TECH_ICON_STRIP_ICON_SIZE);
+  it('enforces TECH_ICON_STRIP_ICON_SIZE on svg and img height', () => {
+    const childStyles = (iconSlotSx as Record<string, unknown>)['& svg, & img'] as Record<
+      string,
+      unknown
+    >;
+    expect(childStyles.height).toBe(TECH_ICON_STRIP_ICON_SIZE);
   });
 });

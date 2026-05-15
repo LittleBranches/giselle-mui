@@ -72,20 +72,29 @@ export function ScrollParallaxHero({
   const scrollProgress = useScrollPercent();
   const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
 
-  const distance = mdUp ? scrollProgress.percent : 0;
   const pm = { ...DEFAULT_PARALLAX, ...parallax };
+  const multiplier = mdUp ? 1 : 0;
 
   // All four useTransformY calls are unconditional — hook call order must be stable.
-  const y1 = useTransformY(scrollProgress.scrollY, distance * pm.logo);
-  const y2 = useTransformY(scrollProgress.scrollY, distance * pm.heading);
-  const y3 = useTransformY(scrollProgress.scrollY, distance * pm.text);
-  const y4 = useTransformY(scrollProgress.scrollY, distance * pm.actions);
-
-  const opacity = useTransform(
+  const y1 = useTransformY(scrollProgress.scrollY, scrollProgress.elementRef, multiplier * pm.logo);
+  const y2 = useTransformY(
     scrollProgress.scrollY,
-    [0, 1],
-    [1, mdUp ? Number((1 - scrollProgress.percent / 100).toFixed(1)) : 1]
+    scrollProgress.elementRef,
+    multiplier * pm.heading
   );
+  const y3 = useTransformY(scrollProgress.scrollY, scrollProgress.elementRef, multiplier * pm.text);
+  const y4 = useTransformY(
+    scrollProgress.scrollY,
+    scrollProgress.elementRef,
+    multiplier * pm.actions
+  );
+
+  const opacity = useTransform(scrollProgress.scrollY, (scrollY: number) => {
+    if (!mdUp) return 1;
+    const heroHeight = scrollProgress.elementRef.current?.offsetHeight;
+    if (!heroHeight) return 1;
+    return Math.max(0, 1 - scrollY / heroHeight);
+  });
 
   return (
     <Box

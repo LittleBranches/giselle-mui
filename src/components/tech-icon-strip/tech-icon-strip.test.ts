@@ -24,7 +24,7 @@ describe('TechIconStrip', () => {
 
   it('renders the title when provided', () => {
     const html = renderToStaticMarkup(
-      React.createElement(TechIconStrip, { items, title: 'Technologies' })
+      React.createElement(TechIconStrip, { items, heading: 'Technologies' })
     );
     expect(html).toContain('Technologies');
   });

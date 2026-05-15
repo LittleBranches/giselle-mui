@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 import { TECH_ICON_STRIP_LABEL_FONT_SIZE } from './tech-icon-strip.const';
-import { iconSlotSx, itemSx, stripWrapperSx, titleSx } from './tech-icon-strip.styles';
+import { iconSlotSx, itemSx, stripRootSx, stripWrapperSx, titleSx } from './tech-icon-strip.styles';
 import type { TechIconStripProps } from './types';
 
 // ----------------------------------------------------------------------
@@ -16,7 +16,7 @@ import type { TechIconStripProps } from './types';
  * @example
  * ```tsx
  * <TechIconStrip
- *   title="Technologies"
+ *   heading="Technologies"
  *   items={[
  *     { icon: <GiselleIcon icon="solar:code-bold" width={32} />, label: 'TypeScript' },
  *     { icon: <GiselleIcon icon="solar:database-bold" width={32} />, label: 'PostgreSQL' },
@@ -26,16 +26,16 @@ import type { TechIconStripProps } from './types';
  */
 export function TechIconStrip({
   items,
-  title,
+  heading,
   centeredWrap = false,
   sx,
   ...other
 }: TechIconStripProps) {
   return (
-    <Box sx={[...(Array.isArray(sx) ? sx : [sx])]} {...other}>
-      {title && (
+    <Box sx={[stripRootSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
+      {heading && (
         <Typography component="span" sx={titleSx} variant="overline">
-          {title}
+          {heading}
         </Typography>
       )}
 

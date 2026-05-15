@@ -253,7 +253,7 @@ export const LibraryHero: Story = {
           </Button>
         </>
       }
-      icons={<TechIconStrip title="Built with" centeredWrap items={libraryIcons} />}
+      icons={<TechIconStrip heading="Built with" centeredWrap items={libraryIcons} />}
     />
   ),
 };
