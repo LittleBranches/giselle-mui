@@ -24,9 +24,10 @@
  * Exit codes: 0 = all passed, 1 = at least one check failed.
  *
  * Flags:
- *   --fix     Auto-fix Prettier + ESLint before read-only checks (default in `npm run check`)
- *   --verify  Read-only mode — no auto-fix (default in pre-push hook and CI)
- *   --storybook  Force-include the Storybook build (always on in CI; opt-in locally)
+ *   --fix          Auto-fix Prettier + ESLint before read-only checks (default in `npm run check`)
+ *   --verify       Read-only mode — no auto-fix (default in pre-push hook and CI)
+ *   --storybook    Force-include the Storybook build (always on in CI; opt-in locally)
+ *   --no-storybook Skip the Storybook build even in CI (used by the fast CI job)
  */
 
 import { execSync } from 'child_process';
@@ -38,7 +39,9 @@ const __dirname = path.dirname(__filename);
 
 // ── Config ─────────────────────────────────────────────────────────────────
 const FIX_MODE = process.argv.includes('--fix');
-const INCLUDE_STORYBOOK = process.argv.includes('--storybook') || process.env['CI'] === 'true';
+const INCLUDE_STORYBOOK =
+  !process.argv.includes('--no-storybook') &&
+  (process.argv.includes('--storybook') || process.env['CI'] === 'true');
 
 const appDir = path.resolve(__dirname, '..');
 
