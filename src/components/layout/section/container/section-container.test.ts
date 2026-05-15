@@ -44,4 +44,32 @@ describe('SectionContainer', () => {
     );
     expect(html).toContain('data-testid="section-root"');
   });
+
+  it('accepts sx as a single object without throwing', () => {
+    // Exercises the Array.isArray(sx) === false branch in the sx array spread
+    expect(() =>
+      renderToStaticMarkup(
+        React.createElement(
+          SectionContainer,
+          { sx: { color: 'red' } } as Parameters<typeof SectionContainer>[0],
+          React.createElement('span', null, 'child')
+        )
+      )
+    ).not.toThrow();
+  });
+
+  it('accepts sx as an array without throwing', () => {
+    // Exercises the Array.isArray(sx) === true branch in the sx array spread
+    expect(() =>
+      renderToStaticMarkup(
+        React.createElement(
+          SectionContainer,
+          { sx: [{ color: 'red' }, { display: 'block' }] } as Parameters<
+            typeof SectionContainer
+          >[0],
+          React.createElement('span', null, 'child')
+        )
+      )
+    ).not.toThrow();
+  });
 });

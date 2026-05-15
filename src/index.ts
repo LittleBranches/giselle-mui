@@ -117,21 +117,24 @@ export type { NestedChecklistState } from './utils/use-nested-checklist';
 export { IconActionBar, DEFAULT_ICON_ACTIONS } from './components/action-bar/icon';
 export type { IconActionBarProps, IconActionItem } from './components/action-bar/icon';
 
-export { TwoColumnShowcaseRow } from './components/layout/two-column-showcase-row';
+export { TwoColumnShowcaseRow } from './components/layout/showcase/row/two-column';
 export type {
   TwoColumnShowcaseRowProps,
   TwoColumnShowcaseRowText,
   ShowcaseRowOrientation,
-} from './components/layout/two-column-showcase-row';
+} from './components/layout/showcase/row/two-column';
 
-export { SectionTitle, SectionCaption } from './components/layout/section-title';
-export type { SectionTitleProps } from './components/layout/section-title';
+export { SectionTitle, SectionCaption } from './components/layout/section/title/section-title';
+export type { SectionTitleProps } from './components/layout/section/title/section-title';
 
 export { FloatingSubNav } from './components/nav/floating-sub-nav';
 export type { FloatingSubNavProps, FloatingSubNavItem } from './components/nav/floating-sub-nav';
 
-export { SectionContainer } from './components/layout/section-container';
-export type { SectionContainerProps } from './components/layout/section-container';
+export { SectionContainer } from './components/layout/section/container';
+export type { SectionContainerProps } from './components/layout/section/container';
+
+export { HeroSection } from './components/layout/section/hero';
+export type { HeroColorKey, HeroSectionProps } from './components/layout/section/hero';
 
 export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity-utils';
 export { assignMilestoneSidesByDone } from './utils/timeline-utils';
