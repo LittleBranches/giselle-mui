@@ -68,6 +68,15 @@ const BANNED_PRIVATE_REFS = [
   // any commercial product. Rationale belongs in alexrebula/docs/ (private).
   'Minimals',
   'minimals',
+  'Devias',
+  'devias',
+  'Berry',
+  'Mantis',
+  'mantis',
+  'TheFront',
+  'thefront',
+  'CodedThemes',
+  'codedthemes',
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────
