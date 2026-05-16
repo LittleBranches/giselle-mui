@@ -24,7 +24,7 @@ const demoGroupLabelMbSx: SxProps<Theme> = { mb: 1 };
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof Accordion> = {
-  title: 'Accordion',
+  title: 'Material/Surfaces/Cards/Accordion',
   component: Accordion,
   parameters: {
     layout: 'padded',

@@ -32,7 +32,7 @@ const SHORT_QUOTE = 'Excellent work, delivered on time.';
 
 const meta: Meta<typeof QuoteCard> = {
   component: QuoteCard,
-  title: 'Cards/Quote',
+  title: 'Material/Surfaces/Cards/Quote',
 };
 
 export default meta;

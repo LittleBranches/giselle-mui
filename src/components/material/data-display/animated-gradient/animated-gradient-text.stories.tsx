@@ -8,7 +8,7 @@ import { AnimatedGradientText } from './animated-gradient-text';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof AnimatedGradientText> = {
-  title: 'Text/Animated Gradient',
+  title: 'Material/Data Display/Animated Gradient',
   component: AnimatedGradientText,
   argTypes: {
     sx: { control: false },

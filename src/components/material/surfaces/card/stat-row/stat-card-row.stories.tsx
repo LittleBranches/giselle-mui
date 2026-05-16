@@ -14,7 +14,7 @@ import { StatCardRow } from './stat-card-row';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof StatCardRow> = {
-  title: 'Cards/Stat Row',
+  title: 'Material/Surfaces/Cards/Stat Row',
   component: StatCardRow,
   parameters: { layout: 'padded' },
   argTypes: {

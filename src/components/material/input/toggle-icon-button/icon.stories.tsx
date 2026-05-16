@@ -31,7 +31,7 @@ const StarFilledIcon = (
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof ToggleIconButton> = {
-  title: 'Inputs/Toggle Icon Button',
+  title: 'Material/Input/Toggle Icon Button',
   component: ToggleIconButton,
   argTypes: {
     idleIcon: { control: false },
