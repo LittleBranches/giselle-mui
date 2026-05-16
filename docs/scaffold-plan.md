@@ -291,7 +291,7 @@ Once the scaffold branch is merged:
    count implemented components. Run `find src/components -name 'README.md' | wc -l` to
    count total planned components. The ratio is coverage.
 
-3. **PRs are reviewable.** A 200-file "add all missing components" PR is unreviwable.
+3. **PRs are reviewable.** A 200-file "add all missing components" PR is unreviewable.
    A "implement `StatusLabel`" PR touching 5 files is a 10-minute review.
 
 4. **Contributors have clear entry points.** Every placeholder folder is a self-contained

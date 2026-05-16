@@ -31,7 +31,7 @@
 | `List`    | A vertical list of same-type items                               | `ActivityFeedList`, `ProgressStatsList`        |
 | `Table`   | Tabular data with headers and sortable rows                      | `DataTable`, `AmortizationTable`               |
 | `Section` | A full-width page section (hero, FAQ, etc.)                      | `HeroSection`, `FaqSection`, `PricingSection`  |
-| `Layout`  | A page shell or structural wrapper with named slots              | `AppShell`, `AuthPageLayout`, `PageHeader`     |
+| `Layout`  | A page shell or structural wrapper with named slots              | `AuthPageLayout`                               |
 | `Label`   | A small status/badge/chip inline element                         | `StatusLabel`                                  |
 | `Sheet`   | A bottom/side drawer that reveals detail                         | `PeriodDetailSheet`, `BudgetSummaryDrawer`     |
 | `Strip`   | A horizontal scrolling or expandable inline strip                | `HorizontalScrollRail`, `ExpandingPeriodStrip` |

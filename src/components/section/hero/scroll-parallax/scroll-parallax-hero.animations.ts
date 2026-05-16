@@ -1,22 +1,35 @@
-import type { MotionProps } from 'framer-motion';
+import type { MotionProps, Transition } from 'framer-motion';
+
+import { fade } from '../../../motion/variants/fade';
 
 // ----------------------------------------------------------------------
 
-/** Framer Motion fade-inUp entry props for the heading `motion.div`. */
+/**
+ * Default motion props for `AnimatedHeroHeading`.
+ *
+ * Uses `variants: fade('inUp', ...)` so the heading participates in parent
+ * `MotionContainer` / `MotionViewport` stagger orchestration.
+ * Override via the `motionProps` prop when stagger is not needed.
+ */
 export const headingMotionProps: MotionProps = {
-  initial: { opacity: 0, y: 24 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: [0.43, 0.13, 0.23, 0.96] },
+  variants: fade('inUp', { distance: 24 }),
 };
 
-/** Animate object for the gradient highlight `<span>` — cycles `backgroundPosition`. */
-export const gradientHighlightAnimate = {
-  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-};
+/**
+ * Animate target for the cycling gradient highlight span.
+ * Drives `backgroundPosition` from its CSS initial value to `200% center`.
+ */
+export const gradientHighlightAnimate = { backgroundPosition: '200% center' } as const;
 
-/** Transition for `gradientHighlightAnimate` — infinite linear loop over 4 s. */
-export const gradientHighlightTransition = {
-  duration: 4,
-  ease: 'linear' as const,
+/**
+ * Transition for the infinitely cycling gradient highlight span.
+ *
+ * 20-second linear loop so the colour wash is slow and non-distracting.
+ * `repeatType: 'reverse'` makes the gradient oscillate rather than jump at the wrap point.
+ */
+export const gradientHighlightTransition: Transition = {
+  duration: 20,
+  ease: 'linear',
   repeat: Infinity,
+  repeatType: 'reverse',
 };
