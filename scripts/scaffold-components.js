@@ -30,87 +30,197 @@ const SRC = path.resolve(__dirname, '..', 'src', 'components');
 const COMPONENTS = [
   // ── Phase E remaining ──────────────────────────────────────────────────
   // section/hero is already implemented — HeroSection lives at section/hero/section/
-  { path: 'material/input/option-with-blurb',                    name: 'OptionWithBlurb',           phase: 'E',     tier: 'T2' },
-  { path: 'material/feedback/section-pending-loader',            name: 'SectionPendingLoader',      phase: 'E',     tier: 'T2' },
-  { path: 'material/navigation/floating-control-bar',            name: 'FloatingControlBar',        phase: 'E',     tier: 'T2' },
+  { path: 'material/input/option-with-blurb', name: 'OptionWithBlurb', phase: 'E', tier: 'T2' },
+  {
+    path: 'material/feedback/section-pending-loader',
+    name: 'SectionPendingLoader',
+    phase: 'E',
+    tier: 'T2',
+  },
+  {
+    path: 'material/navigation/floating-control-bar',
+    name: 'FloatingControlBar',
+    phase: 'E',
+    tier: 'T2',
+  },
 
   // ── Phase F ────────────────────────────────────────────────────────────
-  { path: 'material/surfaces/details-drawer',                    name: 'DetailsDrawer',             phase: 'F',     tier: 'T2' },
+  { path: 'material/surfaces/details-drawer', name: 'DetailsDrawer', phase: 'F', tier: 'T2' },
 
   // ── Phase G ────────────────────────────────────────────────────────────
-  { path: 'section/timeline/item-details',                       name: 'TimelineItemDetails',       phase: 'G',     tier: 'T2' },
+  { path: 'section/timeline/item-details', name: 'TimelineItemDetails', phase: 'G', tier: 'T2' },
 
   // ── Phase H G1 — financial cards ──────────────────────────────────────
-  { path: 'material/surfaces/card/balance-summary',              name: 'BalanceSummaryCard',        phase: 'H-G1',  tier: 'T2' },
-  { path: 'material/surfaces/card/credit-card-display',          name: 'CreditCardDisplay',         phase: 'H-G1',  tier: 'T3' },
+  {
+    path: 'material/surfaces/card/balance-summary',
+    name: 'BalanceSummaryCard',
+    phase: 'H-G1',
+    tier: 'T2',
+  },
+  {
+    path: 'material/surfaces/card/credit-card-display',
+    name: 'CreditCardDisplay',
+    phase: 'H-G1',
+    tier: 'T3',
+  },
 
   // ── Phase H G2 — chart cards (/charts subpath) ────────────────────────
-  { path: 'chart/chart-card-base',                               name: 'ChartCardBase',             phase: 'H-G2',  tier: 'T1' },
-  { path: 'chart/sparkline-bar',                                 name: 'SparklineBarChart',         phase: 'H-G2',  tier: 'T1' },
-  { path: 'chart/donut-chart-card',                              name: 'DonutChartCard',            phase: 'H-G2',  tier: 'T1' },
-  { path: 'chart/area-line-chart-card',                          name: 'AreaLineChartCard',         phase: 'H-G2',  tier: 'T1' },
-  { path: 'chart/grouped-bar-chart-card',                        name: 'GroupedBarChartCard',       phase: 'H-G2',  tier: 'T1' },
-  { path: 'chart/budget-vs-actual-card',                         name: 'BudgetVsActualCard',        phase: 'H-G2',  tier: 'T2' },
-  { path: 'chart/horizontal-bar-chart-card',                     name: 'HorizontalBarChartCard',    phase: 'H-G2',  tier: 'T2' },
-  { path: 'chart/radar-chart-card',                              name: 'RadarChartCard',            phase: 'H-G2',  tier: 'T3' },
-  { path: 'chart/projection-card',                               name: 'ProjectionCard',            phase: 'H-G2',  tier: 'T3' },
+  { path: 'chart/chart-card-base', name: 'ChartCardBase', phase: 'H-G2', tier: 'T1' },
+  { path: 'chart/sparkline-bar', name: 'SparklineBarChart', phase: 'H-G2', tier: 'T1' },
+  { path: 'chart/donut-chart-card', name: 'DonutChartCard', phase: 'H-G2', tier: 'T1' },
+  { path: 'chart/area-line-chart-card', name: 'AreaLineChartCard', phase: 'H-G2', tier: 'T1' },
+  { path: 'chart/grouped-bar-chart-card', name: 'GroupedBarChartCard', phase: 'H-G2', tier: 'T1' },
+  { path: 'chart/budget-vs-actual-card', name: 'BudgetVsActualCard', phase: 'H-G2', tier: 'T2' },
+  {
+    path: 'chart/horizontal-bar-chart-card',
+    name: 'HorizontalBarChartCard',
+    phase: 'H-G2',
+    tier: 'T2',
+  },
+  { path: 'chart/radar-chart-card', name: 'RadarChartCard', phase: 'H-G2', tier: 'T3' },
+  { path: 'chart/projection-card', name: 'ProjectionCard', phase: 'H-G2', tier: 'T3' },
 
   // ── Phase H G3 — data lists and tables ────────────────────────────────
-  { path: 'material/data-display/data-table',                    name: 'DataTable',                 phase: 'H-G3',  tier: 'T1' },
-  { path: 'material/data-display/activity-feed-list',            name: 'ActivityFeedList',          phase: 'H-G3',  tier: 'T2' },
-  { path: 'material/data-display/news-feed-list',                name: 'NewsFeedList',              phase: 'H-G3',  tier: 'T2' },
-  { path: 'material/data-display/related-items-list',            name: 'RelatedItemsList',          phase: 'H-G3',  tier: 'T2' },
+  { path: 'material/data-display/data-table', name: 'DataTable', phase: 'H-G3', tier: 'T1' },
+  {
+    path: 'material/data-display/activity-feed-list',
+    name: 'ActivityFeedList',
+    phase: 'H-G3',
+    tier: 'T2',
+  },
+  { path: 'material/data-display/news-feed-list', name: 'NewsFeedList', phase: 'H-G3', tier: 'T2' },
+  {
+    path: 'material/data-display/related-items-list',
+    name: 'RelatedItemsList',
+    phase: 'H-G3',
+    tier: 'T2',
+  },
 
   // ── Phase H G4 — financial / action widgets ───────────────────────────
-  { path: 'material/data-display/progress-stats-list',           name: 'ProgressStatsList',         phase: 'H-G4',  tier: 'T2' },
-  { path: 'material/data-display/contacts-list',                 name: 'ContactsList',              phase: 'H-G4',  tier: 'T2' },
-  { path: 'material/surfaces/card/quick-transfer',               name: 'QuickTransferCard',         phase: 'H-G4',  tier: 'T2' },
-  { path: 'material/surfaces/card/budget-breakdown',             name: 'BudgetBreakdownCard',       phase: 'H-G4',  tier: 'T2' },
+  {
+    path: 'material/data-display/progress-stats-list',
+    name: 'ProgressStatsList',
+    phase: 'H-G4',
+    tier: 'T2',
+  },
+  { path: 'material/data-display/contacts-list', name: 'ContactsList', phase: 'H-G4', tier: 'T2' },
+  {
+    path: 'material/surfaces/card/quick-transfer',
+    name: 'QuickTransferCard',
+    phase: 'H-G4',
+    tier: 'T2',
+  },
+  {
+    path: 'material/surfaces/card/budget-breakdown',
+    name: 'BudgetBreakdownCard',
+    phase: 'H-G4',
+    tier: 'T2',
+  },
 
   // ── Phase H G5 — hero / marketing cards ──────────────────────────────
-  { path: 'material/surfaces/card/hero-banner',                  name: 'HeroBannerCard',            phase: 'H-G5',  tier: 'T2' },
-  { path: 'material/surfaces/card/featured-item',                name: 'FeaturedItemCard',          phase: 'H-G5',  tier: 'T2' },
-  { path: 'material/surfaces/card/promo-invite',                 name: 'PromoInviteCard',           phase: 'H-G5',  tier: 'T2' },
+  { path: 'material/surfaces/card/hero-banner', name: 'HeroBannerCard', phase: 'H-G5', tier: 'T2' },
+  {
+    path: 'material/surfaces/card/featured-item',
+    name: 'FeaturedItemCard',
+    phase: 'H-G5',
+    tier: 'T2',
+  },
+  {
+    path: 'material/surfaces/card/promo-invite',
+    name: 'PromoInviteCard',
+    phase: 'H-G5',
+    tier: 'T2',
+  },
 
   // ── Phase H G6 — motion components (/motion subpath) ─────────────────
-  { path: 'motion/animated-tab-panel',                           name: 'AnimatedTabPanel',          phase: 'H-G6',  tier: 'T2' },
+  { path: 'motion/animated-tab-panel', name: 'AnimatedTabPanel', phase: 'H-G6', tier: 'T2' },
 
   // ── Phase H G7 — advanced dashboard widgets ───────────────────────────
-  { path: 'material/surfaces/card/cost-classification',          name: 'CostClassificationCard',   phase: 'H-G7',  tier: 'T3' },
-  { path: 'material/surfaces/card/roi-comparison',               name: 'RoiComparisonCard',         phase: 'H-G7',  tier: 'T3' },
-  { path: 'material/surfaces/scenario-comparison',               name: 'ScenarioComparison',        phase: 'H-G7',  tier: 'T3' },
-  { path: 'material/data-display/amortization-table',            name: 'AmortizationTable',         phase: 'H-G7',  tier: 'T3' },
+  {
+    path: 'material/surfaces/card/cost-classification',
+    name: 'CostClassificationCard',
+    phase: 'H-G7',
+    tier: 'T3',
+  },
+  {
+    path: 'material/surfaces/card/roi-comparison',
+    name: 'RoiComparisonCard',
+    phase: 'H-G7',
+    tier: 'T3',
+  },
+  {
+    path: 'material/surfaces/scenario-comparison',
+    name: 'ScenarioComparison',
+    phase: 'H-G7',
+    tier: 'T3',
+  },
+  {
+    path: 'material/data-display/amortization-table',
+    name: 'AmortizationTable',
+    phase: 'H-G7',
+    tier: 'T3',
+  },
 
   // ── Phase I — Motion & Animation (/motion subpath) ────────────────────
-  { path: 'motion/section-title-animated',                       name: 'SectionTitleAnimated',      phase: 'I-2',   tier: 'T2' },
-  { path: 'motion/floating-side-nav',                            name: 'FloatingSideNav',           phase: 'I-3',   tier: 'T2' },
-  { path: 'motion/hero-background',                              name: 'HeroBackground',            phase: 'I-5',   tier: 'T2' },
-  { path: 'motion/floating-icon-cloud',                          name: 'FloatingIconCloud',         phase: 'I-6',   tier: 'T3' },
-  { path: 'motion/interactive-hero-logo',                        name: 'InteractiveHeroLogo',       phase: 'I-7',   tier: 'T3' },
-  { path: 'material/data-display/expense-line-item',             name: 'ExpenseLineItem',           phase: 'I-A',   tier: 'T2' },
-  { path: 'material/data-display/expense-category-group',        name: 'ExpenseCategoryGroup',      phase: 'I-A',   tier: 'T2' },
-  { path: 'motion/period-detail-sheet',                          name: 'PeriodDetailSheet',         phase: 'I-C',   tier: 'T2' },
-  { path: 'motion/horizontal-scroll-rail',                       name: 'HorizontalScrollRail',      phase: 'I-C',   tier: 'T3' },
-  { path: 'motion/expanding-period-strip',                       name: 'ExpandingPeriodStrip',      phase: 'I-C',   tier: 'T3' },
-  { path: 'motion/budget-summary-drawer',                        name: 'BudgetSummaryDrawer',       phase: 'I-C',   tier: 'T3' },
-  { path: 'motion/breakdown-carousel-view',                      name: 'BreakdownCarouselView',     phase: 'I-D',   tier: 'T3' },
-  { path: 'motion/breakdown-expanding-view',                     name: 'BreakdownExpandingView',    phase: 'I-D',   tier: 'T3' },
-  { path: 'motion/breakdown-stacked-view',                       name: 'BreakdownStackedView',      phase: 'I-D',   tier: 'T3' },
-  { path: 'motion/weekly-breakdown-page',                        name: 'WeeklyBreakdownPage',       phase: 'I-D',   tier: 'T3' },
-  { path: 'material/surfaces/card/period-summary',               name: 'PeriodSummaryCard',         phase: 'I-B',   tier: 'T2' },
+  { path: 'motion/section-title-animated', name: 'SectionTitleAnimated', phase: 'I-2', tier: 'T2' },
+  { path: 'motion/floating-side-nav', name: 'FloatingSideNav', phase: 'I-3', tier: 'T2' },
+  { path: 'motion/hero-background', name: 'HeroBackground', phase: 'I-5', tier: 'T2' },
+  { path: 'motion/floating-icon-cloud', name: 'FloatingIconCloud', phase: 'I-6', tier: 'T3' },
+  { path: 'motion/interactive-hero-logo', name: 'InteractiveHeroLogo', phase: 'I-7', tier: 'T3' },
+  {
+    path: 'material/data-display/expense-line-item',
+    name: 'ExpenseLineItem',
+    phase: 'I-A',
+    tier: 'T2',
+  },
+  {
+    path: 'material/data-display/expense-category-group',
+    name: 'ExpenseCategoryGroup',
+    phase: 'I-A',
+    tier: 'T2',
+  },
+  { path: 'motion/period-detail-sheet', name: 'PeriodDetailSheet', phase: 'I-C', tier: 'T2' },
+  { path: 'motion/horizontal-scroll-rail', name: 'HorizontalScrollRail', phase: 'I-C', tier: 'T3' },
+  { path: 'motion/expanding-period-strip', name: 'ExpandingPeriodStrip', phase: 'I-C', tier: 'T3' },
+  { path: 'motion/budget-summary-drawer', name: 'BudgetSummaryDrawer', phase: 'I-C', tier: 'T3' },
+  {
+    path: 'motion/breakdown-carousel-view',
+    name: 'BreakdownCarouselView',
+    phase: 'I-D',
+    tier: 'T3',
+  },
+  {
+    path: 'motion/breakdown-expanding-view',
+    name: 'BreakdownExpandingView',
+    phase: 'I-D',
+    tier: 'T3',
+  },
+  { path: 'motion/breakdown-stacked-view', name: 'BreakdownStackedView', phase: 'I-D', tier: 'T3' },
+  { path: 'motion/weekly-breakdown-page', name: 'WeeklyBreakdownPage', phase: 'I-D', tier: 'T3' },
+  {
+    path: 'material/surfaces/card/period-summary',
+    name: 'PeriodSummaryCard',
+    phase: 'I-B',
+    tier: 'T2',
+  },
 
   // ── Phase J — Dashboard shell ─────────────────────────────────────────
-  { path: 'material/layout/app-shell',                           name: 'AppShell',                  phase: 'J',     tier: 'T1' },
-  { path: 'material/layout/auth-page-layout',                    name: 'AuthPageLayout',            phase: 'J',     tier: 'T1' },
-  { path: 'material/layout/page-header',                         name: 'PageHeader',                phase: 'J',     tier: 'T2' },
-  { path: 'material/navigation/app-sidebar',                     name: 'AppSidebar',                phase: 'J',     tier: 'T1' },
-  { path: 'material/navigation/app-top-bar',                     name: 'AppTopBar',                 phase: 'J',     tier: 'T1' },
-  { path: 'material/navigation/breadcrumbs',                     name: 'Breadcrumbs',               phase: 'J',     tier: 'T2' },
-  { path: 'material/data-display/status-label',                  name: 'StatusLabel',               phase: 'J',     tier: 'T1' },
-  { path: 'material/data-display/avatar-row',                    name: 'AvatarRow',                 phase: 'J',     tier: 'T2' },
-  { path: 'material/surfaces/card/profile-summary',              name: 'ProfileSummaryCard',        phase: 'J',     tier: 'T2' },
-  { path: 'section/error',                                       name: 'ErrorSection',              phase: 'J',     tier: 'T1' },
-  { path: 'section/pricing',                                     name: 'PricingSection',            phase: 'J',     tier: 'T3' },
+  { path: 'material/layout/app-shell', name: 'AppShell', phase: 'J', tier: 'T1' },
+  { path: 'material/layout/auth-page-layout', name: 'AuthPageLayout', phase: 'J', tier: 'T1' },
+  { path: 'material/layout/page-header', name: 'PageHeader', phase: 'J', tier: 'T2' },
+  { path: 'material/navigation/app-sidebar', name: 'AppSidebar', phase: 'J', tier: 'T1' },
+  { path: 'material/navigation/app-top-bar', name: 'AppTopBar', phase: 'J', tier: 'T1' },
+  { path: 'material/navigation/breadcrumbs', name: 'Breadcrumbs', phase: 'J', tier: 'T2' },
+  { path: 'material/data-display/status-label', name: 'StatusLabel', phase: 'J', tier: 'T1' },
+  { path: 'material/data-display/avatar-row', name: 'AvatarRow', phase: 'J', tier: 'T2' },
+  {
+    path: 'material/surfaces/card/profile-summary',
+    name: 'ProfileSummaryCard',
+    phase: 'J',
+    tier: 'T2',
+  },
+  { path: 'section/error', name: 'ErrorSection', phase: 'J', tier: 'T1' },
+  { path: 'section/pricing', name: 'PricingSection', phase: 'J', tier: 'T3' },
 ];
 
 // ── File templates ─────────────────────────────────────────────────────────
@@ -146,9 +256,10 @@ import { describe, it } from 'vitest';
 // Placeholder — stubs filled in before implementation begins.
 // See README.md for planned behaviours.
 
-describe('${name}', () => {
-  it.todo('renders without crashing');
-  it.todo('applies sx prop to root element');
+describe.skip('${name}', () => {
+  it('placeholder scaffold test (implementation pending)', () => {
+    // Intentionally skipped until ${name}.tsx exists.
+  });
 });
 `;
 }
@@ -190,7 +301,11 @@ _Links to similar components, docs, or stories once they exist._
 }
 
 function roadmapMd(name, phase, tier) {
-  const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  const today = new Date().toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
   return `# ${name} — Roadmap
 
 > Last updated: ${today}
@@ -274,4 +389,6 @@ for (const { path: relPath, name, phase, tier } of COMPONENTS) {
   }
 }
 
-console.log(`\nDone — ${created} created, ${patched} patched (roadmap.md added), ${skipped} skipped.`);
+console.log(
+  `\nDone — ${created} created, ${patched} patched (roadmap.md added), ${skipped} skipped.`
+);

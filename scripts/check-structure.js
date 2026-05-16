@@ -9,7 +9,7 @@
  * Layer groups under src/components/:
  *   material/surfaces  material/data-display  material/layout
  *   material/navigation  material/input
- *   motion  section  giselle  theming
+ *   chart  motion  section  theming
  *
  *   ✅  src/components/material/surfaces/card/metric/metric-card.tsx
  *   ❌  src/components/material/surfaces/card/metric-card.tsx
@@ -31,9 +31,7 @@ const srcDir = path.resolve(__dirname, '../src');
 // Every .ts/.tsx file found directly in one of these folders is a violation.
 // The rule: every component lives in its own named subfolder at least one level deeper.
 const PARENT_DIRS_TO_CHECK = [
-  'components/giselle',
-  'components/giselle/chart',
-  'components/giselle/text',
+  'components/chart',
   'components/material',
   'components/material/surfaces',
   'components/material/surfaces/card',

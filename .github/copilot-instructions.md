@@ -147,9 +147,12 @@ MUI: they can navigate to a component without reading docs.
 
 ```
 src/components/
+  chart/                       — chart components (ApexCharts wrappers and chart-card primitives)
+    radial-progress/
   material/                    — MUI-based components (grouped by MUI category)
     surfaces/card/             — accordion, metric, quote, selectable, stat, stat-row
     data-display/icon/         — action-bar, giselle, tech-strip
+    data-display/              — animated-gradient and other display primitives
     layout/                    — section-container, section-title, showcase-row
     navigation/                — floating-sub-nav
     input/                     — toggle-icon-button
@@ -159,9 +162,6 @@ src/components/
     container/ use-scroll-parallax/ variants/ viewport/
   section/                     — section-level compositions
     faq/ hero/ timeline/
-  giselle/                     — Giselle-native (non-MUI-dependent) components
-    chart/radial-progress/
-    text/animated-gradient/
   theming/                     — theme/provider components
     theme-provider/ settings-provider/
 ```

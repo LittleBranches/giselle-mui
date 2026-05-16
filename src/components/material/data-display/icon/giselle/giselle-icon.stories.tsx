@@ -20,7 +20,7 @@ const sizeDemoRowSx = (width: number): SystemStyleObject<Theme> => ({
 
 const meta: Meta<typeof GiselleIcon> = {
   component: GiselleIcon,
-  title: 'Material/Data Display/Icons/Giselle Icon',
+  title: 'Data Display/Icon',
 };
 
 export default meta;

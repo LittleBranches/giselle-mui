@@ -13,7 +13,7 @@ import { FloatingSubNav } from './floating-sub-nav';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof FloatingSubNav> = {
-  title: 'Material/Navigation/Floating Sub Nav',
+  title: 'Navigation/Floating Sub Nav',
   component: FloatingSubNav,
   parameters: { layout: 'centered' },
   argTypes: {
