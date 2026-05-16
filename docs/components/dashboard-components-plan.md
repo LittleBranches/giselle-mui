@@ -175,6 +175,20 @@ card holder name, expiry date, card network logo slot. Purely presentational.
 > Every component in this group follows the same rule as `RadialProgressCard`:
 > **chart options live in `*.styles.ts`, never inline in JSX.**
 
+### `ChartCardBase` ⬜ Needs building
+
+**What it is:** Shared card shell primitive for chart cards: title/subtitle header,
+action slot, chart body slot, optional footer slot, and loading/empty states.
+
+**Why it exists:** Prevent repeated card chrome implementation across
+`DonutChartCard`, `AreaLineChartCard`, `GroupedBarChartCard`, `RadarChartCard`, and
+other chart-card components.
+
+**Rule:** `SparklineBarChart` does NOT use `ChartCardBase` because it is an embedded
+chart primitive (no card wrapper).
+
+**Output subpath:** `/charts`.
+
 ### `RadialProgressCard` ✅ Shipped — 5 May 2026
 
 **What it is:** Card wrapping an ApexCharts radialBar. Already shipped with correct
