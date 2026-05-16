@@ -13,8 +13,8 @@
 //   // requires: apexcharts + react-apexcharts in the consumer's own deps
 //
 // Phase H components will be exported from here.
-export { RadialProgressCard } from './components/chart/radial-progress';
+export { RadialProgressCard } from './components/giselle/chart/radial-progress';
 export type {
   RadialProgressCardProps,
   RadialProgressItem,
-} from './components/chart/radial-progress';
+} from './components/giselle/chart/radial-progress';

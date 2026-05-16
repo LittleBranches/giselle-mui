@@ -12,7 +12,7 @@ import { MotionContainer } from './motion-container';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof MotionContainer> = {
-  title: 'Giselle MUI/Motion/Container',
+  title: 'Motion/Container',
   component: MotionContainer,
   tags: ['autodocs'],
   parameters: {

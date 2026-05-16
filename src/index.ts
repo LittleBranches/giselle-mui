@@ -2,15 +2,23 @@
  * @alexrebula/giselle-mui — public API
  */
 
-export { createIconRegistrar } from './utils/create-icon-registrar';
-export type { GiselleIconData, GiselleIconMap } from './utils/create-icon-registrar';
+export { createIconRegistrar } from './utils/icon/create-icon-registrar/create-icon-registrar';
+export type {
+  GiselleIconData,
+  GiselleIconMap,
+} from './utils/icon/create-icon-registrar/create-icon-registrar';
 
-export { channelAlpha, hexToChannel, pxToRem, remToPx } from './utils/theme-utils';
-export { isDeepEqual } from './utils/is-deep-equal';
-export { getCookieValue, setCookieValue } from './utils/cookie';
-export type { SetCookieOptions } from './utils/cookie';
-export { useLocalStorage } from './utils/use-local-storage';
-export type { UseLocalStorageReturn } from './utils/use-local-storage';
+export {
+  channelAlpha,
+  hexToChannel,
+  pxToRem,
+  remToPx,
+} from './utils/theme/theme-utils/theme-utils';
+export { isDeepEqual } from './utils/is-deep-equal/is-deep-equal';
+export { getCookieValue, setCookieValue } from './utils/cookie/cookie';
+export type { SetCookieOptions } from './utils/cookie/cookie';
+export { useLocalStorage } from './utils/hooks/use-local-storage/use-local-storage';
+export type { UseLocalStorageReturn } from './utils/hooks/use-local-storage/use-local-storage';
 
 export {
   giselleTheme,
@@ -18,67 +26,74 @@ export {
   GISELLE_PRIMARY_MAIN,
   GISELLE_PRIMARY_DARK_MAIN,
   GISELLE_SECONDARY_MAIN,
-} from './utils/theme-preset';
+} from './utils/theme/preset/theme-preset';
 
-export { GiselleThemeProvider } from './components/theme-provider/giselle';
-export type { GiselleThemeProviderProps } from './components/theme-provider/giselle';
+export { GiselleThemeProvider } from './components/theming/theme-provider/giselle';
+export type { GiselleThemeProviderProps } from './components/theming/theme-provider/giselle';
 
 export {
   GiselleSettingsProvider,
   GiselleThemeAndSettingsProvider,
   useGiselleSettings,
-} from './components/settings-provider';
+} from './components/theming/settings-provider';
 export type {
   BaseSettingsState,
   GiselleSettingsContextValue,
   GiselleSettingsProviderProps,
   GiselleThemeAndSettingsProviderProps,
   StorageAdapter,
-} from './components/settings-provider';
+} from './components/theming/settings-provider';
 
-export { GiselleIcon } from './components/icon/giselle';
-export type { GiselleIconProps } from './components/icon/giselle';
+export { GiselleIcon } from './components/material/data-display/icon/giselle';
+export type { GiselleIconProps } from './components/material/data-display/icon/giselle';
 
-export { Accordion } from './components/accordion';
-export type { AccordionProps } from './components/accordion';
-export { ACCORDION_DONE_MIN_TOUCH_TARGET } from './components/accordion';
+export { Accordion } from './components/material/surfaces/card/accordion';
+export type { AccordionProps } from './components/material/surfaces/card/accordion';
+export { ACCORDION_DONE_MIN_TOUCH_TARGET } from './components/material/surfaces/card/accordion';
 
-export { ToggleIconButton } from './components/inputs/button/toggle/icon';
-export type { ToggleIconButtonProps } from './components/inputs/button/toggle/icon';
-export { TOGGLE_ICON_SIZE, TOGGLE_MIN_TOUCH_TARGET } from './components/inputs/button/toggle/icon';
+export { ToggleIconButton } from './components/material/input/toggle-icon-button';
+export type { ToggleIconButtonProps } from './components/material/input/toggle-icon-button';
+export {
+  TOGGLE_ICON_SIZE,
+  TOGGLE_MIN_TOUCH_TARGET,
+} from './components/material/input/toggle-icon-button';
 // @deprecated — CheckIconButton was renamed to ToggleIconButton in 0.1.x.
 // These aliases re-export the replacement constants so existing consumers don't break.
 // Remove in the next minor version.
 /** @deprecated Use {@link TOGGLE_ICON_SIZE} instead. */
-export { TOGGLE_ICON_SIZE as ACCORDION_CHECK_ICON_SIZE } from './components/inputs/button/toggle/icon';
+export { TOGGLE_ICON_SIZE as ACCORDION_CHECK_ICON_SIZE } from './components/material/input/toggle-icon-button';
 /** @deprecated Use {@link TOGGLE_MIN_TOUCH_TARGET} instead. */
-export { TOGGLE_MIN_TOUCH_TARGET as ACCORDION_ICON_BUTTON_MIN_SIZE } from './components/inputs/button/toggle/icon';
+export { TOGGLE_MIN_TOUCH_TARGET as ACCORDION_ICON_BUTTON_MIN_SIZE } from './components/material/input/toggle-icon-button';
 
-export { MetricCard, MetricCardDecoration } from './components/card/metric';
+export { MetricCard, MetricCardDecoration } from './components/material/surfaces/card/metric';
 export type {
   MetricCardProps,
   MetricCardDecorationProps,
   MetricCardColor,
-} from './components/card/metric';
+} from './components/material/surfaces/card/metric';
 
-export { SelectableCard } from './components/card/selectable';
-export type { SelectableCardProps } from './components/card/selectable';
+export { SelectableCard } from './components/material/surfaces/card/selectable';
+export type { SelectableCardProps } from './components/material/surfaces/card/selectable';
 
-export { QuoteCard } from './components/card/quote';
-export type { QuoteCardProps } from './components/card/quote';
+export { QuoteCard } from './components/material/surfaces/card/quote';
+export type { QuoteCardProps } from './components/material/surfaces/card/quote';
 
-export { StatCard, STAT_CARD_SPARKLINE_OPTIONS } from './components/card/stat';
-export type { StatCardProps, StatCardColor, StatCardItem } from './components/card/stat';
+export { StatCard, STAT_CARD_SPARKLINE_OPTIONS } from './components/material/surfaces/card/stat';
+export type {
+  StatCardProps,
+  StatCardColor,
+  StatCardItem,
+} from './components/material/surfaces/card/stat';
 
-export { StatCardRow } from './components/card/stat-row';
-export type { StatCardRowProps } from './components/card/stat-row';
+export { StatCardRow } from './components/material/surfaces/card/stat-row';
+export type { StatCardRowProps } from './components/material/surfaces/card/stat-row';
 
 export {
   MilestoneBadge,
   PhaseCard,
   TimelineDot,
   TimelineTwoColumn,
-} from './components/timeline/two-column';
+} from './components/section/timeline/two-column';
 export type {
   MilestoneBadgeProps,
   PhaseCardProps,
@@ -93,62 +108,74 @@ export type {
   TimelineSidebar,
   TimelineColumnLabels,
   TimelineSectionData,
-} from './components/timeline/two-column';
+} from './components/section/timeline/two-column';
 
 export {
   TimelineCompact,
   TaskDetailsRenderer,
   resolveCompactColor,
-} from './components/timeline/compact';
-export type { TimelineCompactProps } from './components/timeline/compact';
-export { TaskList } from './components/timeline/task-list';
-export type { TaskListProps } from './components/timeline/task-list';
+} from './components/section/timeline/compact';
+export type { TimelineCompactProps } from './components/section/timeline/compact';
+export { TaskList } from './components/section/timeline/task-list';
+export type { TaskListProps } from './components/section/timeline/task-list';
 export {
   COMPACT_PHASE_DOT_SIZE,
   COMPACT_MILESTONE_DOT_SIZE,
   COMPACT_PHASE_ICON_SIZE,
   COMPACT_MIN_PHASE_DOT_SIZE,
   COMPACT_MIN_MILESTONE_DOT_SIZE,
-} from './components/timeline/compact';
+} from './components/section/timeline/compact';
 
-export { useNestedChecklist } from './utils/use-nested-checklist';
-export type { NestedChecklistState } from './utils/use-nested-checklist';
+export { useNestedChecklist } from './utils/hooks/use-nested-checklist/use-nested-checklist';
+export type { NestedChecklistState } from './utils/hooks/use-nested-checklist/use-nested-checklist';
 
-export { IconActionBar, DEFAULT_ICON_ACTIONS } from './components/action-bar/icon';
-export type { IconActionBarProps, IconActionItem } from './components/action-bar/icon';
+export {
+  IconActionBar,
+  DEFAULT_ICON_ACTIONS,
+} from './components/material/data-display/icon/action-bar';
+export type {
+  IconActionBarProps,
+  IconActionItem,
+} from './components/material/data-display/icon/action-bar';
 
-export { TwoColumnShowcaseRow } from './components/layout/showcase/row/two-column';
+export { TwoColumnShowcaseRow } from './components/material/layout/showcase-row';
 export type {
   TwoColumnShowcaseRowProps,
   TwoColumnShowcaseRowText,
   ShowcaseRowOrientation,
-} from './components/layout/showcase/row/two-column';
+} from './components/material/layout/showcase-row';
 
-export { SectionTitle, SectionCaption } from './components/layout/section/title/section-title';
-export type { SectionTitleProps } from './components/layout/section/title/section-title';
+export { SectionTitle, SectionCaption } from './components/material/layout/section-title';
+export type { SectionTitleProps } from './components/material/layout/section-title';
 
-export { FloatingSubNav } from './components/nav/floating-sub-nav';
-export type { FloatingSubNavProps, FloatingSubNavItem } from './components/nav/floating-sub-nav';
+export { FloatingSubNav } from './components/material/navigation/floating-sub-nav';
+export type {
+  FloatingSubNavProps,
+  FloatingSubNavItem,
+} from './components/material/navigation/floating-sub-nav';
 
-export { SectionContainer } from './components/layout/section/container';
-export type { SectionContainerProps } from './components/layout/section/container';
+export { SectionContainer } from './components/material/layout/section-container';
+export type { SectionContainerProps } from './components/material/layout/section-container';
 
-export { HeroSection } from './components/layout/section/hero';
+export { HeroSection } from './components/section/hero/section';
 export type {
   HeroColorKey,
   HeroSectionProps,
   HeroSlotProps,
-} from './components/layout/section/hero';
+} from './components/section/hero/section';
 
-export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity-utils';
-export { assignMilestoneSidesByDone } from './utils/timeline-utils';
+export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity/maturity-utils';
+export { assignMilestoneSidesByDone } from './utils/timeline/timeline-utils';
 
 // --- Phase I: Main bundle additions ---
-export { AnimatedGradientText } from './components/animated-gradient-text';
+export { AnimatedGradientText } from './components/giselle/text/animated-gradient';
 export type {
   AnimatedGradientTextProps,
   PaletteColorKey,
-} from './components/animated-gradient-text';
+} from './components/giselle/text/animated-gradient';
 
-export { TechIconStrip } from './components/tech-icon-strip';
-export type { TechIconStripProps, TechIconItem } from './components/tech-icon-strip';
+export { TechIconStrip } from './components/material/data-display/icon/tech-strip';
+export type {
+  TechIconStripProps,
+  TechIconItem,
+} from './components/material/data-display/icon/tech-strip';

@@ -442,7 +442,13 @@ Use this checklist when Phase 0 confirms the component is independently usable b
 
 Complete this before starting any implementation steps. The goal is a clean move with zero broken imports.
 
-1. **Create the subfolder**: `src/components/<domain>/<name>/`
+1. **Create the subfolder**: `src/components/<layer>/<category>/<name>/`
+   where `<layer>` is `material`, `motion`, `section`, `giselle`, or `theming`;
+   `<category>` follows MUI's own naming for `material` components (e.g. `surfaces/card/`,
+   `data-display/icon/`, `layout/`, `navigation/`, `input/`, `feedback/`).
+   See the **Domain/feature grouping** section in `copilot-instructions.md` for the full tree.
+   **Why this structure:** the folder tree deliberately mirrors the "Components" navigation
+   that consumers see in the docs site — the same convention every MUI Store competitor uses.
 2. **Move the `.tsx` file** into the subfolder and rename if needed to match the folder name.
 3. **Create all companion files** as empty stubs (fill them in during Phase 2):
    - `types.ts`
@@ -460,7 +466,7 @@ Complete this before starting any implementation steps. The goal is a clean move
 
 ### Rules that apply to a standalone component
 
-- **Own subfolder — mandatory.** `src/components/<domain>/<name>/`
+- **Own subfolder — mandatory.** `src/components/<layer>/<category>/<name>/` (see Domain/feature grouping in copilot-instructions.md)
 - **Own `types.ts`** — all TypeScript types and interfaces for this component and all its internal sub-components.
 - **Own `utils.ts`** — all pure logic functions.
 - **Own `<name>.styles.ts` + `<name>.styles.test.ts`** — all sx constants and factories, with mock-theme assertions.

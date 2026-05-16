@@ -133,23 +133,37 @@ src/components/<name>/
 - **Internal sub-components → own `.tsx` files** (flat in the parent folder). See `Sub-component extraction rule` section below.
 - The `.tsx` file is the **composition layer only**: it imports from all of the above and renders JSX.
 
-**Domain/feature grouping:**
+**Domain/feature grouping — mirrors the "Components" nav:**
 Related components are grouped under a shared parent folder. The quality gate enforces that
 no `.tsx` file lives at `src/components/<file>.tsx` — every component is at least one
 subfolder deep.
 
+**Personal preference — non-negotiable:**
+The `src/components/` tree deliberately mirrors the navigation hierarchy that consumers will
+see in the documentation site and demo. Sub-groups follow MUI's own component category naming
+(surfaces, data-display, layout, navigation, input, feedback) — the same categories documented
+on mui.com. This makes the folder tree immediately predictable to any dev already familiar with
+MUI: they can navigate to a component without reading docs.
+
 ```
 src/components/
-  card/
-    metric/   — MetricCard + MetricCardDecoration
-    quote/    — QuoteCard
-    selectable/ — SelectableCard
-  action-bar/
-    icon/     — IconActionBar
-  icon/
-    giselle/  — GiselleIcon
-  timeline/
-    two-column/ — TimelineTwoColumn (see layout below)
+  material/                    — MUI-based components (grouped by MUI category)
+    surfaces/card/             — accordion, metric, quote, selectable, stat, stat-row
+    data-display/icon/         — action-bar, giselle, tech-strip
+    layout/                    — section-container, section-title, showcase-row
+    navigation/                — floating-sub-nav
+    input/                     — toggle-icon-button
+    feedback/
+    utils/
+  motion/                      — framer-motion components
+    container/ use-scroll-parallax/ variants/ viewport/
+  section/                     — section-level compositions
+    faq/ hero/ timeline/
+  giselle/                     — Giselle-native (non-MUI-dependent) components
+    chart/radial-progress/
+    text/animated-gradient/
+  theming/                     — theme/provider components
+    theme-provider/ settings-provider/
 ```
 
 ### TimelineTwoColumn internal file layout
@@ -158,7 +172,7 @@ The `timeline/two-column/` folder is the **reference implementation** for comple
 It demonstrates the full types/utils/styles/const/sub-component split:
 
 ```
-src/components/timeline/two-column/
+src/components/section/timeline/two-column/
   two-column.tsx                       — pure JSX composition only (no types, no logic functions)
   types.ts                             — all exported + internal TypeScript interfaces
   utils.ts                             — all pure logic functions (no JSX return); fully unit-testable
@@ -326,30 +340,30 @@ At the start of every new Copilot session in this package, read these files:
 
 ### Current components (shipped)
 
-| Component                                            | File                                  | Status                                     |
-| ---------------------------------------------------- | ------------------------------------- | ------------------------------------------ |
-| `GiselleIcon`                                        | `src/components/icon/giselle/`        | ✅ Shipped + tested                        |
-| `MetricCard` + `MetricCardDecoration`                | `src/components/card/metric/`         | ✅ Shipped + tested                        |
-| `QuoteCard`                                          | `src/components/card/quote/`          | ✅ Shipped + tested                        |
-| `SelectableCard`                                     | `src/components/card/selectable/`     | ✅ Shipped + tested                        |
-| `createIconRegistrar`                                | `src/utils/create-icon-registrar.ts`  | ✅ Shipped + tested                        |
-| `TimelineTwoColumn`                                  | `src/components/timeline/two-column/` | ✅ Shipped + tested                        |
-| `IconActionBar`                                      | `src/components/action-bar/icon/`     | ✅ Shipped + tested                        |
-| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts`            | ✅ Shipped + tested (Phase A — 4 May 2026) |
-| `giselleTheme`, palette constants                    | `src/utils/theme-preset.ts`           | ✅ Shipped + tested (Phase B — 5 May 2026) |
-| `StatCard`                                           | `src/components/card/stat/`           | ✅ Shipped + tested (5 May 2026)           |
+| Component                                            | File                                                    | Status                                     |
+| ---------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------ |
+| `GiselleIcon`                                        | `src/components/material/data-display/icon/giselle/`    | ✅ Shipped + tested                        |
+| `MetricCard` + `MetricCardDecoration`                | `src/components/material/surfaces/card/metric/`         | ✅ Shipped + tested                        |
+| `QuoteCard`                                          | `src/components/material/surfaces/card/quote/`          | ✅ Shipped + tested                        |
+| `SelectableCard`                                     | `src/components/material/surfaces/card/selectable/`     | ✅ Shipped + tested                        |
+| `createIconRegistrar`                                | `src/utils/icon/create-icon-registrar/`                 | ✅ Shipped + tested                        |
+| `TimelineTwoColumn`                                  | `src/components/section/timeline/two-column/`           | ✅ Shipped + tested                        |
+| `IconActionBar`                                      | `src/components/material/data-display/icon/action-bar/` | ✅ Shipped + tested                        |
+| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme/theme-utils/`                          | ✅ Shipped + tested (Phase A — 4 May 2026) |
+| `giselleTheme`, palette constants                    | `src/utils/theme/preset/`                               | ✅ Shipped + tested (Phase B — 5 May 2026) |
+| `StatCard`                                           | `src/components/material/surfaces/card/stat/`           | ✅ Shipped + tested (5 May 2026)           |
 
 ### Section-level companion types (canonical location)
 
 These types must be defined here and imported from `@alexrebula/giselle-mui` by all consumers.
 **Never re-define them in alexrebula data files or anywhere else.**
 
-| Type                   | Location                                      | Purpose                                                                            |
-| ---------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `TimelineSidebar`      | `src/components/timeline/two-column/types.ts` | Sidebar heading/body/chip for a timeline section page                              |
-| `TimelineColumnLabels` | `src/components/timeline/two-column/types.ts` | Column header labels (`left`, `right`, optional subtitles)                         |
-| `TimelineSectionData`  | `src/components/timeline/two-column/types.ts` | Aggregated `{ sidebar, columnLabels, phases }` — pass directly to a section view   |
-| `StatCardItem`         | `src/components/card/stat/types.ts`           | Data-layer shape for one `StatCard` entry (uses `iconId: string`, not `ReactNode`) |
+| Type                   | Location                                              | Purpose                                                                            |
+| ---------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `TimelineSidebar`      | `src/components/section/timeline/two-column/types.ts` | Sidebar heading/body/chip for a timeline section page                              |
+| `TimelineColumnLabels` | `src/components/section/timeline/two-column/types.ts` | Column header labels (`left`, `right`, optional subtitles)                         |
+| `TimelineSectionData`  | `src/components/section/timeline/two-column/types.ts` | Aggregated `{ sidebar, columnLabels, phases }` — pass directly to a section view   |
+| `StatCardItem`         | `src/components/material/surfaces/card/stat/types.ts` | Data-layer shape for one `StatCard` entry (uses `iconId: string`, not `ReactNode`) |
 
 **Why this matters:** Types defined in data files are invisible to consumers of this library.
 They also diverge over time — the same shape ends up with three different names across three
