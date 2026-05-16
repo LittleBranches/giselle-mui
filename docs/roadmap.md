@@ -527,15 +527,16 @@ Each subfolder follows the full component convention: `<name>.ts(x)`, `<name>.co
 ## Phase M — GiselleMUIView Demo (little-branches/giselle)
 
 **Goal:** Build the live component showcase at `/little-branches/giselle/mui/` in the
-`alexrebula` portfolio. This is the primary proof-of-concept for Giselle Premium — the
-primary component showcase for Giselle Premium. MUI Store reviewers click through this page.
+`alexrebula` portfolio. This is the primary proof-of-concept for Giselle Premium.
+MUI Store reviewers click through this page.
 
-**Architecture insight (from Berry competitor analysis — 16 May 2026):**
+**Architecture insight (confirmed via competitive analysis — 16 May 2026):**
 
-Berry's entire custom component library is 9 thin wrappers. Their 100+ pages are built
-from stock MUI + their theme. This confirms: **`GiselleThemeProvider` IS the product for
-standard MUI components.** No thin wrapper components need to be exported from giselle-mui
-for standard MUI components — the theme handles all of them.
+A well-regarded admin template in this category ships 100+ pages with only 9 thin custom
+component wrappers. All other pages are built from stock MUI styled by the theme. This
+confirms: **`GiselleThemeProvider` IS the product for standard MUI components.** No thin
+wrapper components need to be exported from giselle-mui for standard MUI — the theme
+handles all of them.
 
 **What this phase builds:**
 
