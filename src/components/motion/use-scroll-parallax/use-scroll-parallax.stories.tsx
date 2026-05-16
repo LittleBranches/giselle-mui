@@ -107,7 +107,7 @@ function ParallaxShowcase({ children }: { children?: React.ReactNode }) {
 }
 
 const meta: Meta<typeof ParallaxShowcase> = {
-  title: 'Motion/Parallax',
+  title: 'Giselle MUI/Motion/Parallax',
   component: ParallaxShowcase,
   tags: ['autodocs'],
   parameters: {
