@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
 import { breakpointLabelSx, responsiveWrapperSx } from '../../../../stories-defaults';
-import { AnimatedGradientText } from '../../../giselle/text/animated-gradient';
+import { AnimatedGradientText } from '../../../bonus/text/animated-gradient';
 import { GiselleIcon } from '../../../material/data-display/icon/giselle';
 import { TechIconStrip } from '../../../material/data-display/icon/tech-strip';
 import type { TechIconItem } from '../../../material/data-display/icon/tech-strip/types';
