@@ -5,8 +5,19 @@ import { fade } from '../../../motion/variants/fade';
 // ----------------------------------------------------------------------
 
 /**
+ * Default motion props for `AnimatedHeroHeading`.
+ *
+ * Uses `variants: fade('inUp', ...)` so the heading participates in parent
+ * `MotionContainer` / `MotionViewport` stagger orchestration.
+ * Override via the `motionProps` prop when stagger is not needed.
+ */
+export const headingMotionProps: MotionProps = {
+  variants: fade('inUp', { distance: 24 }),
+};
+
+/**
  * Animate target for the cycling gradient highlight span.
- * Drives the `backgroundPosition` from its initial CSS value to `200% center`.
+ * Drives `backgroundPosition` from its CSS initial value to `200% center`.
  */
 export const gradientHighlightAnimate = { backgroundPosition: '200% center' } as const;
 
@@ -21,14 +32,4 @@ export const gradientHighlightTransition: Transition = {
   ease: 'linear',
   repeat: Infinity,
   repeatType: 'reverse',
-};
-
-/**
- * Default motion props for `AnimatedHeroHeading`.
- *
- * Fades the heading upward 24px on mount using the shared `fade` variant factory.
- * Can be overridden via the `motionProps` prop.
- */
-export const headingMotionProps: MotionProps = {
-  variants: fade('inUp', { distance: 24 }),
 };

@@ -7,7 +7,7 @@ sidebar_label: 'Component Inventory'
 
 > Master inventory across all planning docs. Single source of truth for "what exists, what is planned, and what phase it belongs to."
 >
-> _Last updated: 14 May 2026_
+> _Last updated: 16 May 2026_
 >
 > **Source docs:** `roadmap.mdx`, `standalone-gap-analysis.md`, `components/dashboard-components-plan.md`, `components/home-components-extraction-plan.md`, `components/settings/settings-provider-plan.md`, `components/trip-planner-components-plan.md`
 
@@ -109,22 +109,22 @@ sidebar_label: 'Component Inventory'
 
 > Phase E is **partially done** (remaining: `HeroSection`, `OptionWithBlurb`, `SectionPendingLoader`, `FloatingControlBar`).
 
-| Component              | Source                              | Status                  | Blocker                                           |
-| ---------------------- | ----------------------------------- | ----------------------- | ------------------------------------------------- |
-| `StatCard`             | Written from scratch                | ✅ Shipped 5 May 2026   | —                                                 |
-| `RadialProgressCard`   | Written from scratch                | ✅ Shipped 5 May 2026   | —                                                 |
-| `TimelineCompact`      | Written from scratch                | ✅ Shipped 7 May 2026   | —                                                 |
-| `SectionContainer`     | Written from scratch                | ✅ Shipped 13 May 2026  | —                                                 |
-| `TwoColumnShowcaseRow` | alexrebula                          | ✅ Shipped 13 May 2026  | —                                                 |
-| `SectionTitle`         | Written from scratch                | ✅ Shipped 13 May 2026  | Animated `/motion` variant is Phase I item 2      |
-| `Accordion`            | Written from scratch                | ✅ Shipped 13 May 2026  | —                                                 |
-| `ToggleIconButton`     | Written from scratch                | ✅ Shipped 13 May 2026  | Replaces deprecated `CheckIconButton`             |
-| `TaskList`             | Written from scratch                | ✅ Shipped 13 May 2026  | —                                                 |
-| `FaqSection`           | Write from scratch                  | ✅ Shipped 13 May 2026  | Renamed from `FaqAccordion`; in `/motion` subpath |
-| `HeroSection`          | Write from scratch                  | ⬜                      | None                                              |
-| `OptionWithBlurb`      | alexrebula (tiny, ready to extract) | ⬜                      | None                                              |
-| `SectionPendingLoader` | alexrebula                          | ⬜                      | Replace `Iconify` → `GiselleIcon`                 |
-| `FloatingControlBar`   | alexrebula                          | ⬜                      | Replace `Iconify` → `GiselleIcon`                 |
+| Component              | Source                              | Status                 | Blocker                                           |
+| ---------------------- | ----------------------------------- | ---------------------- | ------------------------------------------------- |
+| `StatCard`             | Written from scratch                | ✅ Shipped 5 May 2026  | —                                                 |
+| `RadialProgressCard`   | Written from scratch                | ✅ Shipped 5 May 2026  | —                                                 |
+| `TimelineCompact`      | Written from scratch                | ✅ Shipped 7 May 2026  | —                                                 |
+| `SectionContainer`     | Written from scratch                | ✅ Shipped 13 May 2026 | —                                                 |
+| `TwoColumnShowcaseRow` | alexrebula                          | ✅ Shipped 13 May 2026 | —                                                 |
+| `SectionTitle`         | Written from scratch                | ✅ Shipped 13 May 2026 | Animated `/motion` variant is Phase I item 2      |
+| `Accordion`            | Written from scratch                | ✅ Shipped 13 May 2026 | —                                                 |
+| `ToggleIconButton`     | Written from scratch                | ✅ Shipped 13 May 2026 | Replaces deprecated `CheckIconButton`             |
+| `TaskList`             | Written from scratch                | ✅ Shipped 13 May 2026 | —                                                 |
+| `FaqSection`           | Write from scratch                  | ✅ Shipped 13 May 2026 | Renamed from `FaqAccordion`; in `/motion` subpath |
+| `HeroSection`          | Write from scratch                  | ⬜                     | None                                              |
+| `OptionWithBlurb`      | alexrebula (tiny, ready to extract) | ⬜                     | None                                              |
+| `SectionPendingLoader` | alexrebula                          | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
+| `FloatingControlBar`   | alexrebula                          | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
 
 ---
 
@@ -157,11 +157,11 @@ sidebar_label: 'Component Inventory'
 
 ### Group 1 — Stat / metric cards (main bundle)
 
-| Component                                                                 | Status |
-| ------------------------------------------------------------------------- | ------ |
-| `StatCardRow` — responsive `Grid2` of `StatCard` items (Shipped 13 May 2026)  | ✅     |
-| `BalanceSummaryCard` — large financial overview card with sparkline slot       | 🔴     |
-| `CreditCardDisplay` — presentational masked card number / holder / expiry | 🔴     |
+| Component                                                                    | Status |
+| ---------------------------------------------------------------------------- | ------ |
+| `StatCardRow` — responsive `Grid2` of `StatCard` items (Shipped 13 May 2026) | ✅     |
+| `BalanceSummaryCard` — large financial overview card with sparkline slot     | 🔴     |
+| `CreditCardDisplay` — presentational masked card number / holder / expiry    | 🔴     |
 
 ### Group 2 — Chart cards (`/charts` subpath, ApexCharts peer dep)
 
@@ -399,7 +399,128 @@ sidebar_label: 'Component Inventory'
 
 ---
 
-## Related
+## Target source tree — complete library
+
+> Folder name = subpath entry or bundle. `chart/` → `/charts` · `motion/` → `/motion` · everything else → main bundle.
+> `bonus/` is a transitional folder — dissolved into this structure once moves are done.
+> Component names follow `docs/naming-conventions.md`. **fb** = required by first-branch.
+
+```
+src/components/
+  material/                              — main bundle | MUI-based custom components
+    surfaces/
+      accordion/                         ✅ Phase E        — Accordion
+      details-drawer/                    ⬜ Phase F        — DetailsDrawer
+      scenario-comparison/               🔴 Phase H G7     — ScenarioComparison
+      card/
+        metric/                          ✅                — MetricCard + MetricCardDecoration
+        quote/                           ✅                — QuoteCard
+        selectable/                      ✅                — SelectableCard
+        stat/                            ✅ fb             — StatCard (earnings summary in first-branch)
+        stat-row/                        ✅ fb             — StatCardRow
+        profile-summary/                 ⬜ Phase J T2     — ProfileSummaryCard
+        balance-summary/                 🔴 Phase H G1     — BalanceSummaryCard
+        credit-card-display/             🔴 Phase H G1     — CreditCardDisplay
+        hero-banner/                     🔴 Phase H G5     — HeroBannerCard
+        featured-item/                   🔴 Phase H G5     — FeaturedItemCard
+        promo-invite/                    🔴 Phase H G5     — PromoInviteCard
+        budget-breakdown/                🔴 Phase H G4     — BudgetBreakdownCard
+        quick-transfer/                  🔴 Phase H G4     — QuickTransferCard
+        cost-classification/             🔴 Phase H G7     — CostClassificationCard
+        roi-comparison/                  🔴 Phase H G7     — RoiComparisonCard
+        period-summary/                  🔴 Phase I B      — PeriodSummaryCard
+    data-display/
+      icon/
+        giselle/                         ✅                — GiselleIcon
+        action-bar/                      ✅                — IconActionBar
+        tech-strip/                      ⬜ planned        — TechStrip
+      animated-gradient/                 ✅ move from bonus/ — AnimatedGradientText
+      task-list/                         ✅ Phase E        — TaskList
+      status-label/                      ⬜ Phase J T1 fb  — StatusLabel (task status badge: open/in-progress/in-review/done)
+      avatar-row/                        ⬜ Phase J T2     — AvatarRow
+      data-table/                        🔴 Phase H G3 fb  — DataTable (task table in first-branch)
+      activity-feed-list/                🔴 Phase H G3     — ActivityFeedList
+      news-feed-list/                    🔴 Phase H G3     — NewsFeedList
+      related-items-list/                🔴 Phase H G3     — RelatedItemsList
+      progress-stats-list/               🔴 Phase H G4     — ProgressStatsList
+      contacts-list/                     🔴 Phase H G4     — ContactsList
+      amortization-table/                🔴 Phase H G7     — AmortizationTable
+      expense-line-item/                 🔴 Phase I A      — ExpenseLineItem
+      expense-category-group/            🔴 Phase I A      — ExpenseCategoryGroup
+    layout/
+      app-shell/                         ⬜ Phase J T1     — AppShell (slot-based shell; sidebar optional for landing pages)
+      auth-page-layout/                  ⬜ Phase J T1     — AuthPageLayout (card on gradient background)
+      page-header/                       ⬜ Phase J T2     — PageHeader (title + breadcrumb + action row)
+      section-container/                 ✅ Phase E        — SectionContainer
+      section-title/                     ✅ Phase E        — SectionTitle (static; animated → motion/)
+      two-column-showcase-row/           ✅ Phase E        — TwoColumnShowcaseRow
+      sidebar-timeline/                  ⬜ planned        — SidebarTimelineLayout (Phase M extraction)
+    navigation/
+      app-sidebar/                       ⬜ Phase J T1     — AppSidebar (collapsible + mini icon-only variant)
+      app-top-bar/                       ⬜ Phase J T1     — AppTopBar (dashboard top nav with user menu slot)
+      breadcrumbs/                       ⬜ Phase J T2     — Breadcrumbs
+      floating-sub-nav/                  ✅               — FloatingSubNav (→ moves to motion/ in Phase H G6)
+      floating-control-bar/              ⬜ Phase E        — FloatingControlBar
+    input/
+      toggle-icon-button/                ✅ Phase E        — ToggleIconButton
+      option-with-blurb/                 ⬜ Phase E        — OptionWithBlurb
+    feedback/
+      section-pending-loader/            ⬜ Phase E        — SectionPendingLoader
+
+  chart/                                 — /charts subpath | ApexCharts peer dep
+    chart-card-base/                     ⬜ Phase H G2     — ChartCardBase (shared chart card shell)
+    radial-progress/                     ✅ move from bonus/ — RadialProgressCard
+    sparkline-bar/                       🔴 Phase H G2     — SparklineBarChart (embedded, no card wrapper)
+    donut-chart-card/                    🔴 Phase H G2     — DonutChartCard
+    area-line-chart-card/                🔴 Phase H G2     — AreaLineChartCard
+    budget-vs-actual-card/               🔴 Phase H G2     — BudgetVsActualCard
+    grouped-bar-chart-card/              🔴 Phase H G2     — GroupedBarChartCard
+    horizontal-bar-chart-card/           🔴 Phase H G2     — HorizontalBarChartCard
+    radar-chart-card/                    🔴 Phase H G2     — RadarChartCard
+    projection-card/                     🔴 Phase H G2     — ProjectionCard
+
+  motion/                                — /motion subpath | framer-motion peer dep
+    container/                           ✅               — MotionContainer
+    viewport/                            ✅               — MotionViewport
+    variants/                            ✅               — variants (fade, slide, etc.; + Phase I-1 factories)
+    use-scroll-parallax/                 ✅               — useScrollParallax
+    faq/                                 ✅ Phase E        — FaqSection
+    animated-tab-panel/                  🔴 Phase H G6     — AnimatedTabPanel
+    floating-sub-nav/                    🟡 Phase H G6     — FloatingSubNav (moved from material/)
+    section-title/                       ⬜ Phase I-2      — SectionTitle animated variant
+    floating-side-nav/                   ⬜ Phase I-3      — FloatingSideNav
+    hero-background/                     ⬜ Phase I-5      — HeroBackground
+    floating-icon-cloud/                 ⬜ Phase I-6      — FloatingIconCloud
+    interactive-hero-logo/               ⬜ Phase I-7      — InteractiveHeroLogo
+    period-detail-sheet/                 🔴 Phase I C      — PeriodDetailSheet
+    horizontal-scroll-rail/              🔴 Phase I C      — HorizontalScrollRail
+    expanding-period-strip/              🔴 Phase I C      — ExpandingPeriodStrip
+    budget-summary-drawer/               🔴 Phase I C      — BudgetSummaryDrawer
+    breakdown-carousel-view/             🔴 Phase I D      — BreakdownCarouselView
+    breakdown-expanding-view/            🔴 Phase I D      — BreakdownExpandingView
+    breakdown-stacked-view/              🔴 Phase I D      — BreakdownStackedView
+    weekly-breakdown-page/               🔴 Phase I D      — WeeklyBreakdownPage
+
+  section/                               — main bundle | section-level compositions
+    hero/                                ⬜ Phase E        — HeroSection
+    faq/                                 ✅               — FaqSection (re-exported from motion/)
+    error/                               ⬜ Phase J T1     — ErrorSection (404 + 500; T1 MUI Store requirement)
+    pricing/                             ⬜ Phase J T3     — PricingSection (3-tier pricing cards)
+    timeline/
+      two-column/                        ✅ fb             — TimelineTwoColumn (project tracking in first-branch)
+      compact/                           ✅               — TimelineCompact
+      task-list/                         ✅ Phase E        — TimelineTaskList
+      item-details/                      ⬜ Phase G        — TimelineItemDetails
+
+  theming/                               — main bundle | provider components
+    theme-provider/                      ✅               — GiselleThemeProvider
+    settings-provider/                   ✅               — SettingsProvider
+```
+
+**first-branch coverage summary:**
+`StatusLabel` (task status) · `DataTable` (task list) · `StatCard` + `StatCardRow` (earnings/payments)
+· `TimelineTwoColumn` (project task view) · `StatCard` again for bucket split (Give/Save/Blow).
+All of these are in the main bundle — no subpath imports needed in first-branch.
 
 - [`roadmap.mdx`](./roadmap.mdx) — Phase A → H timeline with milestone detail
 - [`standalone-gap-analysis.md`](./standalone-gap-analysis.md) — what a blank Next.js project needs from this library

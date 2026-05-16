@@ -518,6 +518,65 @@ Each subfolder follows the full component convention: `<name>.ts(x)`, `<name>.co
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | --------------------- |
 | PR template (`.github/pull_request_template.md`) — consistent across all repos                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Chore | ✅ Done — 9 May 2026  |
 | PR messages index (`docs/pr-messages/`) — all 26 PRs documented                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Chore | ✅ Done — 9 May 2026  |
-| **Per-component `roadmap.md` files** — each component folder gets its own `roadmap.md` with a standard format covering planned improvements, known gaps, and next milestones. The format must be identical across all components so information transfers consistently to any tooling or documentation layer. Named `roadmap.md` in every component folder.                                                                                                                                                                                             | Chore | ⬜                    |
+| **Per-component `roadmap.md` files** — each component folder gets its own `roadmap.md` with a standard format covering planned improvements, known gaps, and next milestones. The format must be identical across all components so information transfers consistently to any tooling or documentation layer. Named `roadmap.md` in every component folder.                                                                                                                                                                                                    | Chore | ⬜                    |
 | Update `docs/components/cleanup-workflow.md` to include Step 10b — create/update the component `roadmap.md` as a mandatory step so Copilot always creates or updates it during any cleanup run.                                                                                                                                                                                                                                                                                                                                                         | Chore | ✅ Done — 14 May 2026 |
 | **PR review workflow formalised** — `docs/pr-review-workflow.md` shipped. The conventions developed iteratively across PRs #37–#43 are now a single, executable document covering branch hygiene, PR creation (via `gh pr create` only), Copilot review response, fix batch commit, and branch owner sign-off. Session shorthands `review pr <N>` and `create pr <branch>` make the workflow invocable in any future Copilot session without re-explanation. This is the point where ad-hoc process became repeatable, self-documenting infrastructure. | Chore | ✅ Done — 14 May 2026 |
+
+---
+
+## Phase M — GiselleMUIView Demo (little-branches/giselle)
+
+**Goal:** Build the live component showcase at `/little-branches/giselle/mui/` in the
+`alexrebula` portfolio. This is the primary proof-of-concept for Giselle Premium.
+MUI Store reviewers click through this page.
+
+**Architecture insight (confirmed via competitive analysis — 16 May 2026):**
+
+A well-regarded admin template in this category ships 100+ pages with only 9 thin custom
+component wrappers. All other pages are built from stock MUI styled by the theme. This
+confirms: **`GiselleThemeProvider` IS the product for standard MUI components.** No thin
+wrapper components need to be exported from giselle-mui for standard MUI — the theme
+handles all of them.
+
+**What this phase builds:**
+
+1. **`GiselleThemeProvider` wired into `little-branches`** — the single prerequisite.
+   All demo pages render inside `GiselleThemeProvider`. This is the first task.
+
+2. **Stock MUI showcase pages** (under `material/` in the demo route) — pages that render
+   standard MUI components (Accordion, Button, Card, etc.) **without any wrapper**.
+   These pages prove the theme works correctly on stock MUI with zero consumer boilerplate.
+
+3. **giselle-mui custom component pages** — MetricCard, QuoteCard, StatCard, GiselleIcon,
+   TimelineTwoColumn, etc. One demo page per component.
+
+**No thin MUI wrappers are exported from giselle-mui for this phase.** A `GiselleAccordion`
+that does nothing beyond `<Accordion {...props} />` would add zero value — the theme handles
+it. Thin wrappers only emerge if, while building demo pages, a repeated pattern is found that
+justifies the wrapper (e.g. a specific `expandIcon` + `disableGutters` combination needed
+on every accordion).
+
+**Full spec:** `alexrebula/docs/giselle-premium/giselle-mui-restructure-plan.md` —
+`GiselleMUIView` section (route structure, `nav-config.ts` data shape, atomic design taxonomy,
+`View → Template → Organism` wiring pattern).
+
+**Blocked on:** Phase C (`GiselleThemeProvider`) — must be shipped and `yalc push`ed before
+demo pages can render the Giselle theme.
+
+| Task                                                                                          | Label     | Status |
+| --------------------------------------------------------------------------------------------- | --------- | ------ |
+| Wire `GiselleThemeProvider` into `little-branches/giselle` — first and only prerequisite      | Core      | ⬜     |
+| `nav-config.ts` — define `GiselleNavSection[]` data shape and initial items list              | Core      | ⬜     |
+| `GiselleMUIView` — grid index page at `/little-branches/giselle/mui/`                         | Page      | ⬜     |
+| `GiselleMUIDemoTemplate` — three-column shell (primary nav, main, secondary nav) — slots only | Template  | ⬜     |
+| `GiselleDemoHero` — heading banner + breadcrumbs organism                                     | Organism  | ⬜     |
+| `GiselleDemoPrimaryNav` — left sidebar nav from `allGiselleComponents` data                   | Organism  | ⬜     |
+| `GiselleDemoSecondaryNav` — right anchor list with scroll spy                                 | Organism  | ⬜     |
+| `GiselleDemoSection` — card wrapper with anchor ID + title + content slot                     | Organism  | ⬜     |
+| Demo page: `material/accordion/` — stock MUI Accordion under GiselleTheme                     | Demo page | ⬜     |
+| Demo page: `material/cards/metric/` — MetricCard                                              | Demo page | ⬜     |
+| Demo page: `material/cards/quote/` — QuoteCard                                                | Demo page | ⬜     |
+| Demo page: `material/cards/stat/` — StatCard                                                  | Demo page | ⬜     |
+| Demo page: `material/icons/giselle-icon/` — GiselleIcon all palette keys                      | Demo page | ⬜     |
+| Demo page: `sections/timeline/two-column/` — TimelineTwoColumn with real data                 | Demo page | ⬜     |
+| SVG thumbnails for `nav-config.ts` cards — `public/assets/icons/giselle-mui/ic-<slug>.svg`    | Assets    | ⬜     |
