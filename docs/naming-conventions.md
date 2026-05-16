@@ -46,13 +46,13 @@
 Shell and navigation components use the `App` prefix to make their role immediately obvious:
 they are application-level chrome, not page-level content components.
 
-| Component        | Folder                     | Why not the Minimals name                                                                                                                                                           |
-| ---------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AppShell`       | `layout/app-shell/`        | Minimals calls their equivalent `DashboardLayout` — we prefer the structural descriptor (`Shell`) which signals it has named slots: sidebar, topbar, content. Used in MUI docs too. |
-| `AppSidebar`     | `navigation/app-sidebar/`  | Minimals calls theirs `NavMini` / `NavHorizontal` based on layout mode. We name by role, expose layout mode as a prop variant.                                                      |
-| `AppTopBar`      | `navigation/app-top-bar/`  | Minimals calls theirs `Header`. We prefer the descriptive compound to avoid clashing with HTML `<header>`.                                                                          |
-| `AuthPageLayout` | `layout/auth-page-layout/` | Minimals calls theirs `AuthModernLayout`. We name by purpose (auth page), not style.                                                                                                |
-| `PageHeader`     | `layout/page-header/`      | No conflict. A row containing page title + breadcrumbs + primary action button.                                                                                                     |
+| Component        | Folder                     | Naming rationale                                                                                                                                                                     |
+| ---------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `AppShell`       | `layout/app-shell/`        | `Shell` is the structural descriptor — signals it has named slots (sidebar, topbar, content). Used in MUI docs too. Preferred over layout-mode names like `DashboardLayout`.         |
+| `AppSidebar`     | `navigation/app-sidebar/`  | Named by role, not by layout mode. Layout mode (`mini`, `horizontal`) is exposed as a prop variant rather than encoded into separate component names.                                |
+| `AppTopBar`      | `navigation/app-top-bar/`  | Descriptive compound preferred over `Header` to avoid clashing with the HTML `<header>` element.                                                                                     |
+| `AuthPageLayout` | `layout/auth-page-layout/` | Named by purpose (auth page), not by visual style. Style variants are props.                                                                                                         |
+| `PageHeader`     | `layout/page-header/`      | A row containing page title + breadcrumbs + primary action button. No naming conflict with any structural concept.                                                                   |
 
 **AppShell slot contract (explicit):**
 
@@ -165,26 +165,25 @@ InteractiveHeroLogo   — logo with interactive hover/click animation
 
 ---
 
-## Minimals name overlap — explicit decisions
+## Naming decision log
 
-These are names where the Minimals theme uses the same or similar identifier. We've
-explicitly chosen to keep, rename, or differ:
+Explicit decisions for names that could have been chosen differently. Each row documents the
+alternative considered and why the current name was preferred.
 
-| Our name             | Minimals name                  | Decision                     | Reason                                                                        |
+| Our name             | Alternative considered         | Decision                     | Reason                                                                        |
 | -------------------- | ------------------------------ | ---------------------------- | ----------------------------------------------------------------------------- |
-| `AppShell`           | `DashboardLayout`              | Different                    | `Shell` is a more precise structural term; not tied to a single page type     |
-| `AppSidebar`         | `NavMini`, `NavHorizontal`     | Different                    | We encode layout mode as a prop, not as separate components                   |
-| `AppTopBar`          | `Header`                       | Different                    | Avoids HTML element conflict; more specific                                   |
-| `StatusLabel`        | `Label`                        | Extended                     | We add `Status` prefix to signal its semantic role                            |
-| `DataTable`          | `TableData`                    | Same concept, reversed words | `DataTable` reads as a noun; `TableData` reads as an adjective                |
+| `AppShell`           | `DashboardLayout`              | Prefer `AppShell`            | `Shell` is a more precise structural term; not tied to a single page type     |
+| `AppSidebar`         | `NavMini`, `NavHorizontal`     | Prefer `AppSidebar`          | We encode layout mode as a prop, not as separate components                   |
+| `AppTopBar`          | `Header`                       | Prefer `AppTopBar`           | Avoids HTML element conflict; more specific                                   |
+| `StatusLabel`        | `StatusChip`                   | Prefer `StatusLabel`         | We add `Status` prefix to signal its semantic role; avoids MUI Chip collision |
+| `DataTable`          | `TableData`                    | Prefer `DataTable`           | `DataTable` reads as a noun; `TableData` reads as an adjective                |
 | `BalanceSummaryCard` | `BankingBalanceStatistics`     | Shortened                    | More reusable name (works for any balance, not only banking)                  |
-| `ActivityFeedList`   | `AppTimeline` / `ActivityNews` | Clarified                    | `List` suffix signals the structural pattern; `Feed` signals the content type |
-| `AvatarRow`          | `AvatarGroup`                  | Slightly different           | `Row` is consistent with our existing `StatCardRow` pattern                   |
+| `ActivityFeedList`   | `AppTimeline`, `ActivityNews`  | Prefer `ActivityFeedList`    | `List` suffix signals the structural pattern; `Feed` signals the content type |
+| `AvatarRow`          | `AvatarGroup`                  | Prefer `AvatarRow`           | `Row` is consistent with our existing `StatCardRow` pattern                   |
 
-**Names we share with Minimals that are fine:** `DonutChartCard`, `RadarChartCard`,
-`ProgressStatsList` — these are generic domain terms. Sharing a name with a competitor
-is only a concern if we risk confusing a developer who uses both. Given these are different
-packages on different npm scopes, no confusion risk.
+**Generic names shared across many libraries:** `DonutChartCard`, `RadarChartCard`,
+`ProgressStatsList` — these are standard domain terms. No naming conflict risk because they
+exist on a distinct npm scope (`@alexrebula/giselle-mui`).
 
 ---
 

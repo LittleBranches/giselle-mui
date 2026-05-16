@@ -528,7 +528,7 @@ Each subfolder follows the full component convention: `<name>.ts(x)`, `<name>.co
 
 **Goal:** Build the live component showcase at `/little-branches/giselle/mui/` in the
 `alexrebula` portfolio. This is the primary proof-of-concept for Giselle Premium — the
-equivalent of `minimals.cc/components/`. MUI Store reviewers click through this page.
+primary component showcase for Giselle Premium. MUI Store reviewers click through this page.
 
 **Architecture insight (from Berry competitor analysis — 16 May 2026):**
 
