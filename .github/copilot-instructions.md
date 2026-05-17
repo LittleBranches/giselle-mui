@@ -626,10 +626,43 @@ Any value or function inside a component that is:
 
 ### JSDoc
 
-Every exported component function and every exported prop interface must have JSDoc. Storybook autodoc generates prop tables from TypeScript types but will not show a component-level description or usage notes without JSDoc on the function itself.
+- **Component function:** one-sentence JSDoc describing what problem it solves — always required.
+- **Own props:** one-line JSDoc only when the purpose is non-obvious; add `@default value` for defaulted props.
+- **Inherited MUI props:** no JSDoc, ever — TypeScript inheritance carries MUI's own JSDoc into autodoc automatically.
+- **Multi-line JSDoc blocks are forbidden.** One line is the hard limit. If it takes more than one sentence, the API is probably wrong.
 
-- JSDoc goes on the exported function, not just the Props type.
-- Only document own props — never redeclare props inherited from MUI interfaces (rule 4). TypeScript inheritance carries MUI's own JSDoc into autodoc automatically.
+See full rules: [`docs/components/api-design-rules.md`](../docs/components/api-design-rules.md)
+
+### Component API — tier system (enforce always)
+
+Every component belongs to one tier. Identify the tier before designing props.
+
+| Tier | When to use | Props | JSDoc on props? |
+|---|---|---|---|
+| **1 — Pure extension** | Only value-add is enforcing a convention | Inherit everything from MUI base. Add zero new props. | None on Props interface |
+| **2 — Selective extension** | Narrowing MUI's API, adding a ReactNode slot, pre-wiring a non-obvious combination | Extend MUI base. Add only the truly new props. | Only on own props |
+| **3 — Composition** | Assembles multiple MUI primitives from a data array | `items: Item[]`, `sx?: SxProps<Theme>`, config props only — do not extend a specific MUI base | Document the item type |
+
+**Shared style vs shared component rule:**
+- Visual-only sharing (colours, spacing, shadows) → use a style constant in `*.styles.ts`
+- Structural sharing (recurring DOM shape with multiple named slots) → thin wrapper component
+
+**The `Paper` → card pattern:** all card components extend `PaperProps` directly and import a shared `cardBaseSx` constant. There is no `BaseCard` wrapper component. Exception: `ChartCardBase` — justified by a non-trivial shared structural shell (title + year-selector slot + chart area + legend).
+
+**7 prop design rules (non-negotiable):**
+1. Inherit first — check if MUI already has the prop before adding it.
+2. `ReactNode` for all slots — never accept a specific icon or image component type.
+3. `sx` always last — forwarded to the root element.
+4. `color` follows MUI convention — `'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error'` with `@default 'primary'`.
+5. No boolean props that duplicate MUI — `disabled`, `fullWidth`, `variant` come through the extended interface.
+6. Data props use plain types — `items: Item[]` not `items: React.ComponentProps<...>`.
+7. No callback duplication — only add callbacks for events MUI does not expose.
+
+**Do not create a component if:** only a default prop value changed, it's identical to MUI, it's used in one place only, or the abstraction saves fewer lines than it adds.
+
+See full rules: [`docs/components/api-design-rules.md`](../docs/components/api-design-rules.md)
+
+---
 
 ### Component folder structure rule
 
@@ -637,32 +670,18 @@ A component gets its own subfolder (`src/components/<name>/`) **only when it is 
 
 Internal sub-components — helpers, local wrappers, private building blocks that only make sense inside their parent — stay flat in the parent's folder. Creating a subfolder for an internal component implies it is independently usable; that false signal causes confusion during refactors.
 
-### Storybook title grouping convention (enforce always — no exceptions)
+### Storybook title convention (enforce always — no exceptions)
 
-Every story file must use the correct group path. The `'Components'` group is **abolished** — it is a catch-all that gives no information. The canonical group map is:
+The `title` in every `.stories.tsx` file **must mirror the `src/components/` folder path exactly**, using `/` as the separator and title-casing each segment.
 
-| Group                             | Contents                              |
-| --------------------------------- | ------------------------------------- |
-| `Cards/Stat`                      | `StatCard`                            |
-| `Cards/Metric`                    | `MetricCard` + `MetricCardDecoration` |
-| `Cards/Quote`                     | `QuoteCard`                           |
-| `Cards/Selectable`                | `SelectableCard`                      |
-| `Data Display/Icon`               | `GiselleIcon`                         |
-| `Data Display/Action Bar`         | `IconActionBar`                       |
-| `Giselle MUI/Timeline/Two Column` | `TimelineTwoColumn`                   |
-| `Giselle MUI/Timeline/Dot`        | `TimelineDot`                         |
-| `Navigation/Floating Sub Nav`     | `FloatingSubNav`                      |
-| `Layout/Section Title`            | `SectionTitle`                        |
-| `Layout/Two Column Showcase Row`  | `TwoColumnShowcaseRow`                |
+**Rule:** `src/components/material/surfaces/card/stat/` → `title: 'Material/Surfaces/Card/Stat'`
 
-**Rules:**
+- Derive the title by reading the file path — never invent a title independently.
+- The `'Components'` group is **abolished** — it is a catch-all that gives no information.
+- If a `title` disagrees with its folder path, fix the `title` — never move the file to match a title.
+- CI enforces this automatically (`npm run check:verify` → `scripts/check-story-titles.js`).
 
-- New card-type components → `Cards/<Name>` (just the noun, no "Card" suffix in the story title)
-- New display/presentational components → `Data Display/<Name>`
-- New complex compositions tied to the Timeline → `Giselle MUI/Timeline/<Name>`
-- New navigation components → `Navigation/<Name>`
-- New page-layout helpers → `Layout/<Name>`
-- Never use `'Components'` as a group — it is not informative
+**Decision rule for which model to trust:** if a model (Copilot, Claude, or other) assigns a `title` that conflicts with the folder path, the folder path wins — always. Verbal agreements to a different convention that were not committed to this file are void.
 
 ---
 
