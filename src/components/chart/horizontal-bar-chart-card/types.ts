@@ -1,12 +1,17 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `HorizontalBarChartCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
+export interface HorizontalBarItem {
+  label: string;
+  value: number;
+}
+
 export interface HorizontalBarChartCardProps {
-  /** MUI sx prop — forwarded to root element. */
+  title: string;
+  subheader?: string;
+  items: HorizontalBarItem[];
+  /** Reference maximum for bar width calculation. Defaults to the max item value. */
+  max?: number;
   sx?: SxProps<Theme>;
 }

@@ -1,12 +1,15 @@
+import type { ReactNode } from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `HeroBannerCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
 export interface HeroBannerCardProps {
-  /** MUI sx prop — forwarded to root element. */
+  title: string;
+  subtitle?: string;
+  description?: string;
+  /** CTA button slot — pass a MUI `<Button>` with the desired label and handler. */
+  action?: ReactNode;
+  /** Illustration slot rendered on the right side — pass an `<img>` or SVG element. */
+  illustration?: ReactNode;
   sx?: SxProps<Theme>;
 }

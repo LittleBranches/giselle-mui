@@ -1,12 +1,25 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `CostClassificationCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
+export type CostCategory = 'capex' | 'opex' | 'investment' | 'opportunity';
+
+export interface CostClassificationItem {
+  label: string;
+  amount: number;
+  /** Consumer-defined category. Common values: capex / opex / investment / opportunity. */
+  category: CostCategory | string;
+  /** When set, renders an 'Amortized over N months' note below the label. */
+  amortizedMonths?: number;
+  /** MUI palette key for the category chip colour. @default 'primary' */
+  color?: 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
+}
+
 export interface CostClassificationCardProps {
-  /** MUI sx prop — forwarded to root element. */
+  title: string;
+  items: CostClassificationItem[];
+  /** Label beside the total, e.g. 'Total investment'. */
+  totalLabel?: string;
+  currency?: string;
   sx?: SxProps<Theme>;
 }

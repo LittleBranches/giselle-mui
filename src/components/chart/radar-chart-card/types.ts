@@ -1,12 +1,16 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `RadarChartCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
+export interface RadarSeriesItem {
+  name: string;
+  data: number[];
+}
+
 export interface RadarChartCardProps {
-  /** MUI sx prop — forwarded to root element. */
+  title: string;
+  subheader?: string;
+  series: RadarSeriesItem[];
+  categories: string[];
   sx?: SxProps<Theme>;
 }

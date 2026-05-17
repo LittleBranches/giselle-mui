@@ -1,12 +1,23 @@
+import type { ReactNode } from 'react';
+import type { DrawerProps } from '@mui/material/Drawer';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `AppSidebar`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface AppSidebarProps {
-  /** MUI sx prop — forwarded to root element. */
+// ----------------------------------------------------------------------
+
+export interface AppSidebarNavItem {
+  id: string;
+  label: string;
+  icon?: ReactNode;
+  href?: string;
+  active?: boolean;
+  children?: AppSidebarNavItem[];
+}
+
+export interface AppSidebarProps extends Omit<DrawerProps, 'children'> {
+  items: AppSidebarNavItem[];
+  /** Logo slot rendered at the top of the sidebar. */
+  logo?: ReactNode;
+  /** Footer slot rendered at the bottom of the sidebar. */
+  footer?: ReactNode;
   sx?: SxProps<Theme>;
 }

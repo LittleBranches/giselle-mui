@@ -1,12 +1,16 @@
+import type { ReactNode } from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `ExpenseCategoryGroup`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
 export interface ExpenseCategoryGroupProps {
-  /** MUI sx prop — forwarded to root element. */
+  /** Category heading, e.g. 'Flights' or 'CAPEX'. */
+  label: string;
+  total: number | string;
+  currency?: string;
+  /** MUI palette key for the category accent colour. @default 'primary' */
+  color?: 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
+  /** `ExpenseLineItem` children. */
+  children?: ReactNode;
   sx?: SxProps<Theme>;
 }

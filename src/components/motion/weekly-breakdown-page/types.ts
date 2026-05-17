@@ -1,12 +1,11 @@
+import type { ReactNode } from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `WeeklyBreakdownPage`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
 export interface WeeklyBreakdownPageProps {
-  /** MUI sx prop — forwarded to root element. */
+  /** Week label rendered in the page header, e.g. 'Week of 12 May 2026'. */
+  weekLabel?: string;
+  children?: ReactNode;
   sx?: SxProps<Theme>;
 }

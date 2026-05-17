@@ -1,12 +1,13 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { BoxProps } from '@mui/material/Box';
 
-/**
- * Props for `TimelineItemDetails`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface TimelineItemDetailsProps {
-  /** MUI sx prop — forwarded to root element. */
-  sx?: SxProps<Theme>;
+import type { Task, TaskDetails } from '../two-column/types';
+
+// ----------------------------------------------------------------------
+
+export interface TimelineItemDetailsProps extends Omit<BoxProps, 'children'> {
+  task: Task;
+  details?: TaskDetails;
+  checklist?: boolean;
+  taskDoneState?: boolean[];
+  onTaskToggle?: (taskIndex: number) => void;
 }

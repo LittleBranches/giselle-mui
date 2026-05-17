@@ -1,12 +1,14 @@
+import type { ReactNode } from 'react';
+import type { RadioProps } from '@mui/material/Radio';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `OptionWithBlurb`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface OptionWithBlurbProps {
-  /** MUI sx prop — forwarded to root element. */
+// ----------------------------------------------------------------------
+
+/** Radio option card with a label, optional icon, and a descriptive blurb. */
+export interface OptionWithBlurbProps extends Omit<RadioProps, 'children'> {
+  label: string;
+  description?: string;
+  /** Optional icon slot shown beside the label. */
+  icon?: ReactNode;
   sx?: SxProps<Theme>;
 }

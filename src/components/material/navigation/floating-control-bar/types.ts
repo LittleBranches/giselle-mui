@@ -1,12 +1,11 @@
+import type { ReactNode } from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `FloatingControlBar`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
 export interface FloatingControlBarProps {
-  /** MUI sx prop — forwarded to root element. */
+  children?: ReactNode;
+  /** When false the bar slides out via AnimatePresence exit. @default true */
+  visible?: boolean;
   sx?: SxProps<Theme>;
 }

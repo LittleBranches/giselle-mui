@@ -1,12 +1,10 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { ReactNode } from 'react';
+import type { BoxProps } from '@mui/material/Box';
 
-/**
- * Props for `AnimatedTabPanel`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface AnimatedTabPanelProps {
-  /** MUI sx prop — forwarded to root element. */
-  sx?: SxProps<Theme>;
+// ----------------------------------------------------------------------
+
+export interface AnimatedTabPanelProps extends Omit<BoxProps, 'children'> {
+  children: ReactNode;
+  /** Active tab index — keys the AnimatePresence transition on tab change. */
+  activeIndex: number;
 }

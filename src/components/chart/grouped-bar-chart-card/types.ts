@@ -1,12 +1,18 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `GroupedBarChartCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
+export interface BarSeriesItem {
+  name: string;
+  data: number[];
+}
+
 export interface GroupedBarChartCardProps {
-  /** MUI sx prop — forwarded to root element. */
+  title: string;
+  subheader?: string;
+  series: BarSeriesItem[];
+  categories: string[];
+  /** When true renders bars stacked instead of grouped. @default false */
+  stacked?: boolean;
   sx?: SxProps<Theme>;
 }

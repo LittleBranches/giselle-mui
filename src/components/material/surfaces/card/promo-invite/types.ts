@@ -1,12 +1,14 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `PromoInviteCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
 export interface PromoInviteCardProps {
-  /** MUI sx prop — forwarded to root element. */
+  title: string;
+  description?: string;
+  /** Placeholder text for the email input. @default 'Enter your email' */
+  inputPlaceholder?: string;
+  /** Submit button label. @default 'Invite Now' */
+  submitLabel?: string;
+  onSubmit?: (email: string) => void;
   sx?: SxProps<Theme>;
 }

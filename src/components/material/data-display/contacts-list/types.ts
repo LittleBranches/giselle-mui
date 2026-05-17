@@ -1,12 +1,18 @@
+import type { ReactNode } from 'react';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `ContactsList`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
+export interface ContactItem {
+  id: string;
+  name: string;
+  email?: string;
+  avatarSrc?: string;
+  /** Optional trailing action slot per row (e.g. message icon, phone icon). */
+  action?: ReactNode;
+}
+
 export interface ContactsListProps {
-  /** MUI sx prop — forwarded to root element. */
+  items: ContactItem[];
   sx?: SxProps<Theme>;
 }

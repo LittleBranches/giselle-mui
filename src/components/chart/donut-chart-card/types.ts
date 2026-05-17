@@ -1,12 +1,13 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `DonutChartCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
 export interface DonutChartCardProps {
-  /** MUI sx prop — forwarded to root element. */
+  title: string;
+  subheader?: string;
+  series: number[];
+  labels: string[];
+  /** Total displayed in the chart centre. When omitted, renders the sum of series. */
+  total?: number;
   sx?: SxProps<Theme>;
 }

@@ -1,12 +1,14 @@
+import type { ReactNode } from 'react';
+import type { BoxProps } from '@mui/material/Box';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `PageHeader`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface PageHeaderProps {
-  /** MUI sx prop — forwarded to root element. */
+// ----------------------------------------------------------------------
+
+export interface PageHeaderProps extends Omit<BoxProps, 'children' | 'title'> {
+  title: string;
+  /** Breadcrumbs slot rendered above the title. */
+  breadcrumbs?: ReactNode;
+  /** Action buttons slot rendered at the trailing edge. */
+  actions?: ReactNode;
   sx?: SxProps<Theme>;
 }
