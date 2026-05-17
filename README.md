@@ -371,3 +371,5 @@ See [docs/local-development.md](./docs/local-development.md) to get started.
 ---
 
 — [Alex Rebula](https://github.com/AlexRebula)
+
+Dummy PR created on 2026-05-17 for testing GitHub workflows and career project documentation in giselle-mui repo.
