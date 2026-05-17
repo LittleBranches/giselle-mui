@@ -1,0 +1,173 @@
+CROSS-SESSION BRIEFING — giselle-mui implementation plan
+Source session: https://claude.ai/code/session_011tcDDSDTRkapyrWzjVxdAV
+Source repo: alexrebula/giselle-mui (public, open-source MUI component library)
+Date: 17 May 2026
+================================================================
+
+
+CONTEXT
+-------
+This session manages the giselle-mui open-source library. The rm session
+is planning the GiselleThemeProvider to replace the copyrighted Minimal
+theme provider in alexrebula/rm. The two plans must be compatible. This
+briefing gives the rm session full visibility so the GiselleThemeProvider
+PR scope and API does not conflict.
+
+
+CURRENT STATE OF giselle-mui
+-----------------------------
+Merged / landed:
+- PR #53 (chore/scaffold-component-tree) — full component folder tree
+  scaffolded, ~70 placeholder files. Ready to merge.
+- Branch claude/review-github-repos-LptP8 — documentation PR (incident
+  report, taxonomy rules). Open as PR #54.
+
+In progress (branch feat/component-types, pushed, not yet PR'd):
+- docs/components/api-design-rules.md — full tier system rules document
+- .github/copilot-instructions.md — updated with tier rules + correct
+  Storybook folder-mirror title convention
+- 48 types.ts files filled — all scaffolded component stubs now have
+  reviewed prop interfaces
+
+
+PLANNED IMPLEMENTATION PRs — FULL ROADMAP (~12-15 PRs)
+-------------------------------------------------------
+PR A  | Architecture
+      | /charts + /motion subpath exports in tsup + package.json
+      | CI story-title guard script (scripts/check-story-titles.js)
+      | Subpath: — | Blocker: must land first
+
+PR B  | GiselleThemeProvider  <-- CROSS-SESSION PR (see detail below)
+      | Subpath: main | Blocker: none
+
+PR C  | Dashboard MUI cards
+      | StatCardRow, ProfileSummaryCard, BalanceSummaryCard,
+      | CreditCardDisplay, BudgetBreakdownCard
+      | Subpath: main | Blocker: B (gradient tokens)
+
+PR D  | Data lists
+      | ActivityFeedList, NewsFeedList, ContactsList, ProgressStatsList,
+      | RelatedItemsList, AvatarRow, DataTable, QuickTransferWidget
+      | Subpath: main | Blocker: none
+
+PR E  | Hero + promo cards
+      | HeroBannerCard, FeaturedItemCard, PromoInviteCard
+      | Subpath: main | Blocker: B
+
+PR F  | Chart base + first charts
+      | ChartCardBase, DonutChartCard, AreaLineChartCard
+      | Subpath: /charts | Blocker: A
+
+PR G  | Remaining chart cards
+      | GroupedBarChartCard, HorizontalBarChartCard, ProjectionChartCard,
+      | BudgetVsActualChartCard, RadarChartCard, SparklineBar
+      | Subpath: /charts | Blocker: A
+
+PR H  | Investment analytics
+      | CostClassificationCard, ROIComparisonCard,
+      | ScenarioComparisonWidget, AmortizationScheduleTable
+      | Subpath: main | Blocker: none
+
+PR I  | Layout + nav shell
+      | AppShell, AppTopBar, AppSidebar, PageHeader, Breadcrumbs,
+      | AuthPageLayout, DetailsDrawer
+      | Subpath: main | Blocker: none
+
+PR J  | Motion utilities + section titles
+      | Motion variant utilities (fadeVariants etc.),
+      | SectionTitle, SectionCaption
+      | Subpath: /motion | Blocker: A
+
+PR K  | Home nav + hero components
+      | FloatingSideNav, HeroBackground, FloatingIconCloud
+      | Subpath: /motion | Blocker: A, J
+
+PR L  | InteractiveHeroLogo
+      | Flagship animation component — 3-phase hover state machine
+      | Subpath: /motion | Blocker: A
+
+PR M  | Section pages
+      | ErrorSection, PricingSection, HeroSection
+      | Subpath: main | Blocker: B
+
+
+PR B — GiselleThemeProvider — DETAIL
+--------------------------------------
+Already committed prop interface in
+src/components/theming/theme-provider/giselle/types.ts:
+
+  export interface GiselleThemeProviderProps {
+    children: ReactNode;
+    themeOverrides?: CssVarsThemeOptions;  // merged on top of Giselle defaults
+    theme?: CssVarsTheme;                  // fully custom; ignores themeOverrides
+    defaultMode?: 'light' | 'dark' | 'system';  // @default 'system'
+  }
+
+What the rm session must know:
+- Must use extendTheme() + CssVarsProvider from MUI v7 (CSS variables mode)
+  NOT createTheme() + ThemeProvider (the Minimal pattern)
+- All palette refs inside giselle-mui use theme.vars.palette.* (CSS variable
+  channel refs), never theme.palette.* — non-negotiable for dark mode
+- Minimal's componentsProps is MUI v6 — giselle-mui uses slotProps (MUI v7+)
+- giselle-mui has a CI forbidden-words check — any Minimal-derived code must
+  be scrubbed of Minimal identifiers before landing here
+
+
+COPYRIGHT / EXTRACTION RULES
+------------------------------
+Governs anything moving from rm (Minimal-derived) -> giselle-mui (open-source):
+
+1. No Minimal utility functions — do not copy bgGradient(), textGradient(),
+   alpha(), or any Minimal helper verbatim. Rewrite from MUI CSS vars primitives.
+2. No Minimal config structure — CONFIG.assetsDir, CONFIG.site etc. must be
+   replaced with explicit props (e.g. backgroundImageSrc?: string).
+3. No Minimal component names — rename everything (GiselleThemeProvider,
+   GiselleSettingsProvider, etc.).
+4. All palette tokens must use theme.vars.palette.* — never #hex literals,
+   never rgba(), never theme.palette.* (non-variable form).
+5. channelAlpha helper — giselle-mui has its own channelAlpha(mainChannel, 0.08)
+   in src/utils/theme-utils.ts. Use this instead of Minimal's alpha helper.
+
+
+API DESIGN RULES — TIER SYSTEM (brief)
+----------------------------------------
+Every component is tiered before props are designed:
+
+Tier 1 — Pure extension
+  Extends MUI base, zero new props. Convention enforcement only.
+
+Tier 2 — Selective extension
+  Extends MUI base, adds only genuinely new props (ReactNode slots,
+  narrowed color type). JSDoc only on own props, never inherited MUI props.
+
+Tier 3 — Composition
+  Data-driven (items: Item[]). Does not extend a specific MUI base.
+  Item type is the real API.
+
+GiselleThemeProvider = Tier 2 (wraps CssVarsProvider, adds themeOverrides
+and defaultMode — no re-declaration of MUI props).
+
+Full rules: docs/components/api-design-rules.md in giselle-mui.
+
+
+KEY FILES
+----------
+src/components/theming/theme-provider/giselle/types.ts
+  -> Already-committed prop interface for GiselleThemeProvider
+
+docs/components/api-design-rules.md
+  -> Full tier system, JSDoc rules, cardBaseSx pattern
+
+.github/copilot-instructions.md
+  -> Condensed rules for any AI model working in this repo
+
+docs/components/dashboard-components-plan.md
+  -> Full API specs for all dashboard components
+
+docs/components/home-components-extraction-plan.md
+  -> Full extraction plan for motion/home components
+
+
+================================================================
+End of briefing.
+Source session: https://claude.ai/code/session_011tcDDSDTRkapyrWzjVxdAV
