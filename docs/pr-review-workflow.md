@@ -1,7 +1,7 @@
 # PR Review Workflow
 
 > Last updated: 14 May 2026 (improvements integrated)
-> Session trigger: `review pr <N>` — type this in any new Copilot chat session to execute Phases 2–5 of this workflow for PR number `<N>`.
+> Session trigger: `respond pr review <N>` — type this in any AI chat session to execute Phases 2–5 of this workflow for PR number `<N>`.
 
 This document defines the end-to-end pull request workflow used across all repos in this
 workspace (`giselle-mui`, `alexrebula`, `first-branch`, `giselle-sections-sdk`, `giselle-ui`).
