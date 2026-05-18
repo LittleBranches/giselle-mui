@@ -8,7 +8,11 @@ import Typography from '@mui/material/Typography';
 import type { SystemStyleObject } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
 
-import { breakpointLabelSx, responsiveWrapperSx } from '../../../stories-defaults';
+import {
+  breakpointLabelSx,
+  buildBreakpointMaxWidthSx,
+  responsiveWrapperSx,
+} from '../../../stories-defaults';
 import { RadialProgressCard } from './radial-progress-card';
 
 // ----------------------------------------------------------------------
@@ -21,7 +25,7 @@ const chartFallbackSx: SystemStyleObject<Theme> = {
 };
 
 const meta: Meta<typeof RadialProgressCard> = {
-  title: 'Charts/Radial Progress',
+  title: 'Chart/Radial Progress',
   component: RadialProgressCard,
   parameters: { layout: 'padded' },
   argTypes: {
@@ -109,7 +113,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
-          <Box sx={{ width, maxWidth: '100%' }}>
+          <Box sx={buildBreakpointMaxWidthSx(width)}>
             <RadialProgressCard
               title="Store Readiness"
               total={35}

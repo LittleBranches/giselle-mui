@@ -22,7 +22,7 @@ import {
 
 const meta: Meta<typeof TimelineTwoColumn> = {
   component: TimelineTwoColumn,
-  title: 'Sections/Timeline/Two Column',
+  title: 'Section/Timeline/Two Column',
   parameters: {
     docs: {
       description: {

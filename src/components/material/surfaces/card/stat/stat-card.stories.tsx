@@ -20,7 +20,7 @@ import type { StatCardColor } from './types';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof StatCard> = {
-  title: 'Material/Surfaces/Cards/Stat',
+  title: 'Material/Surfaces/Card/Stat',
   component: StatCard,
   parameters: { layout: 'padded' },
   argTypes: {

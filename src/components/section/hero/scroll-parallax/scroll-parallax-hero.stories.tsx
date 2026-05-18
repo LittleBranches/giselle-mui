@@ -14,7 +14,7 @@ import { gradientBackgroundSx } from './scroll-parallax-hero.stories.styles';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof ScrollParallaxHero> = {
-  title: 'Sections/Hero/Scroll Parallax',
+  title: 'Section/Hero/Scroll Parallax',
   component: ScrollParallaxHero,
   parameters: {
     layout: 'fullscreen',

@@ -14,7 +14,7 @@ import { SelectableCard } from './selectable-card';
 
 const meta: Meta<typeof SelectableCard> = {
   component: SelectableCard,
-  title: 'Material/Surfaces/Cards/Selectable',
+  title: 'Material/Surfaces/Card/Selectable',
 };
 
 export default meta;

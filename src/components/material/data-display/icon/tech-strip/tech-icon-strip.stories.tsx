@@ -23,7 +23,7 @@ const DEMO_ITEMS: TechIconItem[] = [
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof TechIconStrip> = {
-  title: 'Material/Data Display/Icons/Tech Strip',
+  title: 'Material/Data Display/Icon/Tech Strip',
   component: TechIconStrip,
   argTypes: {
     items: { control: false },

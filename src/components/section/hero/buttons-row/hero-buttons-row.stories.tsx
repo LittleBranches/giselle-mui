@@ -14,7 +14,7 @@ import { HeroButtonsRow } from './hero-buttons-row';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof HeroButtonsRow> = {
-  title: 'Sections/Hero/Buttons Row',
+  title: 'Section/Hero/Buttons Row',
   component: HeroButtonsRow,
   parameters: { layout: 'centered' },
   argTypes: {

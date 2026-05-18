@@ -15,7 +15,7 @@ import { TimelineCompact } from './compact';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof TimelineCompact> = {
-  title: 'Sections/Timeline/Compact',
+  title: 'Section/Timeline/Compact',
   component: TimelineCompact,
   parameters: { layout: 'padded' },
   argTypes: {

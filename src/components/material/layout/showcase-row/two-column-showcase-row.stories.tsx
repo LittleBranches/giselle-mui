@@ -20,7 +20,7 @@ import { TwoColumnShowcaseRow } from './two-column-showcase-row';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof TwoColumnShowcaseRow> = {
-  title: 'Material/Layout/Two Column Showcase Row',
+  title: 'Material/Layout/Showcase Row',
   component: TwoColumnShowcaseRow,
   parameters: { layout: 'padded' },
   argTypes: {
