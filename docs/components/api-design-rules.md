@@ -191,6 +191,80 @@ If the explanation takes more than one sentence, the component API is probably w
 
 ---
 
+## Implementation rules
+
+### `forwardRef` + `displayName`
+
+Every exported component that renders a DOM element must use `React.forwardRef` and set
+`displayName` on the result.
+
+```ts
+const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
+  function StatCard({ label, value, sx, ...other }, ref) {
+    return <Paper ref={ref} sx={[cardBaseSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other} />;
+  }
+);
+StatCard.displayName = 'StatCard';
+```
+
+### `...other` spread
+
+Every component must spread remaining props onto its root element. Never silently drop
+`data-*`, `aria-*`, or event handler props from the consumer.
+
+### `sx` array spread
+
+Always `sx={[ownStyles, ...(Array.isArray(sx) ? sx : [sx])]}`. Never spread objects
+(`sx={{ ...ownStyles, ...sx }}`). The array form is the only safe pattern for composable `sx`.
+
+### Decorative icons
+
+Icons that illustrate a point already conveyed by adjacent text: `aria-hidden="true"`.
+Icon-only interactive elements: `aria-label` on the button, not the icon.
+
+### No `React.FC`
+
+Type components as plain functions or `forwardRef` calls. `React.FC` hides the return type
+and breaks generic components.
+
+### No `shouldForwardProp`
+
+Filter unwanted props via destructuring in the component, not via `shouldForwardProp`
+configuration on styled calls.
+
+---
+
+## Component naming rules
+
+### Prohibited prefixes
+
+Never use: `Base*`, `Custom*`, `Common*`, `Generic*`, `My*`, `New*`, `Advanced*`
+
+These prefixes describe nothing. Find the specific noun — `CardShell` not `BaseCard`.
+
+### Suffix vocabulary
+
+| Suffix | When to use |
+|---|---|
+| `Card` | A contained surface with elevation and a defined content region |
+| `Row` | A horizontal sequence of related items |
+| `List` | A vertical sequence with implicit ordering |
+| `Section` | A full-width, self-contained page section |
+| `Layout` | A structural wrapper with no visible appearance |
+| `Label` | A small inline element that annotates another element |
+| `Table` | Tabular data with named columns and rows |
+| `Strip` | A compact horizontal band of icons or chips |
+| `Dialog` | A modal overlay requiring a user decision |
+| `Drawer` | A sliding panel anchored to a screen edge |
+| `Form` | An interactive data-entry surface |
+| `Field` | A single form input with label and validation state |
+| `Icon` | A single icon element |
+| `Avatar` | A circular image or initials representation |
+| `Chip` | A small, dismissible tag or filter element |
+| `Tab` | A single tab button within a tab group |
+
+---
+
 ## When NOT to create a component
 
 Do not create a wrapper component if:
