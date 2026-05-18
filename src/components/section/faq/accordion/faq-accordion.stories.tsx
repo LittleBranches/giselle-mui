@@ -7,7 +7,7 @@ import { FaqSection } from './faq-accordion';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof FaqSection> = {
-  title: 'Sections/FAQ',
+  title: 'Section/FAQ/Accordion',
   component: FaqSection,
   parameters: {
     layout: 'fullscreen',

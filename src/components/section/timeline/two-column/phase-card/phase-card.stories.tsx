@@ -125,7 +125,7 @@ const CARD_COLUMN_WIDTHS = [
 
 const meta: Meta<typeof PhaseCard> = {
   component: PhaseCard,
-  title: 'Sections/Timeline/Phase Card',
+  title: 'Section/Timeline/Two Column/Phase Card',
   argTypes: {
     phase: { control: false },
     expandableIcon: { control: false },

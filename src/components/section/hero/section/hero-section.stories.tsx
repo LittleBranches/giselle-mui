@@ -4,8 +4,15 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import { breakpointLabelSx, responsiveWrapperSx } from '../../../../stories-defaults';
-import { AnimatedGradientText } from '../../../bonus/text/animated-gradient';
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
+import {
+  breakpointLabelSx,
+  buildBreakpointWidthSx,
+  responsiveWrapperSx,
+} from '../../../../stories-defaults';
+import { AnimatedGradientText } from '../../../material/data-display/animated-gradient';
 import { GiselleIcon } from '../../../material/data-display/icon/giselle';
 import { TechIconStrip } from '../../../material/data-display/icon/tech-strip';
 import type { TechIconItem } from '../../../material/data-display/icon/tech-strip/types';
@@ -15,8 +22,12 @@ import { HeroSection } from './hero-section';
 
 // ----------------------------------------------------------------------
 
+const heroContainerCenterSx: SystemStyleObject<Theme> = {
+  mx: 'auto',
+};
+
 const meta: Meta<typeof HeroSection> = {
-  title: 'Sections/Hero/Section',
+  title: 'Section/Hero/Section',
   component: HeroSection,
   parameters: { layout: 'fullscreen' },
   argTypes: {
@@ -183,15 +194,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
-          <Box
-            sx={{
-              width,
-              mx: 'auto',
-              border: '1px dashed',
-              borderColor: 'divider',
-              overflow: 'hidden',
-            }}
-          >
+          <Box sx={[buildBreakpointWidthSx(width), heroContainerCenterSx]}>
             <HeroSection
               heading={<Typography variant="h1">Responsive hero</Typography>}
               text={

@@ -65,7 +65,7 @@ const CARD_COLUMN_WIDTHS = [
 
 const meta: Meta<typeof MilestoneBadge> = {
   component: MilestoneBadge,
-  title: 'Sections/Timeline/Milestone Badge',
+  title: 'Section/Timeline/Two Column/Milestone Badge',
   argTypes: {
     milestone: { control: false },
     expandableIcon: { control: false },

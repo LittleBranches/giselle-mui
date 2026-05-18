@@ -27,22 +27,14 @@ The scaffold branch (`chore/scaffold-component-tree`) closes that gap structural
 
 ---
 
-## Phase 0 — Bonus folder dissolution (prerequisite)
+## Phase 0 — Bonus folder dissolution (completed)
 
-Before creating the scaffold, move the two misplaced components to their correct locations.
-This is a pure move — no code changes.
+The `bonus/` transitional folder has been dissolved. Both components have been moved to their canonical locations:
 
-```sh
-# 1. Move RadialProgressCard to chart/
-mv src/components/bonus/chart/radial-progress/ src/components/chart/radial-progress/
+- `RadialProgressCard` → `src/components/chart/radial-progress/`
+- `AnimatedGradientText` → `src/components/material/data-display/animated-gradient/`
 
-# 2. Move AnimatedGradientText to material/data-display/
-mv src/components/bonus/text/animated-gradient/ src/components/material/data-display/animated-gradient/
-
-# 3. Update import paths in src/charts-index.ts and src/index.ts
-# 4. Delete empty src/components/bonus/ directory
-# 5. Run npm run check:verify to confirm no breakage
-```
+Import paths in `src/charts-index.ts`, `src/index.ts`, and all story files were updated. The empty `src/components/bonus/` directory was deleted.
 
 ---
 
@@ -56,6 +48,7 @@ src/components/<category>/<name>/
   types.ts           — TypeScript interfaces (Props stub with JSDoc skeleton)
   <name>.test.ts     — Vitest test file (it.todo stubs per planned behaviour)
   README.md          — why it exists, what it solves, API sketch, design decisions
+  roadmap.md         — planned status, open improvements, completed tasks (empty)
 ```
 
 What is NOT pre-created:
@@ -158,9 +151,9 @@ _Links to similar components, docs, or stories once they exist._
 
 ## Scaffold execution order
 
-### Step 1 — bonus/ dissolution (Phase 0)
+### Step 1 — bonus/ dissolution (Phase 0 — completed)
 
-Move existing files, update imports, delete `bonus/`.
+Files moved, imports updated, `bonus/` deleted.
 
 ### Step 2 — material/ placeholders
 
@@ -186,7 +179,8 @@ All Phase H G6 and Phase I C/D motion component folders.
 
 ### Step 5 — remaining section/ and theming/ stubs
 
-`section/pricing/`, `section/hero/`, `section/timeline/item-details/`.
+`section/pricing/`, `section/timeline/item-details/`.
+Note: `section/hero/` was skipped — `HeroSection` is already fully implemented at `section/hero/section/`.
 
 ---
 
@@ -271,8 +265,8 @@ const COMPONENTS = [
 ];
 ```
 
-The script generates `index.ts`, `types.ts`, `<name>.test.ts`, and `README.md` for each
-entry that does not already have a `.tsx` file.
+The script generates `index.ts`, `types.ts`, `<name>.test.ts`, `README.md`, and `roadmap.md`
+for each entry that does not already have a `.tsx` file.
 
 **The scaffold script itself is a chore — build it when executing the branch, not before.**
 The component list above is the authoritative input; the script format is secondary.

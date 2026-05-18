@@ -1,19 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Icon } from '@iconify/react';
 
 import type { SystemStyleObject } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
 
+import {
+  breakpointLabelSx,
+  buildBreakpointMaxWidthSx,
+  responsiveWrapperSx,
+} from '../../../../stories-defaults';
+import { GiselleIcon } from '../../data-display/icon/giselle';
 import { FloatingSubNav } from './floating-sub-nav';
 
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof FloatingSubNav> = {
-  title: 'Navigation/Floating Sub Nav',
+  title: 'Material/Navigation/Floating Sub Nav',
   component: FloatingSubNav,
   parameters: { layout: 'centered' },
   argTypes: {
@@ -34,26 +38,46 @@ const demoContainerSx: SystemStyleObject<Theme> = {
   maxWidth: '100%',
 };
 
+const stickyDemoContainerSx: SystemStyleObject<Theme> = {
+  height: 400,
+  overflow: 'auto',
+  position: 'relative',
+  width: 600,
+  maxWidth: '100%',
+  border: '1px dashed',
+  borderColor: 'divider',
+  p: 2,
+};
+
+const scrollSpacerSx: SystemStyleObject<Theme> = {
+  height: 300,
+};
+
+const navPreviewSx: SystemStyleObject<Theme> = {
+  position: 'relative',
+  height: 100,
+};
+
 const ITEMS = [
   {
     id: 'overview',
     label: 'Overview',
-    icon: <Icon icon="solar:home-2-bold-duotone" width={22} />,
+    icon: <GiselleIcon icon="solar:home-2-bold-duotone" width={22} />,
   },
   {
     id: 'features',
     label: 'Features',
-    icon: <Icon icon="solar:list-bold-duotone" width={22} />,
+    icon: <GiselleIcon icon="solar:list-bold-duotone" width={22} />,
   },
   {
     id: 'pricing',
     label: 'Pricing',
-    icon: <Icon icon="solar:tag-price-bold-duotone" width={22} />,
+    icon: <GiselleIcon icon="solar:tag-price-bold-duotone" width={22} />,
   },
   {
     id: 'contact',
     label: 'Contact',
-    icon: <Icon icon="solar:letter-bold-duotone" width={22} />,
+    icon: <GiselleIcon icon="solar:letter-bold-duotone" width={22} />,
   },
 ];
 
@@ -81,19 +105,8 @@ export const Sticky: Story = {
     sticky: true,
   },
   render: (args) => (
-    <Box
-      sx={{
-        height: 400,
-        overflow: 'auto',
-        position: 'relative',
-        width: 600,
-        maxWidth: '100%',
-        border: '1px dashed',
-        borderColor: 'divider',
-        p: 2,
-      }}
-    >
-      <Box sx={{ height: 300 }} />
+    <Box sx={stickyDemoContainerSx}>
+      <Box sx={scrollSpacerSx} />
       <FloatingSubNav {...args} />
     </Box>
   ),
@@ -116,26 +129,17 @@ export const Hidden: Story = {
 export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Stack spacing={4}>
+    <Box sx={responsiveWrapperSx}>
       {([360, 600, 900, 1200] as const).map((width) => (
         <div key={width}>
-          <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mb: 1 }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
-          <Box
-            sx={{
-              width,
-              maxWidth: '100%',
-              position: 'relative',
-              height: 100,
-              border: '1px dashed',
-              borderColor: 'divider',
-            }}
-          >
+          <Box sx={[buildBreakpointMaxWidthSx(width), navPreviewSx]}>
             <FloatingSubNav items={ITEMS} activeId="overview" onSelect={() => {}} sticky />
           </Box>
         </div>
       ))}
-    </Stack>
+    </Box>
   ),
 };

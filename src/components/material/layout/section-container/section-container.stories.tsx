@@ -13,7 +13,7 @@ import { SectionContainer } from './section-container';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof SectionContainer> = {
-  title: 'Layout/Section Container',
+  title: 'Material/Layout/Section Container',
   component: SectionContainer,
   parameters: { layout: 'fullscreen' },
   argTypes: {
