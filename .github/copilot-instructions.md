@@ -710,7 +710,7 @@ The `title` in every `.stories.tsx` file **must mirror the `src/components/` fol
 - Derive the title by reading the file path — never invent a title independently.
 - The `'Components'` group is **abolished** — it is a catch-all that gives no information.
 - If a `title` disagrees with its folder path, fix the `title` — never move the file to match a title.
-- CI enforces this automatically (`npm run check:verify` → `scripts/check-story-titles.js`).
+- Planned enforcement via `scripts/check-story-titles.js` — script not yet created; rule is documented here but not yet wired into CI.
 
 **Decision rule for which model to trust:** if a model (Copilot, Claude, or other) assigns a `title` that conflicts with the folder path, the folder path wins — always. Verbal agreements to a different convention that were not committed to this file are void.
 

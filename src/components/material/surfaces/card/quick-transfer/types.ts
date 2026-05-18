@@ -1,4 +1,4 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { PaperProps } from '@mui/material/Paper';
 
 // ----------------------------------------------------------------------
 
@@ -8,12 +8,11 @@ export interface QuickTransferContact {
   avatarSrc?: string;
 }
 
-export interface QuickTransferCardProps {
+export interface QuickTransferCardProps extends Omit<PaperProps, 'children'> {
   contacts: QuickTransferContact[];
   /** Formatted balance to display, e.g. '$5,000'. */
   balance?: string;
   /** @default 'Transfer now' */
   submitLabel?: string;
   onTransfer?: (contactId: string, amount: string) => void;
-  sx?: SxProps<Theme>;
 }

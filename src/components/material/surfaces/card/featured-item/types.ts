@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { PaperProps } from '@mui/material/Paper';
 
 // ----------------------------------------------------------------------
 
-export interface FeaturedItemCardProps {
+export interface FeaturedItemCardProps extends Omit<PaperProps, 'children'> {
   title: string;
   description?: string;
   /** Badge label overlaid on the image, e.g. 'NEW' or 'FEATURED'. */
@@ -12,5 +12,4 @@ export interface FeaturedItemCardProps {
   image: ReactNode;
   /** CTA button slot — pass a MUI `<Button>`. */
   action?: ReactNode;
-  sx?: SxProps<Theme>;
 }

@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import type { DrawerProps } from '@mui/material/Drawer';
-import type { SxProps, Theme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
@@ -19,5 +18,4 @@ export interface AppSidebarProps extends Omit<DrawerProps, 'children'> {
   logo?: ReactNode;
   /** Footer slot rendered at the bottom of the sidebar. */
   footer?: ReactNode;
-  sx?: SxProps<Theme>;
 }

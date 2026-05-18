@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import type { BoxProps } from '@mui/material/Box';
-import type { SxProps, Theme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
@@ -14,5 +13,4 @@ export interface BreakdownCarouselViewProps extends Omit<BoxProps, 'children'> {
   slides: BreakdownCarouselSlide[];
   /** Initially active slide id. @default first slide */
   defaultActiveId?: string;
-  sx?: SxProps<Theme>;
 }

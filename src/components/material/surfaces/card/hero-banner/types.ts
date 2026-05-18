@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { PaperProps } from '@mui/material/Paper';
 
 // ----------------------------------------------------------------------
 
-export interface HeroBannerCardProps {
+export interface HeroBannerCardProps extends Omit<PaperProps, 'children'> {
   title: string;
   subtitle?: string;
   description?: string;
@@ -11,5 +11,4 @@ export interface HeroBannerCardProps {
   action?: ReactNode;
   /** Illustration slot rendered on the right side — pass an `<img>` or SVG element. */
   illustration?: ReactNode;
-  sx?: SxProps<Theme>;
 }

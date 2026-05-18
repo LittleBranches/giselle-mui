@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { PaperProps } from '@mui/material/Paper';
 
 // ----------------------------------------------------------------------
 
@@ -11,12 +11,11 @@ export interface BudgetItem {
   color?: 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
 }
 
-export interface BudgetBreakdownCardProps {
+export interface BudgetBreakdownCardProps extends Omit<PaperProps, 'children'> {
   title: string;
   total: number | string;
   currency?: string;
   items: BudgetItem[];
   /** Optional donut chart slot rendered alongside the breakdown rows. */
   chart?: ReactNode;
-  sx?: SxProps<Theme>;
 }

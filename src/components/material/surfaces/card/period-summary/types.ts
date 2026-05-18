@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { PaperProps } from '@mui/material/Paper';
 
 // ----------------------------------------------------------------------
 
@@ -11,12 +11,11 @@ export interface PeriodStat {
   color?: 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
 }
 
-export interface PeriodSummaryCardProps {
+export interface PeriodSummaryCardProps extends Omit<PaperProps, 'children'> {
   /** Period label, e.g. 'This Week' or 'January 2026'. */
   period: string;
   title?: string;
   stats: PeriodStat[];
   /** Optional chart slot rendered below the stats. */
   chart?: ReactNode;
-  sx?: SxProps<Theme>;
 }

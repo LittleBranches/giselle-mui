@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { PaperProps } from '@mui/material/Paper';
 
 // ----------------------------------------------------------------------
 
@@ -17,11 +17,10 @@ export interface NonMaterialROIItem {
   icon?: ReactNode;
 }
 
-export interface ROIComparisonCardProps {
+export interface ROIComparisonCardProps extends Omit<PaperProps, 'children'> {
   title: string;
   materialItems: MaterialROIItem[];
   nonMaterialItems: NonMaterialROIItem[];
   /** Optional bar chart slot for the material column. */
   chart?: ReactNode;
-  sx?: SxProps<Theme>;
 }

@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import type { BoxProps } from '@mui/material/Box';
-import type { SxProps, Theme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
@@ -13,5 +12,4 @@ export interface ErrorSectionProps extends Omit<BoxProps, 'children' | 'title'> 
   action?: ReactNode;
   /** Illustration slot. Defaults to a built-in error illustration. */
   illustration?: ReactNode;
-  sx?: SxProps<Theme>;
 }

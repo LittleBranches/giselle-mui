@@ -1,5 +1,4 @@
 import type { BreadcrumbsProps as MuiBreadcrumbsProps } from '@mui/material/Breadcrumbs';
-import type { SxProps, Theme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
@@ -11,5 +10,4 @@ export interface BreadcrumbItem {
 
 export interface BreadcrumbsProps extends Omit<MuiBreadcrumbsProps, 'children'> {
   items: BreadcrumbItem[];
-  sx?: SxProps<Theme>;
 }

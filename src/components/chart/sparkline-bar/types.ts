@@ -5,7 +5,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
 export type SparklineType = 'bar' | 'area' | 'line';
 
 /** Embeddable mini chart passed as the `chart` slot to `StatCard` or `BalanceSummaryCard`. */
-export interface SparklineBarProps {
+export interface SparklineBarChartProps {
   data: number[];
   /** @default 'bar' */
   type?: SparklineType;

@@ -1,4 +1,4 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { PaperProps } from '@mui/material/Paper';
 
 // ----------------------------------------------------------------------
 
@@ -7,10 +7,9 @@ export interface ProfileStat {
   value: string | number;
 }
 
-export interface ProfileSummaryCardProps {
+export interface ProfileSummaryCardProps extends Omit<PaperProps, 'children'> {
   name: string;
   role?: string;
   avatarSrc?: string;
   stats: ProfileStat[];
-  sx?: SxProps<Theme>;
 }

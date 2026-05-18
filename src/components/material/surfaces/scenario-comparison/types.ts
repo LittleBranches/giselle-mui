@@ -15,11 +15,7 @@ export interface ScenarioVariable {
   label: string;
   type: ScenarioVariableType;
   defaultValue: unknown;
-  /**
-   * For 'select': array of option objects.
-   * For 'range': `[min, max]` tuple.
-   * Not used for 'toggle'.
-   */
+  /** For 'select': option objects. For 'range': `[min, max]` tuple. Unused for 'toggle'. */
   options?: ScenarioVariableOption[] | [number, number];
   /** Step size for range inputs. @default 1 */
   step?: number;

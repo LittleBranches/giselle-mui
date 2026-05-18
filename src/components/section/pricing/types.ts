@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import type { BoxProps } from '@mui/material/Box';
-import type { SxProps, Theme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
@@ -28,9 +27,9 @@ export interface PricingPlan {
 export interface PricingSectionProps extends Omit<BoxProps, 'children'> {
   caption?: string;
   title?: string;
+  /** Gradient-accent word appended after `title`. Rendered with a CSS gradient string on the span element. */
   txtGradient?: string;
   plans: PricingPlan[];
   /** Billing period toggle slot (e.g. monthly/annual switch). */
   billingToggle?: ReactNode;
-  sx?: SxProps<Theme>;
 }

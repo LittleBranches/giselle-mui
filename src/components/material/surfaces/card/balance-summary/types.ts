@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { PaperProps } from '@mui/material/Paper';
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ export interface BalanceAction {
   onClick?: () => void;
 }
 
-export interface BalanceSummaryCardProps {
+export interface BalanceSummaryCardProps extends Omit<PaperProps, 'children'> {
   /** Primary headline value, e.g. '$49,990'. */
   balance: string;
   /** Label above the balance value, e.g. 'Total Balance'. */
@@ -27,5 +27,4 @@ export interface BalanceSummaryCardProps {
   actions?: BalanceAction[];
   /** Chart slot rendered below the stats row. Pass a sparkline or line chart ReactNode. */
   chart?: ReactNode;
-  sx?: SxProps<Theme>;
 }
