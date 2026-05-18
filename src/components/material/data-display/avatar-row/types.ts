@@ -1,12 +1,17 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Props for `AvatarRow`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
+// ----------------------------------------------------------------------
+
+export interface AvatarItem {
+  id: string;
+  name: string;
+  avatarSrc?: string;
+}
+
 export interface AvatarRowProps {
-  /** MUI sx prop — forwarded to root element. */
+  items: AvatarItem[];
+  /** Id of the currently selected avatar. */
+  activeId?: string;
+  onSelect?: (id: string) => void;
   sx?: SxProps<Theme>;
 }

@@ -1,12 +1,8 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { BoxProps } from '@mui/material/Box';
 
-/**
- * Props for `SectionPendingLoader`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface SectionPendingLoaderProps {
-  /** MUI sx prop — forwarded to root element. */
-  sx?: SxProps<Theme>;
+// ----------------------------------------------------------------------
+
+export interface SectionPendingLoaderProps extends BoxProps {
+  /** Optional message shown below the spinner. */
+  message?: string;
 }

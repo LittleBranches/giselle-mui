@@ -1,12 +1,13 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { BreadcrumbsProps as MuiBreadcrumbsProps } from '@mui/material/Breadcrumbs';
 
-/**
- * Props for `Breadcrumbs`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface BreadcrumbsProps {
-  /** MUI sx prop — forwarded to root element. */
-  sx?: SxProps<Theme>;
+// ----------------------------------------------------------------------
+
+export interface BreadcrumbItem {
+  label: string;
+  /** When provided, renders the item as a link. */
+  href?: string;
+}
+
+export interface BreadcrumbsProps extends Omit<MuiBreadcrumbsProps, 'children'> {
+  items: BreadcrumbItem[];
 }

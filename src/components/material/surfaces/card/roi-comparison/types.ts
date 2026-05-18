@@ -1,12 +1,26 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { ReactNode } from 'react';
+import type { PaperProps } from '@mui/material/Paper';
 
-/**
- * Props for `RoiComparisonCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface RoiComparisonCardProps {
-  /** MUI sx prop — forwarded to root element. */
-  sx?: SxProps<Theme>;
+// ----------------------------------------------------------------------
+
+export interface MaterialROIItem {
+  label: string;
+  value: string | number;
+  unit?: string;
+  trend?: number;
+}
+
+export interface NonMaterialROIItem {
+  label: string;
+  /** Qualitative description of the non-material return. */
+  value: string;
+  icon?: ReactNode;
+}
+
+export interface ROIComparisonCardProps extends Omit<PaperProps, 'children'> {
+  title: string;
+  materialItems: MaterialROIItem[];
+  nonMaterialItems: NonMaterialROIItem[];
+  /** Optional bar chart slot for the material column. */
+  chart?: ReactNode;
 }

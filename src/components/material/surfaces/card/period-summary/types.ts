@@ -1,12 +1,21 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { ReactNode } from 'react';
+import type { PaperProps } from '@mui/material/Paper';
 
-/**
- * Props for `PeriodSummaryCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface PeriodSummaryCardProps {
-  /** MUI sx prop — forwarded to root element. */
-  sx?: SxProps<Theme>;
+// ----------------------------------------------------------------------
+
+export interface PeriodStat {
+  label: string;
+  value: string | number;
+  trend?: number;
+  /** MUI palette key. @default 'primary' */
+  color?: 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
+}
+
+export interface PeriodSummaryCardProps extends Omit<PaperProps, 'children'> {
+  /** Period label, e.g. 'This Week' or 'January 2026'. */
+  period: string;
+  title?: string;
+  stats: PeriodStat[];
+  /** Optional chart slot rendered below the stats. */
+  chart?: ReactNode;
 }

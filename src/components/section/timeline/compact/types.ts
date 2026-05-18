@@ -102,6 +102,7 @@ export interface TaskDetailsModalProps {
   open: boolean;
   onClose: () => void;
   checklist?: boolean;
+  /** Index-based done state array — position `i` maps to the task at index `i`. Use `Record<string, boolean>` shape for keyed components like `MilestoneBadge`. */
   taskDoneState?: boolean[];
   onTaskToggle?: (taskIdx: number) => void;
 }
@@ -109,6 +110,7 @@ export interface TaskDetailsModalProps {
 export interface TaskDetailsRendererProps extends BoxProps {
   task: Task;
   checklist?: boolean;
+  /** Index-based done state array — position `i` maps to the task at index `i`. Use `Record<string, boolean>` shape for keyed components like `MilestoneBadge`. */
   taskDoneState?: boolean[];
   onTaskToggle?: (taskIdx: number) => void;
   emptyState?: ReactNode;

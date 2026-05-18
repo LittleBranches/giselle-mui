@@ -50,7 +50,6 @@ export type FaqSectionProps = Omit<BoxProps, 'children'> & {
    * - `ReactNode` → rendered as-is.
    */
   contactIcon?: ReactNode | string;
-  sx?: SxProps<Theme>;
 };
 
 /** @internal Props for the scroll-triggered animation container used by {@link FaqSection}. */

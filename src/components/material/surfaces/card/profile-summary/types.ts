@@ -1,12 +1,15 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { PaperProps } from '@mui/material/Paper';
 
-/**
- * Props for `ProfileSummaryCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface ProfileSummaryCardProps {
-  /** MUI sx prop — forwarded to root element. */
-  sx?: SxProps<Theme>;
+// ----------------------------------------------------------------------
+
+export interface ProfileStat {
+  label: string;
+  value: string | number;
+}
+
+export interface ProfileSummaryCardProps extends Omit<PaperProps, 'children'> {
+  name: string;
+  role?: string;
+  avatarSrc?: string;
+  stats: ProfileStat[];
 }

@@ -1,12 +1,21 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { ReactNode } from 'react';
+import type { PaperProps } from '@mui/material/Paper';
 
-/**
- * Props for `BudgetBreakdownCard`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface BudgetBreakdownCardProps {
-  /** MUI sx prop — forwarded to root element. */
-  sx?: SxProps<Theme>;
+// ----------------------------------------------------------------------
+
+export interface BudgetItem {
+  label: string;
+  amount: number;
+  percentage?: number;
+  /** MUI palette key for the category colour indicator. @default 'primary' */
+  color?: 'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error';
+}
+
+export interface BudgetBreakdownCardProps extends Omit<PaperProps, 'children'> {
+  title: string;
+  total: number | string;
+  currency?: string;
+  items: BudgetItem[];
+  /** Optional donut chart slot rendered alongside the breakdown rows. */
+  chart?: ReactNode;
 }

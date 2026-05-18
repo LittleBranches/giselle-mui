@@ -1,12 +1,13 @@
-import type { SxProps, Theme } from '@mui/material/styles';
+import type { ReactNode } from 'react';
+import type { BoxProps } from '@mui/material/Box';
 
-/**
- * Props for `AuthPageLayout`.
- *
- * @todo Fill in props when implementation begins.
- * See README.md for the planned API.
- */
-export interface AuthPageLayoutProps {
-  /** MUI sx prop — forwarded to root element. */
-  sx?: SxProps<Theme>;
+// ----------------------------------------------------------------------
+
+export interface AuthPageLayoutProps extends Omit<BoxProps, 'children'> {
+  /** Form content rendered on the primary side (left on desktop). */
+  children: ReactNode;
+  /** Illustration or decorative content for the secondary panel (right on desktop). */
+  illustration?: ReactNode;
+  /** When true the illustration appears on the left and the form on the right. @default false */
+  reverse?: boolean;
 }
