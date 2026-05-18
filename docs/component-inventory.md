@@ -107,7 +107,7 @@ sidebar_label: 'Component Inventory'
 
 ## Phase E — Standalone UI primitives
 
-> Phase E is **partially done** (remaining: `HeroSection`, `OptionWithBlurb`, `SectionPendingLoader`, `FloatingControlBar`).
+> Phase E is **partially done** (remaining: `OptionWithBlurb`, `SectionPendingLoader`, `FloatingControlBar`).
 
 | Component              | Source                              | Status                 | Blocker                                           |
 | ---------------------- | ----------------------------------- | ---------------------- | ------------------------------------------------- |
@@ -121,7 +121,7 @@ sidebar_label: 'Component Inventory'
 | `ToggleIconButton`     | Written from scratch                | ✅ Shipped 13 May 2026 | Replaces deprecated `CheckIconButton`             |
 | `TaskList`             | Written from scratch                | ✅ Shipped 13 May 2026 | —                                                 |
 | `FaqSection`           | Write from scratch                  | ✅ Shipped 13 May 2026 | Renamed from `FaqAccordion`; in `/motion` subpath |
-| `HeroSection`          | Write from scratch                  | ⬜                     | None                                              |
+| `HeroSection`          | Written from scratch                | ✅ Shipped 16 May 2026 | —                                                 |
 | `OptionWithBlurb`      | alexrebula (tiny, ready to extract) | ⬜                     | None                                              |
 | `SectionPendingLoader` | alexrebula                          | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
 | `FloatingControlBar`   | alexrebula                          | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
@@ -402,7 +402,7 @@ sidebar_label: 'Component Inventory'
 ## Target source tree — complete library
 
 > Folder name = subpath entry or bundle. `chart/` → `/charts` · `motion/` → `/motion` · everything else → main bundle.
-> `bonus/` is a transitional folder — dissolved into this structure once moves are done.
+> `bonus/` was a transitional folder — it has been dissolved; all components moved to canonical paths.
 > Component names follow `docs/naming-conventions.md`. **fb** = required by first-branch.
 
 ```
@@ -434,7 +434,7 @@ src/components/
         giselle/                         ✅                — GiselleIcon
         action-bar/                      ✅                — IconActionBar
         tech-strip/                      ⬜ planned        — TechStrip
-      animated-gradient/                 ✅ move from bonus/ — AnimatedGradientText
+      animated-gradient/                 ✅ Phase E        — AnimatedGradientText
       task-list/                         ✅ Phase E        — TaskList
       status-label/                      ⬜ Phase J T1 fb  — StatusLabel (task status badge: open/in-progress/in-review/done)
       avatar-row/                        ⬜ Phase J T2     — AvatarRow
@@ -469,7 +469,7 @@ src/components/
 
   chart/                                 — /charts subpath | ApexCharts peer dep
     chart-card-base/                     ⬜ Phase H G2     — ChartCardBase (shared chart card shell)
-    radial-progress/                     ✅ move from bonus/ — RadialProgressCard
+    radial-progress/                     ✅ Phase E        — RadialProgressCard
     sparkline-bar/                       🔴 Phase H G2     — SparklineBarChart (embedded, no card wrapper)
     donut-chart-card/                    🔴 Phase H G2     — DonutChartCard
     area-line-chart-card/                🔴 Phase H G2     — AreaLineChartCard
@@ -502,7 +502,7 @@ src/components/
     weekly-breakdown-page/               🔴 Phase I D      — WeeklyBreakdownPage
 
   section/                               — main bundle | section-level compositions
-    hero/                                ⬜ Phase E        — HeroSection
+    hero/                                ✅ Phase E        — HeroSection
     faq/                                 ✅               — FaqSection (re-exported from motion/)
     error/                               ⬜ Phase J T1     — ErrorSection (404 + 500; T1 MUI Store requirement)
     pricing/                             ⬜ Phase J T3     — PricingSection (3-tier pricing cards)

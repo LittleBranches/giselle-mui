@@ -14,7 +14,7 @@ import { SectionTitle, SectionCaption } from './section-title';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof SectionTitle> = {
-  title: 'Layout/Section Title',
+  title: 'Material/Layout/Section Title',
   component: SectionTitle,
   parameters: { layout: 'padded' },
   argTypes: {

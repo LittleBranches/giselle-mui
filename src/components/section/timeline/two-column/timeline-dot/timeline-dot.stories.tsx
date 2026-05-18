@@ -15,7 +15,7 @@ import type { HighlightedPaletteKey } from '../types';
 
 const meta: Meta<typeof TimelineDot> = {
   component: TimelineDot,
-  title: 'Sections/Timeline/Dot',
+  title: 'Section/Timeline/Two Column/Dot',
 };
 
 export default meta;

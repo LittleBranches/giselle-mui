@@ -36,7 +36,7 @@ const ALL_COLORS: MetricCardColor[] = [
 
 const meta: Meta<typeof MetricCard> = {
   component: MetricCard,
-  title: 'Cards/Metric',
+  title: 'Material/Surfaces/Card/Metric',
 };
 
 export default meta;

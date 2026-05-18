@@ -20,7 +20,7 @@ import { PLACEHOLDER_ART_SRC, PLACEHOLDER_PORTRAIT_SRC } from '../../../../stori
  * `portraitSrc` to activate the additional hover phases.
  */
 const meta: Meta<typeof InteractiveHeroLogo> = {
-  title: 'Sections/Hero/Interactive Logo',
+  title: 'Section/Hero/Interactive Logo',
   component: InteractiveHeroLogo,
   parameters: { layout: 'centered' },
 };

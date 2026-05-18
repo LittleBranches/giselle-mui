@@ -168,11 +168,11 @@ export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity/mat
 export { assignMilestoneSidesByDone } from './utils/timeline/timeline-utils';
 
 // --- Phase I: Main bundle additions ---
-export { AnimatedGradientText } from './components/bonus/text/animated-gradient';
+export { AnimatedGradientText } from './components/material/data-display/animated-gradient';
 export type {
   AnimatedGradientTextProps,
   PaletteColorKey,
-} from './components/bonus/text/animated-gradient';
+} from './components/material/data-display/animated-gradient';
 
 export { TechIconStrip } from './components/material/data-display/icon/tech-strip';
 export type {
