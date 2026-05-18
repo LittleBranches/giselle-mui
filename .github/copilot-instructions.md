@@ -679,20 +679,8 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
 StatCard.displayName = 'StatCard';
 ```
 
-**`...other` spread — required on every component root.**
-Every component must spread remaining props onto its root element to forward `data-*`, `aria-*`, and event handler props. Never silently drop props from the consumer.
-
-**`sx` array spread — required whenever forwarding `sx`.**
-Always `sx={[ownStyles, ...(Array.isArray(sx) ? sx : [sx])]}` — never `sx={{ ...ownStyles, ...sx }}`. The array form is the only safe pattern — it prevents overwriting consumer `sx` values.
-
 **Decorative icons — `aria-hidden="true"` required.**
-Icons that illustrate a point already conveyed by adjacent text must have `aria-hidden="true"`. Icon-only buttons must have `aria-label` on the button itself.
-
-**No `React.FC` — ever.**
-Type components as plain functions (`function Foo(props: FooProps) {}`) or as `forwardRef` calls. `React.FC` hides the return type, breaks generic components, and provides no value.
-
-**No `shouldForwardProp` on styled components.**
-Filter unwanted props via destructuring in the component, not via `shouldForwardProp` configuration on the styled call.
+Icons that illustrate a point already conveyed by adjacent text must have `aria-hidden="true"`. Icon-only interactive elements: `aria-label` on the button, not the icon.
 
 ---
 
@@ -703,26 +691,7 @@ Filter unwanted props via destructuring in the component, not via `shouldForward
 
 These prefixes convey nothing about the component's purpose. Find the specific noun instead — `CardShell` not `BaseCard`, `StatCard` not `CustomCard`.
 
-**Suffix vocabulary — use the most specific suffix that applies:**
-
-| Suffix | When to use |
-|---|---|
-| `Card` | A contained surface with elevation and a defined content region |
-| `Row` | A horizontal sequence of related items |
-| `List` | A vertical sequence with implicit ordering |
-| `Section` | A full-width, self-contained page section |
-| `Layout` | A structural wrapper with no visible appearance |
-| `Label` | A small inline element that annotates another element |
-| `Table` | Tabular data with named columns and rows |
-| `Strip` | A compact horizontal band of icons or chips |
-| `Dialog` | A modal overlay requiring a user decision |
-| `Drawer` | A sliding panel anchored to a screen edge |
-| `Form` | An interactive data-entry surface |
-| `Field` | A single form input with label and validation state |
-| `Icon` | A single icon element |
-| `Avatar` | A circular image or initials representation |
-| `Chip` | A small, dismissible tag or filter element |
-| `Tab` | A single tab button within a tab group |
+For suffix vocabulary, see [`docs/naming-conventions.md`](../docs/naming-conventions.md).
 
 ---
 
