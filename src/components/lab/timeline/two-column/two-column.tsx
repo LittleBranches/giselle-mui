@@ -373,7 +373,6 @@ export function TimelineTwoColumn({
           {sorted.map((phase, i) => {
             const { isDone, isOverdue, dotColor, yearLabelValue, phaseMilestones, isLastPhase } =
               resolvePhaseState(phase, i, sorted, lastKey, checklist, localPhaseDone, today);
-
             // ── Marker variant ──────────────────────────────────────────────────
             // variant='marker': spine-only row — dot + floating label, no card.
             // Use for single point-in-time events that don't need a full card
@@ -393,7 +392,6 @@ export function TimelineTwoColumn({
                 />
               );
             }
-
             const { dotClickAction, dotKeyDownHandler, dotAriaLabel } = resolvePhaseDotHandlers(
               phase,
               isDone,
@@ -401,7 +399,6 @@ export function TimelineTwoColumn({
               handleTogglePhase,
               onPhaseSelect
             );
-
             // ── Layout: nested flex rows ──────────────────────────────────────
             // Each phase renders as ONE <li data-testid="tl-item"> containing:
             //   Row 0 — phase row:  [card]  | [phase dot + spine↓] | [empty]  (or mirrored)
@@ -409,12 +406,9 @@ export function TimelineTwoColumn({
             //
             // Milestone cards are absolutely positioned within their column so card expansion
             // never shifts the spine dot positions. Accordion: at most one open per phase.
-
             const expandedMiIdx = expandedMilestoneMap[String(phase.key)] ?? null;
             const isThisPhaseExpanded = expandedPhaseKey === phase.key;
-
             const phaseViewKey = `phase-${phase.key}`;
-
             // Single PhaseCard node — rendered in whichever column matches phase.side.
             // stopCardPropagation is always active — prevents the document "close all" handler
             // from racing with this card's own expand/collapse state update on every click.
@@ -455,7 +449,6 @@ export function TimelineTwoColumn({
                 />
               </div>
             );
-
             const milestoneCtx: MilestoneRowCtx = {
               phaseKey: phase.key,
               phaseSide: phase.side,
@@ -486,9 +479,7 @@ export function TimelineTwoColumn({
                 }
               },
             };
-
             const rows: ReactNode[] = [];
-
             // Pre-compute phase <li> minHeight before JSX so phaseLiSx receives a plain value.
             //
             // PHASE_CARD_RESERVE_SLOTS = 2 matches the same constant in milestone-row.tsx.
@@ -508,7 +499,6 @@ export function TimelineTwoColumn({
                       )
                     : Math.max(milestoneSlotHeight, msSlotHeights[String(phase.key)] ?? 0))
                 : undefined;
-
             // ── Phase row ──────────────────────────────────────────────────────
             rows.push(
               <PhaseRow
@@ -531,7 +521,6 @@ export function TimelineTwoColumn({
                 isMobile={false}
               />
             );
-
             // ── Milestone rows ─────────────────────────────────────────────────
             // Cards are absolutely positioned within their column so expanding one
             // never displaces the spine dots below it.
@@ -547,7 +536,6 @@ export function TimelineTwoColumn({
                 />
               );
             });
-
             return (
               <Box
                 key={phase.key}

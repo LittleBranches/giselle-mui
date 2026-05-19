@@ -56,7 +56,6 @@ export function SectionTitle({
       {...other}
     >
       {caption && <SectionCaption title={caption} sx={slotProps?.caption?.sx} />}
-
       <Typography component="h2" variant="h2" sx={slotProps?.title?.sx}>
         {title}{' '}
         {txtGradient && (
@@ -65,7 +64,6 @@ export function SectionTitle({
           </Box>
         )}
       </Typography>
-
       {description && (
         <Box
           sx={[

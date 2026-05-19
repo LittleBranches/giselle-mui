@@ -134,7 +134,6 @@ export function Accordion({
   } else {
     leadingElement = leadingAction;
   }
-
   const summaryContent =
     typeof title === 'string' ? (
       <Typography component="span" variant="subtitle1">
@@ -143,7 +142,6 @@ export function Accordion({
     ) : (
       title
     );
-
   const accordionSummary = (
     <AccordionSummary
       expandIcon={expandIcon}

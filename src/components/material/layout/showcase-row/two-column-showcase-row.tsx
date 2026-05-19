@@ -58,8 +58,7 @@ export function TwoColumnShowcaseRow({
       container
       columnSpacing={isVertical ? 0 : { xs: 0, md: 6 }}
       rowSpacing={{ xs: 4, md: isVertical ? 4 : 0 }}
-      direction={{ xs: 'column', md: orientation }}
-      sx={[{}, ...(Array.isArray(sx) ? sx : [sx])]}
+      sx={[{ flexDirection: { xs: 'column', md: orientation } }, ...(Array.isArray(sx) ? sx : [sx])]}
       {...other}
     >
       {text && (
@@ -82,7 +81,6 @@ export function TwoColumnShowcaseRow({
           </Stack>
         </Grid>
       )}
-
       <Grid size={itemSize} sx={{ minWidth: 0 }}>
         <Stack
           spacing={2}

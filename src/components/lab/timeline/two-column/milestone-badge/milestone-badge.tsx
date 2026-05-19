@@ -147,13 +147,11 @@ export function MilestoneBadge({
           </Typography>
         </Box>
       )}
-
       {m.date && (
         <Typography variant="caption" sx={milestoneDateSx(MILESTONE_DATE_FONT_SIZE)}>
           {m.date}
         </Typography>
       )}
-
       <Box sx={milestoneTitleRowSx(rightAlign)}>
         {onMarkViewed && (
           <Tooltip
@@ -212,7 +210,6 @@ export function MilestoneBadge({
           </Typography>
         </Box>
       )}
-
       {hasDetails && (
         <Collapse in={isExpanded} timeout={50}>
           <Box id={detailsId} sx={milestoneDetailListSx}>

@@ -58,6 +58,7 @@ export const contactSectionSx: SxProps<Theme> = {
  * Positioned absolutely relative to the motion viewport.
  */
 export const topTriangleStackSx: SxProps<Theme> = {
+  alignItems: 'center',
   top: 64,
   left: FAQ_FLOAT_LINE_LEFT,
   position: 'absolute',

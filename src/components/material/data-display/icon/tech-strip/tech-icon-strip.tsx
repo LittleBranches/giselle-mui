@@ -38,14 +38,12 @@ export function TechIconStrip({
           {heading}
         </Typography>
       )}
-
       <Box sx={stripWrapperSx(centeredWrap)}>
         {items.map((item) => (
           <Box key={item.label} sx={itemSx}>
             <Box aria-hidden sx={iconSlotSx}>
               {item.icon}
             </Box>
-
             <Typography sx={{ fontSize: TECH_ICON_STRIP_LABEL_FONT_SIZE }} variant="caption">
               {item.label}
             </Typography>

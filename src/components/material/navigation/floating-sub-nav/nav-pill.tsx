@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 
 import { pillVariants, pillTransition } from './floating-sub-nav.animations';
@@ -29,10 +30,8 @@ export function NavPill({ items, activeId, onPress }: NavPillProps) {
       exit="exit"
       transition={pillTransition}
     >
-      <Stack
+      <Box
         component="nav"
-        direction="column"
-        alignItems="center"
         aria-label="Section navigation"
         sx={pillSx}
       >
@@ -46,7 +45,7 @@ export function NavPill({ items, activeId, onPress }: NavPillProps) {
             />
           ))}
         </Stack>
-      </Stack>
+      </Box>
     </motion.div>
   );
 }

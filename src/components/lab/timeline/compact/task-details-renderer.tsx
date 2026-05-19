@@ -25,7 +25,6 @@ function renderDetailsNode(node: ReactNode | undefined) {
   }
   return node;
 }
-
 /**
  * Renders the detailed content for a single timeline task or milestone.
  *
@@ -54,7 +53,6 @@ export function TaskDetailsRenderer({
   const hasSummary = Boolean(task.details?.summary);
   const hasContent = Boolean(task.details?.content);
   const hasTasks = nestedTasks.length > 0;
-
   return (
     <Box sx={[taskDetailsContentSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       {hasInlineDescription && (
@@ -62,10 +60,8 @@ export function TaskDetailsRenderer({
           {task.description}
         </Typography>
       )}
-
       {!hasInlineDescription && renderDetailsNode(task.details?.summary)}
       {hasContent && renderDetailsNode(task.details?.content)}
-
       {hasTasks && (
         <TaskList
           tasks={nestedTasks}
@@ -75,7 +71,6 @@ export function TaskDetailsRenderer({
           indent="milestone"
         />
       )}
-
       {!hasInlineDescription && !hasSummary && !hasContent && !hasTasks && (
         <Typography variant="body2" sx={taskDetailsEmptyStateSx}>
           {emptyState}

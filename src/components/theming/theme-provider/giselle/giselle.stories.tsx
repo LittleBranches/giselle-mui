@@ -16,7 +16,7 @@ function PaletteDemo() {
   return (
     <Stack spacing={1}>
       {PALETTE_COLORS.map((color) => (
-        <Stack key={color} direction="row" spacing={1} alignItems="center">
+        <Stack key={color} direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <Button variant="contained" color={color} size="small">
             {color}
           </Button>

@@ -68,7 +68,6 @@ export function TimelineCompact({
     <Box sx={[accordionRootSx(false), ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       {sorted.map((phase) => {
         const sortedMilestones = phase.milestones ? sortMilestones([...phase.milestones]) : [];
-
         return (
           <PhaseAccordionRow
             key={phase.key}
