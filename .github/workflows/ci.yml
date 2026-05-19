@@ -32,6 +32,33 @@ jobs:
       - name: Run quality gate (no Storybook)
         run: npm run check:verify:fast
 
+  # Temporary — remove once all consumers are on MUI v9 (~T0 + 10-12 weeks).
+  compat-mui-v7:
+    name: Compat check — MUI v7 peers
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Override to MUI v7 peers
+        run: npm install --no-save @mui/material@^7.0.0 @mui/lab@^7.0.0
+
+      - name: Run quality gate with MUI v7
+        run: npm run check:verify:fast
+
   storybook-build:
     name: Storybook build
     runs-on: ubuntu-latest
