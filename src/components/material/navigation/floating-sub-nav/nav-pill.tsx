@@ -30,11 +30,7 @@ export function NavPill({ items, activeId, onPress }: NavPillProps) {
       exit="exit"
       transition={pillTransition}
     >
-      <Box
-        component="nav"
-        aria-label="Section navigation"
-        sx={pillSx}
-      >
+      <Box component="nav" aria-label="Section navigation" sx={pillSx}>
         <Stack direction="row" spacing={PILL_BUTTON_ROW_SPACING}>
           {items.map((item) => (
             <SubNavButton

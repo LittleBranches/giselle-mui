@@ -29,7 +29,9 @@ function ToggleDemo() {
       onClick={() => setSelected((v) => !v)}
       sx={{ p: 3, width: 240 }}
     >
-      <Typography sx={{ fontWeight: 600 }}>{selected ? 'Selected ✓' : 'Click to select'}</Typography>
+      <Typography sx={{ fontWeight: 600 }}>
+        {selected ? 'Selected ✓' : 'Click to select'}
+      </Typography>
       <Typography variant="body2" color="text.secondary">
         aria-pressed: {String(selected)}
       </Typography>

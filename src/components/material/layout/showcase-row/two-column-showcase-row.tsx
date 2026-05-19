@@ -58,7 +58,10 @@ export function TwoColumnShowcaseRow({
       container
       columnSpacing={isVertical ? 0 : { xs: 0, md: 6 }}
       rowSpacing={{ xs: 4, md: isVertical ? 4 : 0 }}
-      sx={[{ flexDirection: { xs: 'column', md: orientation } }, ...(Array.isArray(sx) ? sx : [sx])]}
+      sx={[
+        { flexDirection: { xs: 'column', md: orientation } },
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
       {...other}
     >
       {text && (
