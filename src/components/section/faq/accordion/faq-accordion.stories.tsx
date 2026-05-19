@@ -49,8 +49,8 @@ const SAMPLE_FAQS = [
     question: 'How do I install and configure the library?',
     answer: (
       <Typography>
-        Install via npm: <code>npm install @littlebranches/giselle-mui</code>. Wrap your app in a MUI{' '}
-        <code>ThemeProvider</code> with <code>cssVariables: true</code> to enable CSS Variables
+        Install via npm: <code>npm install @littlebranches/giselle-mui</code>. Wrap your app in a
+        MUI <code>ThemeProvider</code> with <code>cssVariables: true</code> to enable CSS Variables
         mode, which is required for all colour utilities.
       </Typography>
     ),
@@ -64,8 +64,8 @@ const SAMPLE_FAQS = [
           so you can import them directly in Server Components without extra configuration.
         </Typography>
         <Typography>
-          For the motion subpath (<code>@littlebranches/giselle-mui/motion</code>), ensure framer-motion
-          is in your project&apos;s dependencies.
+          For the motion subpath (<code>@littlebranches/giselle-mui/motion</code>), ensure
+          framer-motion is in your project&apos;s dependencies.
         </Typography>
       </>
     ),
