@@ -3,32 +3,52 @@ sidebar_position: 2
 sidebar_label: 'Roadmap'
 ---
 
-# @alexrebula/giselle-mui — Roadmap
+# @littlebranches/giselle-mui — Roadmap
 
 > This file is the source of truth for the giselle-mui library build. It covers theme utilities (Phases A–D), components, and extraction candidates. Summary entries for completed phases bubble up to `alexrebula/docs/roadmap.md` Phase 1.5 (private companion repo — not linkable from here).
 
 ---
 
-## Current state
+## Current state — 19 May 2026
 
-`@alexrebula/giselle-mui` uses only standard MUI v7 APIs to set up its theme:
+`@littlebranches/giselle-mui` supports **MUI v7 and MUI v9** (dual-major peer dep window).
+The library is developed and tested against MUI v9; v7 consumers remain fully supported during
+the migration window. See [`migrations/mui-9-migration-and-support-plan.md`](./migrations/mui-9-migration-and-support-plan.md).
 
-```ts
-import { extendTheme, ThemeProvider } from '@mui/material/styles';
-```
+### Package scope — `@littlebranches`
 
-There are zero external theme utility imports in this package.
-See [`theming/nextjs.md`](./theming/nextjs.md) for the recommended setup in a new project.
+The npm scope is `@littlebranches`. This was decided in PR #61 (19 May 2026).
+
+- `@littlebranches` is the organisation name for the Little Branches design system family.
+- All future packages in the ecosystem (`@littlebranches/giselle-ui`, etc.) share this scope.
+- The previous scope `@alexrebula` was a personal stopgap — it has been superseded.
+
+### Subpath exports
+
+The package ships five independent subpaths. Consumers only pay for what they import:
+
+| Subpath | Entry | Peer dep required |
+|---|---|---|
+| `@littlebranches/giselle-mui` | `dist/index.js` | `@mui/material` |
+| `@littlebranches/giselle-mui/utils` | `dist/utils.js` | none |
+| `@littlebranches/giselle-mui/charts` | `dist/charts.js` | `apexcharts`, `react-apexcharts` |
+| `@littlebranches/giselle-mui/motion` | `dist/motion.js` | `framer-motion` |
+| `@littlebranches/giselle-mui/lab` | `dist/lab.js` | `@mui/lab` |
+
+The `./lab` subpath was added in PR #61 (19 May 2026). It exports all Timeline components
+(`TimelineTwoColumn`, `TimelineCompact`, `TaskList`, `MilestoneBadge`, `PhaseCard`,
+`TimelineDot`) and the `assignMilestoneSidesByDone` utility. Consumers who do not import from
+`./lab` never need `@mui/lab` installed.
 
 ---
 
 ## Theme utilities
 
 **Phase A shipped — 4 May 2026.** Theme-building helpers are available as named exports
-from `@alexrebula/giselle-mui`:
+from `@littlebranches/giselle-mui`:
 
 ```ts
-import { channelAlpha, hexToChannel, pxToRem, remToPx } from '@alexrebula/giselle-mui';
+import { channelAlpha, hexToChannel, pxToRem, remToPx } from '@littlebranches/giselle-mui';
 ```
 
 See [`theming/nextjs.md`](./theming/nextjs.md) for full usage examples and integration guide.
@@ -215,7 +235,7 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 
 **When this phase is done:**
 
-A blank `create-next-app` project can install `@alexrebula/giselle-mui`, add
+A blank `create-next-app` project can install `@littlebranches/giselle-mui`, add
 `GiselleThemeProvider` to `layout.tsx`, and assemble a full homepage from exported
 components — no proprietary theme, no reimplemented patterns.
 
@@ -509,6 +529,82 @@ Each subfolder follows the full component convention: `<name>.ts(x)`, `<name>.co
 | Storybook stories for both (all six palette keys for `AnimatedGradientText`; Responsive story for `TechIconStrip`)                                                                  | Components | ✅     |
 | Vitest tests for both                                                                                                                                                               | Components | ✅     |
 | README for each component folder                                                                                                                                                    | Components | ✅     |
+
+---
+
+### Phase J — `./lab` subpath + `@littlebranches` scope ✅ Done — 19 May 2026
+
+**Goal:** Make `@mui/lab` an optional peer dependency by isolating all Timeline components
+into a dedicated `./lab` subpath export, and rename the package scope from `@alexrebula` to
+`@littlebranches`.
+
+**Why this is a phase boundary, not a patch:**
+
+- Before this change, every consumer installing `@littlebranches/giselle-mui` was implicitly
+  required to have `@mui/lab` installed, because the Timeline components were in the main
+  bundle. This blocked consumers who only wanted theme utilities or non-Timeline components.
+- The `./lab` subpath mirrors the same pattern as `./charts` and `./motion` — heavy optional
+  peer deps stay isolated. Consumers who never import `./lab` never need `@mui/lab`.
+
+**Architecture decisions recorded here:**
+
+1. **One package, not two** — a split into `giselle-mui` + `giselle-mui-lab` was considered and
+   rejected. Two packages means two `yalc push` operations, two version locks to keep in sync,
+   and a confusing consumer story for a library at this scale. The subpath pattern delivers the
+   same isolation with none of the overhead.
+2. **`src/components/lab/` folder mirrors `./lab` export path** — the folder name matches the
+   subpath so the architecture is self-evident. Timeline components moved from
+   `src/components/section/timeline/` to `src/components/lab/timeline/` in this PR.
+3. **`@littlebranches` scope** — `@littlebranches` is the npm organisation for the Little
+   Branches design system family. `@alexrebula` was a personal stopgap scope; all packages
+   now live under `@littlebranches`.
+
+| Task                                                                          | Label | Status |
+| ----------------------------------------------------------------------------- | ----- | ------ |
+| Rename package: `@alexrebula/giselle-mui` → `@littlebranches/giselle-mui`    | Core  | ✅     |
+| Add `src/lab-index.ts` barrel exporting all Timeline components               | Core  | ✅     |
+| Add `./lab` tsup entry + `package.json` exports map entry                     | Core  | ✅     |
+| Move Timeline components: `section/timeline/` → `lab/timeline/`               | Refactor | ✅  |
+| Update Storybook titles: `Section/Timeline/*` → `Lab/Timeline/*`              | Chore | ✅     |
+| Make `@mui/lab` optional in `peerDependenciesMeta`                            | Core  | ✅     |
+| Add `assignMilestoneSidesByDone` utility to `./lab` export                    | Core  | ✅     |
+| Update all docs + source JSDoc to use `@littlebranches/giselle-mui`           | Docs  | ✅     |
+
+---
+
+### Phase K — MUI v7 → v9 dual-major support ✅ Done — 19 May 2026
+
+**Goal:** Upgrade the library's dev dependencies to MUI v9 and expand peer dependency ranges
+to support both MUI v7 and v9 consumers during the transition window.
+
+**Peer dependency ranges after this phase:**
+
+| Package | Range |
+|---|---|
+| `@mui/material` | `>=7.0.0 <10.0.0` |
+| `@mui/lab` | `^7.0.0 \|\| ^9.0.0-beta.3` |
+
+**MUI v9 breaking changes resolved:**
+
+- Typography: `fontWeight`, `display`, `color` shorthand props removed — moved into `sx`
+- Stack: `alignItems`, `justifyContent` shorthand props removed — moved into `sx` or style objects
+- Grid: `direction` prop removed — replaced with `sx={{ flexDirection: ... }}`
+- Accordion: `TransitionComponent` / `TransitionProps` removed from `AccordionProps`
+- `StackProps['alignItems']` type removed — replaced with `React.CSSProperties['alignItems']`
+- `NavPill`: replaced `<Stack component="nav" alignItems="center">` with `<Box component="nav">`
+  (polymorphic `component` typing is stricter in v9; `Box` is the correct element for semantic nav)
+
+**Support window:** v7 support ends T0 + 10–12 weeks. See
+[`migrations/mui-9-migration-and-support-plan.md`](./migrations/mui-9-migration-and-support-plan.md).
+
+| Task                                                                      | Label | Status |
+| ------------------------------------------------------------------------- | ----- | ------ |
+| Expand peer dep ranges for `@mui/material` and `@mui/lab`                 | Core  | ✅     |
+| Upgrade dev deps to MUI v9                                                | Core  | ✅     |
+| Apply `@mui/codemod v6.0.0/sx-prop` (44 files — removes empty sx arrays) | Chore | ✅     |
+| Fix all MUI v9 TypeScript breaking changes (10 files)                     | Fix   | ✅     |
+| Quality gate: Prettier · ESLint · TypeScript · Tests (1218) · Build · Storybook | QA | ✅  |
+| CI dual-major matrix (MUI v7 job + MUI v9 job)                            | CI    | ⬜ PR #64 |
 
 ---
 

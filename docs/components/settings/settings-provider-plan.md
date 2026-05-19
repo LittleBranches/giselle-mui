@@ -1,6 +1,6 @@
 # GiselleSettingsProvider — Implementation Plan
 
-> A fully MIT-safe, framework-agnostic settings context for MUI projects, exported from `@alexrebula/giselle-mui`.
+> A fully MIT-safe, framework-agnostic settings context for MUI projects, exported from `@littlebranches/giselle-mui`.
 
 ---
 
@@ -14,7 +14,7 @@ re-applies the theme.
 It belongs in `giselle-mui` because:
 
 - It must integrate with `GiselleThemeProvider` (Phase C prerequisite)
-- Consumers get one coherent import: `@alexrebula/giselle-mui`
+- Consumers get one coherent import: `@littlebranches/giselle-mui`
 - Consumers can adopt it as a drop-in replacement for any existing settings context — one import change, no consumer component changes
 
 ## Why it belongs here rather than `giselle-ui`
@@ -100,7 +100,7 @@ return <GiselleSettingsProvider initialState={initialSettings} ...>
 The component accepts `initialState` for the first render and falls back to
 `defaultSettings` when omitted (non-Next.js consumers, Storybook, etc.).
 The `detectGiselleSettings()` helper is a convenience export from
-`@alexrebula/giselle-mui/server` (a separate entrypoint that uses `next/headers`
+`@littlebranches/giselle-mui/server` (a separate entrypoint that uses `next/headers`
 — only importable in RSC, never bundled by default).
 
 ### 4. Drawer state is built in
@@ -283,8 +283,8 @@ This is a one-import swap. The context shape is identical.
 
 | Before                                                         | giselle-mui                                                         |
 | -------------------------------------------------------------- | ------------------------------------------------------------------- |
-| `import { SettingsProvider } from 'src/components/settings'`   | `import { GiselleSettingsProvider } from '@alexrebula/giselle-mui'` |
-| `import { useSettingsContext } from 'src/components/settings'` | `import { useGiselleSettings } from '@alexrebula/giselle-mui'`      |
+| `import { SettingsProvider } from 'src/components/settings'`   | `import { GiselleSettingsProvider } from '@littlebranches/giselle-mui'` |
+| `import { useSettingsContext } from 'src/components/settings'` | `import { useGiselleSettings } from '@littlebranches/giselle-mui'`      |
 | `state.mode`, `state.direction`, `setField`, `onReset`, etc.   | Identical — no changes in consumer components                       |
 | `storageKey = 'app-settings'`                                  | `storageKey` prop (default: `'giselle-settings'`)                   |
 | `cookieSettings` from RSC                                      | `initialState` prop from RSC                                        |

@@ -96,9 +96,9 @@ The minimum `layout.tsx` for a project built entirely on giselle-mui:
 
 ```tsx
 // app/layout.tsx
-import { GiselleThemeProvider } from '@alexrebula/giselle-mui'; // Phase C
-import { IconRegistrar } from '@alexrebula/giselle-mui';
-import { createIconRegistrar } from '@alexrebula/giselle-mui';
+import { GiselleThemeProvider } from '@littlebranches/giselle-mui'; // Phase C
+import { IconRegistrar } from '@littlebranches/giselle-mui';
+import { createIconRegistrar } from '@littlebranches/giselle-mui';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

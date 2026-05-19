@@ -109,7 +109,7 @@ the usage site if they want strict icon-name checking.
 ## Basic usage
 
 ```tsx
-import { GiselleIcon } from '@alexrebula/giselle-mui';
+import { GiselleIcon } from '@littlebranches/giselle-mui';
 
 // Default size (20px square)
 <GiselleIcon icon="solar:rocket-bold-duotone" />
@@ -133,12 +133,12 @@ import { GiselleIcon } from '@alexrebula/giselle-mui';
 
 ### As a ReactNode slot in other components
 
-`MetricCard`, `SelectableCard`, and other `@alexrebula/giselle-mui` components accept
+`MetricCard`, `SelectableCard`, and other `@littlebranches/giselle-mui` components accept
 icons as `ReactNode` slots — they have zero icon-library dependency themselves.
 `GiselleIcon` is the intended slot filler:
 
 ```tsx
-import { MetricCard, MetricCardDecoration, GiselleIcon } from '@alexrebula/giselle-mui';
+import { MetricCard, MetricCardDecoration, GiselleIcon } from '@littlebranches/giselle-mui';
 
 <MetricCard
   value="20+"
@@ -246,7 +246,7 @@ src/
 
 ```ts
 // src/icon-sets.ts
-import { createIconRegistrar } from '@alexrebula/giselle-mui';
+import { createIconRegistrar } from '@littlebranches/giselle-mui';
 
 export const registerIcons = createIconRegistrar({
   // ─── Solar icons (24×24 viewBox — no explicit dims needed) ───────────────
@@ -343,7 +343,7 @@ createRoot(document.getElementById('root')!).render(
 // src/components/my-feature.tsx
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { GiselleIcon } from '@alexrebula/giselle-mui';
+import { GiselleIcon } from '@littlebranches/giselle-mui';
 
 // ✅ Icons are already in the store — no CDN fetch, no flicker.
 // Works in any component, any route, any render depth.
@@ -388,7 +388,7 @@ src/
 
 ```ts
 // src/components/icon-sets.ts  (or src/icon-sets.ts — your choice)
-import { createIconRegistrar } from '@alexrebula/giselle-mui';
+import { createIconRegistrar } from '@littlebranches/giselle-mui';
 
 export const registerIcons = createIconRegistrar({
   'solar:rocket-bold-duotone': {
@@ -452,7 +452,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ```tsx
 // src/app/page.tsx  (Server Component — no 'use client' needed)
-import { GiselleIcon } from '@alexrebula/giselle-mui';
+import { GiselleIcon } from '@littlebranches/giselle-mui';
 
 // GiselleIcon is a client component internally (it uses MUI sx which needs
 // a theme context). Next.js will automatically include it in the client bundle.
@@ -475,7 +475,7 @@ export default function HomePage() {
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { GiselleIcon } from '@alexrebula/giselle-mui';
+import { GiselleIcon } from '@littlebranches/giselle-mui';
 
 interface Props {
   icon: string; // e.g. "solar:rocket-bold-duotone"
@@ -497,7 +497,7 @@ export function ExpertiseCard({ icon, title }: Props) {
 
 ```tsx
 // src/app/page.tsx
-import { MetricCard, MetricCardDecoration, GiselleIcon } from '@alexrebula/giselle-mui';
+import { MetricCard, MetricCardDecoration, GiselleIcon } from '@littlebranches/giselle-mui';
 
 // Pass GiselleIcon as a ReactNode slot — the icon is resolved offline,
 // so there is no CDN fetch even when the card animates in on scroll.
@@ -553,7 +553,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
 ```tsx
 // src/pages/index.tsx
-import { GiselleIcon } from '@alexrebula/giselle-mui';
+import { GiselleIcon } from '@littlebranches/giselle-mui';
 
 export default function HomePage() {
   return (
@@ -640,7 +640,7 @@ collection-level default applies — check the top-level `width`/`height` in the
 
 ## Monorepo / local link caveat (webpack)
 
-If `@alexrebula/giselle-mui` is linked locally (via `npm link`, a workspace junction,
+If `@littlebranches/giselle-mui` is linked locally (via `npm link`, a workspace junction,
 or `file:` in package.json), **webpack may bundle two separate copies of `@iconify/react`**
 — one for the app, one for the linked package. Each copy has its own empty icon store.
 `registerIcons()` populates the app's store; `GiselleIcon` reads from the package's store

@@ -103,7 +103,7 @@ export const giselleThemeOptions: CssVarsThemeOptions = {
  * **Usage — with `ThemeProvider` directly:**
  * ```tsx
  * import { ThemeProvider } from '@mui/material/styles';
- * import { giselleTheme } from '@alexrebula/giselle-mui';
+ * import { giselleTheme } from '@littlebranches/giselle-mui';
  *
  * <ThemeProvider theme={giselleTheme}>
  *   <App />
@@ -112,7 +112,7 @@ export const giselleThemeOptions: CssVarsThemeOptions = {
  *
  * **Usage — via `GiselleThemeProvider` (zero-config):**
  * ```tsx
- * import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
+ * import { GiselleThemeProvider } from '@littlebranches/giselle-mui';
  *
  * <GiselleThemeProvider>
  *   <App />

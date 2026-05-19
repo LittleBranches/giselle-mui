@@ -36,7 +36,7 @@ import { addCollection } from '@iconify/react';
 // HOW TO USE
 //
 //   // src/icon-sets.ts  (in your consuming/client app — NOT inside the library)
-//   import { createIconRegistrar } from '@alexrebula/giselle-mui';
+//   import { createIconRegistrar } from '@littlebranches/giselle-mui';
 //
 //   export const registerIcons = createIconRegistrar({
 //     'solar:rocket-bold-duotone': {
@@ -199,7 +199,7 @@ export type GiselleIconMap = Record<string, GiselleIconData>;
  *
  * @example
  * // src/icon-sets.ts  (in your consuming/client app)
- * import { createIconRegistrar } from '@alexrebula/giselle-mui';
+ * import { createIconRegistrar } from '@littlebranches/giselle-mui';
  *
  * export const registerIcons = createIconRegistrar({
  *   'solar:rocket-bold-duotone': { body: '...' },

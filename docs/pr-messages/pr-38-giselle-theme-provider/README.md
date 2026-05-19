@@ -127,7 +127,7 @@ Added `### GiselleThemeProvider — zero config (recommended)` as the first sect
 App Router `layout.tsx` pattern:
 
 ```tsx
-import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
+import { GiselleThemeProvider } from '@littlebranches/giselle-mui';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -231,8 +231,8 @@ runtime, different TypeScript shapes. See [Design decisions](#design-decisions) 
 | Repo           | Change                                                                                                                               |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `alexrebula`   | Roadmap updated (bubble-up rule). `GiselleThemeProvider` available in `node_modules` via `yalc push`.                                |
-| `giselle-docs` | `@alexrebula/giselle-mui` updated via `yalc push`.                                                                                   |
-| `first-branch` | `@alexrebula/giselle-mui` updated via `yalc push`. Phase C is the prerequisite for zero-config theming in the Žiga task-tracker app. |
+| `giselle-docs` | `@littlebranches/giselle-mui` updated via `yalc push`.                                                                                   |
+| `first-branch` | `@littlebranches/giselle-mui` updated via `yalc push`. Phase C is the prerequisite for zero-config theming in the Žiga task-tracker app. |
 
 ---
 

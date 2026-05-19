@@ -23,7 +23,7 @@ export { MetricCardDecoration } from './metric-card-decoration';
  * Library-ready: zero icon-library dependency. Pass any `ReactNode` into `icon` and `decoration`.
  *
  * @example
- * import { MetricCard, MetricCardDecoration, GiselleIcon } from '@alexrebula/giselle-mui';
+ * import { MetricCard, MetricCardDecoration, GiselleIcon } from '@littlebranches/giselle-mui';
  *
  * <MetricCard
  *   value="20+"

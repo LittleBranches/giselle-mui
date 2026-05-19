@@ -179,7 +179,7 @@ All Phase H G6 and Phase I C/D motion component folders.
 
 ### Step 5 — remaining section/ and theming/ stubs
 
-`section/pricing/`, `section/timeline/item-details/`.
+`section/pricing/`, `lab/timeline/item-details/`.
 Note: `section/hero/` was skipped — `HeroSection` is already fully implemented at `section/hero/section/`.
 
 ---

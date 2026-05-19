@@ -19,7 +19,7 @@ export type { GiselleIconProps } from './types';
  *
  * @example
  * // Default size (20px square)
- * import { GiselleIcon } from '@alexrebula/giselle-mui';
+ * import { GiselleIcon } from '@littlebranches/giselle-mui';
  * <GiselleIcon icon="solar:rocket-bold-duotone" />
  *
  * @example
@@ -28,7 +28,7 @@ export type { GiselleIconProps } from './types';
  *
  * @example
  * // As a ReactNode slot inside MetricCard
- * import { MetricCard, MetricCardDecoration, GiselleIcon } from '@alexrebula/giselle-mui';
+ * import { MetricCard, MetricCardDecoration, GiselleIcon } from '@littlebranches/giselle-mui';
  * <MetricCard
  *   value="20+"
  *   label="Years"

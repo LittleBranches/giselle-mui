@@ -19,7 +19,7 @@ import { rowSx, buttonSx } from './hero-buttons-row.styles';
  * `motionProps` to stagger or fade in each button independently.
  *
  * ```tsx
- * import { fade } from '@alexrebula/giselle-mui/motion';
+ * import { fade } from '@littlebranches/giselle-mui/motion';
  *
  * <HeroButtonsRow
  *   items={[

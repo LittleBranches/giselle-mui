@@ -15,7 +15,7 @@ _Session: April 22, 2026_
 
 ## Overview
 
-This session bootstrapped `@alexrebula/giselle-mui` as a standalone open-source React
+This session bootstrapped `@littlebranches/giselle-mui` as a standalone open-source React
 component library, migrated four existing portfolio components into it, fixed TypeScript
 strictness issues, added comprehensive documentation, and wired the library into the
 portfolio app for zero-build local development via Yarn workspaces.
@@ -29,7 +29,7 @@ portfolio app for zero-build local development via Yarn workspaces.
 | File | What was done |
 |---|---|
 | `LICENSE` | MIT, 2026 Alex Rebula |
-| `package.json` | `@alexrebula/giselle-mui` v0.1.0, dual ESM/CJS via tsup, all MUI/Emotion/Iconify as peer deps |
+| `package.json` | `@littlebranches/giselle-mui` v0.1.0, dual ESM/CJS via tsup, all MUI/Emotion/Iconify as peer deps |
 | `tsconfig.json` | strict, ES2020, Bundler moduleResolution, verbatimModuleSyntax |
 | `tsup.config.ts` | entry `src/index.ts`, formats `esm`+`cjs`, `dts: true`, all peers external |
 | `vitest.config.ts` | environment: node, `include: ['src/**/*.test.ts']` |
@@ -125,18 +125,18 @@ Added ecosystem footer linking back to `giselle-mui` and `giselle-ui`.
 
 ### `package.json`
 
-Added `@alexrebula/giselle-mui: "*"` to `dependencies`. The `*` version resolves to the
+Added `@littlebranches/giselle-mui: "*"` to `dependencies`. The `*` version resolves to the
 local workspace symlink — no version pinning needed during development.
 
 ### `next.config.ts`
 
-Added `transpilePackages: ['@alexrebula/giselle-mui']` so Next.js's SWC compiler
+Added `transpilePackages: ['@littlebranches/giselle-mui']` so Next.js's SWC compiler
 processes the symlinked `.tsx` source files directly. This is the mechanism that makes
 HMR work across the package boundary with zero build steps.
 
 ```ts
 const nextConfig: NextConfig = {
-  transpilePackages: ['@alexrebula/giselle-mui'],
+  transpilePackages: ['@littlebranches/giselle-mui'],
   // ...rest unchanged
 };
 ```
@@ -157,7 +157,7 @@ Created `package.json` to declare the monorepo workspace root:
 }
 ```
 
-Running `yarn install` at root will symlink `@alexrebula/giselle-mui` into the
+Running `yarn install` at root will symlink `@littlebranches/giselle-mui` into the
 portfolio's `node_modules`, completing the wiring.
 
 ---
@@ -166,7 +166,7 @@ portfolio's `node_modules`, completing the wiring.
 
 1. Run `tsup` to populate `dist/`
 2. Run `npm publish` — `publishConfig` automatically replaces the `src` paths with `dist` paths in the published package manifest
-3. Remove `"@alexrebula/giselle-mui": "*"` from portfolio `dependencies` and reinstall with the versioned npm package
+3. Remove `"@littlebranches/giselle-mui": "*"` from portfolio `dependencies` and reinstall with the versioned npm package
 4. Remove `transpilePackages` from `next.config.ts` (the published package is pre-compiled)
 5. Delete the workspace root `package.json` or remove the `giselle-mui` entry from `workspaces`
 
@@ -178,6 +178,6 @@ No import paths in the portfolio need to change at any point.
 
 - [ ] `yarn install` at workspace root (pending — verifies symlink wiring end-to-end)
 - [ ] Delete duplicate components from portfolio `src/components/alexrebula/giselle-mui/`
-- [ ] Update portfolio import sites to use `'@alexrebula/giselle-mui'`
+- [ ] Update portfolio import sites to use `'@littlebranches/giselle-mui'`
 - [ ] Storybook stories for all 4 components
 - [ ] npm publish (planned May/June 2026)

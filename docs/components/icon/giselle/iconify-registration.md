@@ -30,7 +30,7 @@ production:
   it on every visit.
 
 The solution is **offline registration**: you copy the SVG body strings you need directly
-into your consuming/client app's source code. `@alexrebula/giselle-mui` exports
+into your consuming/client app's source code. `@littlebranches/giselle-mui` exports
 `createIconRegistrar` to make this easy.
 
 ---
@@ -141,7 +141,7 @@ body: '<path fill="currentColor" d="..." opacity=".5"/><path fill="currentColor"
 npm install @iconify/react
 ```
 
-`@iconify/react` is listed as `peerDependencies` in `@alexrebula/giselle-mui` —
+`@iconify/react` is listed as `peerDependencies` in `@littlebranches/giselle-mui` —
 you need to install it explicitly in your app.
 
 > **Important for monorepos / local links (webpack):** If you link `giselle-mui`
@@ -174,7 +174,7 @@ Where to get icon body strings:
 
 ```ts
 // src/icon-sets.ts
-import { createIconRegistrar } from '@alexrebula/giselle-mui';
+import { createIconRegistrar } from '@littlebranches/giselle-mui';
 
 export const registerIcons = createIconRegistrar({
   // ─── Solar icons (24×24 viewBox — no width/height override needed) ───────
@@ -359,7 +359,7 @@ in-memory store — no network request, no flicker, regardless of render depth o
 #### Basic usage
 
 ```tsx
-import { GiselleIcon } from '@alexrebula/giselle-mui';
+import { GiselleIcon } from '@littlebranches/giselle-mui';
 
 // All of these resolve offline — zero CDN traffic
 <GiselleIcon icon="solar:rocket-bold-duotone" />
@@ -398,7 +398,7 @@ export const expertiseItems = [
 
 ```tsx
 // src/components/expertise-section.tsx
-import { GiselleIcon, MetricCard, MetricCardDecoration } from '@alexrebula/giselle-mui';
+import { GiselleIcon, MetricCard, MetricCardDecoration } from '@littlebranches/giselle-mui';
 import { expertiseItems } from '../data/expertise';
 
 export function ExpertiseSection() {
@@ -434,7 +434,7 @@ A common tech-stack display pattern with logo icons:
 ```tsx
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import { GiselleIcon } from '@alexrebula/giselle-mui';
+import { GiselleIcon } from '@littlebranches/giselle-mui';
 
 const TECH_STACK = [
   { icon: 'logos:react',           label: 'React',      dims: [256, 228] },
@@ -471,7 +471,7 @@ blank during the reveal. Offline registration eliminates this entirely.
 'use client';
 
 import { m } from 'framer-motion';
-import { GiselleIcon } from '@alexrebula/giselle-mui';
+import { GiselleIcon } from '@littlebranches/giselle-mui';
 
 // ✅ Offline-registered — icon is in the bundle.
 // When the animation plays (scroll reveal, page transition, etc.),

@@ -38,15 +38,15 @@ if they never use a chart or animation.
 ### Current state (already two entry points in `tsup.config.ts`)
 
 ```
-@alexrebula/giselle-mui         → dist/index.js     (components, 'use client')
-@alexrebula/giselle-mui/utils   → dist/utils.js     (server-safe utils, no 'use client')
+@littlebranches/giselle-mui         → dist/index.js     (components, 'use client')
+@littlebranches/giselle-mui/utils   → dist/utils.js     (server-safe utils, no 'use client')
 ```
 
 ### Planned subpath additions
 
 ```
-@alexrebula/giselle-mui/charts  → dist/charts.js    (ApexCharts wrappers, optional peer dep)
-@alexrebula/giselle-mui/motion  → dist/motion.js    (framer-motion components, optional peer dep)
+@littlebranches/giselle-mui/charts  → dist/charts.js    (ApexCharts wrappers, optional peer dep)
+@littlebranches/giselle-mui/motion  → dist/motion.js    (framer-motion components, optional peer dep)
 ```
 
 **Implementation:** Add two new tsup entry objects to `tsup.config.ts`, matching the existing
@@ -54,7 +54,7 @@ if they never use a chart or animation.
 `react-apexcharts`, and `framer-motion` as `peerDependenciesMeta.optional: true` (already done
 for apexcharts — needs verification for framer-motion).
 
-**Consumer contract:** A consumer who imports only from `@alexrebula/giselle-mui` never needs
+**Consumer contract:** A consumer who imports only from `@littlebranches/giselle-mui` never needs
 ApexCharts installed. A consumer who imports from `.../charts` must have ApexCharts as a dep.
 This mirrors how `@mui/x-date-pickers` is consumed — opt-in subpath.
 
@@ -98,7 +98,7 @@ Accepts a `StatCardItem[]` array (type already in `giselle-mui`) and lays them o
 
 **Transferability:** 100% once built. Zero special deps.
 
-**Output subpath:** Main bundle (`@alexrebula/giselle-mui`).
+**Output subpath:** Main bundle (`@littlebranches/giselle-mui`).
 
 ---
 
@@ -170,7 +170,7 @@ card holder name, expiry date, card network logo slot. Purely presentational.
 
 ## Group 2 — Chart cards (ApexCharts — subpath `/charts`)
 
-> All components in this group go in `@alexrebula/giselle-mui/charts` (new tsup entry).
+> All components in this group go in `@littlebranches/giselle-mui/charts` (new tsup entry).
 > Consumers must install `apexcharts` and `react-apexcharts` as peer deps.
 > Every component in this group follows the same rule as `RadialProgressCard`:
 > **chart options live in `*.styles.ts`, never inline in JSX.**
@@ -520,7 +520,7 @@ $50"), body copy, email input, and a submit button.
 ## Group 6 — Motion components (framer-motion — subpath `/motion`)
 
 > Components in this group require `framer-motion` as a peer dep. They go in
-> `@alexrebula/giselle-mui/motion` (new tsup entry). Consumers who don't use motion
+> `@littlebranches/giselle-mui/motion` (new tsup entry). Consumers who don't use motion
 > components pay zero bundle cost.
 
 ### `FloatingSubNav` 🟡 Already in giselle-mui (main bundle)
