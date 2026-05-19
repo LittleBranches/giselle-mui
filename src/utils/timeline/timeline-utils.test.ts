@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
 
-import type { TimelinePhase, Milestone } from '../../components/section/timeline/two-column/types';
+import type { TimelinePhase, Milestone } from '../../components/lab/timeline/two-column/types';
 import { assignMilestoneSidesByDone } from './timeline-utils';
 
 // ----------------------------------------------------------------------

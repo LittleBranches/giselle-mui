@@ -7,7 +7,7 @@ export {
   PhaseCard,
   TimelineDot,
   TimelineTwoColumn,
-} from './components/section/timeline/two-column';
+} from './components/lab/timeline/two-column';
 export type {
   MilestoneBadgeProps,
   PhaseCardProps,
@@ -22,7 +22,7 @@ export type {
   TimelineSidebar,
   TimelineColumnLabels,
   TimelineSectionData,
-} from './components/section/timeline/two-column';
+} from './components/lab/timeline/two-column';
 
 export {
   TimelineCompact,
@@ -33,10 +33,10 @@ export {
   COMPACT_PHASE_ICON_SIZE,
   COMPACT_MIN_PHASE_DOT_SIZE,
   COMPACT_MIN_MILESTONE_DOT_SIZE,
-} from './components/section/timeline/compact';
-export type { TimelineCompactProps } from './components/section/timeline/compact';
+} from './components/lab/timeline/compact';
+export type { TimelineCompactProps } from './components/lab/timeline/compact';
 
-export { TaskList } from './components/section/timeline/task-list';
-export type { TaskListProps } from './components/section/timeline/task-list';
+export { TaskList } from './components/lab/timeline/task-list';
+export type { TaskListProps } from './components/lab/timeline/task-list';
 
 export { assignMilestoneSidesByDone } from './utils/timeline/timeline-utils';

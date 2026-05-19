@@ -11,7 +11,7 @@ import { TaskList } from './task-list';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof TaskList> = {
-  title: 'Section/Timeline/Task List',
+  title: 'Lab/Timeline/Task List',
   component: TaskList,
   parameters: { layout: 'padded' },
   argTypes: {
