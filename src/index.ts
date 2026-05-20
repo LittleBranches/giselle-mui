@@ -110,12 +110,6 @@ export type {
 export { SectionTitle, SectionCaption } from './components/material/layout/section-title';
 export type { SectionTitleProps } from './components/material/layout/section-title';
 
-export { FloatingSubNav } from './components/material/navigation/floating-sub-nav';
-export type {
-  FloatingSubNavProps,
-  FloatingSubNavItem,
-} from './components/material/navigation/floating-sub-nav';
-
 export { SectionContainer } from './components/material/layout/section-container';
 export type { SectionContainerProps } from './components/material/layout/section-container';
 

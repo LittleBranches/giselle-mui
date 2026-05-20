@@ -49,6 +49,13 @@ export type {
 export { HeroButtonsRow } from './components/section/hero/buttons-row';
 export type { HeroButtonsRowProps, HeroButtonItem } from './components/section/hero/buttons-row';
 
+// --- Navigation components (framer-motion) ---
+export { FloatingSubNav } from './components/material/navigation/floating-sub-nav';
+export type {
+  FloatingSubNavProps,
+  FloatingSubNavItem,
+} from './components/material/navigation/floating-sub-nav';
+
 // --- Hero: ScrollParallaxHero ---
 export {
   ScrollParallaxHero,
