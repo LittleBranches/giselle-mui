@@ -20,7 +20,7 @@ export interface IconActionItem {
    * Icon rendered inside the button.
    *
    * @example
-   * import { GiselleIcon } from '@alexrebula/giselle-mui';
+   * import { GiselleIcon } from '@littlebranches/giselle-mui';
    * { tooltip: 'Edit', icon: <GiselleIcon icon="solar:pen-bold" /> }
    */
   icon: ReactNode;
@@ -65,7 +65,7 @@ export interface IconActionBarProps extends BoxProps {
    *
    * @example
    * ```tsx
-   * import { GiselleIcon, IconActionBar } from '@alexrebula/giselle-mui';
+   * import { GiselleIcon, IconActionBar } from '@littlebranches/giselle-mui';
    *
    * <IconActionBar
    *   actions={[
@@ -78,7 +78,7 @@ export interface IconActionBarProps extends BoxProps {
    * @example
    * ```tsx
    * // Link action using a router component
-   * import { GiselleIcon, IconActionBar } from '@alexrebula/giselle-mui';
+   * import { GiselleIcon, IconActionBar } from '@littlebranches/giselle-mui';
    *
    * <IconActionBar
    *   actions={[

@@ -3,7 +3,7 @@ sidebar_position: 1
 sidebar_label: 'Overview'
 ---
 
-# @alexrebula/giselle-mui
+# @littlebranches/giselle-mui
 
 A set of focused MUI wrapper components that encode non-obvious design and accessibility decisions so consumers don't have to rediscover them.
 
@@ -25,7 +25,7 @@ Every component in this library exists because it solves a recurring problem tha
 ## Install
 
 ```bash
-npm install @alexrebula/giselle-mui
+npm install @littlebranches/giselle-mui
 ```
 
 ## Peer dependencies

@@ -195,7 +195,7 @@ Review or create `<component-name>.stories.tsx`:
   | `timelineStoryWrapperSx`          | Max-width centred wrapper for timeline stories                                             |
   | `MANGO_*` / `GISELLE_*`           | Giselle brand palette tokens — use instead of hardcoded hex                                |
 
-  `BREAKPOINTS` and `BREAKPOINTS_GRID` are also exported from `@alexrebula/giselle-mui/utils` for use in component utilities and tests.
+  `BREAKPOINTS` and `BREAKPOINTS_GRID` are also exported from `@littlebranches/giselle-mui/utils` for use in component utilities and tests.
 
 ### Step 9 — Barrel (`index.ts`)
 

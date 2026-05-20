@@ -2,7 +2,7 @@
 
 > _Last updated: May 2026_
 
-This guide is for developers who work on `@alexrebula/giselle-mui` alongside a
+This guide is for developers who work on `@littlebranches/giselle-mui` alongside a
 Next.js consumer app (e.g. the `alexrebula` portfolio) and want to see changes in
 both places without a manual publish step every time.
 
@@ -59,7 +59,7 @@ When a component is ready and you want to test it inside the real app:
 
 ```bash
 # in alexrebula (already done — no action needed if you cloned the repo)
-# @alexrebula/giselle-mui is already installed via yalc
+# @littlebranches/giselle-mui is already installed via yalc
 ```
 
 ### Day-to-day update loop
@@ -138,16 +138,16 @@ After publishing, switch the consumer from yalc to the real package:
 
 ```bash
 # in alexrebula
-yalc remove @alexrebula/giselle-mui
-npm install @alexrebula/giselle-mui
+yalc remove @littlebranches/giselle-mui
+npm install @littlebranches/giselle-mui
 ```
 
 To go back to yalc for development after a release:
 
 ```bash
 # in alexrebula
-npm uninstall @alexrebula/giselle-mui
-yalc add @alexrebula/giselle-mui
+npm uninstall @littlebranches/giselle-mui
+yalc add @littlebranches/giselle-mui
 ```
 
 ---

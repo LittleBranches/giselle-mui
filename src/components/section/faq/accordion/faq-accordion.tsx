@@ -31,12 +31,12 @@ const MotionAccordion = motion(Accordion);
  * accordions, decorative SVG elements (visible at ≥1440 px), and an optional
  * contact footer.
  *
- * Powered by `framer-motion` — import from `@alexrebula/giselle-mui/motion`.
+ * Powered by `framer-motion` — import from `@littlebranches/giselle-mui/motion`.
  *
  * ## Usage
  *
  * ```tsx
- * import { FaqSection } from '@alexrebula/giselle-mui/motion';
+ * import { FaqSection } from '@littlebranches/giselle-mui/motion';
  *
  * <FaqSection
  *   caption="Support"

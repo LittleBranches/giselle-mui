@@ -12,7 +12,7 @@ Every MUI v7 application needs a `ThemeProvider` wrapping the component tree, an
 
 ## Why it belongs here
 
-This is the primary DX entry point for the `@alexrebula/giselle-mui` library. The Giselle brand palette (Phase B) and theme utilities (Phase A) are only useful to consumers once there is a zero-config provider that ships them. Without this component, every consumer must wire up `ThemeProvider`, `extendTheme`, and the palette manually — defeating the purpose of a themed component library.
+This is the primary DX entry point for the `@littlebranches/giselle-mui` library. The Giselle brand palette (Phase B) and theme utilities (Phase A) are only useful to consumers once there is a zero-config provider that ships them. Without this component, every consumer must wire up `ThemeProvider`, `extendTheme`, and the palette manually — defeating the purpose of a themed component library.
 
 ## Design decisions
 

@@ -3,7 +3,7 @@ sidebar_position: 4
 sidebar_label: 'Component Inventory'
 ---
 
-# @alexrebula/giselle-mui — Complete Component Inventory
+# @littlebranches/giselle-mui — Complete Component Inventory
 
 > Master inventory across all planning docs. Single source of truth for "what exists, what is planned, and what phase it belongs to."
 >

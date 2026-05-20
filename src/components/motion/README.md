@@ -1,9 +1,9 @@
 # Motion Primitives
 
 Framer-motion variant factories, interaction helpers, and wrapper components for the
-`@alexrebula/giselle-mui` `/motion` subpath.
+`@littlebranches/giselle-mui` `/motion` subpath.
 
-**Import path:** `@alexrebula/giselle-mui/motion`
+**Import path:** `@littlebranches/giselle-mui/motion`
 
 ---
 
@@ -45,7 +45,7 @@ All factories return a framer-motion `Variants` object with `initial`, `animate`
 Fade with optional translation. 10 directions.
 
 ```ts
-import { fade } from '@alexrebula/giselle-mui/motion';
+import { fade } from '@littlebranches/giselle-mui/motion';
 
 const variants = fade('inUp', { distance: 24 });
 // → { initial: { y: 24, opacity: 0 }, animate: { ... }, exit: { ... } }
@@ -62,7 +62,7 @@ const variants = fade('inUp', { distance: 24 });
 Pure positional slide (no opacity). 8 directions.
 
 ```ts
-import { slide } from '@alexrebula/giselle-mui/motion';
+import { slide } from '@littlebranches/giselle-mui/motion';
 const variants = slide('inLeft', { distance: 80 });
 ```
 
@@ -107,7 +107,7 @@ Stagger container `Variants`. Children animate with 50 ms stagger. Used by `Moti
 and `MotionViewport`.
 
 ```ts
-import { container } from '@alexrebula/giselle-mui/motion';
+import { container } from '@littlebranches/giselle-mui/motion';
 const variants = container();
 // → { animate: { transition: { staggerChildren: 0.05, delayChildren: 0.05 } }, exit: { ... } }
 ```
@@ -117,7 +117,7 @@ const variants = container();
 ## Transition defaults
 
 ```ts
-import { transitionEnter, transitionExit } from '@alexrebula/giselle-mui/motion';
+import { transitionEnter, transitionExit } from '@littlebranches/giselle-mui/motion';
 ```
 
 - `transitionEnter(overrides?)` — `duration: 0.64`, custom ease curve
@@ -130,7 +130,7 @@ Both accept a partial `Transition` object to override any key.
 ## Interaction helpers
 
 ```ts
-import { hover, tap, transitionHover, transitionTap } from '@alexrebula/giselle-mui/motion';
+import { hover, tap, transitionHover, transitionTap } from '@littlebranches/giselle-mui/motion';
 
 <motion.div
   whileHover={hover()}        // → { scale: 1.09 }
@@ -153,7 +153,7 @@ import { hover, tap, transitionHover, transitionTap } from '@alexrebula/giselle-
 Wraps children in a `motion.div` with `container()` stagger variants.
 
 ```tsx
-import { MotionContainer, fade } from '@alexrebula/giselle-mui/motion';
+import { MotionContainer, fade } from '@littlebranches/giselle-mui/motion';
 import { motion } from 'framer-motion';
 
 <MotionContainer>
@@ -176,7 +176,7 @@ Scroll-triggered stagger container. Fires `container()` variants when the elemen
 the viewport. Automatically disabled on `sm` and below by default.
 
 ```tsx
-import { MotionViewport, fade } from '@alexrebula/giselle-mui/motion';
+import { MotionViewport, fade } from '@littlebranches/giselle-mui/motion';
 import { motion } from 'framer-motion';
 
 <MotionViewport>
@@ -198,7 +198,7 @@ import { motion } from 'framer-motion';
 5-layer scroll-driven parallax hook.
 
 ```ts
-import { useScrollParallax } from '@alexrebula/giselle-mui/motion';
+import { useScrollParallax } from '@littlebranches/giselle-mui/motion';
 
 const { ref, layers } = useScrollParallax();
 // layers[0] travels ±40px, layers[1] ±80px, ..., layers[4] ±200px
