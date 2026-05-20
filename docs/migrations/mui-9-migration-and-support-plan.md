@@ -15,7 +15,7 @@ This plan defines how the workspace migrates to MUI 9 without breaking current M
 
 - `giselle-mui`: **Phase 1 complete (PR #62).** Dev deps on MUI v9; peer deps support both v7 and v9. All 5 subpath entries build-verified. PR #62 open, pending PR #61 merge.
 - `alexrebula`: MUI 7 + MUI X v8. Phase 2a not yet started.
-- `first-branch`: mixed majors (`@mui/material` v7 with `@mui/material-nextjs` v9) — prerequisite fix still pending.
+- `[consumer-app-b]`: mixed majors (`@mui/material` v7 with `@mui/material-nextjs` v9) — prerequisite fix still pending.
 - `giselle-docs`: MUI 7. Phase 2c not yet started.
 - `giselle-ui` and `giselle-sections-sdk`: no MUI dependency (not part of this migration).
 
