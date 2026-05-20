@@ -1,5 +1,5 @@
 {
-  "name": "@alexrebula/giselle-mui",
+  "name": "@littlebranches/giselle-mui",
   "version": "0.1.0",
   "description": "MUI component library — accessible, theme-adaptive React components built on @mui/material with zero proprietary dependencies.",
   "license": "MIT",
@@ -28,6 +28,11 @@
       "types": "./dist/motion.d.ts",
       "import": "./dist/motion.js",
       "require": "./dist/motion.cjs"
+    },
+    "./lab": {
+      "types": "./dist/lab.d.ts",
+      "import": "./dist/lab.js",
+      "require": "./dist/lab.cjs"
     }
   },
   "publishConfig": {
@@ -98,6 +103,9 @@
       "optional": true
     },
     "react-apexcharts": {
+      "optional": true
+    },
+    "@mui/lab": {
       "optional": true
     }
   },

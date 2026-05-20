@@ -1,4 +1,4 @@
-import type { TimelinePhase } from '../../components/section/timeline/two-column/types';
+import type { TimelinePhase } from '../../components/lab/timeline/two-column/types';
 
 // ----------------------------------------------------------------------
 
