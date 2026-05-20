@@ -17,7 +17,7 @@ drop this in and receive the full visual treatment from a single component.
 
 ### framer-motion subpath
 
-`FaqSection` is exported from `@alexrebula/giselle-mui/motion` (not the root import) because
+`FaqSection` is exported from `@littlebranches/giselle-mui/motion` (not the root import) because
 it depends on `framer-motion`. Isolating it in a subpath ensures that apps which never use
 animation don't pay the bundle cost.
 

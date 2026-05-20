@@ -217,7 +217,7 @@ export const roadmapPhases = [
         key: 0,
         shortTitle: 'Library classification',
         title: 'Decide: giselle-mui or dedicated smart-components package?',
-        description: 'The branch layout algorithm (column widths, re-convergence detection, row alignment across arms) is complex enough that it may warrant its own package — e.g. @alexrebula/giselle-smart-components — rather than bundling into giselle-mui. This decision gates all other milestones.',
+        description: 'The branch layout algorithm (column widths, re-convergence detection, row alignment across arms) is complex enough that it may warrant its own package — e.g. @littlebranches/giselle-smart-components — rather than bundling into giselle-mui. This decision gates all other milestones.',
         details: { content: 'This is the gating architectural decision because the implementation may exceed the scope of a small MUI wrapper library.' },
         color: 'warning',
       },
@@ -275,7 +275,7 @@ export const roadmapPhases = [
 
 ## Current state
 
-`@alexrebula/giselle-mui` uses only standard MUI v7 APIs to set up its theme:
+`@littlebranches/giselle-mui` uses only standard MUI v7 APIs to set up its theme:
 
 ```ts
 import { extendTheme } from '@mui/material/styles';
@@ -289,10 +289,10 @@ See [`theming/nextjs.md`](./theming/nextjs.md) for the recommended setup in a ne
 ## Theme utilities
 
 **Phase A shipped — 4 May 2026.** Theme-building helpers are available as named exports
-from `@alexrebula/giselle-mui`:
+from `@littlebranches/giselle-mui`:
 
 ```ts
-import { channelAlpha, hexToChannel, pxToRem, remToPx } from '@alexrebula/giselle-mui';
+import { channelAlpha, hexToChannel, pxToRem, remToPx } from '@littlebranches/giselle-mui';
 ```
 
 See [`theming/nextjs.md`](./theming/nextjs.md) for full usage examples and integration guide.
@@ -477,7 +477,7 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 
 **When this phase is done:**
 
-A blank `create-next-app` project can install `@alexrebula/giselle-mui`, add
+A blank `create-next-app` project can install `@littlebranches/giselle-mui`, add
 `GiselleThemeProvider` to `layout.tsx`, and assemble a full homepage from exported
 components — no proprietary theme, no reimplemented patterns.
 
@@ -785,7 +785,7 @@ Full spec: [`components/home-components-extraction-plan.md`](./components/home-c
 
 ### Phase K — BranchedTimeline (Scenario Tree) — TBD ⚪ Good to have
 
-> **Library classification open.** This component sits at the boundary of what a pure UI library should own. The branch layout algorithm is complex enough that it may warrant a dedicated package (e.g. `@alexrebula/giselle-smart-components`) rather than bundling into `giselle-mui`. The classification decision must happen before any implementation work begins.
+> **Library classification open.** This component sits at the boundary of what a pure UI library should own. The branch layout algorithm is complex enough that it may warrant a dedicated package (e.g. `@littlebranches/giselle-smart-components`) rather than bundling into `giselle-mui`. The classification decision must happen before any implementation work begins.
 
 **The problem it solves:**
 

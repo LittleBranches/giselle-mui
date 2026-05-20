@@ -30,7 +30,7 @@ import type { TimelinePhase } from '../../components/lab/timeline/two-column/typ
  * @example
  * ```ts
  * // In sections-api/store-readiness/data.tsx
- * import { assignMilestoneSidesByDone } from '@alexrebula/giselle-mui';
+ * import { assignMilestoneSidesByDone } from '@littlebranches/giselle-mui';
  *
  * export const storeReadinessPhases = assignMilestoneSidesByDone(rawPhases);
  * ```

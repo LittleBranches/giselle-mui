@@ -31,50 +31,52 @@ Fix this independently of all MUI 9 work. It is a bug that exists right now.
 | ---- | --------------------------------------------------------------------------------------------------------------- | ------------- | ------ | ------------------------------------------------- |
 | PL-1 | Pin exact target versions for every `@mui/*` package per repo                                                   | all           | ⬜     | Record in decision log of the plan doc            |
 | PL-2 | Confirm MUI X v9 compatibility for `alexrebula` (`@mui/x-data-grid`, `@mui/x-date-pickers`, `@mui/x-tree-view`) | `alexrebula`  | ⬜     | MUI X must align with chosen core major           |
-| PL-3 | Confirm Storybook builder handles MUI 9 without extra config                                                    | `giselle-mui` | ⬜     | react-vite builder; check Storybook release notes |
-| PL-4 | Confirm `@iconify/react` and `framer-motion` peer compat with MUI 9                                             | `giselle-mui` | ⬜     | No known issues expected                          |
+| PL-3 | Confirm Storybook builder handles MUI 9 without extra config                                                    | `giselle-mui` | ✅     | Storybook build green on PR #62 — no extra config needed |
+| PL-4 | Confirm `@iconify/react` and `framer-motion` peer compat with MUI 9                                             | `giselle-mui` | ✅     | No issues found during PR #62 migration           |
 
 ---
 
 ## Phase 1 — `giselle-mui` (upgrade first)
 
+**Completed in PR #62 (`feature/mui-9-migration`) — 19 May 2026.**
+
 ### 1a. Peer dependency and build
 
 | #   | Task                                                            | Repo          | Status | Notes                                                        |
 | --- | --------------------------------------------------------------- | ------------- | ------ | ------------------------------------------------------------ |
-| 1-1 | Create branch `feature/mui-9-migration`                         | `giselle-mui` | ⬜     |                                                              |
-| 1-2 | Expand `peerDependencies` ranges to accept both MUI 7 and MUI 9 | `giselle-mui` | ⬜     | e.g. `">=7.0.0 <10.0.0"`                                     |
-| 1-3 | Upgrade dev dependencies: `@mui/material`, `@mui/lab` to v9     | `giselle-mui` | ⬜     | Dev deps control what Vitest and Storybook see               |
-| 1-4 | Apply MUI official codemods                                     | `giselle-mui` | ⬜     | `npx @mui/codemod@latest v9.0.0/...` — check codemod catalog |
-| 1-5 | Resolve TypeScript compile errors after codemod                 | `giselle-mui` | ⬜     | `npm run typecheck`                                          |
-| 1-6 | Resolve ESLint errors                                           | `giselle-mui` | ⬜     | `npm run lint`                                               |
-| 1-7 | Verify `tsup.config.ts` externals still list all peer deps      | `giselle-mui` | ⬜     | Per tsup external rule — no peer bundled into dist           |
-| 1-8 | Run `npm run build`                                             | `giselle-mui` | ⬜     | tsup must exit 0, all subpath entries generated              |
+| 1-1 | Create branch `feature/mui-9-migration`                         | `giselle-mui` | ✅     | Branch created, PR #62 open                                  |
+| 1-2 | Expand `peerDependencies` ranges to accept both MUI 7 and MUI 9 | `giselle-mui` | ✅     | `@mui/material`: `">=7.0.0 <10.0.0"` · `@mui/lab`: `"^7.0.0 \|\| ^9.0.0-beta.3"` |
+| 1-3 | Upgrade dev dependencies: `@mui/material`, `@mui/lab` to v9     | `giselle-mui` | ✅     | `@mui/material@^9.0.0`, `@mui/lab@^9.0.0-beta.3`            |
+| 1-4 | Apply MUI official codemods                                     | `giselle-mui` | ✅     | `@mui/codemod v6.0.0/sx-prop` — 44 files modified (removed empty `{}` from sx arrays) |
+| 1-5 | Resolve TypeScript compile errors after codemod                 | `giselle-mui` | ✅     | 10 files fixed: Typography shorthand props, Stack alignItems, Grid direction, NavPill component prop, TransitionComponent removal, theme.vars story reference |
+| 1-6 | Resolve ESLint errors                                           | `giselle-mui` | ✅     | 0 warnings/errors on `npm run lint`                          |
+| 1-7 | Verify `tsup.config.ts` externals still list all peer deps      | `giselle-mui` | ✅     | All 5 entries verified: index, utils, charts, motion, lab    |
+| 1-8 | Run `npm run build`                                             | `giselle-mui` | ✅     | All 5 subpath entries generated: `index`, `utils`, `charts`, `motion`, `lab` |
 
 ### 1b. Tests and Storybook
 
 | #    | Task                                                                                | Repo          | Status | Notes                                           |
 | ---- | ----------------------------------------------------------------------------------- | ------------- | ------ | ----------------------------------------------- |
-| 1-9  | Run Vitest — all 839+ tests green                                                   | `giselle-mui` | ⬜     | `npm run test`                                  |
-| 1-10 | Audit tests that use `cssVariables: true` theme — verify they still pass with MUI 9 | `giselle-mui` | ⬜     | MUI 9 may alter CSS vars token shapes           |
-| 1-11 | Build Storybook                                                                     | `giselle-mui` | ⬜     | `npm run build-storybook` — zero broken stories |
-| 1-12 | Visual QA: cards, timeline, icon, action bar in Storybook                           | `giselle-mui` | ⬜     | All variants, light + dark                      |
+| 1-9  | Run Vitest — all tests green                                                        | `giselle-mui` | ✅     | 1218 passed, 59 skipped                         |
+| 1-10 | Audit tests that use `cssVariables: true` theme — verify they still pass with MUI 9 | `giselle-mui` | ✅     | All theme-related tests pass unchanged          |
+| 1-11 | Build Storybook                                                                     | `giselle-mui` | ✅     | `npm run build-storybook` — zero broken stories |
+| 1-12 | Visual QA: cards, timeline, icon, action bar in Storybook                           | `giselle-mui` | ⬜     | Manual — run after PR #62 merges to main        |
 
 ### 1c. Dual-major CI matrix
 
 | #    | Task                                                                | Repo          | Status | Notes                     |
 | ---- | ------------------------------------------------------------------- | ------------- | ------ | ------------------------- |
-| 1-13 | Add CI matrix job that installs MUI 7 peers and runs `check:verify` | `giselle-mui` | ⬜     | Job A: MUI 7 compat check |
-| 1-14 | Add CI matrix job that installs MUI 9 peers and runs `check:verify` | `giselle-mui` | ⬜     | Job B: MUI 9 compat check |
-| 1-15 | Both CI matrix jobs green                                           | `giselle-mui` | ⬜     | Gate before merge         |
+| 1-13 | Add CI matrix job that installs MUI 7 peers and runs `check:verify` | `giselle-mui` | ⬜     | PR #64 — Job A: MUI 7 compat check |
+| 1-14 | Add CI matrix job that installs MUI 9 peers and runs `check:verify` | `giselle-mui` | ⬜     | PR #64 — Job B: MUI 9 compat check |
+| 1-15 | Both CI matrix jobs green                                           | `giselle-mui` | ⬜     | Gate before merge — PR #64        |
 
 ### 1d. Gate and publish
 
 | #    | Task                            | Repo          | Status | Notes                                       |
 | ---- | ------------------------------- | ------------- | ------ | ------------------------------------------- |
-| 1-16 | Run full `npm run check:verify` | `giselle-mui` | ⬜     | All 6 checks must pass                      |
-| 1-17 | Open PR and merge to `main`     | `giselle-mui` | ⬜     | Branch: `feature/mui-9-migration`           |
-| 1-18 | `npm run build && yalc push`    | `giselle-mui` | ⬜     | Push to local registry for consumer testing |
+| 1-16 | Run full `npm run check:verify` | `giselle-mui` | ✅     | All 6 checks passed on PR #62 push hook     |
+| 1-17 | Open PR and merge to `main`     | `giselle-mui` | 🔄     | PR #62 open — pending PR #61 merge first    |
+| 1-18 | `npm run build && yalc push`    | `giselle-mui` | ⬜     | After PR #62 merges to main                 |
 
 ---
 
@@ -142,8 +144,8 @@ Requires Phase 1 complete. Prerequisite P-1 through P-4 must already be done.
 
 ## Decision log
 
-_Append decisions here with date, author, and rationale._
-
-| Date | Decision | Rationale |
-| ---- | -------- | --------- |
-| —    | —        | —         |
+| Date         | Decision                                                                                     | Rationale                                                                                                     |
+| ------------ | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 19 May 2026  | `@mui/material` peer range: `">=7.0.0 <10.0.0"` (dual-major window)                        | Allows existing v7 consumers to keep working while new consumers can adopt v9. Window closes T0 + 10-12 weeks. |
+| 19 May 2026  | `@mui/lab` peer range: `"^7.0.0 \|\| ^9.0.0-beta.3"`                                        | Lab has no stable v9 release yet. Beta accepted for dev builds; consumers on v7 continue to work.             |
+| 19 May 2026  | Dev dependencies upgraded to MUI v9 (`@mui/material@^9.0.0`, `@mui/lab@^9.0.0-beta.3`)      | Library developed and tested against v9 while publishing types compatible with both majors.                   |

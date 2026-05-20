@@ -35,10 +35,10 @@ This library always uses `motion.*` — never `m.*`. The `m.*` API requires `Laz
 **Always import from the `/motion` subpath:**
 
 ```ts
-import { InteractiveHeroLogo } from '@alexrebula/giselle-mui/motion';
+import { InteractiveHeroLogo } from '@littlebranches/giselle-mui/motion';
 ```
 
-The `/motion` entry carries `'use client'` at the bundle boundary, so the component and all its sub-components are treated as client modules automatically. Importing from the root `@alexrebula/giselle-mui` entry in an RSC tree will cause a runtime error.
+The `/motion` entry carries `'use client'` at the bundle boundary, so the component and all its sub-components are treated as client modules automatically. Importing from the root `@littlebranches/giselle-mui` entry in an RSC tree will cause a runtime error.
 
 ### `useImagePreloader` call site
 

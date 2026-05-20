@@ -1,5 +1,5 @@
 /**
- * @alexrebula/giselle-mui — public API
+ * @littlebranches/giselle-mui — public API
  */
 
 export { createIconRegistrar } from './utils/icon/create-icon-registrar/create-icon-registrar';

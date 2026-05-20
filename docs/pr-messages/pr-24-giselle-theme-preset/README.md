@@ -60,8 +60,8 @@ All the feature work (Phase B `giselleTheme`, `StatCard`, `RadialProgressCard`, 
 
 ### 3 — `docs/theming/nextjs.md` — import path correction
 
-- Two `giselleTheme` import examples corrected from `'@alexrebula/giselle-mui'` to
-  `'@alexrebula/giselle-mui/utils'`. The root import carries a `'use client'` banner and
+- Two `giselleTheme` import examples corrected from `'@littlebranches/giselle-mui'` to
+  `'@littlebranches/giselle-mui/utils'`. The root import carries a `'use client'` banner and
   cannot be used in RSC-compatible data files; the `/utils` sub-path is server-safe.
 
 ### 4 — `TwoColumnShowcaseRow` — Grid v2 clarifying comment

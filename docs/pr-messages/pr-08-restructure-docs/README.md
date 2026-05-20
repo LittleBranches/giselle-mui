@@ -7,7 +7,7 @@ sidebar_label: "PR08 - Restructure docs"
 
 # Restructure documentation into theming and components subfolders
 
-This pull request restructures and improves the documentation for the `@alexrebula/giselle-mui` library. The changes focus on reorganizing content into a clearer hierarchy, adding frontmatter for sidebar navigation, and improving discoverability and usability of the docs.
+This pull request restructures and improves the documentation for the `@littlebranches/giselle-mui` library. The changes focus on reorganizing content into a clearer hierarchy, adding frontmatter for sidebar navigation, and improving discoverability and usability of the docs.
 
 **Documentation structure and navigation improvements:**
 

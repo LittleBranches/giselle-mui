@@ -1,5 +1,5 @@
 /**
- * @alexrebula/giselle-mui/utils — server-safe utility exports.
+ * @littlebranches/giselle-mui/utils — server-safe utility exports.
  *
  * This sub-path contains only pure TypeScript functions and types.
  * No React components, no `'use client'` directive.
