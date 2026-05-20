@@ -164,8 +164,8 @@ export const LogoSlot: Story = {
           width: 140,
           height: 180,
           borderRadius: 3,
-          background:
-            'linear-gradient(135deg, var(--mui-palette-primary-main), var(--mui-palette-secondary-main))',
+          background: (theme) =>
+            `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
