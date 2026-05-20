@@ -159,7 +159,6 @@ function ResponsiveDemo() {
     </Box>
   );
 }
-
 export const Responsive: Story = {
   render: () => <ResponsiveDemo />,
   parameters: {

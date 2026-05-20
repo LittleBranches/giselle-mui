@@ -13,6 +13,9 @@ const blackCh = (theme: Theme): string =>
 
 /** Pill container — border, shadow, background. Shared by both variants. */
 export const pillSx: SxProps<Theme> = (theme) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
   p: 0.5,
   borderRadius: 2,
   bgcolor: 'background.paper',

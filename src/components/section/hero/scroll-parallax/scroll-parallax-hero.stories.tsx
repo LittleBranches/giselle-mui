@@ -81,7 +81,6 @@ const SampleActions = (
 function GradientBackground() {
   return <Box sx={gradientBackgroundSx} />;
 }
-
 /** Scroll wrapper so the hero has room to scroll through in Storybook. */
 function ScrollWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -166,7 +165,7 @@ export const LogoSlot: Story = {
           height: 180,
           borderRadius: 3,
           background: (theme) =>
-            `linear-gradient(135deg, ${theme.vars!.palette.primary.main}, ${theme.vars!.palette.secondary.main})`,
+            `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

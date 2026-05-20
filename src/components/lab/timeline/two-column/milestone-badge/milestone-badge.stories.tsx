@@ -239,7 +239,6 @@ function ColorVariantItem({ color }: { color: string }) {
     </Box>
   );
 }
-
 function AllColorsDemo() {
   return (
     <Box sx={variantGridSx}>
@@ -249,7 +248,6 @@ function AllColorsDemo() {
     </Box>
   );
 }
-
 function ResponsiveDemo() {
   const [expandedWidth, setExpandedWidth] = useState<number | null>(null);
   const handleExpand = useCallback(
@@ -276,11 +274,9 @@ function ResponsiveDemo() {
     </Box>
   );
 }
-
 // ----------------------------------------------------------------------
 // Stories
 // ----------------------------------------------------------------------
-
 /**
  * **Default** — right-column, collapsed at rest.
  *
@@ -289,7 +285,6 @@ function ResponsiveDemo() {
 export const Default: Story = {
   render: () => <DefaultDemo />,
 };
-
 /**
  * **ExpandedState** — card opened to show detail bullets.
  *
@@ -298,7 +293,6 @@ export const Default: Story = {
 export const ExpandedState: Story = {
   render: () => <ExpandedStateDemo />,
 };
-
 /**
  * **LeftColumn** — `columnSide="left"` right-aligns the collapsed card.
  *
@@ -315,7 +309,6 @@ export const ExpandedState: Story = {
 export const LeftColumn: Story = {
   render: () => <LeftColumnDemo />,
 };
-
 /**
  * **LeftColumnExpanded** — same `columnSide="left"` card in the expanded state.
  *
@@ -325,7 +318,6 @@ export const LeftColumn: Story = {
 export const LeftColumnExpanded: Story = {
   render: () => <LeftColumnExpandedDemo />,
 };
-
 /**
  * **DoneState** — `done=true` dims and desaturates the card.
  *
@@ -336,7 +328,6 @@ export const LeftColumnExpanded: Story = {
 export const DoneState: Story = {
   render: () => <DoneStateDemo />,
 };
-
 /**
  * **IsViewed** — `onMarkViewed` makes the viewed eye button visible.
  *
@@ -352,7 +343,6 @@ export const DoneState: Story = {
 export const IsViewed: Story = {
   render: () => <IsViewedDemo />,
 };
-
 /**
  * **AllColors** — all six MUI palette keys side-by-side.
  *
@@ -364,7 +354,6 @@ export const AllColors: Story = {
   parameters: { layout: 'padded' },
   render: () => <AllColorsDemo />,
 };
-
 /**
  * **Responsive** — the card at realistic column widths across MUI standard breakpoints.
  *

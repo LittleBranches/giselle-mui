@@ -51,11 +51,8 @@ export function HeroSection({
     <Box sx={[heroRootSx(color), ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <Container maxWidth="lg" sx={heroInnerSx}>
         {heading}
-
         {text}
-
         {actions && <Box sx={heroActionsRowSx}>{actions}</Box>}
-
         {icons && <Box sx={heroIconsSlotSx}>{icons}</Box>}
       </Container>
     </Box>

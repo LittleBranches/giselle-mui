@@ -24,15 +24,19 @@ export function DotInner({ done, icon, animationKey, iconSize }: DotInnerProps) 
       </Box>
     );
   }
-
   return (
     <Box
       key={animationKey}
-      sx={{
-        display: 'flex',
-        animation:
-          animationKey > 0 ? `${checkPop} 0.36s cubic-bezier(0.34, 1.56, 0.64, 1)` : undefined,
-      }}
+      sx={[
+        {
+          display: 'flex',
+        },
+        animationKey > 0
+          ? {
+              animation: `${checkPop} 0.36s cubic-bezier(0.34, 1.56, 0.64, 1)`,
+            }
+          : false,
+      ]}
     >
       {icon}
     </Box>

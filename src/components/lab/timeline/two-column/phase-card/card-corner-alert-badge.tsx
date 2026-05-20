@@ -54,7 +54,6 @@ export function CardCornerAlertBadge({
       ))}
     </Box>
   );
-
   const badgeCircle = (
     <Box
       ref={innerRef}

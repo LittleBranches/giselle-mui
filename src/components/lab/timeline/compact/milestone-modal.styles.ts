@@ -10,6 +10,7 @@ export const dialogTitleSx: SxProps<Theme> = {
 };
 
 export const dialogDateSx: SxProps<Theme> = {
+  display: 'block',
   color: 'text.secondary',
   mt: 0.25,
 };

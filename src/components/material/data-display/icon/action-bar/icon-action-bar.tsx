@@ -58,7 +58,6 @@ export function IconActionBar({
           ...(item.component !== undefined && { component: item.component }),
           ...(item.href !== undefined && { href: item.href }),
         };
-
         return (
           <Tooltip
             key={`${item.tooltip}-${index}`}

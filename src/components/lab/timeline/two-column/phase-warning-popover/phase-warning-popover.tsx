@@ -144,7 +144,9 @@ export function PhaseWarningPopover({
       anchorEl={anchorEl}
       placement="bottom-start"
       modifiers={[{ name: 'offset', options: { offset: [0, 8] } }]}
-      sx={{ zIndex: (theme) => theme.zIndex.tooltip + 1 }}
+      sx={(theme) => ({
+        zIndex: theme.zIndex.tooltip + 1,
+      })}
     >
       <ClickAwayListener onClickAway={onClose}>
         <Paper elevation={8} sx={popoverPaperSx}>
@@ -165,9 +167,7 @@ export function PhaseWarningPopover({
               ×
             </IconButton>
           </Box>
-
           <Divider />
-
           {/* Warning list */}
           <Box>
             <Typography variant="body2" color="warning.main" sx={{ fontWeight: 500 }}>
@@ -178,9 +178,7 @@ export function PhaseWarningPopover({
               sequential.
             </Typography>
           </Box>
-
           <Divider />
-
           {/* Range sliders — one per conflicting phase */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
             {conflictingPhases.map((phase) => {
@@ -190,7 +188,7 @@ export function PhaseWarningPopover({
               return (
                 <Box key={phase.key}>
                   <Box sx={sliderRowHeaderSx}>
-                    <Typography variant="caption" fontWeight={600}>
+                    <Typography variant="caption" sx={{ fontWeight: 600 }}>
                       {phase.shortTitle ?? phase.title}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -212,12 +210,9 @@ export function PhaseWarningPopover({
               );
             })}
           </Box>
-
           {/* Mini Gantt ruler */}
           <MiniGanttRuler axis={axis} conflictingPhases={conflictingPhases} overrides={overrides} />
-
           <Divider />
-
           {/* Actions */}
           <Box sx={actionsRowSx}>
             <Button
@@ -229,7 +224,6 @@ export function PhaseWarningPopover({
             >
               Make sequential
             </Button>
-
             {pendingApply && (
               <Box sx={{ display: 'flex', gap: 1 }}>
                 <Button

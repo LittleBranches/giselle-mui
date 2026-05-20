@@ -57,12 +57,11 @@ export function TaskDetailsModal({
             {task.title}
           </Typography>
           {task.date && (
-            <Typography variant="caption" display="block" sx={dialogDateSx}>
+            <Typography variant="caption" sx={dialogDateSx}>
               {task.date}
             </Typography>
           )}
         </div>
-
         <IconButton aria-label="Close details" onClick={onClose} sx={{ mt: 0.5, flexShrink: 0 }}>
           {/* × close icon — inline SVG, zero external dep */}
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -70,9 +69,7 @@ export function TaskDetailsModal({
           </svg>
         </IconButton>
       </DialogTitle>
-
       <Divider />
-
       <DialogContent sx={{ pt: 2 }}>
         <TaskDetailsRenderer
           task={task}

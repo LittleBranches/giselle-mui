@@ -330,9 +330,7 @@ export const ReadOnly: Story = {
   ),
   argTypes: { phases: { control: false }, sx: { control: false } },
 };
-
 // ----------------------------------------------------------------------
-
 /**
  * **Column placement invariant** — the most important architectural decision in this component.
  *
@@ -376,13 +374,13 @@ export const ColumnPlacementInvariant: Story = {
     <Box sx={timelineStoryWrapperSx}>
       <Box sx={{ display: 'flex', gap: 4, mb: 3 }}>
         <Box sx={storyColumnIndicatorSx('info.main')}>
-          <Typography variant="caption" color="info.main" fontWeight={700}>
+          <Typography variant="caption" sx={{ color: 'info.main', fontWeight: 700 }}>
             LEFT column — phase cards for side=&#x27;right&#x27; phases; milestones from
             side=&#x27;left&#x27; phases
           </Typography>
         </Box>
         <Box sx={storyColumnIndicatorSx('success.main')}>
-          <Typography variant="caption" color="success.main" fontWeight={700}>
+          <Typography variant="caption" sx={{ color: 'success.main', fontWeight: 700 }}>
             RIGHT column — phase cards for side=&#x27;left&#x27; phases; milestones from
             side=&#x27;right&#x27; phases
           </Typography>
@@ -393,9 +391,7 @@ export const ColumnPlacementInvariant: Story = {
   ),
   argTypes: { phases: { control: false }, sx: { control: false } },
 };
-
 // ----------------------------------------------------------------------
-
 /**
  * **Marker variant** — a third item type: spine-only, no card.
  *
@@ -512,9 +508,7 @@ export const MarkerVariant: Story = {
   ),
   argTypes: { phases: { control: false }, sx: { control: false } },
 };
-
 // ----------------------------------------------------------------------
-
 /**
  * **Life-event vs marker decision** — when to use each item type for one-off events.
  *
@@ -657,9 +651,7 @@ export const LifeEventVsMarker: Story = {
   ),
   argTypes: { phases: { control: false }, sx: { control: false } },
 };
-
 // ----------------------------------------------------------------------
-
 /**
  * **Scenario variant** — a hypothetical or speculative phase card alongside real phases.
  *
@@ -755,9 +747,7 @@ export const ScenarioVariant: Story = {
   ),
   argTypes: { phases: { control: false }, sx: { control: false } },
 };
-
 // ----------------------------------------------------------------------
-
 /**
  * **Dot tooltip added value** — why tooltips show description previews, not just the name.
  *
@@ -816,9 +806,7 @@ export const DotTooltipAddedValue: Story = {
   ),
   argTypes: { phases: { control: false }, sx: { control: false } },
 };
-
 // ----------------------------------------------------------------------
-
 /**
  * **Checklist mode** — dots become interactive task checkboxes.
  *
@@ -846,9 +834,7 @@ export const ChecklistMode: Story = {
   ),
   argTypes: { phases: { control: false }, sx: { control: false } },
 };
-
 // ----------------------------------------------------------------------
-
 /**
  * **Viewed state** — click the eye icon to mark phases and milestones as read.
  *
@@ -866,7 +852,6 @@ export const ChecklistMode: Story = {
  */
 function ViewedStateDemo() {
   const [viewedKeys, setViewedKeys] = useState<Set<string>>(new Set());
-
   function handleMarkViewed(key: string) {
     setViewedKeys((prev) => {
       const next = new Set(prev);
@@ -878,7 +863,6 @@ function ViewedStateDemo() {
       return next;
     });
   }
-
   return (
     <Box sx={timelineStoryWrapperSx}>
       <TimelineTwoColumn
@@ -889,7 +873,6 @@ function ViewedStateDemo() {
     </Box>
   );
 }
-
 export const ViewedState: Story = {
   render: () => <ViewedStateDemo />,
   argTypes: {
@@ -899,9 +882,7 @@ export const ViewedState: Story = {
     onMarkViewed: { control: false },
   },
 };
-
 // ----------------------------------------------------------------------
-
 /**
  * **Responsive** — the layout at each MUI standard breakpoint.
  *
@@ -929,9 +910,7 @@ export const Responsive: Story = {
   ),
   argTypes: { phases: { control: false }, sx: { control: false } },
 };
-
 // ----------------------------------------------------------------------
-
 /**
  * **FooterSlot** — a `ReactNode` rendered below icon strips in the always-visible
  * card area, before the expandable detail bullets.
@@ -1253,12 +1232,12 @@ export const MarkerLabelSidePlacement: Story = {
     <Box sx={timelineStoryWrapperSx}>
       <Box sx={{ display: 'flex', gap: 4, mb: 3 }}>
         <Box sx={storyColumnIndicatorSx('info.main')}>
-          <Typography variant="caption" color="info.main" fontWeight={700}>
+          <Typography variant="caption" sx={{ color: 'info.main', fontWeight: 700 }}>
             LEFT — label floats left when side=&#x27;left&#x27;
           </Typography>
         </Box>
         <Box sx={storyColumnIndicatorSx('success.main')}>
-          <Typography variant="caption" color="success.main" fontWeight={700}>
+          <Typography variant="caption" sx={{ color: 'success.main', fontWeight: 700 }}>
             RIGHT — label floats right when side=&#x27;right&#x27;
           </Typography>
         </Box>

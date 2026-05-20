@@ -56,7 +56,6 @@ const CHECK_DONE_DOT = (
     </svg>
   </Box>
 );
-
 // Hover state: outlined green check-circle, same 32 px footprint, no fill background.
 const CHECK_HOVER_DOT = (
   <SvgIcon sx={{ color: 'success.main', fontSize: COMPACT_PHASE_DOT_SIZE }} viewBox="0 0 24 24">
@@ -64,7 +63,6 @@ const CHECK_HOVER_DOT = (
     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8-1.41-1.42z" />
   </SvgIcon>
 );
-
 // Milestone done state: success circle (24 px) with white checkmark inside.
 const MS_CHECK_DONE_DOT = (
   <Box
@@ -167,26 +165,21 @@ export function PhaseAccordionRow({
       {phase.icon}
     </Box>
   );
-
   const leadingAction = checklist ? undefined : phaseDot;
   const checkIcon = checklist ? phaseDot : undefined;
   const checkDoneIcon = checklist ? CHECK_DONE_DOT : undefined;
   const checkHoverIcon = checklist ? CHECK_HOVER_DOT : undefined;
-
   const titleContent = (
     <Typography variant="subtitle2" sx={phaseTitleSx}>
       {phase.shortTitle ?? phase.title}
     </Typography>
   );
-
   const dateLabel = phase.date ? (
     <Typography variant="caption" sx={dateSx}>
       {phase.date}
     </Typography>
   ) : null;
-
   const isExpanded = expandedPhaseKey === phase.key;
-
   return (
     <>
       <Accordion
@@ -217,7 +210,6 @@ export function PhaseAccordionRow({
                 {phase.description}
               </Typography>
             )}
-
             {childTasks.length > 0 && (
               <Box component="ul" sx={milestonesListSx}>
                 {childTasks.map((task, idx) => {
@@ -251,7 +243,6 @@ export function PhaseAccordionRow({
                         },
                       }
                     : {};
-
                   return (
                     <Box
                       component="li"
@@ -277,7 +268,6 @@ export function PhaseAccordionRow({
                         )}
                         {!isLast && <Box aria-hidden="true" sx={milestoneConnectorLineSx} />}
                       </Box>
-
                       <Box sx={milestoneContentSx}>
                         <Typography variant="subtitle2" sx={milestoneTitleSx}>
                           {task.shortTitle ?? task.title}
@@ -288,7 +278,6 @@ export function PhaseAccordionRow({
                           </Typography>
                         )}
                       </Box>
-
                       {task.date && (
                         <Typography variant="caption" sx={milestoneDateSx}>
                           {task.date}
@@ -302,7 +291,6 @@ export function PhaseAccordionRow({
           </Box>
         )}
       </Accordion>
-
       <TaskDetailsModal
         task={modalTask?.task ?? null}
         open={modalTask !== null}

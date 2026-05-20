@@ -85,7 +85,6 @@ function ChecklistPhaseDemo() {
     </Box>
   );
 }
-
 /** Named helper for checklist milestone demo. */
 function ChecklistMilestoneDemo() {
   const [done, setDone] = useState(false);
@@ -120,9 +119,7 @@ function ChecklistMilestoneDemo() {
     </Box>
   );
 }
-
 // ----------------------------------------------------------------------
-
 /**
  * Default (read-only) phase dot — filled circle with icon, no interaction.
  */
@@ -136,7 +133,6 @@ export const Default: Story = {
     sx: { control: false },
   },
 };
-
 /**
  * Active phase dot — enlarged to 40 px with a pulsing ring halo.
  * The ring requires `overflow: visible` on the outer Box to be visible;
@@ -150,7 +146,6 @@ export const Active: Story = {
     </Box>
   ),
 };
-
 /**
  * Done phase dot — transparent circle with coloured border and animated checkmark.
  */
@@ -165,7 +160,6 @@ export const DonePhase: Story = {
     sx: { control: false },
   },
 };
-
 /**
  * Milestone size — smaller filled dot (30 px) placed on the spine between phases.
  */
@@ -180,7 +174,6 @@ export const MilestoneDefault: Story = {
     sx: { control: false },
   },
 };
-
 /**
  * Milestone done — filled circle with checkmark (milestone dots stay filled when done).
  */
@@ -196,7 +189,6 @@ export const MilestoneDone: Story = {
     sx: { control: false },
   },
 };
-
 /**
  * Checklist interaction for a phase dot — click to toggle done / undone.
  * Inspect the aria-checked attribute in the DOM panel.
@@ -204,14 +196,12 @@ export const MilestoneDone: Story = {
 export const ChecklistPhase: Story = {
   render: () => <ChecklistPhaseDemo />,
 };
-
 /**
  * Checklist interaction for a milestone dot — click to toggle done / undone.
  */
 export const ChecklistMilestone: Story = {
   render: () => <ChecklistMilestoneDemo />,
 };
-
 /**
  * All six MUI palette colours — phase size, default state.
  * Every colour must be represented to verify the palette-key abstraction.
@@ -230,7 +220,6 @@ export const AllColors: Story = {
     </Box>
   ),
 };
-
 /**
  * All six MUI palette colours — active state with pulsing ring.
  */

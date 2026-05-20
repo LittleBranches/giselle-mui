@@ -140,7 +140,6 @@ export function PhaseCard({
         onClick={popoverMode ? handleOpenPopover : undefined}
         innerRef={popoverMode ? badgeRef : undefined}
       />
-
       {/* PhaseWarningPopover — only rendered when onPhasesChange + allPhases are provided */}
       {popoverMode && onPhasesChange && allPhases && (
         <PhaseWarningPopover
@@ -152,7 +151,6 @@ export function PhaseCard({
           onPhasesChange={onPhasesChange}
         />
       )}
-
       <Paper
         role={hasDetails ? 'button' : undefined}
         tabIndex={hasDetails ? 0 : undefined}
@@ -210,7 +208,18 @@ export function PhaseCard({
           <Box sx={{ flex: 1 }}>
             <Typography
               variant={isScenario ? 'h6' : 'subtitle1'}
-              sx={{ mb: hasDetails ? 0.5 : 1, pr: !isHighlighted && !phase.hideDecoration ? 6 : 0 }}
+              sx={[
+                {
+                  pr: !isHighlighted && !phase.hideDecoration ? 6 : 0,
+                },
+                hasDetails
+                  ? {
+                      mb: 0.5,
+                    }
+                  : {
+                      mb: 1,
+                    },
+              ]}
             >
               {displayTitle}
             </Typography>
@@ -232,7 +241,6 @@ export function PhaseCard({
                 </Typography>
               </Box>
             )}
-
             {expanded && phase.description && (
               <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
                 {phase.description}
@@ -243,7 +251,6 @@ export function PhaseCard({
               resolvePhotoSources(phase)?.map((p, i) => (
                 <Box key={i} component="img" src={p.src} alt={p.alt} sx={photoImgSx(i === 0)} />
               ))}
-
             {/* Client logos — shown only in expanded state (level 3) */}
             {expanded && phase.clients && (
               <LabeledIconStrip label={phase.clientsLabel}>
@@ -256,14 +263,12 @@ export function PhaseCard({
                 </Box>
               </LabeledIconStrip>
             )}
-
             {/* Tech stack platforms — shown only in expanded state (level 3) */}
             {expanded && phase.platforms && phase.platforms.length > 0 && (
               <LabeledIconStrip label={phase.platformsLabel ?? 'Tech Stack'}>
                 <Box sx={platformStripSx}>{buildPlatformStripItems(phase.platforms)}</Box>
               </LabeledIconStrip>
             )}
-
             {/* Project logos — shown only in expanded state (level 3) */}
             {expanded && phase.projects && (
               <LabeledIconStrip label={phase.projectsLabel}>
@@ -274,7 +279,6 @@ export function PhaseCard({
                 </Box>
               </LabeledIconStrip>
             )}
-
             {/* Optional footer slot — shown only in expanded state (level 3) */}
             {expanded && phase.footer != null && (
               <Box sx={{ mt: 1 }} onClick={(e: MouseEvent) => e.stopPropagation()}>
@@ -283,7 +287,6 @@ export function PhaseCard({
             )}
           </Box>
         </Box>
-
         {hasDetails && (
           <CardDetailBullets
             id={detailsId}
@@ -294,7 +297,6 @@ export function PhaseCard({
           />
         )}
       </Paper>
-
       {/* Viewed eye badge — floats outside the card at the bottom on the outer edge. */}
       {/* Uses columnSide so it mirrors the corner alert badge: outer edge away from spine. */}
       {onMarkViewed && (
