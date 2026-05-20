@@ -35,9 +35,7 @@ export function DotInner({ done, icon, animationKey, iconSize }: DotInnerProps) 
           ? {
               animation: `${checkPop} 0.36s cubic-bezier(0.34, 1.56, 0.64, 1)`,
             }
-          : {
-              animation: null,
-            },
+          : false,
       ]}
     >
       {icon}
