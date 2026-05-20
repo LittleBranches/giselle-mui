@@ -36,6 +36,7 @@ jobs:
   compat-mui-v7:
     name: Compat check — MUI v7 peers
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
 
@@ -54,6 +55,9 @@ jobs:
         run: npm ci
 
       - name: Override to MUI v7 peers
+        # No --legacy-peer-deps needed: no devDependency in this library declares @mui/material
+        # as a peer dep (storybook, vitest, tsup, eslint do not). Both packages are installed
+        # together in one call so npm resolves the @mui/lab@^7 / @mui/material@^7 peer pair atomically.
         run: npm install --no-save @mui/material@^7.0.0 @mui/lab@^7.0.0
 
       - name: Run quality gate with MUI v7
