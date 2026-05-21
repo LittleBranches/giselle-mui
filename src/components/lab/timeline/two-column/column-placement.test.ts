@@ -32,6 +32,7 @@ import React, { act } from 'react';
 import ReactDOM from 'react-dom/client';
 import { it, vi, expect, describe, afterEach } from 'vitest';
 import type * as UtilsModule from './utils';
+import { GiselleThemeProvider } from '../../../../components/theming/theme-provider/giselle/giselle';
 
 (globalThis as unknown as Record<string, unknown>)['IS_REACT_ACT_ENVIRONMENT'] = true;
 
@@ -129,7 +130,13 @@ function renderAndMount(side: 'left' | 'right', msSide?: 'left' | 'right'): HTML
   document.body.appendChild(container);
   const root = ReactDOM.createRoot(container);
   act(() => {
-    root.render(React.createElement(TimelineTwoColumn, { phases: [makePhase(side, msSide)] }));
+    root.render(
+      React.createElement(
+        GiselleThemeProvider,
+        null,
+        React.createElement(TimelineTwoColumn, { phases: [makePhase(side, msSide)] })
+      )
+    );
   });
   cleanups.push(() => {
     act(() => root.unmount());

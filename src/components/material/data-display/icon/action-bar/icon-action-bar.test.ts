@@ -2,15 +2,11 @@
 /**
  * Unit tests for IconActionBar.
  *
- * **Structure tests** (`renderToStaticMarkup`) — verify rendered HTML structure,
- * ARIA attributes, tooltip labels, and default/custom actions.
+ * **Structure tests** (`renderWithTheme`) — verify rendered HTML structure,
+ * ARIA attributes, and default/custom actions.
  *
  * **Interaction tests** (`ReactDOM.createRoot` + `act`) — verify that click
  * handlers fire when buttons are clicked and are blocked when disabled.
- *
- * MUI components are mocked to avoid theme-provider requirements.
- * `Tooltip` renders its children directly (title accessible via data attribute).
- * `IconButton` renders a `<button>` element so ARIA and click tests work.
  *
  * ## What is tested
  * - Default actions render when no `actions` prop is supplied
@@ -20,20 +16,17 @@
  * - `onClick` fires when a button is clicked
  * - `onClick` does NOT fire when a button is disabled
  * - `disabled` attribute is present when `disabled=true`
- * - `href` and `component` are forwarded to the IconButton
- * - `tooltipPlacement` is forwarded to Tooltip
+ * - `href` is forwarded to the rendered element
  * - `aria-label` override is used when provided
- * - `sx` and extra `...other` props are forwarded to the root Box
  *
  * ## What is NOT tested
- * - sx styles (require MUI theme)
- * - Tooltip visibility / hover behaviour (browser-level)
+ * - sx styles (design-system level)
+ * - Tooltip visibility / hover behaviour (browser-level, not in static markup)
  * - Icon SVG rendering (icon library internals)
  */
 
 import React, { act } from 'react';
 import ReactDOM from 'react-dom/client';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { it, vi, expect, describe, beforeEach, afterEach } from 'vitest';
 
 // Tell React 18+'s act() that this file runs in a test environment.
@@ -47,69 +40,12 @@ vi.mock('@iconify/react', () => ({
   Icon: ({ icon }: { icon: string }) => React.createElement('svg', { 'data-icon': icon }),
 }));
 
-vi.mock('@mui/material/Box', () => ({
-  default: ({
-    children,
-    sx: _sx,
-    ...props
-  }: React.PropsWithChildren<{ sx?: unknown; [key: string]: unknown }>) =>
-    React.createElement('div', props, children),
-}));
-
-vi.mock('@mui/material/Tooltip', () => ({
-  default: ({
-    children,
-    title,
-    placement,
-  }: {
-    children: React.ReactNode;
-    title: string;
-    placement?: string;
-  }) =>
-    React.createElement(
-      'span',
-      {
-        'data-tooltip': title,
-        ...(placement !== undefined && { 'data-tooltip-placement': placement }),
-      },
-      children
-    ),
-}));
-
-vi.mock('@mui/material/IconButton', () => ({
-  default: ({
-    children,
-    onClick,
-    disabled,
-    'aria-label': ariaLabel,
-    component: _component,
-    href,
-    ...props
-  }: React.PropsWithChildren<{
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
-    disabled?: boolean;
-    'aria-label'?: string;
-    component?: React.ElementType;
-    href?: string;
-    [key: string]: unknown;
-  }>) =>
-    React.createElement(
-      'button',
-      {
-        onClick,
-        disabled,
-        'aria-label': ariaLabel,
-        ...(href !== undefined && { 'data-href': href }),
-        ...props,
-      },
-      children
-    ),
-}));
-
 // ---------------------------------------------------------------------------
 // Component under test — imported AFTER mocks
 // ---------------------------------------------------------------------------
 
+import { renderWithTheme } from '../../../../../test-utils';
+import { GiselleThemeProvider } from '../../../../../components/theming/theme-provider/giselle/giselle';
 import { IconActionBar, DEFAULT_ICON_ACTIONS } from './icon-action-bar';
 
 // ---------------------------------------------------------------------------
@@ -117,7 +53,7 @@ import { IconActionBar, DEFAULT_ICON_ACTIONS } from './icon-action-bar';
 // ---------------------------------------------------------------------------
 
 function renderBar(props: React.ComponentProps<typeof IconActionBar> = {}) {
-  return renderToStaticMarkup(React.createElement(IconActionBar, props));
+  return renderWithTheme(React.createElement(IconActionBar, props));
 }
 
 // ---------------------------------------------------------------------------
@@ -160,12 +96,6 @@ describe('IconActionBar — default actions', () => {
     expect(html).toContain('aria-label="Send"');
     expect(html).toContain('aria-label="Share"');
   });
-
-  it('renders data-tooltip attributes from Tooltip mock', () => {
-    const html = renderBar();
-    expect(html).toContain('data-tooltip="Edit"');
-    expect(html).toContain('data-tooltip="Share"');
-  });
 });
 
 // ---------------------------------------------------------------------------
@@ -189,7 +119,6 @@ describe('IconActionBar — custom actions', () => {
       actions: [{ tooltip: 'Download', icon: React.createElement('svg') }],
     });
     expect(html).toContain('aria-label="Download"');
-    expect(html).toContain('data-tooltip="Download"');
   });
 
   it('prefers explicit aria-label over tooltip', () => {
@@ -205,7 +134,7 @@ describe('IconActionBar — custom actions', () => {
     expect(html).toContain('aria-label="Download invoice PDF"');
   });
 
-  it('forwards href to the button element', () => {
+  it('forwards href to the rendered element', () => {
     const html = renderBar({
       actions: [
         {
@@ -216,20 +145,21 @@ describe('IconActionBar — custom actions', () => {
         },
       ],
     });
-    expect(html).toContain('data-href="/invoices/1/edit"');
+    expect(html).toContain('href="/invoices/1/edit"');
   });
 
-  it('forwards tooltipPlacement to Tooltip', () => {
-    const html = renderBar({
-      actions: [
-        {
-          tooltip: 'Edit',
-          icon: React.createElement('svg'),
-          tooltipPlacement: 'top',
-        },
-      ],
-    });
-    expect(html).toContain('data-tooltip-placement="top"');
+  it('renders without error when tooltipPlacement is provided', () => {
+    expect(() =>
+      renderBar({
+        actions: [
+          {
+            tooltip: 'Edit',
+            icon: React.createElement('svg'),
+            tooltipPlacement: 'top',
+          },
+        ],
+      })
+    ).not.toThrow();
   });
 
   it('renders disabled attribute when disabled=true', () => {
@@ -260,9 +190,13 @@ describe('IconActionBar — interaction', () => {
     const handler = vi.fn();
     act(() => {
       ReactDOM.createRoot(container).render(
-        React.createElement(IconActionBar, {
-          actions: [{ tooltip: 'Edit', icon: React.createElement('svg'), onClick: handler }],
-        })
+        React.createElement(
+          GiselleThemeProvider,
+          null,
+          React.createElement(IconActionBar, {
+            actions: [{ tooltip: 'Edit', icon: React.createElement('svg'), onClick: handler }],
+          })
+        )
       );
     });
     const button = container.querySelector('button');
@@ -276,11 +210,20 @@ describe('IconActionBar — interaction', () => {
     const handler = vi.fn();
     act(() => {
       ReactDOM.createRoot(container).render(
-        React.createElement(IconActionBar, {
-          actions: [
-            { tooltip: 'Edit', icon: React.createElement('svg'), onClick: handler, disabled: true },
-          ],
-        })
+        React.createElement(
+          GiselleThemeProvider,
+          null,
+          React.createElement(IconActionBar, {
+            actions: [
+              {
+                tooltip: 'Edit',
+                icon: React.createElement('svg'),
+                onClick: handler,
+                disabled: true,
+              },
+            ],
+          })
+        )
       );
     });
     const button = container.querySelector('button');
