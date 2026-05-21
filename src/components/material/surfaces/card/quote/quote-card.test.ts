@@ -87,9 +87,9 @@ describe('QuoteCard — source', () => {
 describe('QuoteCard — attribution row', () => {
   it('renders author in the output when author is provided', () => {
     const html = renderWithTheme(
-      React.createElement(QuoteCard, { quote: 'Great work.', author: 'Alex' })
+      React.createElement(QuoteCard, { quote: 'Great work.', author: 'Jane Smith' })
     );
-    expect(html).toContain('Alex');
+    expect(html).toContain('Jane Smith');
   });
 
   it('renders source in the output when source is provided', () => {
