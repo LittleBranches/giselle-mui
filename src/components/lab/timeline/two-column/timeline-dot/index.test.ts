@@ -3,12 +3,9 @@
 /**
  * Unit tests for TimelineDot.
  *
- * ## Strategy
- *
- * TimelineDot uses `theme.vars.palette.*` inside its sx callbacks, so both Box
- * instances are mocked to render plain divs. renderToStaticMarkup is used for
- * structure and attribute assertions; ReactDOM.createRoot + act is used for
- * interaction tests.
+ * The Box mock strips SVG-specific attributes so assertions about data-active
+ * and checkmark polylines work cleanly against plain div output. This is an
+ * intentional structural simplification — not a theme workaround.
  *
  * ## Behaviour under test
  *
@@ -23,12 +20,11 @@
 
 import React from 'react';
 import { it, vi, expect, describe } from 'vitest';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { act } from 'react';
 import ReactDOM from 'react-dom/client';
 
 // ---------------------------------------------------------------------------
-// Minimal MUI mocks — render plain HTML so renderToStaticMarkup works
+// Box mock — strips SVG-specific attributes so data-* assertions work on divs
 // ---------------------------------------------------------------------------
 
 vi.mock('@mui/material/Box', () => ({
@@ -58,6 +54,8 @@ vi.mock('@mui/material/Box', () => ({
 }));
 
 // Import AFTER mocks are registered.
+import { renderWithTheme } from '../../../../../test-utils';
+import { GiselleThemeProvider } from '../../../../../components/theming/theme-provider/giselle/giselle';
 import { TimelineDot, resolveEffectiveColor } from './timeline-dot';
 
 // ---------------------------------------------------------------------------
@@ -65,7 +63,7 @@ import { TimelineDot, resolveEffectiveColor } from './timeline-dot';
 // ---------------------------------------------------------------------------
 
 function render(props: Parameters<typeof TimelineDot>[0]): string {
-  return renderToStaticMarkup(React.createElement(TimelineDot, props));
+  return renderWithTheme(React.createElement(TimelineDot, props));
 }
 
 // ---------------------------------------------------------------------------
@@ -153,7 +151,13 @@ describe('TimelineDot — interaction', () => {
     const root = ReactDOM.createRoot(container);
 
     act(() => {
-      root.render(React.createElement(TimelineDot, { onClick }));
+      root.render(
+        React.createElement(
+          GiselleThemeProvider,
+          null,
+          React.createElement(TimelineDot, { onClick })
+        )
+      );
     });
 
     const div = container.querySelector('div');
@@ -176,7 +180,13 @@ describe('TimelineDot — interaction', () => {
     const root = ReactDOM.createRoot(container);
 
     act(() => {
-      root.render(React.createElement(TimelineDot, { onKeyDown, tabIndex: 0 }));
+      root.render(
+        React.createElement(
+          GiselleThemeProvider,
+          null,
+          React.createElement(TimelineDot, { onKeyDown, tabIndex: 0 })
+        )
+      );
     });
 
     const div = container.querySelector('div');
