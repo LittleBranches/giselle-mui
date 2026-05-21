@@ -42,8 +42,20 @@ describe('Quality Gate §5.5 — Two-Phase Scaffold Enforcement', () => {
     expect(fs.existsSync(LEGACY_BASELINE_PATH)).toBe(true);
   });
 
+  it('fails if baseline contains files that no longer exist', () => {
+    const legacyBaseline = new Set(readLegacyBaseline());
+    const currentTestFiles = new Set(testFiles.map(toRepoRelative));
+
+    const staleBaselineFiles = [...legacyBaseline].filter(
+      (filePath) => !currentTestFiles.has(filePath)
+    );
+
+    expect(staleBaselineFiles).toEqual([]);
+  });
+
   it('blocks new files that skip scaffold todo tests', () => {
     const legacyBaseline = new Set(readLegacyBaseline());
+    const currentTestFiles = new Set(testFiles.map(toRepoRelative));
 
     for (const testFilePath of testFiles) {
       const testContent = fs.readFileSync(testFilePath, 'utf-8');
@@ -57,8 +69,12 @@ describe('Quality Gate §5.5 — Two-Phase Scaffold Enforcement', () => {
     const unexpectedMissingTodoFiles = filesMissingTodo.filter(
       (filePath) => !legacyBaseline.has(filePath)
     );
+    const staleBaselineFiles = [...legacyBaseline].filter(
+      (filePath) => !currentTestFiles.has(filePath)
+    );
 
     expect(unexpectedMissingTodoFiles).toEqual([]);
+    expect(staleBaselineFiles).toEqual([]);
 
     // Keep the report for migration tracking and periodic audits.
     const report = {
@@ -67,11 +83,12 @@ describe('Quality Gate §5.5 — Two-Phase Scaffold Enforcement', () => {
       filesMissingTodo: filesMissingTodo.length,
       legacyBaselineCount: legacyBaseline.size,
       unexpectedMissingTodoFiles,
+      staleBaselineFiles,
       failingFiles: filesMissingTodo,
       message:
-        unexpectedMissingTodoFiles.length === 0
+        unexpectedMissingTodoFiles.length === 0 && staleBaselineFiles.length === 0
           ? `${filesMissingTodo.length} legacy tests currently missing it.todo (baseline locked).`
-          : `Detected ${unexpectedMissingTodoFiles.length} new tests missing it.todo.`,
+          : `Detected baseline drift: ${unexpectedMissingTodoFiles.length} new files missing it.todo, ${staleBaselineFiles.length} stale baseline entries.`,
     };
 
     const reportPath = path.join(process.cwd(), 'src/quality-gate/audit-report.json');
