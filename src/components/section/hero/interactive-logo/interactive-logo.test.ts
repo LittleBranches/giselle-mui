@@ -3,7 +3,8 @@ import type { FadeTransition } from './types';
 
 import React from 'react';
 import { it, vi, expect, describe } from 'vitest';
-import { renderToStaticMarkup } from 'react-dom/server';
+
+import { renderWithTheme } from '../../../../test-utils';
 
 // ----------------------------------------------------------------------
 // Mocks — hoisted before any imports below.
@@ -11,19 +12,6 @@ import { renderToStaticMarkup } from 'react-dom/server';
 vi.mock('framer-motion', () => ({
   motion: { div: 'div', img: 'img' },
   m: { div: 'div', img: 'img' },
-}));
-
-vi.mock('@mui/material/Box', () => ({
-  default: (rawProps: unknown) => {
-    const props = rawProps as {
-      component?: string;
-      alt?: string;
-      src?: string;
-      children?: React.ReactNode;
-    };
-    const tag: string = props.component ?? 'div';
-    return React.createElement(tag, { alt: props.alt, src: props.src }, props.children ?? null);
-  },
 }));
 
 import { PortraitLayer } from './portrait-layer';
@@ -183,7 +171,7 @@ describe('ArtisticLogoLayer', () => {
   });
 
   it('uses logoAlt as the alt text when provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ArtisticLogoLayer, {
         artisticLogoSrc: '/artistic.png',
         showArtisticLogo: true,
@@ -195,7 +183,7 @@ describe('ArtisticLogoLayer', () => {
   });
 
   it('falls back to Logo as the alt text when logoAlt is not provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ArtisticLogoLayer, {
         artisticLogoSrc: '/artistic.png',
         showArtisticLogo: true,
@@ -217,7 +205,7 @@ describe('PortraitLayer', () => {
   });
 
   it('includes the portrait alt text in rendered HTML when a src is provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(PortraitLayer, {
         portraitSrc: '/portrait.jpg',
         portraitAlt: 'Person facing left',
@@ -234,7 +222,7 @@ describe('PortraitLayer', () => {
 
 describe('OriginalLogoLayer', () => {
   it('renders slotted children when no activeFrame is provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(
         OriginalLogoLayer,
         { hoverPhase: 'idle', logoFadeTransition: FADE },
@@ -245,7 +233,7 @@ describe('OriginalLogoLayer', () => {
   });
 
   it('renders the frame image when activeFrame is provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(OriginalLogoLayer, {
         hoverPhase: 'artistic',
         logoFadeTransition: FADE,
@@ -258,7 +246,7 @@ describe('OriginalLogoLayer', () => {
   });
 
   it('uses Logo as alt fallback when no logoAlt provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(OriginalLogoLayer, {
         hoverPhase: 'artistic',
         logoFadeTransition: FADE,
