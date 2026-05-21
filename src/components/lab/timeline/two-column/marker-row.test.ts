@@ -2,12 +2,11 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import * as React from 'react';
-import { renderToStaticMarkup } from 'react-dom/server';
 
 import type { TimelinePhase } from './types';
 import type { MarkerRowProps } from './types';
 
-// Mock components that require a MUI ThemeProvider (use theme.vars in sx callbacks).
+// Child component mocks for unit isolation — these components have their own tests.
 vi.mock('./timeline-dot', () => ({
   TimelineDot: () => React.createElement('span', { 'data-testid': 'timeline-dot' }),
 }));
@@ -16,12 +15,7 @@ vi.mock('./spine-connector', () => ({
   SpineConnector: () => React.createElement('span', { 'data-testid': 'spine-connector' }),
 }));
 
-// Tooltip is not needed for label-rendering logic and avoids a ThemeProvider requirement.
-vi.mock('@mui/material/Tooltip', () => ({
-  default: ({ children }: { children: React.ReactNode }) =>
-    React.createElement(React.Fragment, null, children),
-}));
-
+import { renderWithTheme } from '../../../../test-utils';
 import { MarkerRow } from './marker-row';
 
 // ---------------------------------------------------------------------------
@@ -54,25 +48,25 @@ const baseProps: MarkerRowProps = {
 
 describe('MarkerRow — label text', () => {
   it('renders shortTitle when available', () => {
-    const html = renderToStaticMarkup(React.createElement(MarkerRow, baseProps));
+    const html = renderWithTheme(React.createElement(MarkerRow, baseProps));
     expect(html).toContain('Platform');
     expect(html).not.toContain('Platform Released');
   });
 
   it('falls back to title when shortTitle is not set', () => {
     const phase: TimelinePhase = { ...basePhase, shortTitle: undefined };
-    const html = renderToStaticMarkup(React.createElement(MarkerRow, { ...baseProps, phase }));
+    const html = renderWithTheme(React.createElement(MarkerRow, { ...baseProps, phase }));
     expect(html).toContain('Platform Released');
   });
 
   it('renders date inline when phase.date is set', () => {
-    const html = renderToStaticMarkup(React.createElement(MarkerRow, baseProps));
+    const html = renderWithTheme(React.createElement(MarkerRow, baseProps));
     expect(html).toContain('Jan 2024');
   });
 
   it('omits date when phase.date is empty', () => {
     const phase: TimelinePhase = { ...basePhase, date: '' };
-    const html = renderToStaticMarkup(React.createElement(MarkerRow, { ...baseProps, phase }));
+    const html = renderWithTheme(React.createElement(MarkerRow, { ...baseProps, phase }));
     expect(html).not.toContain('Jan 2024');
   });
 });
@@ -83,14 +77,14 @@ describe('MarkerRow — label text', () => {
 
 describe('MarkerRow — label slot visibility', () => {
   it('renders label once when side="right" on desktop (right slot only)', () => {
-    const html = renderToStaticMarkup(React.createElement(MarkerRow, baseProps));
+    const html = renderWithTheme(React.createElement(MarkerRow, baseProps));
     const count = (html.match(/Platform/g) ?? []).length;
     expect(count).toBe(1);
   });
 
   it('renders label once when side="left" on desktop (left slot only)', () => {
     const phase: TimelinePhase = { ...basePhase, side: 'left' };
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(MarkerRow, { ...baseProps, phase, isMobile: false })
     );
     const count = (html.match(/Platform/g) ?? []).length;
@@ -103,7 +97,7 @@ describe('MarkerRow — label slot visibility', () => {
     // visible at xs — the left slot is hidden by CSS (markerLabelSlotSx('left') display.xs='none')
     // and the right slot provides the visible text on mobile.
     const phase: TimelinePhase = { ...basePhase, side: 'left' };
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(MarkerRow, { ...baseProps, phase, isMobile: true })
     );
     const count = (html.match(/Platform/g) ?? []).length;
@@ -111,9 +105,7 @@ describe('MarkerRow — label slot visibility', () => {
   });
 
   it('[regression: mobile] side="right" still renders in right slot when isMobile=true', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(MarkerRow, { ...baseProps, isMobile: true })
-    );
+    const html = renderWithTheme(React.createElement(MarkerRow, { ...baseProps, isMobile: true }));
     expect(html).toContain('Platform');
   });
 });
@@ -124,12 +116,12 @@ describe('MarkerRow — label slot visibility', () => {
 
 describe('MarkerRow — spine connector', () => {
   it('renders spine connector when isLastPhase=false', () => {
-    const html = renderToStaticMarkup(React.createElement(MarkerRow, baseProps));
+    const html = renderWithTheme(React.createElement(MarkerRow, baseProps));
     expect(html).toContain('data-testid="spine-connector"');
   });
 
   it('suppresses spine connector when isLastPhase=true', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(MarkerRow, { ...baseProps, isLastPhase: true })
     );
     expect(html).not.toContain('data-testid="spine-connector"');
