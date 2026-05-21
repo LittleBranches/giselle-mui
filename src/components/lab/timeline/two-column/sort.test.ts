@@ -84,22 +84,6 @@ vi.mock('@mui/material/Box', async () => {
   };
 });
 
-vi.mock('@mui/material/Tooltip', async () => {
-  const m = await import('react');
-  return {
-    default: ({ children }: { children?: React.ReactNode }) =>
-      m.createElement(m.Fragment, null, children),
-  };
-});
-
-vi.mock('@mui/material/Typography', async () => {
-  const m = await import('react');
-  return {
-    default: ({ children }: { children?: React.ReactNode }) =>
-      m.createElement('span', null, children),
-  };
-});
-
 vi.mock('./phase-card', () => ({ PhaseCard: () => null }));
 vi.mock('./timeline-dot', () => ({ TimelineDot: () => null }));
 vi.mock('./spine-connector', () => ({ SpineConnector: () => null }));
@@ -119,6 +103,7 @@ import type { ReactElement } from 'react';
 import type { TimelinePhase } from './types';
 
 import { TimelineTwoColumn } from './two-column';
+import { GiselleThemeProvider } from '../../../../components/theming/theme-provider/giselle/giselle';
 
 // ── Helpers ───────────────────────────────────────────────────────────────
 
@@ -167,10 +152,14 @@ function renderTimeline(sortOrder: 'asc' | 'desc'): HTMLElement {
   const root = ReactDOM.createRoot(container);
   act(() => {
     root.render(
-      React.createElement(TimelineTwoColumn, {
-        phases: [makePhaseWithMilestones()],
-        sortOrder,
-      })
+      React.createElement(
+        GiselleThemeProvider,
+        null,
+        React.createElement(TimelineTwoColumn, {
+          phases: [makePhaseWithMilestones()],
+          sortOrder,
+        })
+      )
     );
   });
   cleanups.push(() => {
@@ -223,10 +212,14 @@ describe('sortOrder integration — milestone render order in DOM', () => {
     const root = ReactDOM.createRoot(container);
     act(() => {
       root.render(
-        React.createElement(TimelineTwoColumn, {
-          phases: [makePhaseWithMilestones()],
-          // sortOrder intentionally omitted — testing the default
-        })
+        React.createElement(
+          GiselleThemeProvider,
+          null,
+          React.createElement(TimelineTwoColumn, {
+            phases: [makePhaseWithMilestones()],
+            // sortOrder intentionally omitted — testing the default
+          })
+        )
       );
     });
     cleanups.push(() => {
