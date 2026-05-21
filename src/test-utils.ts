@@ -8,5 +8,7 @@ import { GiselleThemeProvider } from './components/theming/theme-provider/gisell
  * Use for structural and content assertions that do not require interaction.
  */
 export function renderWithTheme(element: React.ReactElement): string {
-  return renderToStaticMarkup(React.createElement(GiselleThemeProvider, null, element));
+  return renderToStaticMarkup(
+    React.createElement(GiselleThemeProvider, { defaultMode: 'light', children: element })
+  );
 }
