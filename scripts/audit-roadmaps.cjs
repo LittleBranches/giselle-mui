@@ -1,17 +1,36 @@
 // @ts-check
+// Prints audit results to stdout only. Does not write any files.
+// Run with: node scripts/audit-roadmaps.cjs
 const fs = require('fs');
-const { execSync } = require('child_process');
+const path = require('path');
 
-const base = 'C:/work/projects/ar/giselle-mui/src/components';
-const files = execSync(`find "${base}" -name "roadmap.md"`).toString().trim().split('\n');
+const base = path.resolve(process.cwd(), 'src/components');
 
-const VALID_STATUSES = ['planned', 'in-progress', 'stable', 'deprecated'];
+/** @param {string} dir @returns {string[]} */
+function findRoadmaps(dir) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  /** @type {string[]} */
+  let found = [];
+  for (const entry of entries) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      found = found.concat(findRoadmaps(full));
+    } else if (entry.name === 'roadmap.md') {
+      found.push(full);
+    }
+  }
+  return found;
+}
+
+const files = findRoadmaps(base);
+
+const VALID_STATUSES = ['alpha', 'beta', 'stable', 'lts'];
 const REQUIRED_HEADERS = ['## Status', '## Open improvements', '## Completed'];
 
 const issues = [];
 
 for (const f of files) {
-  const rel = f.replace(base + '/', '');
+  const rel = path.relative(base, f).split(path.sep).join('/');
   const content = fs.readFileSync(f, 'utf8');
   const lines = content.split('\n');
 

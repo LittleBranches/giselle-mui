@@ -1,11 +1,7 @@
 {
-  "timestamp": "2026-05-23T03:58:35.243Z",
-  "totalTestFiles": 138,
-  "filesMissingTodo": 138,
-  "legacyBaselineCount": 138,
-  "unexpectedMissingTodoFiles": [],
-  "staleBaselineFiles": [],
-  "failingFiles": [
+  "generatedAt": "2026-05-21T15:43:24.845Z",
+  "description": "Exempt files: pre-gate legacy files (existed before §5.5 was wired) or Phase 2 graduated components (it.todo replaced with real tests). To graduate a component: add it here with a comment.",
+  "exemptFiles": [
     "src/components/chart/area-line-chart-card/area-line-chart-card.test.ts",
     "src/components/chart/budget-vs-actual-card/budget-vs-actual-card.test.ts",
     "src/components/chart/chart-card-base/chart-card-base.test.ts",
@@ -97,9 +93,9 @@
     "src/components/material/surfaces/card/roi-comparison/roi-comparison-card.test.ts",
     "src/components/material/surfaces/card/selectable/selectable-card.styles.test.ts",
     "src/components/material/surfaces/card/selectable/selectable-card.test.ts",
+    "src/components/material/surfaces/card/stat-row/stat-card-row.test.ts",
     "src/components/material/surfaces/card/stat/stat-card.styles.test.ts",
     "src/components/material/surfaces/card/stat/stat-card.test.ts",
-    "src/components/material/surfaces/card/stat-row/stat-card-row.test.ts",
     "src/components/material/surfaces/details-drawer/details-drawer.test.ts",
     "src/components/material/surfaces/scenario-comparison/scenario-comparison.test.ts",
     "src/components/motion/animated-tab-panel/animated-tab-panel.test.ts",
@@ -144,6 +140,5 @@
     "src/components/theming/settings-provider/settings-provider.test.ts",
     "src/components/theming/settings-provider/theme-and-settings-provider.test.ts",
     "src/components/theming/theme-provider/giselle/giselle.test.ts"
-  ],
-  "message": "138 legacy tests currently missing it.todo (baseline locked)."
+  ]
 }

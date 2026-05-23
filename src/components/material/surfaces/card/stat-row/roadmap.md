@@ -4,7 +4,7 @@
 
 ## Status
 
-`in-progress`
+`alpha`
 
 Shipped. Responsive `Grid2` row of `StatCard` items. Cleanup audit pending.
 

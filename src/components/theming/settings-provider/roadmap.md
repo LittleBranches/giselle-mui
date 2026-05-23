@@ -4,7 +4,7 @@
 
 ## Status
 
-`in-progress`
+`alpha`
 
 Shipped. Generic settings context with localStorage, cookie, and custom storage adapters. Cleanup audit pending. One planned feature (`detectGiselleSettings`) not yet implemented.
 

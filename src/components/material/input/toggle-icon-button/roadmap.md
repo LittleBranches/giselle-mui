@@ -4,7 +4,7 @@
 
 ## Status
 
-`in-progress`
+`alpha`
 
 Shipped. Toggle icon button with `checked`/`unchecked` icon slots and ARIA `aria-pressed` state. Cleanup audit pending.
 

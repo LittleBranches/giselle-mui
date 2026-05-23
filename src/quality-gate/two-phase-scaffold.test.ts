@@ -3,9 +3,13 @@ import fs from 'fs';
 import path from 'path';
 
 const SRC_DIR = path.resolve(process.cwd(), 'src/components');
-const LEGACY_BASELINE_PATH = path.resolve(
+// Exemption list covers two cases:
+// 1. Legacy files: existed before this gate was wired in (pre-gate baseline).
+// 2. Graduated files: components that completed Phase 2 (real tests written).
+// To add a graduated file: append it here with a "reason" comment.
+const EXEMPT_BASELINE_PATH = path.resolve(
   process.cwd(),
-  'src/quality-gate/two-phase-scaffold-legacy-missing-todo.json'
+  'src/quality-gate/two-phase-scaffold-exempt.json'
 );
 
 const findTestFiles = (dir: string): string[] => {
@@ -32,21 +36,21 @@ describe('Quality Gate §5.5 — Two-Phase Scaffold Enforcement', () => {
     return repoRelative.split(path.sep).join('/');
   };
 
-  const readLegacyBaseline = (): string[] => {
-    const baselineRaw = fs.readFileSync(LEGACY_BASELINE_PATH, 'utf-8');
-    const parsed = JSON.parse(baselineRaw) as { legacyMissingTodoFiles: string[] };
-    return parsed.legacyMissingTodoFiles;
+  const readExemptBaseline = (): string[] => {
+    const baselineRaw = fs.readFileSync(EXEMPT_BASELINE_PATH, 'utf-8');
+    const parsed = JSON.parse(baselineRaw) as { exemptFiles: string[] };
+    return parsed.exemptFiles;
   };
 
   it('fails fast if baseline file is missing', () => {
-    expect(fs.existsSync(LEGACY_BASELINE_PATH)).toBe(true);
+    expect(fs.existsSync(EXEMPT_BASELINE_PATH)).toBe(true);
   });
 
   it('fails if baseline contains files that no longer exist', () => {
-    const legacyBaseline = new Set(readLegacyBaseline());
+    const exemptBaseline = new Set(readExemptBaseline());
     const currentTestFiles = new Set(testFiles.map(toRepoRelative));
 
-    const staleBaselineFiles = [...legacyBaseline].filter(
+    const staleBaselineFiles = [...exemptBaseline].filter(
       (filePath) => !currentTestFiles.has(filePath)
     );
 
@@ -54,7 +58,7 @@ describe('Quality Gate §5.5 — Two-Phase Scaffold Enforcement', () => {
   });
 
   it('blocks new files that skip scaffold todo tests', () => {
-    const legacyBaseline = new Set(readLegacyBaseline());
+    const exemptBaseline = new Set(readExemptBaseline());
     const currentTestFiles = new Set(testFiles.map(toRepoRelative));
 
     for (const testFilePath of testFiles) {
@@ -67,34 +71,17 @@ describe('Quality Gate §5.5 — Two-Phase Scaffold Enforcement', () => {
     }
 
     const unexpectedMissingTodoFiles = filesMissingTodo.filter(
-      (filePath) => !legacyBaseline.has(filePath)
+      (filePath) => !exemptBaseline.has(filePath)
     );
-    const staleBaselineFiles = [...legacyBaseline].filter(
+    const staleBaselineFiles = [...exemptBaseline].filter(
       (filePath) => !currentTestFiles.has(filePath)
     );
 
     expect(unexpectedMissingTodoFiles).toEqual([]);
     expect(staleBaselineFiles).toEqual([]);
 
-    // Keep the report for migration tracking and periodic audits.
-    const report = {
-      timestamp: new Date().toISOString(),
-      totalTestFiles: testFiles.length,
-      filesMissingTodo: filesMissingTodo.length,
-      legacyBaselineCount: legacyBaseline.size,
-      unexpectedMissingTodoFiles,
-      staleBaselineFiles,
-      failingFiles: filesMissingTodo,
-      message:
-        unexpectedMissingTodoFiles.length === 0 && staleBaselineFiles.length === 0
-          ? `${filesMissingTodo.length} legacy tests currently missing it.todo (baseline locked).`
-          : `Detected baseline drift: ${unexpectedMissingTodoFiles.length} new files missing it.todo, ${staleBaselineFiles.length} stale baseline entries.`,
-    };
-
-    const reportPath = path.join(process.cwd(), 'src/quality-gate/audit-report.json');
-    fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-
-    console.warn(`\nTwo-phase scaffold report updated. Missing todo: ${filesMissingTodo.length}.`);
-    console.warn(`Report written to ${reportPath}`);
+    console.warn(
+      `\nTwo-phase scaffold gate: ${filesMissingTodo.length} exempt files, ${testFiles.length} total test files scanned.`
+    );
   });
 });

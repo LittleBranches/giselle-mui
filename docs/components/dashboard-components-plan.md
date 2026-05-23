@@ -6,11 +6,8 @@ sidebar_label: 'Dashboard Components Plan'
 # Dashboard Components — Build Plan for giselle-mui
 
 > **Context:** This plan defines every reusable component needed to render a full data
-> dashboard in any project built on `giselle-mui`. The immediate consumers are:
->
-> - **`first-branch`** — Žiga's open-source task tracker (deadline: ~20 Jun 2026). Needs
->   stat cards, data table, activity feed, progress bars, profile card, and chart widgets.
-> - **`alexrebula`** — trip-costs dashboard (cost breakdowns, payment timelines, budget widgets).
+> dashboard in any project built on `giselle-mui`. Typical use cases include task trackers,
+> analytics dashboards, financial tools, and project management UIs.
 >
 > Every component must be general-purpose — nothing app-specific belongs in giselle-mui.
 > Every component is built independently from scratch — no proprietary utilities.
@@ -348,7 +345,7 @@ type DonutChartCardProps = {
 };
 ```
 
-**Immediate first-branch use:** Viewer dashboard — task status breakdown (Open / In Progress / In Review / Done).
+**Example use:** Task status breakdown across open / in-progress / in-review / done states.
 
 **Output subpath:** `/charts`. **Blockers:** None (subpath ✅, GiselleThemeProvider ✅).
 
@@ -503,7 +500,7 @@ type DataTableProps<K extends string> = {
 };
 ```
 
-**Immediate first-branch use:** Admin task table — all tasks with status, repo, rate, actions.
+**Example use:** Admin task table — rows with status, category, rate, and row actions.
 
 **Output subpath:** Main bundle. **Blockers:** None.
 
@@ -529,7 +526,7 @@ type ActivityFeedListProps = {
 };
 ```
 
-**Immediate first-branch use:** Viewer dashboard — recent task completions and payment events.
+**Example use:** Recent task completions and payment events in a viewer dashboard.
 
 **Output subpath:** Main bundle. **Blockers:** None.
 
@@ -548,7 +545,7 @@ type ProgressStatsListProps = {
 };
 ```
 
-**Immediate first-branch use:** Viewer dashboard — Barefoot bucket split (Give / Save / Blow).
+**Example use:** Progress breakdown across multiple named categories (e.g. three-bucket allocation split).
 
 **Output subpath:** Main bundle. **Blockers:** None.
 
@@ -610,7 +607,7 @@ type AvatarRowProps = {
 Compact status indicator chip/label. Accepts a `status` string and maps it to a palette colour.
 Useful anywhere a task or item status needs to be shown inline.
 
-**Immediate first-branch use:** Task status column in admin table, viewer task list.
+**Example use:** Status column in an admin table or a viewer task list.
 
 **Output subpath:** Main bundle. **Blockers:** None.
 
@@ -688,7 +685,7 @@ type AppTopBarProps = {
 };
 ```
 
-**Immediate first-branch use:** Admin and viewer layout top bars.
+**Example use:** Top bars in admin and viewer layouts.
 
 **Output subpath:** Main bundle. **Blockers:** None.
 
@@ -757,7 +754,7 @@ type AppShellProps = {
 };
 ```
 
-**Immediate first-branch use:** Admin and viewer layout shells.
+**Example use:** Admin and viewer layout shells.
 
 **Output subpath:** Main bundle. **Blockers:** None.
 
@@ -800,7 +797,7 @@ type PageHeaderProps = {
 };
 ```
 
-**Immediate first-branch use:** Admin task management page, viewer dashboard header.
+**Example use:** Page headers on admin and viewer dashboard pages.
 
 **Output subpath:** Main bundle. **Blockers:** None.
 
@@ -863,9 +860,9 @@ type ScenarioComparisonWidgetProps = {
 
 ---
 
-## first-branch shopping list
+## Task tracker consumer checklist
 
-Components `first-branch` needs before ~20 Jun 2026 (Žiga's arrival):
+Components required for a minimal task-tracker dashboard:
 
 | Widget                                         | Component                      | Status           | Priority   |
 | ---------------------------------------------- | ------------------------------ | ---------------- | ---------- |
@@ -879,7 +876,7 @@ Components `first-branch` needs before ~20 Jun 2026 (Žiga's arrival):
 | Page header (admin/viewer)                     | `PageHeader`                   | ⚙️ scaffolded    | **HIGH**   |
 | Admin layout shell                             | `AppShell` + `AppTopBar`       | ⚙️ scaffolded    | **HIGH**   |
 
-**Minimum viable first-branch (MUI-only, no `/charts` dep):**
+**Minimum viable task tracker (MUI-only, no `/charts` dep):**
 `ProfileSummaryCard` + `DataTable` + `StatusLabel` + `ProgressStatsList` + `ActivityFeedList` + `PageHeader` + `AppShell` + `AppTopBar`
 
 ---
@@ -894,9 +891,9 @@ Components `first-branch` needs before ~20 Jun 2026 (Žiga's arrival):
 | `GiselleThemeProvider` + Settings shipped | ✅     |
 | Phase 1 scaffolding for all components    | ✅     |
 
-### Tier 2 — first-branch critical path (build next)
+### Tier 2 — task tracker critical path (build next)
 
-MUI-only, no dep blockers, needed by ~20 Jun 2026:
+MUI-only, no dep blockers. Unblocks a minimal task-tracker dashboard:
 
 1. `StatusLabel` — simplest, unblocks task lists everywhere
 2. `PageHeader` — layout primitive needed before shell
@@ -907,7 +904,7 @@ MUI-only, no dep blockers, needed by ~20 Jun 2026:
 7. `ProgressStatsList` — Barefoot bucket split
 8. `ActivityFeedList` — recent completions feed
 
-### Tier 3 — second wave (after first-branch Tier 2)
+### Tier 3 — second wave (after Tier 2)
 
 Remaining MUI-only cards and widgets:
 
@@ -923,7 +920,7 @@ Remaining MUI-only cards and widgets:
 
 1. `ChartCardBase` — shared shell for all chart cards
 2. `SparklineBar` — embedded in StatCard
-3. `DonutChartCard` — first-branch status breakdown
+3. `DonutChartCard` — task status breakdown
 4. `AreaLineChartCard` — earnings over time
 5. `BudgetVsActualChartCard` — planned vs actual spend
 6. `ProjectionCard` — cost vs return break-even
@@ -957,5 +954,4 @@ Remaining MUI-only cards and widgets:
 
 - [`roadmap.mdx`](../roadmap.mdx) — Phase H: Dashboard Components
 - [`cleanup-workflow.md`](./cleanup-workflow.md) — Definition of Done for every component
-- `alexrebula/docs/roadmap.md` — Phase 1.6: Dashboard Components
-- `first-branch/.github/copilot-instructions.md` — first-branch consumer requirements
+- [`roadmap.mdx`](../roadmap.mdx) — Phase H: Dashboard Components (duplicate link removed)
