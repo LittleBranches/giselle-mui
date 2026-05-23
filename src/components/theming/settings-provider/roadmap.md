@@ -4,16 +4,16 @@
 
 ## Status
 
-`alpha`
+`in-progress`
 
 Shipped. Generic settings context with localStorage, cookie, and custom storage adapters. Cleanup audit pending. One planned feature (`detectGiselleSettings`) not yet implemented.
 
 ## Open improvements
 
-| Task                                                                                           | Priority | Status |
-| ---------------------------------------------------------------------------------------------- | -------- | ------ |
-| Implement `detectGiselleSettings()` — SSR-safe cookie read helper for Next.js App Router       | High     | ⬜     |
-| Run full cleanup audit (DoD 21, Best practices 13)                                             | High     | ⬜     |
+| Task                                                                                     | Priority | Status |
+| ---------------------------------------------------------------------------------------- | -------- | ------ |
+| Implement `detectGiselleSettings()` — SSR-safe cookie read helper for Next.js App Router | High     | ⬜     |
+| Run full cleanup audit (DoD 21, Best practices 13)                                       | High     | ⬜     |
 
 ## Known gaps
 

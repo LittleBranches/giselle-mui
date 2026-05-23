@@ -94,7 +94,7 @@ describe('Quality Gate §5.5 — Two-Phase Scaffold Enforcement', () => {
     const reportPath = path.join(process.cwd(), 'src/quality-gate/audit-report.json');
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 
-    console.log(`\nTwo-phase scaffold report updated. Missing todo: ${filesMissingTodo.length}.`);
-    console.log(`Report written to ${reportPath}`);
+    console.warn(`\nTwo-phase scaffold report updated. Missing todo: ${filesMissingTodo.length}.`);
+    console.warn(`Report written to ${reportPath}`);
   });
 });

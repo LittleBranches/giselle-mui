@@ -4,7 +4,7 @@
 
 ## Status
 
-`alpha`
+`in-progress`
 
 Shipped. Wraps MUI `ThemeProvider` with the Giselle palette as default. Accepts `themeOverrides` for partial overrides and `theme` for full bypass. Cleanup audit pending.
 
