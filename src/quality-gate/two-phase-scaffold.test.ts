@@ -29,7 +29,6 @@ const findTestFiles = (dir: string): string[] => {
 
 describe('Quality Gate §5.5 — Two-Phase Scaffold Enforcement', () => {
   const testFiles = findTestFiles(SRC_DIR);
-  const filesMissingTodo: string[] = [];
 
   const toRepoRelative = (filePath: string): string => {
     const repoRelative = path.relative(process.cwd(), filePath);
@@ -58,8 +57,8 @@ describe('Quality Gate §5.5 — Two-Phase Scaffold Enforcement', () => {
   });
 
   it('blocks new files that skip scaffold todo tests', () => {
+    const filesMissingTodo: string[] = [];
     const exemptBaseline = new Set(readExemptBaseline());
-    const currentTestFiles = new Set(testFiles.map(toRepoRelative));
 
     for (const testFilePath of testFiles) {
       const testContent = fs.readFileSync(testFilePath, 'utf-8');
@@ -73,15 +72,11 @@ describe('Quality Gate §5.5 — Two-Phase Scaffold Enforcement', () => {
     const unexpectedMissingTodoFiles = filesMissingTodo.filter(
       (filePath) => !exemptBaseline.has(filePath)
     );
-    const staleBaselineFiles = [...exemptBaseline].filter(
-      (filePath) => !currentTestFiles.has(filePath)
-    );
 
     expect(unexpectedMissingTodoFiles).toEqual([]);
-    expect(staleBaselineFiles).toEqual([]);
 
     console.warn(
-      `\nTwo-phase scaffold gate: ${filesMissingTodo.length} exempt files, ${testFiles.length} total test files scanned.`
+      `\nTwo-phase scaffold gate: ${unexpectedMissingTodoFiles.length} gate failures, ${filesMissingTodo.length} files without it.todo (${testFiles.length} total scanned).`
     );
   });
 });

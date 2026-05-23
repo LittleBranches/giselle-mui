@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-05-21T15:43:24.845Z",
-  "description": "Exempt files: pre-gate legacy files (existed before §5.5 was wired) or Phase 2 graduated components (it.todo replaced with real tests). To graduate a component: add it here with a comment.",
+  "description": "Exempt files: pre-gate legacy files (existed before §5.5 was wired) or Phase 2 graduated components (it.todo replaced with real tests). To graduate a component: add its path to the exemptFiles array and document the reason in your PR or commit message.",
   "exemptFiles": [
     "src/components/chart/area-line-chart-card/area-line-chart-card.test.ts",
     "src/components/chart/budget-vs-actual-card/budget-vs-actual-card.test.ts",

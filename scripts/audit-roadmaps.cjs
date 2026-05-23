@@ -1,5 +1,5 @@
 // @ts-check
-// Prints audit results to stdout only. Does not write any files.
+// Prints audit results to stdout. Exits 1 if ERROR-severity issues are found, 0 otherwise. Does not write any files.
 // Run with: node scripts/audit-roadmaps.cjs
 const fs = require('fs');
 const path = require('path');
@@ -146,3 +146,4 @@ console.log(
     infos.length +
     ' info'
 );
+if (errors.length) process.exit(1);

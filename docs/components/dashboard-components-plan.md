@@ -44,16 +44,6 @@ all shipped ✅ and exported from the main bundle.
 
 ---
 
-## Status legend
-
-| Symbol | Meaning                                                                                    |
-| ------ | ------------------------------------------------------------------------------------------ |
-| ✅     | Implemented, tested, exported from barrel — ready to consume                               |
-| ⚙️     | Phase 1 scaffolded: `types.ts` + test stubs + `README.md` + `index.ts` — **no `.tsx` yet** |
-| 🔴     | Not started — no folder, no scaffold                                                       |
-
----
-
 ## Group 1 — Cards (main bundle)
 
 All card components live in `src/components/material/surfaces/card/` and export from
