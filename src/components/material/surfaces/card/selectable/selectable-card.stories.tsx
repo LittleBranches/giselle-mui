@@ -29,9 +29,7 @@ function ToggleDemo() {
       onClick={() => setSelected((v) => !v)}
       sx={{ p: 3, width: 240 }}
     >
-      <Typography sx={{ fontWeight: 600 }}>
-        {selected ? 'Selected ✓' : 'Click to select'}
-      </Typography>
+      <Typography fontWeight={600}>{selected ? 'Selected ✓' : 'Click to select'}</Typography>
       <Typography variant="body2" color="text.secondary">
         aria-pressed: {String(selected)}
       </Typography>
@@ -51,7 +49,7 @@ function MultiSelectDemo() {
           onClick={() => setActive(opt)}
           sx={{ p: 2.5, width: 140 }}
         >
-          <Typography sx={{ fontWeight: 600 }}>{opt}</Typography>
+          <Typography fontWeight={600}>{opt}</Typography>
         </SelectableCard>
       ))}
     </Box>
@@ -122,7 +120,7 @@ function ResponsiveDemo() {
                 onClick={() => setActive(opt)}
                 sx={{ p: 2.5 }}
               >
-                <Typography sx={{ fontWeight: 600 }}>{opt}</Typography>
+                <Typography fontWeight={600}>{opt}</Typography>
               </SelectableCard>
             ))}
           </Box>

@@ -193,6 +193,7 @@ export const Responsive: Story = {
   ),
   parameters: { layout: 'padded' },
 };
+
 /**
  * Named helper — uses `useState` so it must be a named function (not inline arrow).
  * Drives `StatCard` colour and label live from the slider value.
@@ -201,6 +202,7 @@ function MaturityDemo() {
   const [percent, setPercent] = useState(35);
   const color = resolveMaturityColor(percent);
   const label = resolveMaturityLabel(percent);
+
   return (
     <Box sx={{ maxWidth: 360 }}>
       <Box sx={{ mb: 3 }}>

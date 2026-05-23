@@ -32,37 +32,6 @@ jobs:
       - name: Run quality gate (no Storybook)
         run: npm run check:verify:fast
 
-  # Temporary — remove once all consumers are on MUI v9 (~T0 + 10-12 weeks).
-  compat-mui-v7:
-    name: Compat check — MUI v7 peers
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Override to MUI v7 peers
-        # No --legacy-peer-deps needed: no devDependency in this library declares @mui/material
-        # as a peer dep (storybook, vitest, tsup, eslint do not). Both packages are installed
-        # together in one call so npm resolves the @mui/lab@^7 / @mui/material@^7 peer pair atomically.
-        run: npm install --no-save @mui/material@^7.0.0 @mui/lab@^7.0.0
-
-      - name: Run quality gate with MUI v7
-        run: npm run check:verify:fast
-
   storybook-build:
     name: Storybook build
     runs-on: ubuntu-latest

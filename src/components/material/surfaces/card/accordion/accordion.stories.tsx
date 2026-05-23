@@ -53,6 +53,8 @@ trigger — both are separately keyboard-accessible and WCAG 2.2 AA compliant.
     checkHoverIcon: { control: false },
     children: { control: false },
     onDoneButtonClick: { control: false },
+    TransitionComponent: { control: false },
+    TransitionProps: { control: false },
   },
 };
 
