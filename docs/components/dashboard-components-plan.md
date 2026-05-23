@@ -6,114 +6,77 @@ sidebar_label: 'Dashboard Components Plan'
 # Dashboard Components — Build Plan for giselle-mui
 
 > **Context:** This plan defines every reusable component needed to render a full data
-> dashboard in `alexrebula` (and any future project built on `giselle-mui`). The immediate
-> use case is the **trip-costs dashboard** in `alexrebula` — displaying cost breakdowns,
-> payment timelines, wage progress, and budget widgets using the same widget vocabulary as
-> a product analytics dashboard. The components must be general-purpose: nothing
-> trip-cost-specific belongs in giselle-mui.
+> dashboard in any project built on `giselle-mui`. Typical use cases include task trackers,
+> analytics dashboards, financial tools, and project management UIs.
 >
-> Every component listed here must be built independently from scratch in `giselle-mui` — no
-> proprietary utilities, no unauthorized imports.
+> Every component must be general-purpose — nothing app-specific belongs in giselle-mui.
+> Every component is built independently from scratch — no proprietary utilities.
 >
-> _Last updated: 12 May 2026_
+> _Last updated: 26 May 2026 · Phase 1 scaffolding complete for all components · Phase 2 (implementation) in progress_
 
 ---
 
-## Dependency architecture — the subpath export strategy
+## Status legend
 
-### The problem
-
-Some components need heavy dependencies (`apexcharts`, `react-apexcharts`, `framer-motion`).
-Bundling them into the main `dist/index.js` means every consumer pays the bundle cost even
-if they never use a chart or animation.
-
-### Options considered
-
-| Option                                     | Pros                                                    | Cons                                                          |
-| ------------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------------- |
-| **A — Single bundle, optional peer deps**  | Simple                                                  | Consumer installs ApexCharts even for a text-only project     |
-| **B — Separate repo `giselle-mui-charts`** | Clean separation                                        | Two packages to maintain, two yalc pushes, version drift risk |
-| **C — Subpath exports (chosen ✅)**        | Zero cost for unused subpaths, one repo, proven pattern | Requires `exports` map in `package.json` + extra tsup entry   |
-
-### Current state (already two entry points in `tsup.config.ts`)
-
-```
-@littlebranches/giselle-mui         → dist/index.js     (components, 'use client')
-@littlebranches/giselle-mui/utils   → dist/utils.js     (server-safe utils, no 'use client')
-```
-
-### Planned subpath additions
-
-```
-@littlebranches/giselle-mui/charts  → dist/charts.js    (ApexCharts wrappers, optional peer dep)
-@littlebranches/giselle-mui/motion  → dist/motion.js    (framer-motion components, optional peer dep)
-```
-
-**Implementation:** Add two new tsup entry objects to `tsup.config.ts`, matching the existing
-`utils` pattern. Add corresponding `exports` entries to `package.json`. Mark `apexcharts`,
-`react-apexcharts`, and `framer-motion` as `peerDependenciesMeta.optional: true` (already done
-for apexcharts — needs verification for framer-motion).
-
-**Consumer contract:** A consumer who imports only from `@littlebranches/giselle-mui` never needs
-ApexCharts installed. A consumer who imports from `.../charts` must have ApexCharts as a dep.
-This mirrors how `@mui/x-date-pickers` is consumed — opt-in subpath.
-
-**No new repo needed.** The one-repo / subpath-export approach is strictly better for this
-library's scale.
+| Symbol | Meaning                                                                                    |
+| ------ | ------------------------------------------------------------------------------------------ |
+| ✅     | Implemented, tested, exported from barrel — ready to consume                               |
+| ⚙️     | Phase 1 scaffolded: `types.ts` + test stubs + `README.md` + `index.ts` — **no `.tsx` yet** |
+| 🔴     | Not started — no folder, no scaffold                                                       |
 
 ---
 
-## Blocker key
+## Architecture status
 
-| Symbol | Meaning                                                                  |
-| ------ | ------------------------------------------------------------------------ |
-| ✅     | Already shipped in giselle-mui                                           |
-| 🟡     | Exists in alexrebula but needs cleanup before extraction                 |
-| 🔴     | Does not exist anywhere — must be written from scratch                   |
-| ⚙️     | Architecture blocker (theme, settings, or subpath setup must land first) |
-| 📦     | Dependency blocker (optional peer dep subpath must be set up first)      |
+All five subpath exports are **wired, build-verified, and in production** as of 19 May 2026.
+No architectural prerequisites remain.
+
+```
+@littlebranches/giselle-mui          → dist/index.js    MUI-only components (main bundle)
+@littlebranches/giselle-mui/utils    → dist/utils.js    Server-safe pure utilities
+@littlebranches/giselle-mui/charts   → dist/charts.js   ApexCharts wrappers (optional peer dep)
+@littlebranches/giselle-mui/motion   → dist/motion.js   framer-motion components (optional peer dep)
+@littlebranches/giselle-mui/lab      → dist/lab.js      @mui/lab Timeline components (optional peer dep)
+```
+
+`GiselleThemeProvider`, `GiselleSettingsProvider`, and `GiselleThemeAndSettingsProvider` are
+all shipped ✅ and exported from the main bundle.
 
 ---
 
-## Group 1 — Stat / Metric cards (MUI only)
+## Group 1 — Cards (main bundle)
+
+All card components live in `src/components/material/surfaces/card/` and export from
+the main `@littlebranches/giselle-mui` bundle.
 
 ### `StatCard` ✅ Shipped — 5 May 2026
 
-**What it is:** Compact data card. Number, label, trend arrow, six palette colour variants,
-sparkline slot via `chart?: ReactNode`.
-
-**Transferability:** 100% — already in giselle-mui. ApexCharts sparkline is the consumer's
-responsibility (passes a `ReactNode` into the `chart` slot — StatCard itself has zero
-ApexCharts dependency).
-
-**Blockers:** None. In production.
-
----
+Compact data card: number, label, trend arrow, six palette colour variants, `chart?: ReactNode` slot.
 
 ### `StatCardRow` ✅ Shipped — 13 May 2026
 
-**What it is:** Responsive grid of `StatCard` items. Seen in every dashboard top row.
-Accepts a `StatCardItem[]` array (type already in `giselle-mui`) and lays them out in a
-`Grid2` row with the correct breakpoints (`xs=12 sm=6 md=3`).
+Responsive `Grid2` row of `StatCard` items. Accepts `StatCardItem[]`, breakpoints `xs=12 sm=6 md=3`.
 
-**Transferability:** 100% once built. Zero special deps.
+### `MetricCard` ✅ Shipped
 
-**Output subpath:** Main bundle (`@littlebranches/giselle-mui`).
+Large metric with icon slot, decoration variants. Six palette keys.
+
+### `QuoteCard` ✅ Shipped
+
+Pull-quote card. Author name, role, avatar slot, decorative quote marks.
+
+### `SelectableCard` ✅ Shipped
+
+Keyboard-accessible clickable card wrapping `ButtonBase`. Avoids the `Paper onClick` accessibility anti-pattern.
 
 ---
 
-### `ProfileSummaryCard` 🔴 Needs building
+### `ProfileSummaryCard` ⚙️ Phase 1 scaffolded
 
-**What it is:** Right-sidebar profile card. Avatar (image or initials fallback), display
-name, optional role/subtitle, and a horizontal row of 2–4 labelled stat values below.
+**Phase 2 dispatch brief:**
 
-**Seen in:** Analytics-style dashboards — avatar, name, role label, 3 stat numbers in a row (e.g. "Courses in progress / Completed / Certificates").
-
-**Immediate consumer:**
-
-- Example: contributor dashboard sidebar — profile card with display name, earned-to-date, and pending payment stats. Display name comes from the authenticated session.
-
-**Accepts:**
+Right-sidebar profile card — avatar (image or initials fallback), display name, optional role,
+2–4 labelled stat values in a row below. Pure MUI: `Avatar`, `Typography`, `Stack`, `Divider`.
 
 ```ts
 type ProfileSummaryCardProps = {
@@ -125,662 +88,860 @@ type ProfileSummaryCardProps = {
 };
 ```
 
-**Transferability:** 100%. Pure MUI (`Avatar`, `Typography`, `Stack`, `Divider`). No charts.
-
-**Blockers:** None.
-
-**Output subpath:** Main bundle.
+**Output subpath:** Main bundle. **Blockers:** None.
 
 ---
 
-### `BalanceSummaryCard` 🔴 Needs building
+### `BalanceSummaryCard` ⚙️ Phase 1 scaffolded
 
-**What it is:** Large financial overview card. Primary metric (e.g. total balance), two
-sub-stats (income / expenses) with trend indicators, a sparkline or line chart below.
-Action buttons: Send / Add card / Request.
+**Phase 2 dispatch brief:**
 
-**Seen in:** Banking dashboard (top-left card "Total balance $49,990").
+Large financial overview card. Primary metric (balance), two sub-stats (income / expenses) with
+trend indicators, action buttons, `chart?: ReactNode` slot for an optional sparkline.
+Use `chart?: ReactNode` slot — keeps this component in the main bundle with zero ApexCharts dep.
 
-**Transferability:** High for the shell. Line chart inside = ApexCharts sparkline (optional).
+```ts
+type BalanceSummaryCardProps = {
+  balance: string | number;
+  balanceLabel?: string;
+  stats: Array<{ label: string; value: string | number; trend?: 'up' | 'down' }>;
+  actions?: Array<{ label: string; icon: ReactNode; onClick?: () => void }>;
+  chart?: ReactNode;
+  sx?: SxProps<Theme>;
+};
+```
 
-**Blockers:**
-
-- 📦 `/charts` subpath must exist if the embedded sparkline uses ApexCharts.
-- Or: accept `chart?: ReactNode` and let the consumer supply the chart — simpler.
-- Recommended: `chart?: ReactNode` slot. Keep BalanceSummaryCard in the main bundle.
-
-**Output subpath:** Main bundle.
-
----
-
-### `CreditCardDisplay` 🔴 Needs building
-
-**What it is:** Dark card showing a credit/debit card — masked number (`•••• •••• •••• 3640`),
-card holder name, expiry date, card network logo slot. Purely presentational.
-
-**Seen in:** Banking dashboard (top-right dark card).
-
-**Transferability:** 100%. Pure MUI + CSS. Zero deps beyond core.
-
-**Blockers:** None beyond standard MUI.
-
-**Output subpath:** Main bundle.
+**Output subpath:** Main bundle. **Blockers:** None.
 
 ---
 
-## Group 2 — Chart cards (ApexCharts — subpath `/charts`)
+### `CreditCardDisplay` ⚙️ Phase 1 scaffolded
 
-> All components in this group go in `@littlebranches/giselle-mui/charts` (new tsup entry).
-> Consumers must install `apexcharts` and `react-apexcharts` as peer deps.
-> Every component in this group follows the same rule as `RadialProgressCard`:
-> **chart options live in `*.styles.ts`, never inline in JSX.**
+**Phase 2 dispatch brief:**
 
-### `ChartCardBase` ⬜ Needs building
+Dark card showing a payment card — masked number (`•••• •••• •••• 3640`), card holder, expiry,
+`networkLogo?: ReactNode` slot. Purely presentational.
 
-**What it is:** Shared card shell primitive for chart cards: title/subtitle header,
-action slot, chart body slot, optional footer slot, and loading/empty states.
+```ts
+type CreditCardDisplayProps = {
+  cardNumber: string;
+  cardHolder: string;
+  expiry: string;
+  networkLogo?: ReactNode;
+  sx?: SxProps<Theme>;
+};
+```
 
-**Why it exists:** Prevent repeated card chrome implementation across
-`DonutChartCard`, `AreaLineChartCard`, `GroupedBarChartCard`, `RadarChartCard`, and
-other chart-card components.
+**Output subpath:** Main bundle. **Blockers:** None.
 
-**Rule:** `SparklineBarChart` does NOT use `ChartCardBase` because it is an embedded
-chart primitive (no card wrapper).
+---
 
-**Output subpath:** `/charts`.
+### `HeroBannerCard` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Full-width gradient card with headline, optional subtitle/description, `action?: ReactNode` CTA
+slot, `illustration?: ReactNode` right-side slot. Gradient uses `theme.vars.palette.*` — no
+hardcoded hex. Consumer passes `<img>` or SVG into the illustration slot.
+
+```ts
+type HeroBannerCardProps = {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  action?: ReactNode;
+  illustration?: ReactNode;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `FeaturedItemCard` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Card with `image?: ReactNode` top area, optional `badge?: string` label, `title`, `description?`,
+`action?: ReactNode` CTA slot. Used for product, article, or featured-app cards.
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `PromoInviteCard` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Accent-coloured card: headline, body copy, email input, submit button. For invite / referral
+incentive widgets.
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `PeriodSummaryCard` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Summary card for a named time period. Stat rows with optional trend indicators, `chart?: ReactNode` slot.
+
+```ts
+type PeriodSummaryCardProps = {
+  period: string;
+  title?: string;
+  stats: Array<{ label: string; value: string | number; trend?: 'up' | 'down'; color?: string }>;
+  chart?: ReactNode;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `BudgetBreakdownCard` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Card with a named budget total, breakdown rows (category / amount / optional percentage),
+`chart?: ReactNode` slot for an optional donut chart. General-purpose — no trip-cost semantics.
+
+```ts
+type BudgetBreakdownCardProps = {
+  title: string;
+  total: number | string;
+  currency?: string;
+  items: Array<{ label: string; amount: number | string; percentage?: number; color?: string }>;
+  chart?: ReactNode;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `CostClassificationCard` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Classifies costs into categories (capex / opex / investment / opportunity). Category labels
+are data-driven — the component renders whatever scheme the consumer defines. Uses MUI `Chip`
+
+- `Stack` + `Typography`.
+
+```ts
+type CostClassificationCardProps = {
+  title: string;
+  items: Array<{
+    label: string;
+    amount: number | string;
+    category: string;
+    amortizedMonths?: number;
+    color?: string;
+  }>;
+  totalLabel?: string;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `ROIComparisonCard` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Two-column card comparing material vs non-material returns on an investment. Material column:
+labelled rows with numeric values + trend. Non-material column: labelled rows with string
+values + `icon?: ReactNode` slot. Optional `chart?: ReactNode` for the material column.
+
+```ts
+type ROIComparisonCardProps = {
+  title: string;
+  materialItems: Array<{
+    label: string;
+    value: string | number;
+    unit?: string;
+    trend?: 'up' | 'down';
+  }>;
+  nonMaterialItems: Array<{ label: string; value: string; icon?: ReactNode }>;
+  chart?: ReactNode;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `QuickTransferWidget` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Compact action widget: avatar row of contacts, amount input, transfer button, balance display.
+Fits a dashboard sidebar. Pure MUI form components.
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+## Group 2 — Chart cards (`/charts` subpath)
+
+All components in this group import `react-apexcharts`. They ship from
+`@littlebranches/giselle-mui/charts`. Consumers must install `apexcharts` +
+`react-apexcharts` as peer deps.
+
+**Non-negotiable rule:** Chart options objects must never be defined inline in JSX.
+Static options → module-level const in `*.styles.ts`. Theme-dependent options →
+factory function `buildXxxOptions(theme)` in `*.styles.ts`.
 
 ### `RadialProgressCard` ✅ Shipped — 5 May 2026
 
-**What it is:** Card wrapping an ApexCharts radialBar. Already shipped with correct
-lazy-load pattern. Reference implementation for all chart components below.
-
-**Output subpath:** Currently in main bundle via lazy load. Move to `/charts` in Phase H.
+Reference implementation for all chart components. Correct lazy-load pattern, options in
+`*.styles.ts`. Folder: `src/components/chart/radial-progress/`.
 
 ---
 
-### `DonutChartCard` 🔴 Needs building
+### `ChartCardBase` ⚙️ Phase 1 scaffolded
 
-**What it is:** Donut/pie chart in a card shell. Shows a legend below or to the side.
-Accepts `series: number[]`, `labels: string[]`, `title: string`, `total?: number`.
+**Phase 2 dispatch brief:**
 
-**Seen in:** App dashboard ("Current download by OS"), Ecommerce ("Sale by gender"),
-Analytics ("Current visits"), Banking ("Expenses categories").
+Shared shell primitive for chart cards: title/subtitle header, action slot, chart body area,
+optional footer. Prevents repeated chrome across DonutChartCard, AreaLineChartCard, etc.
+`SparklineBar` does NOT use `ChartCardBase` — it is an embedded chart primitive, not a card.
 
-**Immediate consumer:**
-
-- Example: task management viewer dashboard — status breakdown (Open / In Progress / In Review / Done counts).
-
-**Transferability:** 100% once ApexCharts subpath is in place.
-
-**Blockers:**
-
-- 📦 `/charts` subpath must be configured in tsup + package.json first.
-- Chart options (colors, plotOptions) must come from `donut-chart-card.styles.ts`.
-- Uses `theme.vars.palette.*` for colors — requires `GiselleThemeProvider` or manual theme.
-
-**Output subpath:** `/charts`.
+**Output subpath:** `/charts`. **Blockers:** None (subpath already configured ✅).
 
 ---
 
-### `AreaLineChartCard` 🔴 Needs building
+### `DonutChartCard` ⚙️ Phase 1 scaffolded
 
-**What it is:** Area or line chart in a card. Supports 1–2 series (e.g. income vs expenses).
-Year selector in card header. Accepts `series: ApexAxisChartSeries`, `title`, `subtitle`,
-`yearOptions?: number[]`.
+**Phase 2 dispatch brief:**
 
-**Seen in:** Ecommerce ("Yearly sales"), Banking (balance line in BalanceSummaryCard).
+Donut/pie chart in a card shell. Legend below or to the side.
 
-**Immediate consumer:**
+```ts
+type DonutChartCardProps = {
+  title: string;
+  subheader?: string;
+  series: number[];
+  labels: string[];
+  total?: string | number;
+  sx?: SxProps<Theme>;
+};
+```
 
-- Example: contributor earnings dashboard — accumulated total per week (bucketed from task completion date).
+**Example use:** Task status breakdown across open / in-progress / in-review / done states.
 
-**Output subpath:** `/charts`.
-
-**Blockers:** Same as DonutChartCard.
-
----
-
-### `BudgetVsActualChartCard` 🔴 Needs building
-
-**What it is:** Dual-series line chart comparing **planned spend** against **actual spend**
-over a set of time periods. The planned series is fixed at period start (the budget).
-The actual series grows as real spend is recorded. The key visual is the divergence
-gap — the chart fills `error.main` when actual exceeds planned (over budget) and
-`success.main` when actual is below planned (under budget).
-
-Distinct from `AreaLineChartCard` (a general chart with no budget semantics) and from
-`ProjectionChartCard` (which compares cost vs projected return — the break-even model).
-This component encodes the specific "planned vs actual" BI pattern with correct
-variance fill semantics.
-
-**Accepts:**
-
-- `title: string`
-- `plannedSeries: BudgetDataPoint[]` — `{ label: string; value: number }` (static budget)
-- `actualSeries: BudgetDataPoint[]` — `{ label: string; value: number }` (grows over time)
-- `xAxisLabel?: string` — e.g. `'Week'` or `'Month'`
-- `currency?: string` — e.g. `'AUD'`
-- `cumulativeMode?: boolean` — `true` = cumulative totals, `false` = period deltas
-
-**Variance colouring (non-negotiable):**
-
-Area fill between the two series uses `theme.vars.palette.error.mainChannel` when actual
-
-> planned and `theme.vars.palette.success.mainChannel` when actual < planned. Never
-> hardcoded hex or rgba literals.
-
-**Immediate consumer:**
-
-- Example: project administration dashboard — planned payment schedule vs actual payout dates.
-
-**Output subpath:** `/charts`.
-
-**Blockers:**
-
-- 📦 `/charts` subpath must be configured first. ✅ Done (7 May 2026).
-- Chart options and variance fill logic must come from `budget-vs-actual-chart-card.styles.ts`.
-- `BudgetDataPoint` type must be defined in `types.ts` before building the component.
+**Output subpath:** `/charts`. **Blockers:** None (subpath ✅, GiselleThemeProvider ✅).
 
 ---
 
-### `GroupedBarChartCard` 🔴 Needs building
+### `AreaLineChartCard` ⚙️ Phase 1 scaffolded
 
-**What it is:** Grouped or stacked bar chart in a card. Supports multiple series, legend,
-x-axis labels. Accepts `series`, `categories`, `stacked?: boolean`, `title`.
+**Phase 2 dispatch brief:**
 
-**Seen in:** App ("Area installed"), Analytics ("Website visits"), Banking ("Balance statistics").
+Area or line chart in a card. 1–2 series. Optional year selector in header.
 
-**Output subpath:** `/charts`.
+```ts
+type AreaLineChartCardProps = {
+  title: string;
+  subheader?: string;
+  series: Array<{ name: string; data: number[] }>;
+  categories: string[];
+  yearOptions?: number[];
+  defaultYear?: number;
+  sx?: SxProps<Theme>;
+};
+```
 
-**Blockers:** Same as DonutChartCard.
-
----
-
-### `HorizontalBarChartCard` 🔴 Needs building
-
-**What it is:** Horizontal progress-bar style chart. Each row = one category with a filled
-bar and a value label. Different from `ProgressStatsList` — this uses ApexCharts for precise
-axis alignment.
-
-**Seen in:** Analytics ("Conversion rates — Female, Male, Other, Senior, Future").
-
-**Output subpath:** `/charts`.
-
-**Blockers:** Same as DonutChartCard.
+**Output subpath:** `/charts`. **Blockers:** None.
 
 ---
 
-### `RadarChartCard` 🔴 Needs building
+### `BudgetVsActualChartCard` ⚙️ Phase 1 scaffolded
 
-**What it is:** Radar / spider chart. Multiple polygon series, labelled axes. Accepts
-`series: ApexAxisChartSeries`, `categories: string[]`, `title`.
+**Phase 2 dispatch brief:**
 
-**Seen in:** Analytics-style dashboards — strength/score breakdown by category (e.g. subjects, skill areas, repo types).
+Dual-series chart: planned (static) vs actual (grows over time). Area fill uses
+`error.mainChannel` when actual > planned, `success.mainChannel` when under budget.
+Never hardcoded hex.
 
-**Immediate consumer:**
+```ts
+type BudgetVsActualChartCardProps = {
+  title: string;
+  plannedSeries: Array<{ label: string; value: number }>;
+  actualSeries: Array<{ label: string; value: number }>;
+  xAxisLabel?: string;
+  currency?: string;
+  cumulativeMode?: boolean;
+  sx?: SxProps<Theme>;
+};
+```
 
-- Example: contributor metrics dashboard — per-repository completion strength across multiple tracked repositories.
-
-**Output subpath:** `/charts`.
-
-**Blockers:** Same as DonutChartCard.
-
----
-
-### `SparklineBar` 🔴 Needs building
-
-**What it is:** Tiny bar or area chart for embedding inside `StatCard` or
-`BalanceSummaryCard`. Not a full chart card — just the chart element (no card shell).
-Designed to be passed as `chart={<SparklineBar ... />}` to `StatCard`.
-
-**Seen in:** Top stat row in App and Ecommerce dashboards (bar sparklines on the right
-of each stat card).
-
-**Output subpath:** `/charts`.
-
-**Blockers:** Same as DonutChartCard.
+**Output subpath:** `/charts`. **Blockers:** None.
 
 ---
 
-## Group 3 — Data lists and tables (MUI only)
+### `ProjectionCard` ⚙️ Phase 1 scaffolded
 
-### `DataTable` 🔴 Needs building
+**Phase 2 dispatch brief:**
 
-**What it is:** Styled MUI `Table` (not DataGrid — avoid MUI X dependency). Accepts
-`columns: DataTableColumn[]` and `rows: Record<string, ReactNode>[]`. Renders a
-scroll-safe, compact table with an optional action menu per row.
+Dual-series area chart: actual costs vs projected return. The crossing point = break-even.
+Optional vertical annotation at the crossing.
 
-**Seen in:** App ("New Invoices"), Ecommerce ("Best salesman"), Banking ("Recent transitions").
+```ts
+type ProjectionCardProps = {
+  title: string;
+  actualSeries: Array<{ label: string; value: number }>;
+  projectedSeries: Array<{ label: string; value: number }>;
+  xAxisLabel?: string;
+  currency?: string;
+  breakEvenAnnotation?: boolean;
+  sx?: SxProps<Theme>;
+};
+```
 
-**Transferability:** 100% using MUI `Table`. DataGrid would add MUI X as a dep — avoid.
-
-**Blockers:** Define `DataTableColumn` and `DataTableRow` types in `types.ts`. No dep blockers.
-
-**Output subpath:** Main bundle.
-
----
-
-### `ActivityFeedList` 🔴 Needs building
-
-**What it is:** Vertical list of activity items. Each item: avatar (image or icon),
-primary text, secondary text, timestamp, optional status chip. Accepts `ActivityFeedItem[]`.
-
-**Seen in:** Banking ("Recent transitions"), App ("New Invoices" alternative layout).
-
-**Transferability:** 100%. Pure MUI `List` + `ListItem` + `Avatar` + `Chip`.
-
-**Blockers:** None.
-
-**Output subpath:** Main bundle.
+**Output subpath:** `/charts`. **Blockers:** None.
 
 ---
 
-### `NewsFeedList` 🔴 Needs building
+### `GroupedBarChartCard` ⚙️ Phase 1 scaffolded
 
-**What it is:** Vertical list of news/article items. Each item: thumbnail image, title,
-snippet (1–2 lines), relative time. Accepts `NewsFeedItem[]`.
+**Phase 2 dispatch brief:**
 
-**Seen in:** Analytics ("News" section).
+Grouped or stacked bar chart in a card. Multiple series, legend, x-axis labels.
 
-**Transferability:** 100%. MUI `List` + `Box`.
-
-**Blockers:** None.
-
-**Output subpath:** Main bundle.
+**Output subpath:** `/charts`. **Blockers:** None.
 
 ---
 
-### `RelatedItemsList` 🔴 Needs building
+### `HorizontalBarChartCard` ⚙️ Phase 1 scaffolded
 
-**What it is:** Vertical list with tab filter ("Top 7 days / Top 30 days / All time").
-Each item: icon, name, sub-label, 3 stat numbers. Accepts `tabs: string[]` and
-`items: RelatedItem[]` per tab.
+**Phase 2 dispatch brief:**
 
-**Seen in:** App dashboard ("Related applications").
+Horizontal progress-bar style chart. Each row = one category with filled bar + value label.
+Uses ApexCharts for axis alignment precision (vs `ProgressStatsList` which is pure MUI).
 
-**Blockers:** None beyond standard MUI (`Tabs`, `List`).
-
-**Output subpath:** Main bundle.
+**Output subpath:** `/charts`. **Blockers:** None.
 
 ---
 
-## Group 4 — Financial / action widgets (MUI only)
+### `RadarChartCard` ⚙️ Phase 1 scaffolded
 
-### `ProgressStatsList` 🔴 Needs building
+**Phase 2 dispatch brief:**
 
-**What it is:** Vertical list of labeled progress bars. Each row: label, value (amount +
-percentage), coloured `LinearProgress`. Accepts `ProgressStatsItem[]`.
+Radar/spider chart. Multiple polygon series, labelled axes.
 
-**Seen in:** Ecommerce ("Sales overview — Total profit / Total income / Total expenses").
-
-**Transferability:** 100%. Uses MUI `LinearProgress` + `Typography` + `Stack`. No charts.
-
-**Output subpath:** Main bundle.
+**Output subpath:** `/charts`. **Blockers:** None.
 
 ---
 
-### `QuickTransferWidget` 🔴 Needs building
+### `SparklineBar` ⚙️ Phase 1 scaffolded
 
-**What it is:** Avatar row (contacts), text input for amount (`$200`), confirm button
-("Transfer now"), balance display. A compact action widget that fits in a dashboard sidebar.
+**Phase 2 dispatch brief:**
 
-**Seen in:** Banking dashboard (right panel).
+Tiny embedded bar or area chart — no card wrapper. Designed to be passed as `chart={<SparklineBar />}`
+to `StatCard` or `BalanceSummaryCard`.
 
-**Transferability:** 100%. MUI form components only.
+```ts
+type SparklineBarProps = {
+  data: number[];
+  color?: string;
+  sx?: SxProps<Theme>;
+};
+```
 
-**Blockers:** None.
-
-**Output subpath:** Main bundle.
-
----
-
-### `ContactsList` 🔴 Needs building
-
-**What it is:** Compact vertical list of contacts with avatar and email. Optional action
-icons per row. Accepts `ContactItem[]`.
-
-**Seen in:** Banking ("Contacts — 502 contacts").
-
-**Transferability:** 100%.
-
-**Output subpath:** Main bundle.
+**Output subpath:** `/charts`. **Blockers:** None.
 
 ---
 
-### `BudgetBreakdownCard` 🔴 Needs building (trip-costs specific → generalise)
+## Group 3 — Data display (main bundle)
 
-**What it is:** Card showing a named budget with a primary total, breakdown rows
-(category / amount / percentage), and an optional donut chart slot. This is the component
-that will display the trip costs breakdown in alexrebula.
+All components in `src/components/material/data-display/`.
 
-**General version accepts:**
+### `AnimatedGradientText` ✅ Shipped
 
-- `title: string`
-- `total: number | string`
-- `currency?: string`
-- `items: BudgetItem[]` — `{ label, amount, percentage?, color? }`
-- `chart?: ReactNode` — optional donut chart
+### `GiselleIcon` ✅ Shipped
 
-**Seen as concept in:** Ecommerce "Sales overview" + Banking "Current balance" combined.
+### `IconActionBar` ✅ Shipped
 
-**Blockers:** None. MUI only. Donut chart passed as a slot — no direct ApexCharts dep.
-
-**Output subpath:** Main bundle.
+### `TechIconStrip` ✅ Shipped
 
 ---
 
-## Group 5 — Hero / marketing cards (MUI only)
+### `DataTable` ⚙️ Phase 1 scaffolded
 
-### `HeroBannerCard` 🔴 Needs building
+**Phase 2 dispatch brief:**
 
-**What it is:** Full-width or wide card with gradient background, headline text, optional
-subtitle, CTA button slot, and an illustration slot (right side). Dark-mode and light-mode
-variants.
+Styled MUI `Table` (not DataGrid — avoids MUI X dep). Column definitions + typed row data.
+Optional action menu per row.
 
-**Seen in:** App ("Welcome back Jaydon Frankie"), Ecommerce ("Congratulations").
+```ts
+type DataTableProps<K extends string> = {
+  columns: DataTableColumn<K>[];
+  rows: Array<Record<K, ReactNode> & { id: string | number }>;
+  renderActions?: (row: Record<K, ReactNode> & { id: string | number }) => ReactNode;
+  sx?: SxProps<Theme>;
+};
+```
 
-**Rule:** The illustration is a `ReactNode` slot — `HeroBannerCard` itself never imports an
-image. Consumer passes `<img src="..." />` or an SVG component.
+**Example use:** Admin task table — rows with status, category, rate, and row actions.
 
-**Blockers:**
-
-- ⚙️ `GiselleThemeProvider` (Phase C) must exist so the gradient uses `theme.vars.palette.*`
-  channel references — no hardcoded hex.
-
-**Output subpath:** Main bundle.
-
----
-
-### `FeaturedItemCard` 🔴 Needs building
-
-**What it is:** Right-rail card with a product or article image, badge label ("NEW",
-"FEATURED APP"), title, short description, and a CTA button. Image fills the top of the card.
-
-**Seen in:** App ("Understanding Blockchain Technology"), Ecommerce ("Urban Explorer Sneakers").
-
-**Blockers:** None.
-
-**Output subpath:** Main bundle.
+**Output subpath:** Main bundle. **Blockers:** None.
 
 ---
 
-### `PromoInviteCard` 🔴 Needs building
+### `ActivityFeedList` ⚙️ Phase 1 scaffolded
 
-**What it is:** Accent-coloured card with an incentive headline ("Invite friends and earn
-$50"), body copy, email input, and a submit button.
+**Phase 2 dispatch brief:**
 
-**Seen in:** Banking (bottom-right dark red card).
+Vertical list of activity items: avatar, primary text, secondary text, timestamp, optional status chip.
 
-**Blockers:** None.
+```ts
+type ActivityFeedListProps = {
+  items: Array<{
+    id: string | number;
+    avatar?: ReactNode;
+    primary: string;
+    secondary?: string;
+    timestamp: string;
+    status?: string;
+  }>;
+  sx?: SxProps<Theme>;
+};
+```
 
-**Output subpath:** Main bundle.
+**Example use:** Recent task completions and payment events in a viewer dashboard.
 
----
-
-## Group 6 — Motion components (framer-motion — subpath `/motion`)
-
-> Components in this group require `framer-motion` as a peer dep. They go in
-> `@littlebranches/giselle-mui/motion` (new tsup entry). Consumers who don't use motion
-> components pay zero bundle cost.
-
-### `FloatingSubNav` 🟡 Already in giselle-mui (main bundle)
-
-**What it is:** Floating sub-navigation bar with animated show/hide. Currently ships in the
-main bundle. Should move to `/motion` to avoid imposing framer-motion on all consumers.
-
-**Current state:** Shipped, uses `motion.div`, follows `motion.*` rule (not `m.*`).
-
-**Blockers:**
-
-- 📦 `/motion` subpath must be configured before this can move out of the main bundle.
-- This is a breaking change for current consumers of the main bundle — needs a deprecation
-  path or minor version bump with a re-export shim.
-
-**Output subpath:** Move from main bundle → `/motion`.
+**Output subpath:** Main bundle. **Blockers:** None.
 
 ---
 
-### Animated tab panels / page transitions 🔴 Needs building
+### `ProgressStatsList` ⚙️ Phase 1 scaffolded
 
-**What it is:** `AnimatedTabPanel` — wraps `children` in a `motion.div` with enter/exit
-animations. Used for dashboard tab switches.
+**Phase 2 dispatch brief:**
 
-**Output subpath:** `/motion`.
+Vertical list of labelled progress bars. Each row: label, value, coloured `LinearProgress`.
 
----
+```ts
+type ProgressStatsListProps = {
+  items: Array<{ label: string; value: string | number; percentage: number; color?: string }>;
+  sx?: SxProps<Theme>;
+};
+```
 
-## Group 7 — Investment analytics / projection widgets
+**Example use:** Progress breakdown across multiple named categories (e.g. three-bucket allocation split).
 
-> These components exist because of a specific mental model: an investment (e.g. a person,
-> a codebase, a tool) has both a cost curve and a return curve. The cost appears first;
-> the return emerges over time. The widgets below make that model visible and interactive.
-> They are general-purpose — nothing use-case-specific belongs in giselle-mui.
-> The data shapes are intentionally abstract (`InvestmentItem`, `ProjectionSeries`,
-> `ScenarioInput`) so any ROI or planning dashboard can consume them.
-
-### `ProjectionChartCard` 🔴 Needs building
-
-**What it is:** Dual-series area/line chart in a card. One series = actual costs over time
-(week or month buckets). One series = projected return / dividend curve. The two series
-cross at the break-even point — that crossing is the key visual insight.
-
-**Accepts:**
-
-- `title: string`
-- `actualSeries: ProjectionDataPoint[]` — `{ label: string, value: number }`
-- `projectedSeries: ProjectionDataPoint[]`
-- `xAxisLabel?: string` — e.g. `'Week'` or `'Month'`
-- `currency?: string` — e.g. `'AUD'`
-- `breakEvenAnnotation?: boolean` — draw a vertical line at the crossing point
-
-**Seen as concept in:** Ecommerce "Yearly sales" (dual series area chart).
-
-**Output subpath:** `/charts`.
-
-**Blockers:**
-
-- 📦 `/charts` subpath must be configured first.
-- Chart options (colors, fill opacity, annotation) must come from `projection-chart-card.styles.ts`.
+**Output subpath:** Main bundle. **Blockers:** None.
 
 ---
 
-### `CostClassificationCard` 🔴 Needs building
+### `NewsFeedList` ⚙️ Phase 1 scaffolded
 
-**What it is:** Card that breaks a set of costs into named categories with distinct
-visual treatment. Categories are data-driven — the component does not know what
-"CAPEX" or "opportunity cost" means; it renders whatever classification scheme
-the consumer defines.
+**Phase 2 dispatch brief:**
 
-**Default category vocabulary (consumer-defined, not hardcoded):**
+Vertical list of news/article items: thumbnail, title, snippet, relative time.
 
-- `'capex'` — one-time spend that produces a durable asset (amortized)
-- `'opex'` — recurring spend with no residual asset
-- `'investment'` — spend that creates a future return (opportunity cost model)
-- `'opportunity'` — non-cash cost (time, foregone income)
-
-**Accepts:**
-
-- `title: string`
-- `items: CostClassificationItem[]` — `{ label, amount, category, amortizedMonths?, color? }`
-- `totalLabel?: string`
-
-**Output subpath:** Main bundle (no chart dep — uses MUI `Chip` + `Stack` + `Typography`).
-
-**Blockers:** None.
+**Output subpath:** Main bundle. **Blockers:** None.
 
 ---
 
-### `ROIComparisonCard` 🔴 Needs building
+### `RelatedItemsList` ⚙️ Phase 1 scaffolded
 
-**What it is:** Side-by-side comparison of investment returns across two dimensions:
-material (income, time saving, product shipped) and non-material (relationship,
-skill development, compounding value). Renders two columns of labeled metric rows
-with a qualitative/quantitative indicator per row.
+**Phase 2 dispatch brief:**
 
-**The key insight:** non-material dividends (a 15-year-old who understands git, code
-review, and shipping software) are often larger than the material ones but invisible
-in any standard financial model. This widget makes them explicit.
+List with optional tab filter. Each item: icon, name, sub-label, stat numbers. Uses MUI `Tabs` + `List`.
 
-**Accepts:**
-
-- `title: string`
-- `materialItems: ROIItem[]` — `{ label, value, unit?, trend? }`
-- `nonMaterialItems: ROIItem[]` — `{ label, value: string, icon?: ReactNode }`
-- `chart?: ReactNode` — optional bar chart slot for the material column
-
-**Output subpath:** Main bundle.
-
-**Blockers:** None.
+**Output subpath:** Main bundle. **Blockers:** None.
 
 ---
 
-### `ScenarioComparisonWidget` 🔴 Needs building
+### `ContactsList` ⚙️ Phase 1 scaffolded
 
-**What it is:** Interactive "what if" widget. Consumer defines a set of scenario
-variables (toggle, numeric slider, dropdown). Each variable change re-computes a
-set of outcome metrics in real time. Shows a before/after or multi-scenario grid.
+**Phase 2 dispatch brief:**
 
-**General enough to model:**
+Compact contact list: avatar, name, email. Optional action icons per row.
 
-- "What if a contributor completes 4 tasks vs 8 tasks — how does the wage cost change and
-  how does the projected delivery speed change?"
-- "What if I defer the desk — how does CAPEX drop and what is the productivity impact?"
-- "What if the visit is 48 days vs 53 days — how do recurring costs change?"
-
-**Accepts:**
-
-- `title: string`
-- `variables: ScenarioVariable[]` — `{ key, label, type: 'toggle'|'range'|'select', defaultValue, options? }`
-- `compute: (values: Record<string, unknown>) => ScenarioOutcome[]`
-- `outcomes: ScenarioOutcomeDefinition[]` — `{ key, label, format: 'currency'|'days'|'percent'|'text' }`
-
-**Output subpath:** Main bundle. The `compute` function is pure — no animation dep.
-Optional: wrap in a motion variant in `/motion` for animated value transitions.
-
-**Blockers:**
-
-- Requires careful API design — `compute` must be a pure function (no side effects)
-  so the component stays testable and server-renderable.
-- Define `ScenarioVariable`, `ScenarioOutcome`, `ScenarioOutcomeDefinition` types in
-  `types.ts` before building the component.
+**Output subpath:** Main bundle. **Blockers:** None.
 
 ---
 
-### `AmortizationScheduleTable` 🔴 Needs building
+### `AvatarRow` ⚙️ Phase 1 scaffolded
 
-**What it is:** Table showing how a one-time cost (CAPEX) is amortized over a defined
-period. Each row = one time period (month/quarter). Columns: period, remaining balance,
-period cost, cumulative amortized. Optional: a `chart?: ReactNode` slot for a bar
-chart showing the curve.
+**Phase 2 dispatch brief:**
 
-**Why it belongs here:** Any dashboard that tracks an investment (a tool, a person, a
-dep upgrade) needs to distinguish "I paid AUD 1,800 for a laptop today" from "the
-effective monthly cost is AUD 75 over 24 months". This table makes that explicit.
+Horizontal stacked avatar group with a `+N` overflow indicator. Used in `QuickTransferWidget`
+and any dashboard showing "who worked on this".
 
-**Accepts:**
+```ts
+type AvatarRowProps = {
+  avatars: Array<{ src?: string; name: string; size?: number }>;
+  max?: number;
+  sx?: SxProps<Theme>;
+};
+```
 
-- `title: string`
-- `totalCost: number`
-- `periodLabel: string` — e.g. `'Month'`
-- `periods: number` — total amortization period
-- `currency?: string`
-- `chart?: ReactNode`
-
-**Output subpath:** Main bundle.
-
-**Blockers:** None.
+**Output subpath:** Main bundle. **Blockers:** None.
 
 ---
 
-## Build order (recommended)
+### `StatusLabel` ⚙️ Phase 1 scaffolded
 
-Phase G of the giselle-mui roadmap covers these components. Recommended order:
+**Phase 2 dispatch brief:**
 
-### Tier 1 — Architecture prerequisites (unblock everything)
+Compact status indicator chip/label. Accepts a `status` string and maps it to a palette colour.
+Useful anywhere a task or item status needs to be shown inline.
 
-| Task                                                             | Why                                                   |
-| ---------------------------------------------------------------- | ----------------------------------------------------- |
-| Configure `/charts` subpath in tsup + package.json               | Unblocks all ApexCharts chart cards                   |
-| Configure `/motion` subpath in tsup + package.json               | Unblocks FloatingSubNav move + new motion components  |
-| Confirm `framer-motion` is `peerDependenciesMeta.optional: true` | Already done for apexcharts; verify for framer-motion |
-| Phase C — `GiselleThemeProvider`                                 | Unblocks HeroBannerCard gradient tokens               |
+**Example use:** Status column in an admin table or a viewer task list.
 
-### Tier 2 — MUI-only components (no dep blockers, build immediately)
-
-Build these in parallel with Tier 1 — they have no architectural dependencies:
-
-1. `ProgressStatsList` — needed for trip-costs "payment spread" view
-2. `BudgetBreakdownCard` — primary trip-costs component
-3. `ActivityFeedList` — timeline of payments / cash-flow
-4. `DataTable` — task list / payment history
-5. `HeroBannerCard` — dashboard welcome card
-6. `StatCardRow` — stat cards in a responsive grid
-7. `BalanceSummaryCard` (`chart?: ReactNode` slot)
-8. `NewsFeedList`, `ContactsList`, `QuickTransferWidget`, `RelatedItemsList`
-
-### Tier 3 — Chart components (after `/charts` subpath is configured)
-
-1. `SparklineBar` — embedded in StatCard
-2. `DonutChartCard` — expenses breakdown, bucket split visualisation
-3. `AreaLineChartCard` — cash-flow over time
-4. `ProjectionChartCard` — dual series cost vs return, break-even annotation
-5. `GroupedBarChartCard` — weekly spend by category
-6. `HorizontalBarChartCard` — conversion / budget category bars
-7. `RadarChartCard` — (lower priority — no immediate trip-costs use case)
-
-### Tier 4 — Motion components (after `/motion` subpath is configured)
-
-1. Move `FloatingSubNav` from main → `/motion`
-2. `AnimatedTabPanel`
+**Output subpath:** Main bundle. **Blockers:** None.
 
 ---
 
-## Trip-costs dashboard — component shopping list
+### `ExpenseCategoryGroup` ⚙️ Phase 1 scaffolded
 
-The specific components needed to render a cost-breakdown dataset as a
-live dashboard in alexrebula (Phase H of the alexrebula roadmap):
+**Phase 2 dispatch brief:**
 
-| Widget                                                     | Component                       | Status                          |
-| ---------------------------------------------------------- | ------------------------------- | ------------------------------- |
-| Stat row: total cost, cash needed this week, ZipPay amount | `StatCard` × 3 + `StatCardRow`  | `StatCard` ✅, `StatCardRow` ✅ |
-| Cash-flow timeline                                         | `TimelineTwoColumn`             | ✅                              |
-| Budget breakdown (flights, CAPEX, activities, wages)       | `BudgetBreakdownCard`           | 🔴                              |
-| Donut: cost categories                                     | `DonutChartCard`                | 🔴                              |
-| Payment spread table (ZipPay vs cash)                      | `DataTable`                     | 🔴                              |
-| Activity feed: payment events as tasks are paid            | `ActivityFeedList`              | 🔴                              |
-| Wage progress + Barefoot split                             | `ProgressStatsList`             | 🔴                              |
-| Barefoot buckets donut                                     | `DonutChartCard`                | 🔴                              |
-| Task completion progress                                   | `StatCard` (tasks done / total) | ✅                              |
-| Cost classification (CAPEX / OpEx / Investment)            | `CostClassificationCard`        | 🔴                              |
-| Costs vs projected return over time (break-even line)      | `ProjectionChartCard`           | 🔴                              |
-| Planned vs actual spend over time (budget adherence)       | `BudgetVsActualChartCard`       | 🔴                              |
-| Material vs non-material dividends                         | `ROIComparisonCard`             | 🔴                              |
-| Scenario: "what if contributor does 4 vs 8 tasks?"         | `ScenarioComparisonWidget`      | 🔴                              |
-| Laptop/desk amortization over 24 months                    | `AmortizationScheduleTable`     | 🔴                              |
+Grouped list of expense items under a category header. Collapsible. Used to render
+a structured expense breakdown in a sidebar or card.
 
-**Minimum viable dashboard (MUI-only components only, no charts subpath needed):**
+**Output subpath:** Main bundle. **Blockers:** None.
 
-`StatCardRow` + `BudgetBreakdownCard` + `DataTable` + `ActivityFeedList` + `ProgressStatsList`
+---
 
-This gives a fully functional read-only dashboard for the trip costs. Chart components
-add visual richness but are not required for the data to be legible.
+### `ExpenseLineItem` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Single row in an expense breakdown: icon slot, label, amount, optional trend indicator.
+Sub-component of `ExpenseCategoryGroup` but independently exportable.
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `AmortizationTable` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Table showing how a one-time cost is amortized. Each row = one period. Columns: period,
+remaining balance, period cost, cumulative amortized. Optional `chart?: ReactNode` slot.
+
+```ts
+type AmortizationTableProps = {
+  title?: string;
+  totalCost: number;
+  periodLabel: string;
+  periods: number;
+  currency?: string;
+  chart?: ReactNode;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+## Group 4 — Navigation (main bundle)
+
+All components in `src/components/material/navigation/`.
+
+### `FloatingSubNav` ✅ Shipped
+
+Floating sub-navigation bar with animated show/hide. Currently in main bundle.
+
+---
+
+### `AppTopBar` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+MUI `AppBar` wrapper. `logo?: ReactNode`, `title?: ReactNode`, `actions?: ReactNode` right-side
+slot, `onMenuClick?` for sidebar toggle.
+
+```ts
+type AppTopBarProps = {
+  logo?: ReactNode;
+  title?: ReactNode;
+  actions?: ReactNode;
+  onMenuClick?: () => void;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Example use:** Top bars in admin and viewer layouts.
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `AppSidebar` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+MUI `Drawer` wrapper. `logo?: ReactNode`, `navItems: NavItem[]`, `width?`, `open?` for
+controlled open/close. Nav items: icon, label, href, optional active state.
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `Breadcrumbs` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+MUI `Breadcrumbs` wrapper with consistent styling. Accepts `items: { label, href? }[]`.
+Last item is non-navigable (current page).
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `FloatingControlBar` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Floating pill-shaped action bar. Wraps children in a positioned container with elevation.
+Used for contextual actions that float above the page content.
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+## Group 5 — Layout (main bundle)
+
+All components in `src/components/material/layout/`. Shipped items are already exported.
+
+### `SectionContainer` ✅ Shipped
+
+### `SectionTitle` ✅ Shipped
+
+### `TwoColumnShowcaseRow` ✅ Shipped
+
+---
+
+### `AppShell` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Full-page shell: sidebar + topbar + main content area. Handles sidebar open/close state.
+Accepts `AppTopBar` and `AppSidebar` as `ReactNode` slots — no coupling to those components.
+
+```ts
+type AppShellProps = {
+  sidebar?: ReactNode;
+  topbar?: ReactNode;
+  children?: ReactNode;
+  sidebarOpen?: boolean;
+  onSidebarToggle?: () => void;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Example use:** Admin and viewer layout shells.
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `AuthPageLayout` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Two-column layout for auth pages: form column + illustration column. `reverse?` flips sides.
+`illustration?: ReactNode` slot.
+
+```ts
+type AuthPageLayoutProps = {
+  children: ReactNode;
+  illustration?: ReactNode;
+  reverse?: boolean;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+### `PageHeader` ⚙️ Phase 1 scaffolded
+
+**Phase 2 dispatch brief:**
+
+Standard dashboard page header: `title`, `subtitle?`, `breadcrumbs?: ReactNode`, `action?: ReactNode`
+right-side slot.
+
+```ts
+type PageHeaderProps = {
+  title: string;
+  subtitle?: string;
+  breadcrumbs?: ReactNode;
+  action?: ReactNode;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Example use:** Page headers on admin and viewer dashboard pages.
+
+**Output subpath:** Main bundle. **Blockers:** None.
+
+---
+
+## Group 6 — Motion (`/motion` subpath)
+
+Components in `src/components/motion/`. Require `framer-motion` peer dep.
+
+### Shipped (currently in `/motion`)
+
+- `MotionContainer` ✅
+- `MotionViewport` ✅
+- `useScrollParallax` ✅
+- `HeroButtonsRow` ✅
+- `InteractiveHeroLogo` ✅
+- Animation `variants` ✅
+
+---
+
+### `AnimatedTabPanel` 🔴 Not yet scaffolded
+
+**Brief:** Wraps `children` in a `motion.div` with enter/exit animations. Used for animated
+dashboard tab switches.
+
+```ts
+type AnimatedTabPanelProps = {
+  children: ReactNode;
+  value: number;
+  index: number;
+  sx?: SxProps<Theme>;
+};
+```
+
+**Output subpath:** `/motion`. **Blockers:** None.
+
+---
+
+## Group 7 — Investment analytics (main bundle)
+
+### `ScenarioComparisonWidget` 🔴 Not yet scaffolded
+
+**Brief:** Interactive "what if" widget. Consumer defines scenario variables (toggle, slider,
+dropdown). Each change re-computes outcome metrics via a pure `compute` function. Shows
+before/after or multi-scenario outcome grid.
+
+```ts
+type ScenarioComparisonWidgetProps = {
+  title: string;
+  variables: ScenarioVariable[];
+  compute: (values: Record<string, unknown>) => ScenarioOutcome[];
+  outcomes: ScenarioOutcomeDefinition[];
+  sx?: SxProps<Theme>;
+};
+```
+
+`compute` must be a pure function — no side effects, no fetching.
+
+**Output subpath:** Main bundle. **Blockers:** None (requires careful API design).
+
+---
+
+## Task tracker consumer checklist
+
+Components required for a minimal task-tracker dashboard:
+
+| Widget                                         | Component                      | Status           | Priority   |
+| ---------------------------------------------- | ------------------------------ | ---------------- | ---------- |
+| Viewer stats row (tasks done, earned, pending) | `StatCard` × 3 + `StatCardRow` | `StatCardRow` ✅ | Done       |
+| Profile card (display name + 3 stats)          | `ProfileSummaryCard`           | ⚙️ scaffolded    | **HIGH**   |
+| Task table (admin view)                        | `DataTable`                    | ⚙️ scaffolded    | **HIGH**   |
+| Task status breakdown                          | `StatusLabel`                  | ⚙️ scaffolded    | **HIGH**   |
+| Barefoot bucket split                          | `ProgressStatsList`            | ⚙️ scaffolded    | **HIGH**   |
+| Recent activity feed                           | `ActivityFeedList`             | ⚙️ scaffolded    | **HIGH**   |
+| Task status donut chart                        | `DonutChartCard`               | ⚙️ scaffolded    | **MEDIUM** |
+| Page header (admin/viewer)                     | `PageHeader`                   | ⚙️ scaffolded    | **HIGH**   |
+| Admin layout shell                             | `AppShell` + `AppTopBar`       | ⚙️ scaffolded    | **HIGH**   |
+
+**Minimum viable task tracker (MUI-only, no `/charts` dep):**
+`ProfileSummaryCard` + `DataTable` + `StatusLabel` + `ProgressStatsList` + `ActivityFeedList` + `PageHeader` + `AppShell` + `AppTopBar`
+
+---
+
+## Build order (Phase 2)
+
+### Tier 1 — Already done ✅
+
+| What                                      | Status |
+| ----------------------------------------- | ------ |
+| All 5 subpath exports configured          | ✅     |
+| `GiselleThemeProvider` + Settings shipped | ✅     |
+| Phase 1 scaffolding for all components    | ✅     |
+
+### Tier 2 — task tracker critical path (build next)
+
+MUI-only, no dep blockers. Unblocks a minimal task-tracker dashboard:
+
+1. `StatusLabel` — simplest, unblocks task lists everywhere
+2. `PageHeader` — layout primitive needed before shell
+3. `AppTopBar` — needed for admin/viewer layouts
+4. `AppShell` — composes the above
+5. `ProfileSummaryCard` — viewer dashboard hero
+6. `DataTable` — admin task table
+7. `ProgressStatsList` — Barefoot bucket split
+8. `ActivityFeedList` — recent completions feed
+
+### Tier 3 — second wave (after Tier 2)
+
+Remaining MUI-only cards and widgets:
+
+- `BalanceSummaryCard`, `BudgetBreakdownCard`, `PeriodSummaryCard`
+- `HeroBannerCard`, `FeaturedItemCard`, `PromoInviteCard`
+- `CostClassificationCard`, `ROIComparisonCard`, `QuickTransferWidget`
+- `CreditCardDisplay`, `AvatarRow`, `ContactsList`
+- `NewsFeedList`, `RelatedItemsList`, `ExpenseCategoryGroup`, `ExpenseLineItem`
+- `AppSidebar`, `Breadcrumbs`, `FloatingControlBar`
+- `AuthPageLayout`, `AmortizationTable`
+
+### Tier 4 — Chart components (parallel with Tier 3)
+
+1. `ChartCardBase` — shared shell for all chart cards
+2. `SparklineBar` — embedded in StatCard
+3. `DonutChartCard` — task status breakdown
+4. `AreaLineChartCard` — earnings over time
+5. `BudgetVsActualChartCard` — planned vs actual spend
+6. `ProjectionCard` — cost vs return break-even
+7. `GroupedBarChartCard`, `HorizontalBarChartCard`, `RadarChartCard`
+
+### Tier 5 — Investment analytics + Motion
+
+- `ScenarioComparisonWidget` — scaffold first, then implement
+- `AnimatedTabPanel` — scaffold first, then implement
 
 ---
 
 ## Component count summary
 
-| Group                    | Count                                                      | Subpath       | Status     |
-| ------------------------ | ---------------------------------------------------------- | ------------- | ---------- |
-| Already shipped          | 2 (`StatCard`, `RadialProgressCard`)                       | Main + Charts | ✅         |
-| MUI-only (no dep)        | 16                                                         | Main bundle   | 🔴 All new |
-| ApexCharts chart cards   | 8 (incl. `ProjectionChartCard`, `BudgetVsActualChartCard`) | `/charts`     | 🔴 All new |
-| Motion components        | 2 (1 move, 1 new)                                          | `/motion`     | 🟡/🔴      |
-| **Total new components** | **24**                                                     |               |            |
+| Group                             | Shipped ✅ | Scaffolded ⚙️ | Not started 🔴 |
+| --------------------------------- | ---------- | ------------- | -------------- |
+| Group 1 — Cards                   | 5          | 11            | 0              |
+| Group 2 — Chart cards (`/charts`) | 1          | 9             | 0              |
+| Group 3 — Data display            | 4          | 11            | 0              |
+| Group 4 — Navigation              | 1          | 4             | 0              |
+| Group 5 — Layout                  | 3          | 3             | 0              |
+| Group 6 — Motion                  | 6          | 0             | 1              |
+| Group 7 — Investment analytics    | 0          | 0             | 1              |
+| **Total**                         | **20**     | **38**        | **2**          |
+
+38 Phase 2 implementations needed. All but 2 are scaffolded and ready for `/create-giselle-component` dispatch.
 
 ---
 
 ## Related
 
-- [`roadmap.mdx`](../roadmap.mdx) — Phases A–G (add Phase H: Dashboard Components here)
-- [`standalone-gap-analysis.md`](../standalone-gap-analysis.md) — Phase D UI primitives
-- `alexrebula/docs/roadmap.md` — Phase 1.6: Dashboard Components (bubble-up entry)
+- [`roadmap.mdx`](../roadmap.mdx) — Phase H: Dashboard Components
+- [`cleanup-workflow.md`](./cleanup-workflow.md) — Definition of Done for every component
+- [`roadmap.mdx`](../roadmap.mdx) — Phase H: Dashboard Components (duplicate link removed)

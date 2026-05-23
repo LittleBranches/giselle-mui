@@ -21,7 +21,7 @@ Shipped. Toggle icon button with `checked`/`unchecked` icon slots and ARIA `aria
 
 ## Completed
 
-| Task                                   | Completed   |
-| -------------------------------------- | ----------- |
-| Initial component shipped              | 13 May 2026 |
-| Replaced deprecated `CheckIconButton`  | 13 May 2026 |
+| Task                                  | Completed   |
+| ------------------------------------- | ----------- |
+| Initial component shipped             | 13 May 2026 |
+| Replaced deprecated `CheckIconButton` | 13 May 2026 |

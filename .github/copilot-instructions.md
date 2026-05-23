@@ -284,7 +284,6 @@ When updating or writing docs:
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `cleanup component <Name>` | Read `docs/components/cleanup-workflow.md` and execute the full cleanup workflow on the named component. No further explanation needed. |
 | `review pr <N>`            | Run the PR review workflow below on PR #N.                                                                                              |
-| `respond pr review <N>`    | Load AGENTS.md standards, then run the respond-to-PR-review workflow below as branch owner's assistant.                                 |
 | `create pr <branch>`       | Execute Phase 0 + Phase 1 of `docs/pr-review-workflow.md` for `<branch>`; stop after Copilot review is confirmed triggered.             |
 
 ## PR review workflow — `review pr <N>`
@@ -328,74 +327,16 @@ Prompt the user to resolve the threads in the GitHub PR UI.
 
 ---
 
-## Respond-to-PR-review workflow — `respond pr review <N>`
-
-When asked to `respond pr review <N>`, you are the **branch owner's assistant**.
-Execute these phases in order:
-
-**Phase 0 — Load standards (mandatory — do not skip)**
-Fetch both AGENTS.md barrels before reading any comments:
-
-```
-Public:  https://raw.githubusercontent.com/LittleBranches/oss-quality-standards/main/docs/AGENTS.md
-Private: https://raw.githubusercontent.com/LittleBranches/oss-quality-standards-private/main/AGENTS.md
-```
-
-**Phase 1 — Verify branch**
-
-```sh
-git branch  # confirm you are on the PR branch before touching any file
-```
-
-Switch to the PR branch if needed before making any edits.
-
-**Phase 2 — Read the comments**
-`mcp_gitkraken_pull_request_get_comments` — list all review comments.
-Note every unresolved comment: its `id`, file, and what it flags.
-
-**Phase 3 — Triage each comment**
-Assign a verdict to each: ✅ Valid | ❌ Invalid | ⚠️ Partial | ⏸️ Deferred
-
-**Phase 4 — Pre-acknowledge in-thread (before fixing)**
-For each ✅ or ⚠️ comment, post a reply **before** making any code change:
-
-```sh
-gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies \
-  --method POST -f body="✅ Valid. <one-sentence acknowledgement>. Fixing: <what will change>."
-```
-
-⚠️ **NEVER use `mcp_gitkraken_pull_request_create_review` for thread replies.**
-That tool creates a top-level review on the main PR thread — not a nested reply.
-`gh api .../replies` is the only correct tool for replying inside an existing thread.
-
-**Phase 5 — Fix the code**
-Apply all fixes. Run `npm run check:verify`. Commit and push.
-
-**Phase 6 — Confirm in-thread (after fixing)**
-For each comment fixed, post a follow-up reply using the same `comment_id`:
-
-```sh
-gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies \
-  --method POST -f body="Fixed at commit \`<sha>\`: <one sentence describing the change>."
-```
-
-**Phase 7 — Branch owner sign-off**
-Prompt the user to resolve the threads in the GitHub PR UI.
-
----
-
 ## Session bootstrap: where Copilot should look first
 
 At the start of every new Copilot session in this package, read these files:
 
-| File                                                                                                  | Purpose                                                                                                        |
-| ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Fetch `https://raw.githubusercontent.com/LittleBranches/oss-quality-standards/main/docs/AGENTS.md`    | Full PR review/respond workflow phases — **required before any `review pr` or `respond pr review` task**       |
-| Fetch `https://raw.githubusercontent.com/LittleBranches/oss-quality-standards-private/main/AGENTS.md` | Private extension: banned content policy, identifier rules                                                     |
-| [`docs/roadmap.md`](../docs/roadmap.md)                                                               | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
-| [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md)                             | Full plan for `RoadmapTimeline` — next component to build                                                      |
-| [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                                                 | How to wire this library into a Next.js app                                                                    |
-| [`docs/components/cleanup-workflow.md`](../docs/components/cleanup-workflow.md)                       | Step-by-step playbook for creating or cleaning up any component — Definitions of Done for Scenario A and B     |
+| File                                                                            | Purpose                                                                                                        |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [`docs/roadmap.md`](../docs/roadmap.md)                                         | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
+| [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md)       | Full plan for `RoadmapTimeline` — next component to build                                                      |
+| [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                           | How to wire this library into a Next.js app                                                                    |
+| [`docs/components/cleanup-workflow.md`](../docs/components/cleanup-workflow.md) | Step-by-step playbook for creating or cleaning up any component — Definitions of Done for Scenario A and B     |
 
 ### Current components (shipped)
 
@@ -700,21 +641,19 @@ See full rules: [`docs/components/api-design-rules.md`](../docs/components/api-d
 
 Every component belongs to one tier. Identify the tier before designing props.
 
-| Tier                        | When to use                                                                        | Props                                                                                         | JSDoc on props?         |
-| --------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------- |
-| **1 — Pure extension**      | Only value-add is enforcing a convention                                           | Inherit everything from MUI base. Add zero new props.                                         | None on Props interface |
-| **2 — Selective extension** | Narrowing MUI's API, adding a ReactNode slot, pre-wiring a non-obvious combination | Extend MUI base. Add only the truly new props.                                                | Only on own props       |
-| **3 — Composition**         | Assembles multiple MUI primitives from a data array                                | `items: Item[]`, `sx?: SxProps<Theme>`, config props only — do not extend a specific MUI base | Document the item type  |
+| Tier | When to use | Props | JSDoc on props? |
+|---|---|---|---|
+| **1 — Pure extension** | Only value-add is enforcing a convention | Inherit everything from MUI base. Add zero new props. | None on Props interface |
+| **2 — Selective extension** | Narrowing MUI's API, adding a ReactNode slot, pre-wiring a non-obvious combination | Extend MUI base. Add only the truly new props. | Only on own props |
+| **3 — Composition** | Assembles multiple MUI primitives from a data array | `items: Item[]`, `sx?: SxProps<Theme>`, config props only — do not extend a specific MUI base | Document the item type |
 
 **Shared style vs shared component rule:**
-
 - Visual-only sharing (colours, spacing, shadows) → use a style constant in `*.styles.ts`
 - Structural sharing (recurring DOM shape with multiple named slots) → thin wrapper component
 
 **The `Paper` → card pattern:** all card components extend `PaperProps` directly and import a shared `cardBaseSx` constant. There is no `BaseCard` wrapper component. Exception: `ChartCardBase` — justified by a non-trivial shared structural shell (title + year-selector slot + chart area + legend).
 
 **7 prop design rules (non-negotiable):**
-
 1. Inherit first — check if MUI already has the prop before adding it.
 2. `ReactNode` for all slots — never accept a specific icon or image component type.
 3. `sx` always last — forwarded to the root element.

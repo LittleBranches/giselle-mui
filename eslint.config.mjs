@@ -176,5 +176,19 @@ export default eslintTs.config(
         },
       ],
     },
+  },
+
+  // ── Node.js scripts override ──────────────────────────────────────────────
+  // scripts/ are CommonJS Node.js files — require(), console, process are all
+  // valid globals here. TypeScript-ESLint's no-require-imports does not apply.
+  {
+    files: ['scripts/**/*.{js,cjs,mjs}'],
+    languageOptions: {
+      globals: { ...globals.node },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      'no-console': 'off',
+    },
   }
 );

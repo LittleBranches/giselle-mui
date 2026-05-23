@@ -10,10 +10,10 @@ Shipped. Responsive `Grid2` row of `StatCard` items. Cleanup audit pending.
 
 ## Open improvements
 
-| Task                                                 | Priority | Status |
-| ---------------------------------------------------- | -------- | ------ |
-| Run full cleanup audit (DoD 21, Best practices 13)   | High     | ⬜     |
-| Verify `Responsive` story covers all breakpoints     | Medium   | ⬜     |
+| Task                                               | Priority | Status |
+| -------------------------------------------------- | -------- | ------ |
+| Run full cleanup audit (DoD 21, Best practices 13) | High     | ⬜     |
+| Verify `Responsive` story covers all breakpoints   | Medium   | ⬜     |
 
 ## Known gaps
 

@@ -210,6 +210,7 @@ export const Responsive: Story = {
     </Box>
   ),
 };
+
 /** Icons used in the LibraryHero tech strip. */
 const libraryIcons: TechIconItem[] = [
   { icon: <GiselleIcon icon="logos:react" width={32} />, label: 'React' },
@@ -218,6 +219,7 @@ const libraryIcons: TechIconItem[] = [
   { icon: <GiselleIcon icon="logos:storybook-icon" width={32} />, label: 'Storybook' },
   { icon: <GiselleIcon icon="logos:vitest" width={32} />, label: 'Vitest' },
 ];
+
 /**
  * **`LibraryHero`** — demonstrates the composition potential of the `heading` and `icons` slots.
  *

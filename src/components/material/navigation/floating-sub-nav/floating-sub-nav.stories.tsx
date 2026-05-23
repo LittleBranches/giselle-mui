@@ -95,6 +95,7 @@ export const Fixed: Story = {
     </Box>
   ),
 };
+
 /** Sticky variant — constrained to the parent container's bottom edge. */
 export const Sticky: Story = {
   args: {
@@ -110,6 +111,7 @@ export const Sticky: Story = {
     </Box>
   ),
 };
+
 /** Hidden — `activeId={null}` hides the pill. */
 export const Hidden: Story = {
   args: {
@@ -118,6 +120,7 @@ export const Hidden: Story = {
     onSelect: () => {},
   },
 };
+
 /**
  * Responsive — verify `FloatingSubNav` renders correctly at each standard MUI breakpoint.
  * Uses `sticky` mode so the pill sits at the bottom of its container, making it

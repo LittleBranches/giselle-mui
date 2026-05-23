@@ -73,6 +73,7 @@ export const ColorOverride: Story = {
     </Box>
   ),
 };
+
 /** Flip and rotate variants. */
 export const FlipAndRotate: Story = {
   render: () => (
@@ -85,6 +86,7 @@ export const FlipAndRotate: Story = {
     </Box>
   ),
 };
+
 /**
  * Responsive — icon renders identically at all breakpoints.
  * Sizes story shows the available width range; this story shows in-context usage
