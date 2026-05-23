@@ -336,3 +336,12 @@ This is the point where ad-hoc process became repeatable, self-documenting infra
 Currently open (PR 43, not yet merged).
 
 - PR 43 ([GitHub](https://github.com/AlexRebula/giselle-mui/pull/43)) - [pr-43-component-roadmap-standard/README.md](./pr-43-component-roadmap-standard/README.md)
+
+### [`chore/two-phase-scaffold-gate`](https://github.com/AlexRebula/giselle-mui/tree/chore/two-phase-scaffold-gate)
+
+Quality-infrastructure branch that automates enforcement of the two-phase TDD scaffold pattern.
+Ships `src/quality-gate/two-phase-scaffold.test.ts` (Vitest gate that blocks implementation-only test files), `src/quality-gate/two-phase-scaffold-exempt.json` (144-file baseline of pre-existing files), and `scripts/audit-roadmaps.cjs` (roadmap audit script that exits 1 on ERROR-severity findings).
+Also fixes story `argTypes` across 4 components, deduplicates the dashboard-components-plan Status legend, and adds `.pr67_threads*.json` to `.gitignore`.
+Merged — PR 70 — 24 May 2026.
+
+- PR 70 ([GitHub](https://github.com/AlexRebula/giselle-mui/pull/70)) - [pr-70-two-phase-scaffold-gate/README.md](./pr-70-two-phase-scaffold-gate/README.md)

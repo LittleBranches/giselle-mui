@@ -27,13 +27,13 @@ The npm scope is `@littlebranches`. This was decided in PR #61 (19 May 2026).
 
 The package ships five independent subpaths. Consumers only pay for what they import:
 
-| Subpath | Entry | Peer dep required |
-|---|---|---|
-| `@littlebranches/giselle-mui` | `dist/index.js` | `@mui/material` |
-| `@littlebranches/giselle-mui/utils` | `dist/utils.js` | none |
+| Subpath                              | Entry            | Peer dep required                |
+| ------------------------------------ | ---------------- | -------------------------------- |
+| `@littlebranches/giselle-mui`        | `dist/index.js`  | `@mui/material`                  |
+| `@littlebranches/giselle-mui/utils`  | `dist/utils.js`  | none                             |
 | `@littlebranches/giselle-mui/charts` | `dist/charts.js` | `apexcharts`, `react-apexcharts` |
-| `@littlebranches/giselle-mui/motion` | `dist/motion.js` | `framer-motion` |
-| `@littlebranches/giselle-mui/lab` | `dist/lab.js` | `@mui/lab` |
+| `@littlebranches/giselle-mui/motion` | `dist/motion.js` | `framer-motion`                  |
+| `@littlebranches/giselle-mui/lab`    | `dist/lab.js`    | `@mui/lab`                       |
 
 The `./lab` subpath was added in PR #61 (19 May 2026). It exports all Timeline components
 (`TimelineTwoColumn`, `TimelineCompact`, `TaskList`, `MilestoneBadge`, `PhaseCard`,
@@ -559,16 +559,16 @@ into a dedicated `./lab` subpath export, and rename the package scope from `@ale
    Branches design system family. `@alexrebula` was a personal stopgap scope; all packages
    now live under `@littlebranches`.
 
-| Task                                                                          | Label | Status |
-| ----------------------------------------------------------------------------- | ----- | ------ |
-| Rename package: `@alexrebula/giselle-mui` → `@littlebranches/giselle-mui`    | Core  | ✅     |
-| Add `src/lab-index.ts` barrel exporting all Timeline components               | Core  | ✅     |
-| Add `./lab` tsup entry + `package.json` exports map entry                     | Core  | ✅     |
-| Move Timeline components: `section/timeline/` → `lab/timeline/`               | Refactor | ✅  |
-| Update Storybook titles: `Section/Timeline/*` → `Lab/Timeline/*`              | Chore | ✅     |
-| Make `@mui/lab` optional in `peerDependenciesMeta`                            | Core  | ✅     |
-| Add `assignMilestoneSidesByDone` utility to `./lab` export                    | Core  | ✅     |
-| Update all docs + source JSDoc to use `@littlebranches/giselle-mui`           | Docs  | ✅     |
+| Task                                                                      | Label    | Status |
+| ------------------------------------------------------------------------- | -------- | ------ |
+| Rename package: `@alexrebula/giselle-mui` → `@littlebranches/giselle-mui` | Core     | ✅     |
+| Add `src/lab-index.ts` barrel exporting all Timeline components           | Core     | ✅     |
+| Add `./lab` tsup entry + `package.json` exports map entry                 | Core     | ✅     |
+| Move Timeline components: `section/timeline/` → `lab/timeline/`           | Refactor | ✅     |
+| Update Storybook titles: `Section/Timeline/*` → `Lab/Timeline/*`          | Chore    | ✅     |
+| Make `@mui/lab` optional in `peerDependenciesMeta`                        | Core     | ✅     |
+| Add `assignMilestoneSidesByDone` utility to `./lab` export                | Core     | ✅     |
+| Update all docs + source JSDoc to use `@littlebranches/giselle-mui`       | Docs     | ✅     |
 
 ---
 
@@ -579,10 +579,10 @@ to support both MUI v7 and v9 consumers during the transition window.
 
 **Peer dependency ranges after this phase:**
 
-| Package | Range |
-|---|---|
-| `@mui/material` | `>=7.0.0 <10.0.0` |
-| `@mui/lab` | `^7.0.0 \|\| ^9.0.0-beta.3` |
+| Package         | Range                       |
+| --------------- | --------------------------- |
+| `@mui/material` | `>=7.0.0 <10.0.0`           |
+| `@mui/lab`      | `^7.0.0 \|\| ^9.0.0-beta.3` |
 
 **MUI v9 breaking changes resolved:**
 
@@ -597,26 +597,27 @@ to support both MUI v7 and v9 consumers during the transition window.
 **Support window:** v7 support ends T0 + 10–12 weeks. See
 [`migrations/mui-9-migration-and-support-plan.md`](./migrations/mui-9-migration-and-support-plan.md).
 
-| Task                                                                      | Label | Status |
-| ------------------------------------------------------------------------- | ----- | ------ |
-| Expand peer dep ranges for `@mui/material` and `@mui/lab`                 | Core  | ✅     |
-| Upgrade dev deps to MUI v9                                                | Core  | ✅     |
-| Apply `@mui/codemod v6.0.0/sx-prop` (44 files — removes empty sx arrays) | Chore | ✅     |
-| Fix all MUI v9 TypeScript breaking changes (10 files)                     | Fix   | ✅     |
-| Quality gate: Prettier · ESLint · TypeScript · Tests (1218) · Build · Storybook | QA | ✅  |
-| CI dual-major matrix (MUI v7 job + MUI v9 job)                            | CI    | ⬜ PR #64 |
+| Task                                                                            | Label | Status    |
+| ------------------------------------------------------------------------------- | ----- | --------- |
+| Expand peer dep ranges for `@mui/material` and `@mui/lab`                       | Core  | ✅        |
+| Upgrade dev deps to MUI v9                                                      | Core  | ✅        |
+| Apply `@mui/codemod v6.0.0/sx-prop` (44 files — removes empty sx arrays)        | Chore | ✅        |
+| Fix all MUI v9 TypeScript breaking changes (10 files)                           | Fix   | ✅        |
+| Quality gate: Prettier · ESLint · TypeScript · Tests (1218) · Build · Storybook | QA    | ✅        |
+| CI dual-major matrix (MUI v7 job + MUI v9 job)                                  | CI    | ⬜ PR #64 |
 
 ---
 
 ## Phase L — Quality Infrastructure
 
-| Task                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | Label | Status                |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | --------------------- |
-| PR template (`.github/pull_request_template.md`) — consistent across all repos                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Chore | ✅ Done — 9 May 2026  |
-| PR messages index (`docs/pr-messages/`) — all 26 PRs documented                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         | Chore | ✅ Done — 9 May 2026  |
-| **Per-component `roadmap.md` files** — each component folder gets its own `roadmap.md` with a standard format covering planned improvements, known gaps, and next milestones. The format must be identical across all components so information transfers consistently to any tooling or documentation layer. Named `roadmap.md` in every component folder.                                                                                                                                                                                                    | Chore | ⬜                    |
-| Update `docs/components/cleanup-workflow.md` to include Step 10b — create/update the component `roadmap.md` as a mandatory step so Copilot always creates or updates it during any cleanup run.                                                                                                                                                                                                                                                                                                                                                         | Chore | ✅ Done — 14 May 2026 |
-| **PR review workflow formalised** — `docs/pr-review-workflow.md` shipped. The conventions developed iteratively across PRs #37–#43 are now a single, executable document covering branch hygiene, PR creation (via `gh pr create` only), Copilot review response, fix batch commit, and branch owner sign-off. Session shorthands `review pr <N>` and `create pr <branch>` make the workflow invocable in any future Copilot session without re-explanation. This is the point where ad-hoc process became repeatable, self-documenting infrastructure. | Chore | ✅ Done — 14 May 2026 |
+| Task                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Label | Status                |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | --------------------- |
+| PR template (`.github/pull_request_template.md`) — consistent across all repos                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | Chore | ✅ Done — 9 May 2026  |
+| PR messages index (`docs/pr-messages/`) — all 26 PRs documented                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          | Chore | ✅ Done — 9 May 2026  |
+| **Per-component `roadmap.md` files** — each component folder gets its own `roadmap.md` with a standard format covering planned improvements, known gaps, and next milestones. The format must be identical across all components so information transfers consistently to any tooling or documentation layer. Named `roadmap.md` in every component folder.                                                                                                                                                                                                                              | Chore | ⬜                    |
+| Update `docs/components/cleanup-workflow.md` to include Step 10b — create/update the component `roadmap.md` as a mandatory step so Copilot always creates or updates it during any cleanup run.                                                                                                                                                                                                                                                                                                                                                                                          | Chore | ✅ Done — 14 May 2026 |
+| **PR review workflow formalised** — `docs/pr-review-workflow.md` shipped. The conventions developed iteratively across PRs #37–#43 are now a single, executable document covering branch hygiene, PR creation (via `gh pr create` only), Copilot review response, fix batch commit, and branch owner sign-off. Session shorthands `review pr <N>` and `create pr <branch>` make the workflow invocable in any future Copilot session without re-explanation. This is the point where ad-hoc process became repeatable, self-documenting infrastructure.                                  | Chore | ✅ Done — 14 May 2026 |
+| **Two-phase scaffold gate + roadmap audit scripts** — `src/quality-gate/two-phase-scaffold.test.ts` enforces the TDD scaffold rule: every new `.test.ts` file must have `it.todo` stubs before any implementation. `src/quality-gate/two-phase-scaffold-exempt.json` baselines 144 pre-existing files that predate the gate. `scripts/audit-roadmaps.cjs` prints audit results to stdout and exits 1 on ERROR-severity findings. Story `argTypes` fixed across 4 components. Docs deduplicated (`dashboard-components-plan.md` Status legend). PR #70 (`chore/two-phase-scaffold-gate`). | Chore | ✅ Done — 24 May 2026 |
 
 ---
 
