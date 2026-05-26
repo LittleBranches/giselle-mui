@@ -4,7 +4,7 @@
 
 ## Status
 
-`beta`
+`stable`
 
 Fully audited. Horizontally scrollable pill-tab navigation bar. Currently in the main bundle — migration to `/motion` subpath is planned (Phase H Group 6) but is a breaking change for current consumers.
 

@@ -127,12 +127,10 @@ export function ScrollParallaxHero({
                   <Box sx={heroLogoBoxSx}>{logo}</Box>
                 </motion.div>
               )}
-
               <Stack spacing={1} sx={heroStackSx}>
                 {heading && <motion.div style={parallaxYStyle(y2)}>{heading}</motion.div>}
                 {text && <motion.div style={parallaxYStyle(y3)}>{text}</motion.div>}
               </Stack>
-
               {actions && <motion.div style={parallaxYStyle(y4)}>{actions}</motion.div>}
               {icons && <motion.div style={parallaxYStyle(y5)}>{icons}</motion.div>}
             </Container>

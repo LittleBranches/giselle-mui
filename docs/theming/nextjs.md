@@ -5,7 +5,7 @@ sidebar_label: 'Next.js'
 
 # Theming in Next.js (App Router + Pages Router)
 
-`@alexrebula/giselle-mui` components use **MUI v7 CSS variables mode** and require a
+`@littlebranches/giselle-mui` components use **MUI v7 CSS variables mode** and require a
 `ThemeProvider` wrapping your application.
 
 Next.js has two routers with slightly different setup requirements. Both are covered below.
@@ -18,7 +18,7 @@ Next.js has two routers with slightly different setup requirements. Both are cov
 
 ```bash
 npm install @mui/material @emotion/react @emotion/styled @mui/material-nextjs react react-dom
-npm install @alexrebula/giselle-mui
+npm install @littlebranches/giselle-mui
 
 # Optional: only if you use GiselleIcon
 npm install @iconify/react
@@ -93,7 +93,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
 ### 4. Server vs. Client components
 
-`@alexrebula/giselle-mui` components are **client components** — they use MUI's `sx` prop
+`@littlebranches/giselle-mui` components are **client components** — they use MUI's `sx` prop
 which relies on React context. You don't need to add `'use client'` to your page files;
 Next.js will automatically treat any component that imports from a client-component package
 as a client subtree.
@@ -104,7 +104,7 @@ If you want to use a component inside a Server Component, wrap it in a thin clie
 // components/MetricCardClient.tsx
 'use client';
 
-export { MetricCard, MetricCardDecoration } from '@alexrebula/giselle-mui';
+export { MetricCard, MetricCardDecoration } from '@littlebranches/giselle-mui';
 ```
 
 ```tsx
@@ -144,7 +144,7 @@ export function DarkModeToggle() {
 
 ```bash
 npm install @mui/material @emotion/react @emotion/styled @mui/material-nextjs react react-dom
-npm install @alexrebula/giselle-mui
+npm install @littlebranches/giselle-mui
 ```
 
 ---
@@ -200,7 +200,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
 ## Theme utilities
 
-`@alexrebula/giselle-mui` exports a set of small helpers for building MUI v7 themes:
+`@littlebranches/giselle-mui` exports a set of small helpers for building MUI v7 themes:
 
 ### `channelAlpha(channel, alpha)`
 
@@ -210,7 +210,7 @@ slash syntax. MUI v7 exposes colours as space-separated RGB channels
 literal channel strings and CSS `var()` references.
 
 ```ts
-import { channelAlpha } from '@alexrebula/giselle-mui';
+import { channelAlpha } from '@littlebranches/giselle-mui';
 
 sx={(theme) => ({
   backgroundColor: channelAlpha(theme.vars.palette.primary.mainChannel, 0.08),
@@ -224,7 +224,7 @@ Converts a hex colour to a space-separated RGB channel string — the format MUI
 expects for `*Channel` palette slots in `extendTheme()`.
 
 ```ts
-import { hexToChannel } from '@alexrebula/giselle-mui';
+import { hexToChannel } from '@littlebranches/giselle-mui';
 
 const theme = extendTheme({
   colorSchemes: {
@@ -245,7 +245,7 @@ const theme = extendTheme({
 Typography scale helpers for consistent `rem` definitions.
 
 ```ts
-import { pxToRem, remToPx } from '@alexrebula/giselle-mui';
+import { pxToRem, remToPx } from '@littlebranches/giselle-mui';
 
 pxToRem(14); // "0.875rem"
 remToPx(0.875); // 14
@@ -264,7 +264,7 @@ call required.
 ```tsx
 // app/layout.tsx
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
+import { GiselleThemeProvider } from '@littlebranches/giselle-mui';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -286,7 +286,7 @@ If you prefer to manage `ThemeProvider` yourself, pass the pre-built theme direc
 ```tsx
 import { ThemeProvider } from '@mui/material/styles';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { giselleTheme } from '@alexrebula/giselle-mui';
+import { giselleTheme } from '@littlebranches/giselle-mui';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -325,7 +325,7 @@ Pass a partial `CssVarsThemeOptions` to `GiselleThemeProvider`. Only the keys yo
 provide change; all Giselle defaults are preserved.
 
 ```tsx
-import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
+import { GiselleThemeProvider } from '@littlebranches/giselle-mui';
 
 <GiselleThemeProvider
   themeOverrides={{
@@ -348,7 +348,7 @@ theme object manually:
 import { extendTheme } from '@mui/material/styles';
 // giselleThemeOptions is a plain object — import from /utils to avoid the
 // 'use client' banner on the root entry point.
-import { giselleThemeOptions } from '@alexrebula/giselle-mui/utils';
+import { giselleThemeOptions } from '@littlebranches/giselle-mui/utils';
 
 const myTheme = extendTheme({
   ...giselleThemeOptions,
@@ -374,14 +374,14 @@ import {
   GISELLE_PRIMARY_MAIN, // '#2E7D32'
   GISELLE_PRIMARY_DARK_MAIN, // '#76C442'
   GISELLE_SECONDARY_MAIN, // '#F5A623'
-} from '@alexrebula/giselle-mui';
+} from '@littlebranches/giselle-mui';
 ```
 
 ---
 
 ## Roadmap note
 
-The `@alexrebula/giselle-mui` package is in beta. A dedicated Next.js integration example
+The `@littlebranches/giselle-mui` package is in beta. A dedicated Next.js integration example
 (or a starter template) is planned after the initial npm release. Until then, the setup
 above is the recommended approach.
 

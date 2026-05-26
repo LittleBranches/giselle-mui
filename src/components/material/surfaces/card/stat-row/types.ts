@@ -12,7 +12,7 @@ export interface StatCardRowProps extends Omit<GridProps, 'children' | 'containe
   /**
    * Optional factory to render the `chart` slot for each item.
    *
-   * Use this to wire sparklines from `@alexrebula/giselle-mui/charts` in the consuming app.
+   * Use this to wire sparklines from `@littlebranches/giselle-mui/charts` in the consuming app.
    * When omitted, cards render without a chart — the main bundle stays chart-free.
    *
    * @example

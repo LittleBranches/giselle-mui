@@ -127,7 +127,7 @@ Added `### GiselleThemeProvider — zero config (recommended)` as the first sect
 App Router `layout.tsx` pattern:
 
 ```tsx
-import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
+import { GiselleThemeProvider } from '@littlebranches/giselle-mui';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -231,8 +231,8 @@ runtime, different TypeScript shapes. See [Design decisions](#design-decisions) 
 | Repo           | Change                                                                                                                               |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `alexrebula`   | Roadmap updated (bubble-up rule). `GiselleThemeProvider` available in `node_modules` via `yalc push`.                                |
-| `giselle-docs` | `@alexrebula/giselle-mui` updated via `yalc push`.                                                                                   |
-| `first-branch` | `@alexrebula/giselle-mui` updated via `yalc push`. Phase C is the prerequisite for zero-config theming in the Žiga task-tracker app. |
+| `giselle-docs` | `@littlebranches/giselle-mui` updated via `yalc push`.                                                                                   |
+| `[consumer-app-b]` | `@littlebranches/giselle-mui` updated via `yalc push`. Phase C is the prerequisite for zero-config theming in the task-tracker app. |
 
 ---
 
@@ -244,7 +244,7 @@ runtime, different TypeScript shapes. See [Design decisions](#design-decisions) 
 - [x] tsup build exits 0
 - [x] No `any`, no `React.FC`, no bare `<Box>`
 - [x] Branch → PR (not pushed to `main` directly)
-- [x] `yalc push` done — alexrebula, giselle-docs, first-branch updated
+- [x] `yalc push` done — alexrebula, giselle-docs, [consumer-app-b] updated
 
 ---
 

@@ -183,7 +183,7 @@ alternative considered and why the current name was preferred.
 
 **Generic names shared across many libraries:** `DonutChartCard`, `RadarChartCard`,
 `ProgressStatsList` — these are standard domain terms. No naming conflict risk because they
-exist on a distinct npm scope (`@alexrebula/giselle-mui`).
+exist on a distinct npm scope (`@littlebranches/giselle-mui`).
 
 ---
 

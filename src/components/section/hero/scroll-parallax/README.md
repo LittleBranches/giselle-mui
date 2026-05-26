@@ -86,7 +86,7 @@ scroll-parallax/
 
 ## Library safety
 
-This component is exported from the `/motion` subpath (`@alexrebula/giselle-mui/motion`),
+This component is exported from the `/motion` subpath (`@littlebranches/giselle-mui/motion`),
 not the main bundle. Consumers who do not import from `/motion` pay zero bytes for
 framer-motion.
 

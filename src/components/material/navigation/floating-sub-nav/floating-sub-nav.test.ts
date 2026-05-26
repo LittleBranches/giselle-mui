@@ -2,8 +2,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import React, { act } from 'react';
 import ReactDOM from 'react-dom/client';
-import { renderToStaticMarkup } from 'react-dom/server';
 
+import { renderWithTheme } from '../../../../test-utils';
+import { GiselleThemeProvider } from '../../../../components/theming/theme-provider/giselle/giselle';
 import { FloatingSubNav } from './floating-sub-nav';
 import { pillVariants } from './floating-sub-nav.animations';
 import { SubNavButton } from './sub-nav-button';
@@ -23,48 +24,6 @@ vi.mock('framer-motion', () => ({
   ),
 }));
 
-// MUI components are mocked to avoid ThemeProvider / theme.vars requirements
-vi.mock('@mui/material/Box', () => ({
-  default: ({
-    children,
-    sx: _sx,
-    ...props
-  }: React.PropsWithChildren<{ sx?: unknown; [key: string]: unknown }>) =>
-    React.createElement('div', props, children),
-}));
-
-vi.mock('@mui/material/Stack', () => ({
-  default: ({
-    children,
-    sx: _sx,
-    direction: _d,
-    alignItems: _a,
-    spacing: _s,
-    component: _c,
-    initial: _i,
-    animate: _an,
-    exit: _ex,
-    transition: _tr,
-    ...props
-  }: React.PropsWithChildren<Record<string, unknown>>) =>
-    React.createElement('div', props, children),
-}));
-
-vi.mock('@mui/material/Tooltip', () => ({
-  default: ({ children, title }: { children: React.ReactNode; title: string }) =>
-    React.createElement('span', { 'data-tooltip': title }, children),
-}));
-
-vi.mock('@mui/material/ButtonBase', () => ({
-  default: ({
-    children,
-    sx: _sx,
-    disableRipple: _dr,
-    ...props
-  }: React.PropsWithChildren<{ sx?: unknown; [key: string]: unknown }>) =>
-    React.createElement('button', props, children),
-}));
-
 // ----------------------------------------------------------------------
 
 const items = [
@@ -78,7 +37,7 @@ const items = [
 
 describe('FloatingSubNav', () => {
   it('renders nav buttons when activeId is set', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(FloatingSubNav, {
         items,
         activeId: 'about',
@@ -90,7 +49,7 @@ describe('FloatingSubNav', () => {
   });
 
   it('renders nothing when activeId is null', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(FloatingSubNav, {
         items,
         activeId: null,
@@ -102,7 +61,7 @@ describe('FloatingSubNav', () => {
 
   it('renders sticky variant without error', () => {
     expect(() =>
-      renderToStaticMarkup(
+      renderWithTheme(
         React.createElement(FloatingSubNav, {
           items,
           activeId: 'about',
@@ -114,7 +73,7 @@ describe('FloatingSubNav', () => {
   });
 
   it('renders icon slot content for each item', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(FloatingSubNav, {
         items,
         activeId: 'about',
@@ -126,14 +85,13 @@ describe('FloatingSubNav', () => {
   });
 
   it('sets aria-pressed=true on active item', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(FloatingSubNav, {
         items,
         activeId: 'about',
         onSelect: vi.fn(),
       })
     );
-    // The active button has aria-pressed="true"
     expect(html).toContain('aria-pressed="true"');
   });
 });
@@ -142,14 +100,13 @@ describe('FloatingSubNav', () => {
 
 describe('NavPill — animation variants', () => {
   it('renders into the DOM via FloatingSubNav without throwing', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(FloatingSubNav, {
         items,
         activeId: 'about',
         onSelect: vi.fn(),
       })
     );
-    // NavPill renders the nav landmark and all buttons
     expect(html).toContain('aria-label="Section navigation"');
   });
 
@@ -178,28 +135,28 @@ describe('SubNavButton', () => {
   };
 
   it('renders with correct aria-label', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(SubNavButton, { item, isActive: false, onPress: vi.fn() })
     );
     expect(html).toContain('aria-label="About"');
   });
 
   it('sets aria-pressed=false when inactive', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(SubNavButton, { item, isActive: false, onPress: vi.fn() })
     );
     expect(html).toContain('aria-pressed="false"');
   });
 
   it('sets aria-pressed=true when active', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(SubNavButton, { item, isActive: true, onPress: vi.fn() })
     );
     expect(html).toContain('aria-pressed="true"');
   });
 
   it('renders icon slot content', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(SubNavButton, { item, isActive: false, onPress: vi.fn() })
     );
     expect(html).toContain('icon-about');
@@ -212,7 +169,11 @@ describe('SubNavButton', () => {
     const root = ReactDOM.createRoot(container);
     act(() => {
       root.render(
-        React.createElement(SubNavButton, { item, isActive: false, onPress: handlePress })
+        React.createElement(
+          GiselleThemeProvider,
+          null,
+          React.createElement(SubNavButton, { item, isActive: false, onPress: handlePress })
+        )
       );
     });
     const button = container.querySelector('button');

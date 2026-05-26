@@ -17,11 +17,10 @@ import { FAQ_FLOAT_LINE_LEFT } from './faq-accordion.const';
 export function FaqTopLines() {
   return (
     <>
-      <Stack spacing={8} alignItems="center" sx={topTriangleStackSx}>
+      <Stack spacing={8} sx={topTriangleStackSx}>
         <FaqFloatTriangleDownIcon sx={{ position: 'static', opacity: 0.12 }} />
         <FaqFloatTriangleDownIcon sx={smallTriangleSx} />
       </Stack>
-
       <FaqFloatLine vertical sx={{ top: 0, left: FAQ_FLOAT_LINE_LEFT }} />
     </>
   );

@@ -10,7 +10,7 @@ import type { GiselleThemeProviderProps } from './types';
 // ----------------------------------------------------------------------
 
 /**
- * Zero-config theme provider for `@alexrebula/giselle-mui`.
+ * Zero-config theme provider for `@littlebranches/giselle-mui`.
  *
  * Ships with the Giselle brand palette (Deep grove green + Mango gold) as
  * the default — wrap your application and every MUI component gets the
@@ -18,7 +18,7 @@ import type { GiselleThemeProviderProps } from './types';
  *
  * ## Usage — zero config
  * ```tsx
- * import { GiselleThemeProvider } from '@alexrebula/giselle-mui';
+ * import { GiselleThemeProvider } from '@littlebranches/giselle-mui';
  *
  * export default function RootLayout({ children }: { children: React.ReactNode }) {
  *   return (

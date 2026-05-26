@@ -18,7 +18,7 @@ The default breakpoints (`xs=12 sm=6 md=3`) are intentional and cover the standa
 
 ### `renderChart` keeps the main bundle chart-free
 
-`StatCardRow` is in the **main bundle** (`@alexrebula/giselle-mui`). ApexCharts lives in the `/charts` subpath. The `renderChart?: (item: StatCardItem) => ReactNode` factory bridge is how the consumer wires them together without imposing a chart dependency on every app. When omitted, cards render without sparklines.
+`StatCardRow` is in the **main bundle** (`@littlebranches/giselle-mui`). ApexCharts lives in the `/charts` subpath. The `renderChart?: (item: StatCardItem) => ReactNode` factory bridge is how the consumer wires them together without imposing a chart dependency on every app. When omitted, cards render without sparklines.
 
 ### `items` drives layout via `key={item.label}`
 

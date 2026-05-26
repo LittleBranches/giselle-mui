@@ -26,7 +26,7 @@ export { DEFAULT_ICON_ACTIONS } from './icon-action-bar.defaults';
  * set: **Edit, View, Print, Send, Share**.
  *
  * ```tsx
- * import { GiselleIcon, IconActionBar } from '@alexrebula/giselle-mui';
+ * import { GiselleIcon, IconActionBar } from '@littlebranches/giselle-mui';
  *
  * // Minimal — default actions
  * <IconActionBar />
@@ -58,7 +58,6 @@ export function IconActionBar({
           ...(item.component !== undefined && { component: item.component }),
           ...(item.href !== undefined && { href: item.href }),
         };
-
         return (
           <Tooltip
             key={`${item.tooltip}-${index}`}

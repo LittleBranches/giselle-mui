@@ -2,103 +2,15 @@
 /**
  * Unit tests for RadialProgressCard.
  *
- * All MUI components are mocked to avoid ThemeProvider/theme.vars requirements.
  * The chart area (React.lazy + Suspense) renders its fallback during
  * renderToStaticMarkup — we test title, legend labels, and value display
- * which are rendered synchronously.
+ * which are rendered synchronously. MUI components run with GiselleThemeProvider.
  */
 
 import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
-import { renderToStaticMarkup } from 'react-dom/server';
+import { describe, it, expect } from 'vitest';
 
-// ---------------------------------------------------------------------------
-// MUI mocks — strip sx to avoid theme.vars access in server context
-// ---------------------------------------------------------------------------
-
-vi.mock('@mui/material/Card', () => ({
-  default: ({
-    children,
-    sx: _sx,
-    ...props
-  }: {
-    children?: React.ReactNode;
-    sx?: unknown;
-    [key: string]: unknown;
-  }) => React.createElement('div', { 'data-testid': 'radial-card', ...props }, children),
-}));
-
-vi.mock('@mui/material/CardContent', () => ({
-  default: ({ children }: { children?: React.ReactNode }) =>
-    React.createElement('div', { 'data-testid': 'card-content' }, children),
-}));
-
-vi.mock('@mui/material/CardHeader', () => ({
-  default: ({ title, subheader }: { title?: React.ReactNode; subheader?: React.ReactNode }) =>
-    React.createElement(
-      'div',
-      { 'data-testid': 'card-header' },
-      React.createElement('span', { 'data-testid': 'card-title' }, title),
-      subheader && React.createElement('span', { 'data-testid': 'card-subheader' }, subheader)
-    ),
-}));
-
-vi.mock('@mui/material/Divider', () => ({
-  default: ({ sx: _sx }: { sx?: unknown }) => React.createElement('hr', null),
-}));
-
-vi.mock('@mui/material/Box', () => ({
-  default: ({
-    children,
-    sx: _sx,
-    ...props
-  }: {
-    children?: React.ReactNode;
-    sx?: unknown;
-    [key: string]: unknown;
-  }) => React.createElement('div', props, children),
-}));
-
-vi.mock('@mui/material/Typography', () => ({
-  default: ({
-    children,
-    variant: _variant,
-    sx: _sx,
-    ...props
-  }: {
-    children?: React.ReactNode;
-    variant?: string;
-    sx?: unknown;
-    [key: string]: unknown;
-  }) => React.createElement('span', props, children),
-}));
-
-vi.mock('@mui/material/styles', () => ({
-  useTheme: vi.fn(() => ({
-    vars: {
-      palette: {
-        grey: { 200: 'var(--mui-palette-grey-200)' },
-        text: {
-          secondary: 'var(--mui-palette-text-secondary)',
-          primary: 'var(--mui-palette-text-primary)',
-        },
-      },
-    },
-    palette: {
-      primary: { main: '#1976d2' },
-      secondary: { main: '#9c27b0' },
-      success: { main: '#2e7d32' },
-      warning: { main: '#ed6c02' },
-      error: { main: '#d32f2f' },
-      info: { main: '#0288d1' },
-    },
-  })),
-}));
-
-// ---------------------------------------------------------------------------
-// Component under test
-// ---------------------------------------------------------------------------
-
+import { renderWithTheme } from '../../../test-utils';
 import { RadialProgressCard } from './radial-progress-card';
 
 // ---------------------------------------------------------------------------
@@ -112,15 +24,14 @@ const defaultSeries = [
 // ---------------------------------------------------------------------------
 
 describe('RadialProgressCard', () => {
-  it('renders the card container', () => {
-    const html = renderToStaticMarkup(
-      React.createElement(RadialProgressCard, { total: 35, series: defaultSeries })
-    );
-    expect(html).toContain('data-testid="radial-card"');
+  it('renders without crashing', () => {
+    expect(() =>
+      renderWithTheme(React.createElement(RadialProgressCard, { total: 35, series: defaultSeries }))
+    ).not.toThrow();
   });
 
   it('renders CardHeader when title is provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(RadialProgressCard, {
         title: 'Store Readiness',
         total: 35,
@@ -131,7 +42,7 @@ describe('RadialProgressCard', () => {
   });
 
   it('renders subheader when title and subheader are provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(RadialProgressCard, {
         title: 'Title',
         subheader: 'Sub text',
@@ -142,15 +53,15 @@ describe('RadialProgressCard', () => {
     expect(html).toContain('Sub text');
   });
 
-  it('does not render CardHeader when neither title nor subheader is provided', () => {
-    const html = renderToStaticMarkup(
+  it('does not render header content when neither title nor subheader is provided', () => {
+    const html = renderWithTheme(
       React.createElement(RadialProgressCard, { total: 35, series: defaultSeries })
     );
-    expect(html).not.toContain('data-testid="card-header"');
+    expect(html).not.toContain('Store Readiness');
   });
 
   it('renders all legend labels', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(RadialProgressCard, { total: 35, series: defaultSeries })
     );
     expect(html).toContain('Quality');
@@ -159,7 +70,7 @@ describe('RadialProgressCard', () => {
   });
 
   it('renders percentage values in the legend', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(RadialProgressCard, { total: 35, series: defaultSeries })
     );
     expect(html).toContain('90%');

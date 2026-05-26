@@ -1,5 +1,5 @@
 /**
- * @alexrebula/giselle-mui — public API
+ * @littlebranches/giselle-mui — public API
  */
 
 export { createIconRegistrar } from './utils/icon/create-icon-registrar/create-icon-registrar';
@@ -95,44 +95,6 @@ export type {
 export { StatCardRow } from './components/material/surfaces/card/stat-row';
 export type { StatCardRowProps } from './components/material/surfaces/card/stat-row';
 
-export {
-  MilestoneBadge,
-  PhaseCard,
-  TimelineDot,
-  TimelineTwoColumn,
-} from './components/section/timeline/two-column';
-export type {
-  MilestoneBadgeProps,
-  PhaseCardProps,
-  TaskDetails,
-  TimelineDotComponentProps,
-  TimelineTwoColumnProps,
-  Task,
-  TimelinePhase,
-  TimelineMilestone,
-  TimelinePlatformItem,
-  HighlightedPaletteKey,
-  TimelineSidebar,
-  TimelineColumnLabels,
-  TimelineSectionData,
-} from './components/section/timeline/two-column';
-
-export {
-  TimelineCompact,
-  TaskDetailsRenderer,
-  resolveCompactColor,
-} from './components/section/timeline/compact';
-export type { TimelineCompactProps } from './components/section/timeline/compact';
-export { TaskList } from './components/section/timeline/task-list';
-export type { TaskListProps } from './components/section/timeline/task-list';
-export {
-  COMPACT_PHASE_DOT_SIZE,
-  COMPACT_MILESTONE_DOT_SIZE,
-  COMPACT_PHASE_ICON_SIZE,
-  COMPACT_MIN_PHASE_DOT_SIZE,
-  COMPACT_MIN_MILESTONE_DOT_SIZE,
-} from './components/section/timeline/compact';
-
 export { useNestedChecklist } from './utils/hooks/use-nested-checklist/use-nested-checklist';
 export type { NestedChecklistState } from './utils/hooks/use-nested-checklist/use-nested-checklist';
 
@@ -155,12 +117,6 @@ export type {
 export { SectionTitle, SectionCaption } from './components/material/layout/section-title';
 export type { SectionTitleProps } from './components/material/layout/section-title';
 
-export { FloatingSubNav } from './components/material/navigation/floating-sub-nav';
-export type {
-  FloatingSubNavProps,
-  FloatingSubNavItem,
-} from './components/material/navigation/floating-sub-nav';
-
 export { SectionContainer } from './components/material/layout/section-container';
 export type { SectionContainerProps } from './components/material/layout/section-container';
 
@@ -172,8 +128,6 @@ export type {
 } from './components/section/hero/section';
 
 export { resolveMaturityColor, resolveMaturityLabel } from './utils/maturity/maturity-utils';
-export { assignMilestoneSidesByDone } from './utils/timeline/timeline-utils';
-
 // --- Phase I: Main bundle additions ---
 export { AnimatedGradientText } from './components/material/data-display/animated-gradient';
 export type {

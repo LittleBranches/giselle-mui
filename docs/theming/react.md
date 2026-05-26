@@ -5,7 +5,7 @@ sidebar_label: 'React / Vite'
 
 # Theming in a React app (Vite / CRA)
 
-`@alexrebula/giselle-mui` components use **MUI v7 CSS variables mode**. They resolve
+`@littlebranches/giselle-mui` components use **MUI v7 CSS variables mode**. They resolve
 colours through CSS custom properties like `var(--mui-palette-primary-main)`, which are
 injected by `ThemeProvider` at the root of your app.
 
@@ -18,7 +18,7 @@ without meaningful colours, borders, or typography scale.
 
 ```bash
 npm install @mui/material @emotion/react @emotion/styled react react-dom
-npm install @alexrebula/giselle-mui
+npm install @littlebranches/giselle-mui
 
 # Optional: only if you use GiselleIcon
 npm install @iconify/react
@@ -59,7 +59,7 @@ export const theme = createTheme({
 You can also use the pre-built Giselle brand theme instead of defining your own:
 
 ```ts
-import { giselleTheme } from '@alexrebula/giselle-mui';
+import { giselleTheme } from '@littlebranches/giselle-mui';
 // Pass giselleTheme directly to ThemeProvider — no extra configuration needed.
 ```
 
@@ -102,7 +102,7 @@ import {
   MetricCardDecoration,
   SelectableCard,
   QuoteCard,
-} from '@alexrebula/giselle-mui';
+} from '@littlebranches/giselle-mui';
 
 export function App() {
   return (

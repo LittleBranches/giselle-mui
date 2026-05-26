@@ -1,5 +1,4 @@
 import type { GridProps } from '@mui/material/Grid';
-import type { StackProps } from '@mui/material/Stack';
 import type { Theme, SxProps } from '@mui/material/styles';
 import type React from 'react';
 
@@ -49,7 +48,7 @@ export type TwoColumnShowcaseRowProps = Omit<
    *
    * @default 'flex-start'
    */
-  controlsAlign?: StackProps['alignItems'];
+  controlsAlign?: React.CSSProperties['alignItems'];
   /** `sx` applied to the text column `Stack`. */
   textSx?: SxProps<Theme>;
   /** `sx` applied to the controls column `Stack`. */

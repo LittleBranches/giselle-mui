@@ -60,6 +60,23 @@ floating-sub-nav/
   README.md                         — this file
 ```
 
+## Breaking change — PR #67 (21 May 2026)
+
+`FloatingSubNav` was moved from the main bundle (`src/index.ts`) to the `/motion` subpath
+entry (`src/motion-index.ts`) to keep `framer-motion` opt-in for all consumers.
+
+**Update your import:**
+
+```ts
+// Before (no longer works)
+import { FloatingSubNav } from '@littlebranches/giselle-mui';
+
+// After
+import { FloatingSubNav } from '@littlebranches/giselle-mui/motion';
+```
+
+---
+
 ## Related
 
 - `SectionContainer` — the outer shell used to constrain section content. `FloatingSubNav` can

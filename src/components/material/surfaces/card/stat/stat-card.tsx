@@ -74,10 +74,8 @@ export function StatCard({
       <Box aria-hidden="true" sx={decorationSx}>
         <StatCardShape />
       </Box>
-
       {/* Icon slot */}
       <Box sx={iconBoxSx}>{icon}</Box>
-
       {/* Trend indicator — top-right */}
       {trend !== undefined && (
         <Box sx={trendBoxSx}>
@@ -97,7 +95,6 @@ export function StatCard({
           )}
         </Box>
       )}
-
       {/* Value + chart row */}
       <Box sx={contentRowSx}>
         <Box sx={labelsBoxSx}>
@@ -106,7 +103,6 @@ export function StatCard({
           </Typography>
           <Typography variant="h4">{value}</Typography>
         </Box>
-
         {chart}
       </Box>
     </Card>

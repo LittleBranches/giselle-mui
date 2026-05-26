@@ -18,7 +18,7 @@ export interface MetricCardProps extends PaperProps {
    * Accepts any `ReactNode` — the component has no icon-library dependency.
    *
    * @example
-   * import { GiselleIcon, MetricCard } from '@alexrebula/giselle-mui';
+   * import { GiselleIcon, MetricCard } from '@littlebranches/giselle-mui';
    * <MetricCard icon={<GiselleIcon icon="solar:clock-circle-bold-duotone" width={36} />} ... />
    */
   icon?: ReactNode;
@@ -32,7 +32,7 @@ export interface MetricCardProps extends PaperProps {
    * The decoration positions itself; the card clips it via `overflow: hidden`.
    *
    * @example
-   * import { MetricCard, MetricCardDecoration } from '@alexrebula/giselle-mui';
+   * import { MetricCard, MetricCardDecoration } from '@littlebranches/giselle-mui';
    * <MetricCard decoration={<MetricCardDecoration color="primary" />} ... />
    */
   decoration?: ReactNode;

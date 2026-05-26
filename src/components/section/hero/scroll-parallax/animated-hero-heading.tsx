@@ -50,7 +50,6 @@ export function AnimatedHeroHeading({
   sx,
 }: AnimatedHeroHeadingProps) {
   const resolvedMotionProps = motionProps ?? headingMotionProps;
-
   return (
     <motion.div {...resolvedMotionProps}>
       <Box component="h1" sx={[headingH1Sx, ...(Array.isArray(sx) ? sx : [sx])]}>

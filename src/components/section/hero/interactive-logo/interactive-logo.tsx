@@ -253,7 +253,6 @@ export function InteractiveHeroLogo({
           >
             {children}
           </OriginalLogoLayer>
-
           <ArtisticLogoLayer
             artisticLogoSrc={artisticLogoSrc}
             showArtisticLogo={Boolean(showArtisticLogo)}
@@ -261,7 +260,6 @@ export function InteractiveHeroLogo({
             logoAlt={logoAlt}
           />
         </Box>
-
         <PortraitLayer
           portraitSrc={activePortraitSrcResolved}
           portraitAlt={portraitAlt}

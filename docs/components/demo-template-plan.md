@@ -191,7 +191,7 @@ import {
   GiselleDemoPrimaryNav,
   GiselleDemoSecondaryNav,
   GiselleDemoSection,
-} from '@alexrebula/giselle-mui';
+} from '@littlebranches/giselle-mui';
 import { allGiselleComponents } from './nav-config';
 import { useGiselleDemoScroll } from './hooks/use-giselle-demo-scroll';
 

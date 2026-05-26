@@ -23,7 +23,7 @@ export { MetricCardDecoration } from './metric-card-decoration';
  * Library-ready: zero icon-library dependency. Pass any `ReactNode` into `icon` and `decoration`.
  *
  * @example
- * import { MetricCard, MetricCardDecoration, GiselleIcon } from '@alexrebula/giselle-mui';
+ * import { MetricCard, MetricCardDecoration, GiselleIcon } from '@littlebranches/giselle-mui';
  *
  * <MetricCard
  *   value="20+"
@@ -59,14 +59,11 @@ export function MetricCard({
           {decoration}
         </Box>
       )}
-
       <Box sx={metricCardContentSx}>
         <Box sx={{ typography: 'h3' }}>{value}</Box>
-
         <Typography noWrap variant="subtitle2" component="div" sx={{ color: 'text.secondary' }}>
           {label}
         </Typography>
-
         {sublabel && (
           <Typography
             noWrap
@@ -78,7 +75,6 @@ export function MetricCard({
           </Typography>
         )}
       </Box>
-
       {icon && (
         <Box aria-hidden="true" sx={metricCardIconBoxSx(color)}>
           {icon}

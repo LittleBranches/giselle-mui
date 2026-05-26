@@ -11,15 +11,24 @@ export const roadmapPhases = [
     key: 1,
     title: 'Phase A — Theme token utilities',
     shortTitle: 'Phase A',
-    description: 'channelAlpha, hexToChannel, pxToRem, remToPx — standalone helpers for any MUI v7 project.',
+    description:
+      'channelAlpha, hexToChannel, pxToRem, remToPx — standalone helpers for any MUI v7 project.',
     date: '4 May 2026',
     side: 'left',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 22C6.5 22 2 18 2 13C2 8 6 4 11 4C16 4 20 8 20 13C20 15.38 18.95 17.47 17.33 18.94C16.88 19.34 16.63 19.92 16.68 20.53C16.73 21.25 16.34 22 15.5 22H12ZM7 12C6.45 12 6 12.45 6 13S6.45 14 7 14 8 13.55 8 13 7.55 12 7 12ZM10 8C9.45 8 9 8.45 9 9S9.45 10 10 10 11 9.55 11 9 10.55 8 10 8ZM14 8C13.45 8 13 8.45 13 9S13.45 10 14 10 15 9.55 15 9 14.55 8 14 8ZM17 12C16.45 12 16 12.45 16 13S16.45 14 17 14 18 13.55 18 13 17.55 12 17 12Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 22C6.5 22 2 18 2 13C2 8 6 4 11 4C16 4 20 8 20 13C20 15.38 18.95 17.47 17.33 18.94C16.88 19.34 16.63 19.92 16.68 20.53C16.73 21.25 16.34 22 15.5 22H12ZM7 12C6.45 12 6 12.45 6 13S6.45 14 7 14 8 13.55 8 13 7.55 12 7 12ZM10 8C9.45 8 9 8.45 9 9S9.45 10 10 10 11 9.55 11 9 10.55 8 10 8ZM14 8C13.45 8 13 8.45 13 9S13.45 10 14 10 15 9.55 15 9 14.55 8 14 8ZM17 12C16.45 12 16 12.45 16 13S16.45 14 17 14 18 13.55 18 13 17.55 12 17 12Z" />
+      </svg>
+    ),
     color: 'success',
     done: true,
     children: [
       { key: 0, title: 'channelAlpha(channel, alpha) — CSS-variable-safe alpha tint', done: true },
-      { key: 1, title: 'hexToChannel(hex) — hex to space-separated RGB channel string', done: true },
+      {
+        key: 1,
+        title: 'hexToChannel(hex) — hex to space-separated RGB channel string',
+        done: true,
+      },
       { key: 2, title: 'pxToRem(px) / remToPx(rem) — unit conversion utilities', done: true },
       { key: 3, title: '22 unit tests, all green', done: true },
     ],
@@ -28,14 +37,23 @@ export const roadmapPhases = [
     key: 2,
     title: 'Phase B — Giselle brand theme preset',
     shortTitle: 'Phase B',
-    description: 'giselleTheme — a ready-to-use extendTheme() result with the Giselle palette. Import and use, or extend.',
+    description:
+      'giselleTheme — a ready-to-use extendTheme() result with the Giselle palette. Import and use, or extend.',
     date: '5 May 2026',
     side: 'left',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 22C6.5 22 2 18 2 13C2 8 6 4 11 4C16 4 20 8 20 13C20 15.38 18.95 17.47 17.33 18.94C16.88 19.34 16.63 19.92 16.68 20.53C16.73 21.25 16.34 22 15.5 22H12ZM7 12C6.45 12 6 12.45 6 13S6.45 14 7 14 8 13.55 8 13 7.55 12 7 12ZM10 8C9.45 8 9 8.45 9 9S9.45 10 10 10 11 9.55 11 9 10.55 8 10 8ZM14 8C13.45 8 13 8.45 13 9S13.45 10 14 10 15 9.55 15 9 14.55 8 14 8ZM17 12C16.45 12 16 12.45 16 13S16.45 14 17 14 18 13.55 18 13 17.55 12 17 12Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 22C6.5 22 2 18 2 13C2 8 6 4 11 4C16 4 20 8 20 13C20 15.38 18.95 17.47 17.33 18.94C16.88 19.34 16.63 19.92 16.68 20.53C16.73 21.25 16.34 22 15.5 22H12ZM7 12C6.45 12 6 12.45 6 13S6.45 14 7 14 8 13.55 8 13 7.55 12 7 12ZM10 8C9.45 8 9 8.45 9 9S9.45 10 10 10 11 9.55 11 9 10.55 8 10 8ZM14 8C13.45 8 13 8.45 13 9S13.45 10 14 10 15 9.55 15 9 14.55 8 14 8ZM17 12C16.45 12 16 12.45 16 13S16.45 14 17 14 18 13.55 18 13 17.55 12 17 12Z" />
+      </svg>
+    ),
     color: 'success',
     done: true,
     children: [
-      { key: 0, title: 'Primary light: #2E7D32 Deep grove green — WCAG 4.76:1 against white', done: true },
+      {
+        key: 0,
+        title: 'Primary light: #2E7D32 Deep grove green — WCAG 4.76:1 against white',
+        done: true,
+      },
       { key: 1, title: 'Primary dark: #76C442 Lime — readable on dark backgrounds', done: true },
       { key: 2, title: 'Secondary: #F5A623 Mango gold — both modes', done: true },
       { key: 3, title: 'All six MUI palette keys covered', done: true },
@@ -45,10 +63,15 @@ export const roadmapPhases = [
     key: 3,
     title: 'Phase C — GiselleThemeProvider',
     shortTitle: 'Phase C',
-    description: 'A zero-config ThemeProvider wrapper with the Giselle palette as default. Accepts themeOverrides or a fully custom theme.',
+    description:
+      'A zero-config ThemeProvider wrapper with the Giselle palette as default. Accepts themeOverrides or a fully custom theme.',
     date: 'May 2026',
     side: 'left',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.14 7.14 0 0 0-1.63-.94l-.36-2.54a.49.49 0 0 0-.49-.42h-3.84a.49.49 0 0 0-.49.42l-.36 2.54c-.58.22-1.12.52-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.51.41 1.05.73 1.63.94l.36 2.54c.05.24.25.42.49.42h3.84c.24 0 .44-.18.49-.42l.36-2.54c.58-.22 1.12-.53 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.14 7.14 0 0 0-1.63-.94l-.36-2.54a.49.49 0 0 0-.49-.42h-3.84a.49.49 0 0 0-.49.42l-.36 2.54c-.58.22-1.12.52-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.51.41 1.05.73 1.63.94l.36 2.54c.05.24.25.42.49.42h3.84c.24 0 .44-.18.49-.42l.36-2.54c.58-.22 1.12-.53 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z" />
+      </svg>
+    ),
     color: 'warning',
     active: true,
     activeLabel: 'Next',
@@ -62,10 +85,15 @@ export const roadmapPhases = [
     key: 4,
     title: 'Phase D — GiselleSettingsProvider',
     shortTitle: 'Phase D',
-    description: 'Framework-agnostic settings persistence: color mode, direction, font size, color presets.',
+    description:
+      'Framework-agnostic settings persistence: color mode, direction, font size, color presets.',
     date: 'Jun 2026',
     side: 'left',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.14 7.14 0 0 0-1.63-.94l-.36-2.54a.49.49 0 0 0-.49-.42h-3.84a.49.49 0 0 0-.49.42l-.36 2.54c-.58.22-1.12.52-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.51.41 1.05.73 1.63.94l.36 2.54c.05.24.25.42.49.42h3.84c.24 0 .44-.18.49-.42l.36-2.54c.58-.22 1.12-.53 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.14 7.14 0 0 0-1.63-.94l-.36-2.54a.49.49 0 0 0-.49-.42h-3.84a.49.49 0 0 0-.49.42l-.36 2.54c-.58.22-1.12.52-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.51.41 1.05.73 1.63.94l.36 2.54c.05.24.25.42.49.42h3.84c.24 0 .44-.18.49-.42l.36-2.54c.58-.22 1.12-.53 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z" />
+      </svg>
+    ),
     color: 'info',
     children: [
       { key: 0, title: 'useLocalStorage<T> utility' },
@@ -79,36 +107,211 @@ export const roadmapPhases = [
     key: 5,
     title: 'Phase E — Standalone UI primitives',
     shortTitle: 'Phase E',
-    description: 'Layout and section components every portfolio or product site needs: SectionContainer, HeroSection, FAQAccordion, StatCard, and more.',
+    description:
+      'Layout and section components every portfolio or product site needs: SectionContainer, HeroSection, FAQAccordion, StatCard, and more.',
     date: 'Jun 2026',
     side: 'right',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 11h8V3H4v8Zm0 10h8v-8H4v8Zm10 0h8v-8h-8v8Zm0-18v8h8V3h-8Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M4 11h8V3H4v8Zm0 10h8v-8H4v8Zm10 0h8v-8h-8v8Zm0-18v8h8V3h-8Z" />
+      </svg>
+    ),
     color: 'secondary',
     children: [
-      { key: 0, date: '5 May 2026', shortTitle: 'StatCard', title: 'StatCard', description: 'Data card with sparkline, six palette variants.', details: { content: 'Shipped as one of the first standalone dashboard-ready cards in giselle-mui.' }, color: 'success', done: true },
-      { key: 1, date: '5 May 2026', shortTitle: 'RadialProgressCard', title: 'RadialProgressCard', description: 'Card wrapping an ApexCharts radialBar.', details: { content: 'Established the chart-card pattern for the optional /charts subpath work.' }, color: 'success', done: true },
-      { key: 4, date: '7 May 2026', shortTitle: 'TimelineCompact', title: 'TimelineCompact', description: 'Single-column accordion renderer for TimelinePhase[]. Mobile companion to TimelineTwoColumn — swap at xs/sm breakpoints with no data-layer changes.', details: { content: 'This is the compact/mobile renderer used in constrained widths such as docs pages and small breakpoints.' }, color: 'success', done: true },
-      { key: 11, date: '8 May 2026', shortTitle: 'Accordion', title: 'Accordion', description: 'Generic WCAG 2.2 AA accordion with done-toggle, checklist mode, CheckIconButton custom-icon variant, leading icon/action slots. Solves the nested-interactive-element problem once.', details: { content: 'This is the reusable primitive the compact timeline now builds on instead of baking milestone-specific logic into the accordion itself.' }, color: 'success', done: true },
-      { key: 12, date: '8 May 2026', shortTitle: 'TaskList', title: 'TaskList', description: 'Flat done/pending list. Shares the same done/onDoneButtonClick API as Accordion.', details: { content: 'Acts as the flat checklist companion to Accordion and now also renders nested task details inside compact timeline modals.' }, color: 'success', done: true },
-      { key: 13, date: '8 May 2026', shortTitle: 'FaqAccordion (/motion)', title: 'FaqAccordion', description: 'FAQ section with framer-motion scroll animation, decorative SVGs, contact footer. /motion subpath only — consumers without framer-motion pay zero bundle cost.', details: { content: 'Lives in the optional /motion entry so non-motion consumers do not inherit framer-motion as a hard dependency.' }, color: 'success', done: true },
-      { key: 2, date: 'Jun 2026', shortTitle: 'HeroSection', title: 'HeroSection', description: 'Full-width hero: headline, subtitle, CTA slot.', details: { content: 'Planned as a reusable layout shell rather than an app-specific landing-page implementation.' }, color: 'secondary' },
-      { key: 3, date: 'Jun 2026', shortTitle: 'FAQAccordion', title: 'FAQAccordion', description: 'MUI Accordion with icon slot and accessible expand.', details: { content: 'A simpler non-motion FAQ primitive for consumers that only need the structural accordion behaviour.' }, color: 'secondary' },
-      { key: 5, shortTitle: 'TwoColumnShowcaseRow', title: 'TwoColumnShowcaseRow', description: 'Two-column grid for a showcase item and descriptive text. Extracted from alexrebula — zero proprietary deps.', details: { content: 'Already extracted and available as a reusable layout row instead of living only in the private portfolio.' }, color: 'success', done: true },
-      { key: 6, shortTitle: 'SectionContainer', title: 'SectionContainer', description: 'Container + consistent vertical padding + optional title/subtitle slot. Required by every portfolio page.', details: { content: 'Provides the baseline spacing shell that section-level components can share instead of re-implementing paddings page by page.' }, color: 'success', done: true },
-      { key: 7, shortTitle: 'SectionTitle + SectionCaption', title: 'SectionTitle + SectionCaption', description: 'Section heading group with optional gradient accent text.', details: { content: 'Forms the standard title/caption pair for section headers across marketing and portfolio-style layouts.' }, color: 'success', done: true },
-      { key: 8, date: 'Jun 2026', shortTitle: 'OptionWithBlurb', title: 'OptionWithBlurb', description: 'Small option card with descriptive text.', details: { content: 'Planned as a lightweight selection primitive for settings, comparisons, and feature choices.' }, color: 'secondary' },
-      { key: 9, date: 'Jun 2026', shortTitle: 'SectionPendingLoader', title: 'SectionPendingLoader', description: 'Loading placeholder for async section data. Requires internal Iconify → GiselleIcon swap.', details: { content: 'Still blocked on replacing the private icon dependency path with the public GiselleIcon contract.' }, color: 'secondary' },
-      { key: 10, date: 'Jun 2026', shortTitle: 'FloatingControlBar', title: 'FloatingControlBar', description: 'Floating toolbar variant. Requires internal Iconify → GiselleIcon swap.', details: { content: 'Another extraction candidate waiting on the same icon boundary cleanup before it can ship publicly.' }, color: 'secondary' },
+      {
+        key: 0,
+        date: '5 May 2026',
+        shortTitle: 'StatCard',
+        title: 'StatCard',
+        description: 'Data card with sparkline, six palette variants.',
+        details: {
+          content: 'Shipped as one of the first standalone dashboard-ready cards in giselle-mui.',
+        },
+        color: 'success',
+        done: true,
+      },
+      {
+        key: 1,
+        date: '5 May 2026',
+        shortTitle: 'RadialProgressCard',
+        title: 'RadialProgressCard',
+        description: 'Card wrapping an ApexCharts radialBar.',
+        details: {
+          content: 'Established the chart-card pattern for the optional /charts subpath work.',
+        },
+        color: 'success',
+        done: true,
+      },
+      {
+        key: 4,
+        date: '7 May 2026',
+        shortTitle: 'TimelineCompact',
+        title: 'TimelineCompact',
+        description:
+          'Single-column accordion renderer for TimelinePhase[]. Mobile companion to TimelineTwoColumn — swap at xs/sm breakpoints with no data-layer changes.',
+        details: {
+          content:
+            'This is the compact/mobile renderer used in constrained widths such as docs pages and small breakpoints.',
+        },
+        color: 'success',
+        done: true,
+      },
+      {
+        key: 11,
+        date: '8 May 2026',
+        shortTitle: 'Accordion',
+        title: 'Accordion',
+        description:
+          'Generic WCAG 2.2 AA accordion with done-toggle, checklist mode, CheckIconButton custom-icon variant, leading icon/action slots. Solves the nested-interactive-element problem once.',
+        details: {
+          content:
+            'This is the reusable primitive the compact timeline now builds on instead of baking milestone-specific logic into the accordion itself.',
+        },
+        color: 'success',
+        done: true,
+      },
+      {
+        key: 12,
+        date: '8 May 2026',
+        shortTitle: 'TaskList',
+        title: 'TaskList',
+        description:
+          'Flat done/pending list. Shares the same done/onDoneButtonClick API as Accordion.',
+        details: {
+          content:
+            'Acts as the flat checklist companion to Accordion and now also renders nested task details inside compact timeline modals.',
+        },
+        color: 'success',
+        done: true,
+      },
+      {
+        key: 13,
+        date: '8 May 2026',
+        shortTitle: 'FaqAccordion (/motion)',
+        title: 'FaqAccordion',
+        description:
+          'FAQ section with framer-motion scroll animation, decorative SVGs, contact footer. /motion subpath only — consumers without framer-motion pay zero bundle cost.',
+        details: {
+          content:
+            'Lives in the optional /motion entry so non-motion consumers do not inherit framer-motion as a hard dependency.',
+        },
+        color: 'success',
+        done: true,
+      },
+      {
+        key: 2,
+        date: 'Jun 2026',
+        shortTitle: 'HeroSection',
+        title: 'HeroSection',
+        description: 'Full-width hero: headline, subtitle, CTA slot.',
+        details: {
+          content:
+            'Planned as a reusable layout shell rather than an app-specific landing-page implementation.',
+        },
+        color: 'secondary',
+      },
+      {
+        key: 3,
+        date: 'Jun 2026',
+        shortTitle: 'FAQAccordion',
+        title: 'FAQAccordion',
+        description: 'MUI Accordion with icon slot and accessible expand.',
+        details: {
+          content:
+            'A simpler non-motion FAQ primitive for consumers that only need the structural accordion behaviour.',
+        },
+        color: 'secondary',
+      },
+      {
+        key: 5,
+        shortTitle: 'TwoColumnShowcaseRow',
+        title: 'TwoColumnShowcaseRow',
+        description:
+          'Two-column grid for a showcase item and descriptive text. Extracted from alexrebula — zero proprietary deps.',
+        details: {
+          content:
+            'Already extracted and available as a reusable layout row instead of living only in the private portfolio.',
+        },
+        color: 'success',
+        done: true,
+      },
+      {
+        key: 6,
+        shortTitle: 'SectionContainer',
+        title: 'SectionContainer',
+        description:
+          'Container + consistent vertical padding + optional title/subtitle slot. Required by every portfolio page.',
+        details: {
+          content:
+            'Provides the baseline spacing shell that section-level components can share instead of re-implementing paddings page by page.',
+        },
+        color: 'success',
+        done: true,
+      },
+      {
+        key: 7,
+        shortTitle: 'SectionTitle + SectionCaption',
+        title: 'SectionTitle + SectionCaption',
+        description: 'Section heading group with optional gradient accent text.',
+        details: {
+          content:
+            'Forms the standard title/caption pair for section headers across marketing and portfolio-style layouts.',
+        },
+        color: 'success',
+        done: true,
+      },
+      {
+        key: 8,
+        date: 'Jun 2026',
+        shortTitle: 'OptionWithBlurb',
+        title: 'OptionWithBlurb',
+        description: 'Small option card with descriptive text.',
+        details: {
+          content:
+            'Planned as a lightweight selection primitive for settings, comparisons, and feature choices.',
+        },
+        color: 'secondary',
+      },
+      {
+        key: 9,
+        date: 'Jun 2026',
+        shortTitle: 'SectionPendingLoader',
+        title: 'SectionPendingLoader',
+        description:
+          'Loading placeholder for async section data. Requires internal Iconify → GiselleIcon swap.',
+        details: {
+          content:
+            'Still blocked on replacing the private icon dependency path with the public GiselleIcon contract.',
+        },
+        color: 'secondary',
+      },
+      {
+        key: 10,
+        date: 'Jun 2026',
+        shortTitle: 'FloatingControlBar',
+        title: 'FloatingControlBar',
+        description: 'Floating toolbar variant. Requires internal Iconify → GiselleIcon swap.',
+        details: {
+          content:
+            'Another extraction candidate waiting on the same icon boundary cleanup before it can ship publicly.',
+        },
+        color: 'secondary',
+      },
     ],
   },
   {
     key: 6,
     title: 'Phase F — DetailsDrawer',
     shortTitle: 'Phase F',
-    description: 'Slide-in detail panel: shell only, content via slot. Responsive width, backdrop, header + footer slots.',
+    description:
+      'Slide-in detail panel: shell only, content via slot. Responsive width, backdrop, header + footer slots.',
     date: 'Jul 2026',
     side: 'right',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5Zm12 0v14h4V5h-4Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5Zm12 0v14h4V5h-4Z" />
+      </svg>
+    ),
     color: 'primary',
   },
   {
@@ -118,33 +321,93 @@ export const roadmapPhases = [
     description: 'Read/edit panel for any timeline item. Rendered inside DetailsDrawer.',
     date: 'Jul 2026',
     side: 'right',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm4-14h10v2H11V4Zm0 8h10v2H11v-2Zm0 8h10v2H11v-2Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm4-14h10v2H11V4Zm0 8h10v2H11v-2Zm0 8h10v2H11v-2Z" />
+      </svg>
+    ),
     color: 'primary',
   },
   {
     key: 8,
     title: 'Phase H — Dashboard component suite',
     shortTitle: 'Phase H',
-    description: 'Full set of data dashboard widgets: chart cards, data tables, activity feeds, budget breakdown, stat rows, hero banners. Enables trip-costs dashboard and any product analytics view.',
+    description:
+      'Full set of data dashboard widgets: chart cards, data tables, activity feeds, budget breakdown, stat rows, hero banners. Enables trip-costs dashboard and any product analytics view.',
     date: 'Aug 2026',
     side: 'right',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 11h8V3H4v8Zm0 10h8v-8H4v8Zm10 0h8v-8h-8v8Zm0-18v8h8V3h-8Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M4 11h8V3H4v8Zm0 10h8v-8H4v8Zm10 0h8v-8h-8v8Zm0-18v8h8V3h-8Z" />
+      </svg>
+    ),
     color: 'info',
     children: [
-      { key: 0, date: '7 May 2026', shortTitle: 'Subpath exports', title: 'Configure /charts and /motion subpath exports in tsup + package.json', description: 'Architecture prerequisite. Unblocks ApexCharts chart cards and framer-motion components without imposing those deps on all consumers.', details: { content: 'Completed prerequisite: the package can now isolate heavy optional dependencies behind explicit import paths.' }, color: 'success', done: true },
-      { key: 1, date: 'Aug 2026', shortTitle: 'MUI-only widgets', title: 'MUI-only dashboard widgets (18 components)', description: 'Groups 1+3+4+5 + Group 7 main-bundle analytics: StatCardRow, BalanceSummaryCard, CreditCardDisplay, DataTable, ActivityFeedList, NewsFeedList, RelatedItemsList, ProgressStatsList, QuickTransferWidget, ContactsList, BudgetBreakdownCard, HeroBannerCard, FeaturedItemCard, PromoInviteCard, CostClassificationCard, ROIComparisonCard, ScenarioComparisonWidget, AmortizationScheduleTable.', details: { content: 'These are the main-bundle widgets that stay available to every consumer without bringing in charting or motion packages.' } },
-      { key: 2, date: 'Aug 2026', shortTitle: 'Chart cards', title: 'ApexCharts chart card suite (8 components — /charts subpath)', description: 'SparklineBar, DonutChartCard, AreaLineChartCard, BudgetVsActualChartCard, GroupedBarChartCard, HorizontalBarChartCard, RadarChartCard, ProjectionChartCard (dual-series costs-vs-returns with break-even annotation).', details: { content: 'All chart-heavy cards stay behind the /charts entry so the main bundle remains MUI-only.' } },
-      { key: 3, date: 'Aug 2026', shortTitle: 'Motion components', title: 'Move FloatingSubNav to /motion subpath + AnimatedTabPanel', description: 'Breaking change for FloatingSubNav consumers — needs re-export shim or minor version bump.', details: { content: 'This milestone is mainly about package-boundary hygiene so motion remains opt-in instead of leaking into the default entry.' } },
+      {
+        key: 0,
+        date: '7 May 2026',
+        shortTitle: 'Subpath exports',
+        title: 'Configure /charts and /motion subpath exports in tsup + package.json',
+        description:
+          'Architecture prerequisite. Unblocks ApexCharts chart cards and framer-motion components without imposing those deps on all consumers.',
+        details: {
+          content:
+            'Completed prerequisite: the package can now isolate heavy optional dependencies behind explicit import paths.',
+        },
+        color: 'success',
+        done: true,
+      },
+      {
+        key: 1,
+        date: 'Aug 2026',
+        shortTitle: 'MUI-only widgets',
+        title: 'MUI-only dashboard widgets (18 components)',
+        description:
+          'Groups 1+3+4+5 + Group 7 main-bundle analytics: StatCardRow, BalanceSummaryCard, CreditCardDisplay, DataTable, ActivityFeedList, NewsFeedList, RelatedItemsList, ProgressStatsList, QuickTransferWidget, ContactsList, BudgetBreakdownCard, HeroBannerCard, FeaturedItemCard, PromoInviteCard, CostClassificationCard, ROIComparisonCard, ScenarioComparisonWidget, AmortizationScheduleTable.',
+        details: {
+          content:
+            'These are the main-bundle widgets that stay available to every consumer without bringing in charting or motion packages.',
+        },
+      },
+      {
+        key: 2,
+        date: 'Aug 2026',
+        shortTitle: 'Chart cards',
+        title: 'ApexCharts chart card suite (8 components — /charts subpath)',
+        description:
+          'SparklineBar, DonutChartCard, AreaLineChartCard, BudgetVsActualChartCard, GroupedBarChartCard, HorizontalBarChartCard, RadarChartCard, ProjectionChartCard (dual-series costs-vs-returns with break-even annotation).',
+        details: {
+          content:
+            'All chart-heavy cards stay behind the /charts entry so the main bundle remains MUI-only.',
+        },
+      },
+      {
+        key: 3,
+        date: 'Aug 2026',
+        shortTitle: 'Motion components',
+        title: 'Move FloatingSubNav to /motion subpath + AnimatedTabPanel',
+        description:
+          'Breaking change for FloatingSubNav consumers — needs re-export shim or minor version bump.',
+        details: {
+          content:
+            'This milestone is mainly about package-boundary hygiene so motion remains opt-in instead of leaking into the default entry.',
+        },
+      },
     ],
   },
   {
     key: 10,
     title: 'Phase J — Headless CMS / Sitecore JSS developer experience',
     shortTitle: 'Phase J',
-    description: 'Make giselle-mui a natural fit for Sitecore JSS / Next.js teams. Slot-first APIs, compound component patterns, and MUI JSDoc inheritance — so developers write less boilerplate and no redundant documentation.',
+    description:
+      'Make giselle-mui a natural fit for Sitecore JSS / Next.js teams. Slot-first APIs, compound component patterns, and MUI JSDoc inheritance — so developers write less boilerplate and no redundant documentation.',
     date: 'Oct 2026',
     side: 'right',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.14 7.14 0 0 0-1.63-.94l-.36-2.54a.49.49 0 0 0-.49-.42h-3.84a.49.49 0 0 0-.49.42l-.36 2.54c-.58.22-1.12.52-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.51.41 1.05.73 1.63.94l.36 2.54c.05.24.25.42.49.42h3.84c.24 0 .44-.18.49-.42l.36-2.54c.58-.22 1.12-.53 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.14 7.14 0 0 0-1.63-.94l-.36-2.54a.49.49 0 0 0-.49-.42h-3.84a.49.49 0 0 0-.49.42l-.36 2.54c-.58.22-1.12.52-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 14.52a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.51.41 1.05.73 1.63.94l.36 2.54c.05.24.25.42.49.42h3.84c.24 0 .44-.18.49-.42l.36-2.54c.58-.22 1.12-.53 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z" />
+      </svg>
+    ),
     color: 'secondary',
     children: [
       {
@@ -152,8 +415,12 @@ export const roadmapPhases = [
         date: 'Oct 2026',
         shortTitle: 'Slot-first API guide',
         title: 'Slot-first API design guide — Sitecore / CMS compatibility',
-        description: 'Documents the pattern: every composite component exposes named ReactNode slots instead of data arrays. Maps directly to Sitecore placeholder mechanics — the layout engine renders into children or named slots; the component provides structure and styling only. Includes a migration guide from data-prop APIs to slot APIs.',
-        details: { content: 'This guide explains the architectural contract for CMS-first teams: the CMS owns content composition, the component owns structure, styling, and accessibility.' },
+        description:
+          'Documents the pattern: every composite component exposes named ReactNode slots instead of data arrays. Maps directly to Sitecore placeholder mechanics — the layout engine renders into children or named slots; the component provides structure and styling only. Includes a migration guide from data-prop APIs to slot APIs.',
+        details: {
+          content:
+            'This guide explains the architectural contract for CMS-first teams: the CMS owns content composition, the component owns structure, styling, and accessibility.',
+        },
         color: 'secondary',
       },
       {
@@ -161,8 +428,12 @@ export const roadmapPhases = [
         date: 'Oct 2026',
         shortTitle: 'CompositeCard',
         title: 'CompositeCard — canonical slot-first component',
-        description: 'A card component with named ReactNode slots: header, media, body, footer, actions. No required props. Each slot is independently wirable from a Sitecore placeholder. The reference implementation for the slot-first pattern — other components follow this shape.',
-        details: { content: 'CompositeCard becomes the concrete example teams can copy when converting from data-driven props to slot-driven composition.' },
+        description:
+          'A card component with named ReactNode slots: header, media, body, footer, actions. No required props. Each slot is independently wirable from a Sitecore placeholder. The reference implementation for the slot-first pattern — other components follow this shape.',
+        details: {
+          content:
+            'CompositeCard becomes the concrete example teams can copy when converting from data-driven props to slot-driven composition.',
+        },
         color: 'secondary',
       },
       {
@@ -170,8 +441,12 @@ export const roadmapPhases = [
         date: 'Nov 2026',
         shortTitle: 'Compound component guide',
         title: 'Compound component pattern — parent + exported sub-components sharing context',
-        description: 'Pattern guide and reference implementation: a parent component that exposes React context, with named sub-components (Component.Header, Component.Body, Component.Footer) that consume it. Avoids prop drilling when Sitecore wires each placeholder independently. Each sub-component can be placed in a separate Sitecore placeholder without the parent needing to know the structure.',
-        details: { content: 'This is the context-sharing companion to the slot-first pattern: flexible composition without passing every prop through every level.' },
+        description:
+          'Pattern guide and reference implementation: a parent component that exposes React context, with named sub-components (Component.Header, Component.Body, Component.Footer) that consume it. Avoids prop drilling when Sitecore wires each placeholder independently. Each sub-component can be placed in a separate Sitecore placeholder without the parent needing to know the structure.',
+        details: {
+          content:
+            'This is the context-sharing companion to the slot-first pattern: flexible composition without passing every prop through every level.',
+        },
         color: 'secondary',
       },
       {
@@ -179,8 +454,12 @@ export const roadmapPhases = [
         date: 'Nov 2026',
         shortTitle: 'MUI JSDoc inheritance guide',
         title: 'MUI JSDoc inheritance — write docs only for new props',
-        description: 'A documented principle and Storybook story that demonstrates: extending CardProps, ButtonProps, etc. means MUI\'s own JSDoc for elevation, variant, sx, aria-*, and all base props appears in the IDE and Storybook autodoc with zero authoring. Only props that giselle-mui adds need documentation. This is the productivity multiplier for large Sitecore teams.',
-        details: { content: 'The point is to cut duplicate documentation work: teams document only the new contract they add, not the entire inherited MUI surface.' },
+        description:
+          "A documented principle and Storybook story that demonstrates: extending CardProps, ButtonProps, etc. means MUI's own JSDoc for elevation, variant, sx, aria-*, and all base props appears in the IDE and Storybook autodoc with zero authoring. Only props that giselle-mui adds need documentation. This is the productivity multiplier for large Sitecore teams.",
+        details: {
+          content:
+            'The point is to cut duplicate documentation work: teams document only the new contract they add, not the entire inherited MUI surface.',
+        },
         color: 'secondary',
       },
     ],
@@ -189,60 +468,151 @@ export const roadmapPhases = [
     key: 9,
     title: 'Phase I — Home section extraction (/motion subpath)',
     shortTitle: 'Phase I',
-    description: 'Extract seven animation-dependent components from alexrebula into the /motion subpath. Replaces proprietary animate utilities with standalone MIT-safe motion variant factories.',
+    description:
+      'Extract seven animation-dependent components from alexrebula into the /motion subpath. Replaces proprietary animate utilities with standalone MIT-safe motion variant factories.',
     date: 'Sep 2026',
     side: 'left',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm4-14h10v2H11V4Zm0 8h10v2H11v-2Zm0 8h10v2H11v-2Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm4-14h10v2H11V4Zm0 8h10v2H11v-2Zm0 8h10v2H11v-2Z" />
+      </svg>
+    ),
     color: 'info',
     children: [
-      { key: 0, date: 'Sep 2026', shortTitle: 'Motion variants', title: 'fadeVariants, scaleVariants, zoomVariants — motion variant factories', description: 'Standalone framer-motion Variants factories. MIT-safe motion variant utilities. Exported from /motion subpath. Unblocks all animation-dependent components in this phase.', details: { content: 'This is the legal and architectural prerequisite for any future extraction that currently depends on private motion helpers.' } },
-      { key: 1, date: 'Sep 2026', shortTitle: 'SectionTitle animated', title: 'SectionTitle + SectionCaption — animated /motion variants', description: 'Animated wrappers using fadeVariants stagger on each text slot. The static base components are already shipped in Phase E; these are the entrance-animated /motion versions.', details: { content: 'The static primitives already exist; this milestone adds the optional animated entry path without contaminating the main bundle.' } },
-      { key: 2, date: 'Sep 2026', shortTitle: 'FloatingSideNav', title: 'FloatingSideNav — vertically stacked left-side pill nav', description: 'Props-only API: isVisible, activeId, onSelect. Distinct from FloatingSubNav (bottom-anchored pill) — different component, different placement, different use case.', details: { content: 'The interaction model and placement are different enough that this remains a separate component, not a variant of FloatingSubNav.' } },
-      { key: 3, date: 'Sep 2026', shortTitle: 'HeroBackground', title: 'HeroBackground — radial gradient backdrop + animated SVG grid', description: 'Full-width animated hero background. Internal SVG primitives (FloatLine, FloatTriangle, FloatDot) not exported. Uses theme.vars.palette.* CSS variables for all colour tokens.', details: { content: 'The key requirement is a clean-room animated background built entirely on theme vars and MIT-safe motion utilities.' } },
-      { key: 4, date: 'Oct 2026', shortTitle: 'FloatingIconCloud', title: 'FloatingIconCloud — floating icon images with seeded positioning', description: 'Consumer supplies items[]. No alexrebula-specific presets.', details: { content: 'This extraction only ships once the component is fully data-driven and detached from portfolio-specific icon presets.' } },
-      { key: 5, date: 'Oct 2026', shortTitle: 'InteractiveHeroLogo', title: 'InteractiveHeroLogo', description: 'Most valuable single component in this phase. Requires useImagePreloader utility to be moved from alexrebula utils to giselle-mui utils before extraction.', details: { content: 'Blocked on moving the supporting preloader utility across the private/public boundary first.' } },
+      {
+        key: 0,
+        date: 'Sep 2026',
+        shortTitle: 'Motion variants',
+        title: 'fadeVariants, scaleVariants, zoomVariants — motion variant factories',
+        description:
+          'Standalone framer-motion Variants factories. MIT-safe motion variant utilities. Exported from /motion subpath. Unblocks all animation-dependent components in this phase.',
+        details: {
+          content:
+            'This is the legal and architectural prerequisite for any future extraction that currently depends on private motion helpers.',
+        },
+      },
+      {
+        key: 1,
+        date: 'Sep 2026',
+        shortTitle: 'SectionTitle animated',
+        title: 'SectionTitle + SectionCaption — animated /motion variants',
+        description:
+          'Animated wrappers using fadeVariants stagger on each text slot. The static base components are already shipped in Phase E; these are the entrance-animated /motion versions.',
+        details: {
+          content:
+            'The static primitives already exist; this milestone adds the optional animated entry path without contaminating the main bundle.',
+        },
+      },
+      {
+        key: 2,
+        date: 'Sep 2026',
+        shortTitle: 'FloatingSideNav',
+        title: 'FloatingSideNav — vertically stacked left-side pill nav',
+        description:
+          'Props-only API: isVisible, activeId, onSelect. Distinct from FloatingSubNav (bottom-anchored pill) — different component, different placement, different use case.',
+        details: {
+          content:
+            'The interaction model and placement are different enough that this remains a separate component, not a variant of FloatingSubNav.',
+        },
+      },
+      {
+        key: 3,
+        date: 'Sep 2026',
+        shortTitle: 'HeroBackground',
+        title: 'HeroBackground — radial gradient backdrop + animated SVG grid',
+        description:
+          'Full-width animated hero background. Internal SVG primitives (FloatLine, FloatTriangle, FloatDot) not exported. Uses theme.vars.palette.* CSS variables for all colour tokens.',
+        details: {
+          content:
+            'The key requirement is a clean-room animated background built entirely on theme vars and MIT-safe motion utilities.',
+        },
+      },
+      {
+        key: 4,
+        date: 'Oct 2026',
+        shortTitle: 'FloatingIconCloud',
+        title: 'FloatingIconCloud — floating icon images with seeded positioning',
+        description: 'Consumer supplies items[]. No alexrebula-specific presets.',
+        details: {
+          content:
+            'This extraction only ships once the component is fully data-driven and detached from portfolio-specific icon presets.',
+        },
+      },
+      {
+        key: 5,
+        date: 'Oct 2026',
+        shortTitle: 'InteractiveHeroLogo',
+        title: 'InteractiveHeroLogo',
+        description:
+          'Most valuable single component in this phase. Requires useImagePreloader utility to be moved from alexrebula utils to giselle-mui utils before extraction.',
+        details: {
+          content:
+            'Blocked on moving the supporting preloader utility across the private/public boundary first.',
+        },
+      },
     ],
   },
   {
     key: 11,
     title: 'Phase K — BranchedTimeline (Scenario Tree)',
     shortTitle: 'Phase K',
-    description: 'Good to have — library classification open. A branched timeline where scenarios fork the main spine into parallel arms, each with its own phases and milestones. Solves the flat-timeline limitation for plans with multiple parallel futures. May belong in a dedicated smart-components package rather than giselle-mui.',
+    description:
+      'Good to have — library classification open. A branched timeline where scenarios fork the main spine into parallel arms, each with its own phases and milestones. Solves the flat-timeline limitation for plans with multiple parallel futures. May belong in a dedicated smart-components package rather than giselle-mui.',
     date: 'TBD',
     side: 'right',
-    icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm4-14h10v2H11V4Zm0 8h10v2H11v-2Zm0 8h10v2H11v-2Z" /></svg>,
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M7 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm0 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4Zm4-14h10v2H11V4Zm0 8h10v2H11v-2Zm0 8h10v2H11v-2Z" />
+      </svg>
+    ),
     color: 'secondary',
     children: [
       {
         key: 0,
         shortTitle: 'Library classification',
         title: 'Decide: giselle-mui or dedicated smart-components package?',
-        description: 'The branch layout algorithm (column widths, re-convergence detection, row alignment across arms) is complex enough that it may warrant its own package — e.g. @alexrebula/giselle-smart-components — rather than bundling into giselle-mui. This decision gates all other milestones.',
-        details: { content: 'This is the gating architectural decision because the implementation may exceed the scope of a small MUI wrapper library.' },
+        description:
+          'The branch layout algorithm (column widths, re-convergence detection, row alignment across arms) is complex enough that it may warrant its own package — e.g. @littlebranches/giselle-smart-components — rather than bundling into giselle-mui. This decision gates all other milestones.',
+        details: {
+          content:
+            'This is the gating architectural decision because the implementation may exceed the scope of a small MUI wrapper library.',
+        },
         color: 'warning',
       },
       {
         key: 1,
         shortTitle: 'Data model',
         title: 'Define BranchedTimelineNode, BranchedTimelineScenario, BranchedTimelineData',
-        description: 'Recursive typed data structure: trunk nodes (linear phases), branch-point nodes (condition string + scenario arms), and re-convergence nodes. Each scenario arm contains its own BranchedTimelineNode[] — branches can nest.',
-        details: { content: 'The recursive model is the core prerequisite for representing alternative futures without flattening them into a misleading linear sequence.' },
+        description:
+          'Recursive typed data structure: trunk nodes (linear phases), branch-point nodes (condition string + scenario arms), and re-convergence nodes. Each scenario arm contains its own BranchedTimelineNode[] — branches can nest.',
+        details: {
+          content:
+            'The recursive model is the core prerequisite for representing alternative futures without flattening them into a misleading linear sequence.',
+        },
         color: 'secondary',
       },
       {
         key: 2,
         shortTitle: 'Layout algorithm',
         title: 'Branch layout engine — column widths, re-convergence, row alignment',
-        description: 'Pure utility (no JSX): given a BranchedTimelineData tree, compute per-arm column widths, detect re-convergence nodes, and produce a flat render grid that aligns sibling-arm phases by date or sequence index. This is the hardest part and should be independently unit-testable.',
-        details: { content: 'This milestone is intentionally algorithm-first: layout correctness needs to be solved in pure data before any visual component is attempted.' },
+        description:
+          'Pure utility (no JSX): given a BranchedTimelineData tree, compute per-arm column widths, detect re-convergence nodes, and produce a flat render grid that aligns sibling-arm phases by date or sequence index. This is the hardest part and should be independently unit-testable.',
+        details: {
+          content:
+            'This milestone is intentionally algorithm-first: layout correctness needs to be solved in pure data before any visual component is attempted.',
+        },
         color: 'secondary',
       },
       {
         key: 3,
         shortTitle: 'BranchedTimeline component',
         title: 'BranchedTimeline — trunk + arms + fork indicators + re-convergence',
-        description: 'Renders the trunk timeline, splits into parallel arm columns at fork points (labelled with condition text and palette-keyed colour bands), and re-merges where all arms converge to a shared outcome. Reuses TimelinePhase, MilestoneBadge, and SpineConnector from TimelineTwoColumn internals.',
-        details: { content: 'The render layer comes last, after the package boundary and layout algorithm are settled.' },
+        description:
+          'Renders the trunk timeline, splits into parallel arm columns at fork points (labelled with condition text and palette-keyed colour bands), and re-merges where all arms converge to a shared outcome. Reuses TimelinePhase, MilestoneBadge, and SpineConnector from TimelineTwoColumn internals.',
+        details: {
+          content:
+            'The render layer comes last, after the package boundary and layout algorithm are settled.',
+        },
         color: 'secondary',
       },
     ],
@@ -251,18 +621,43 @@ export const roadmapPhases = [
     key: 12,
     title: 'Phase L — Quality infrastructure',
     shortTitle: 'Phase L',
-    description: 'Component cleanup playbook, per-component quality scoring, and Copilot tooling that make the library maintainable at scale.',
+    description:
+      'Component cleanup playbook, per-component quality scoring, and Copilot tooling that make the library maintainable at scale.',
     date: '8 May 2026',
     side: 'left',
     color: 'success',
     done: true,
     children: [
-      { key: 0, title: '14-step cleanup-workflow.md playbook (Scenario A + B DoD checklists)', done: true },
-      { key: 1, title: 'Session shorthand: `cleanup component <Name>` — zero-context fresh sessions', done: true },
-      { key: 2, title: 'Scoped .instructions.md — VS Code auto-loads on any component file open', done: true },
-      { key: 3, title: 'DoD checklists inlined in copilot-instructions.md — GitHub PR reviewer coverage', done: true },
-      { key: 4, title: 'Per-component quality scoring: DoD n/20 · Best practices n/13 in JSDoc + README', done: true },
-      { key: 5, title: 'component-inventory.md quality status table with last-audited date', done: true },
+      {
+        key: 0,
+        title: '14-step cleanup-workflow.md playbook (Scenario A + B DoD checklists)',
+        done: true,
+      },
+      {
+        key: 1,
+        title: 'Session shorthand: `cleanup component <Name>` — zero-context fresh sessions',
+        done: true,
+      },
+      {
+        key: 2,
+        title: 'Scoped .instructions.md — VS Code auto-loads on any component file open',
+        done: true,
+      },
+      {
+        key: 3,
+        title: 'DoD checklists inlined in copilot-instructions.md — GitHub PR reviewer coverage',
+        done: true,
+      },
+      {
+        key: 4,
+        title: 'Per-component quality scoring: DoD n/20 · Best practices n/13 in JSDoc + README',
+        done: true,
+      },
+      {
+        key: 5,
+        title: 'component-inventory.md quality status table with last-audited date',
+        done: true,
+      },
     ],
   },
 ];
@@ -272,10 +667,9 @@ export const roadmapPhases = [
 <div className="giselle-roadmap-layout">
 <div className="giselle-roadmap-main">
 
-
 ## Current state
 
-`@alexrebula/giselle-mui` uses only standard MUI v7 APIs to set up its theme:
+`@littlebranches/giselle-mui` currently supports **MUI v7** (`peerDependencies: "^7.0.0"`). Dual-major support (v7 + v9) is in progress — see PR #62. It uses only standard MUI APIs to set up its theme:
 
 ```ts
 import { extendTheme } from '@mui/material/styles';
@@ -289,10 +683,10 @@ See [`theming/nextjs.md`](./theming/nextjs.md) for the recommended setup in a ne
 ## Theme utilities
 
 **Phase A shipped — 4 May 2026.** Theme-building helpers are available as named exports
-from `@alexrebula/giselle-mui`:
+from `@littlebranches/giselle-mui`:
 
 ```ts
-import { channelAlpha, hexToChannel, pxToRem, remToPx } from '@alexrebula/giselle-mui';
+import { channelAlpha, hexToChannel, pxToRem, remToPx } from '@littlebranches/giselle-mui';
 ```
 
 See [`theming/nextjs.md`](./theming/nextjs.md) for full usage examples and integration guide.
@@ -455,29 +849,29 @@ from scratch in giselle-mui (copyright rule: no copy from the private repo).
 
 | Task                                                                                              | Label      | Status |
 | ------------------------------------------------------------------------------------------------- | ---------- | ------ |
-| Extract `TwoColumnShowcaseRow` — clean, no proprietary deps, ready now                                  | Components | ✅     |
+| Extract `TwoColumnShowcaseRow` — clean, no proprietary deps, ready now                            | Components | ✅     |
 | Extract `SectionTitle` + `SectionCaption` — section heading group with optional gradient accent   | Components | ✅     |
 | Extract `FloatingSubNav` — sticky/fixed pill nav with framer-motion, `ReactNode` icon slot        | Components | ✅     |
-| Extract `OptionWithBlurb` — tiny wrapper, clean, no proprietary deps                                    | Components | ⬜     |
+| Extract `OptionWithBlurb` — tiny wrapper, clean, no proprietary deps                              | Components | ⬜     |
 | Extract `SectionPendingLoader` — replace internal `Iconify` with `GiselleIcon`                    | Components | ⬜     |
 | Extract `FloatingControlBar` — replace `channelAlpha` (Phase A first) + `Iconify` → `GiselleIcon` | Components | ⬜     |
 
 **Write from scratch** (no copy from alexrebula — independent implementations):
 
-| Task                                                                                                                                             | Label      | Status |
-| ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ------ |
-| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot                                                    | Components | ✅     |
-| `StatCard` — data card with sparkline, six palette variants, `StatCardItem[]` data prop — ✅ Done 5 May 2026                                     | Components | ✅     |
-| `RadialProgressCard` — Card wrapping an ApexCharts radialBar with configurable progress items and palette keys                                   | Components | ✅     |
-| `resolveMaturityColor(pct)` + `resolveMaturityLabel(pct)` — maps readiness percentages to MUI palette key and mango-stage label                  | Utilities  | ✅     |
-| `assignMilestoneSidesByDone(phases)` — derives milestone column placement from `done` state; exported so consumers don't reimplement the pattern | Utilities  | ✅     |
+| Task                                                                                                                                                                                            | Label      | Status |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------ |
+| `SectionContainer` — `Container` + consistent vertical padding + optional title/subtitle slot                                                                                                   | Components | ✅     |
+| `StatCard` — data card with sparkline, six palette variants, `StatCardItem[]` data prop — ✅ Done 5 May 2026                                                                                    | Components | ✅     |
+| `RadialProgressCard` — Card wrapping an ApexCharts radialBar with configurable progress items and palette keys                                                                                  | Components | ✅     |
+| `resolveMaturityColor(pct)` + `resolveMaturityLabel(pct)` — maps readiness percentages to MUI palette key and mango-stage label                                                                 | Utilities  | ✅     |
+| `assignMilestoneSidesByDone(phases)` — derives milestone column placement from `done` state; exported so consumers don't reimplement the pattern                                                | Utilities  | ✅     |
 | `TimelineCompact` — single-column accordion renderer for `TimelinePhase[]`; mobile companion to `TimelineTwoColumn` — swap at xs/sm breakpoints with no data-layer changes — ✅ Done 7 May 2026 | Components | ✅     |
-| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha`                                                | Components | ⬜     |
-| `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand                                                       | Components | ⬜     |
+| `HeroSection` — full-width hero: headline, subtitle, CTA slot, background tint via `channelAlpha`                                                                                               | Components | ⬜     |
+| `FAQAccordion` — MUI `Accordion` with consistent styling, icon slot, and accessible expand                                                                                                      | Components | ⬜     |
 
 **When this phase is done:**
 
-A blank `create-next-app` project can install `@alexrebula/giselle-mui`, add
+A blank `create-next-app` project can install `@littlebranches/giselle-mui`, add
 `GiselleThemeProvider` to `layout.tsx`, and assemble a full homepage from exported
 components — no proprietary theme, no reimplemented patterns.
 
@@ -689,10 +1083,12 @@ A parent component exposes React context. Named sub-components (`CompositeCard.H
 ```tsx
 // Parent + sub-components sharing context via React.createContext
 <CompositeCard color="primary">
-  <CompositeCard.Header>          {/* reads color from context */}
+  <CompositeCard.Header>
+    {' '}
+    {/* reads color from context */}
     <SitecoreText field={fields.title} />
   </CompositeCard.Header>
-  <Placeholder name="card-body" rendering={rendering} />   {/* CMS-wired */}
+  <Placeholder name="card-body" rendering={rendering} /> {/* CMS-wired */}
   <CompositeCard.Footer>
     <Placeholder name="card-actions" rendering={rendering} />
   </CompositeCard.Footer>
@@ -724,17 +1120,17 @@ The Sitecore Experience Editor attaches `data-*` attributes to every component f
 
 **Prerequisite:** Phase E — `SectionContainer` and `HeroSection` must be reviewed for slot-API compliance before Phase J ships.
 
-| Task | Label | Status |
-| ---- | ----- | ------ |
-| Write slot-first API design guide — with Sitecore placeholder examples | Docs | ⬜ |
-| Audit all shipped components for slot-API compliance (`...other` spread, `ReactNode` slots, no required content props) | Docs | ⬜ |
-| Implement `CompositeCard` — `header?`, `media?`, `body?`, `footer?`, `actions?` all `ReactNode` slots, no required props | Components | ⬜ |
-| Export `CompositeCard` sub-components: `CompositeCard.Header`, `CompositeCard.Body`, `CompositeCard.Footer`, `CompositeCard.Actions` | Components | ⬜ |
-| Write compound component pattern guide with React context wiring example | Docs | ⬜ |
-| Write MUI JSDoc inheritance guide — Storybook story demonstrating autodoc from extended MUI interfaces | Docs | ⬜ |
-| Add Storybook story: `CompositeCard` with all slots filled, minimal (no optionals), Sitecore placeholder simulation | Components | ⬜ |
-| Vitest tests: renders with all slots, renders with no optional slots, `data-*` attributes flow to DOM root | Components | ⬜ |
-| README: why this exists, Sitecore use case, compound component pattern, slot-first API, JSDoc inheritance | Docs | ⬜ |
+| Task                                                                                                                                 | Label      | Status |
+| ------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ------ |
+| Write slot-first API design guide — with Sitecore placeholder examples                                                               | Docs       | ⬜     |
+| Audit all shipped components for slot-API compliance (`...other` spread, `ReactNode` slots, no required content props)               | Docs       | ⬜     |
+| Implement `CompositeCard` — `header?`, `media?`, `body?`, `footer?`, `actions?` all `ReactNode` slots, no required props             | Components | ⬜     |
+| Export `CompositeCard` sub-components: `CompositeCard.Header`, `CompositeCard.Body`, `CompositeCard.Footer`, `CompositeCard.Actions` | Components | ⬜     |
+| Write compound component pattern guide with React context wiring example                                                             | Docs       | ⬜     |
+| Write MUI JSDoc inheritance guide — Storybook story demonstrating autodoc from extended MUI interfaces                               | Docs       | ⬜     |
+| Add Storybook story: `CompositeCard` with all slots filled, minimal (no optionals), Sitecore placeholder simulation                  | Components | ⬜     |
+| Vitest tests: renders with all slots, renders with no optional slots, `data-*` attributes flow to DOM root                           | Components | ⬜     |
+| README: why this exists, Sitecore use case, compound component pattern, slot-first API, JSDoc inheritance                            | Docs       | ⬜     |
 
 ---
 
@@ -749,15 +1145,15 @@ Full spec: [`components/dashboard-components-plan.md`](./components/dashboard-co
 - `/charts` subpath in tsup + package.json — unblocks all ApexCharts chart cards
 - `/motion` subpath in tsup + package.json — unblocks `FloatingSubNav` migration and `AnimatedTabPanel`
 
-| Group | Components | Subpath | Status |
-| ----- | ---------- | ------- | ------ |
-| 1 — Stat / metric cards | `StatCardRow`, `BalanceSummaryCard`, `CreditCardDisplay` | Main | ⬜ |
-| 2 — Chart cards (8) | `SparklineBar`, `DonutChartCard`, `AreaLineChartCard`, `BudgetVsActualChartCard`, `GroupedBarChartCard`, `HorizontalBarChartCard`, `RadarChartCard`, `ProjectionChartCard` | `/charts` | ⬜ |
-| 3 — Data lists + tables | `DataTable`, `ActivityFeedList`, `NewsFeedList`, `RelatedItemsList` | Main | ⬜ |
-| 4 — Financial / action widgets | `ProgressStatsList`, `QuickTransferWidget`, `ContactsList`, `BudgetBreakdownCard` | Main | ⬜ |
-| 5 — Hero / marketing cards | `HeroBannerCard`, `FeaturedItemCard`, `PromoInviteCard` | Main | ⬜ |
-| 6 — Motion (migrate) | Move `FloatingSubNav` → `/motion` (re-export shim needed), add `AnimatedTabPanel` | `/motion` | 🟡/⬜ |
-| 7 — Investment analytics | `CostClassificationCard`, `ROIComparisonCard`, `ScenarioComparisonWidget`, `AmortizationScheduleTable` | Main | ⬜ |
+| Group                          | Components                                                                                                                                                                 | Subpath   | Status |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------ |
+| 1 — Stat / metric cards        | `StatCardRow`, `BalanceSummaryCard`, `CreditCardDisplay`                                                                                                                   | Main      | ⬜     |
+| 2 — Chart cards (8)            | `SparklineBar`, `DonutChartCard`, `AreaLineChartCard`, `BudgetVsActualChartCard`, `GroupedBarChartCard`, `HorizontalBarChartCard`, `RadarChartCard`, `ProjectionChartCard` | `/charts` | ⬜     |
+| 3 — Data lists + tables        | `DataTable`, `ActivityFeedList`, `NewsFeedList`, `RelatedItemsList`                                                                                                        | Main      | ⬜     |
+| 4 — Financial / action widgets | `ProgressStatsList`, `QuickTransferWidget`, `ContactsList`, `BudgetBreakdownCard`                                                                                          | Main      | ⬜     |
+| 5 — Hero / marketing cards     | `HeroBannerCard`, `FeaturedItemCard`, `PromoInviteCard`                                                                                                                    | Main      | ⬜     |
+| 6 — Motion (migrate)           | Move `FloatingSubNav` → `/motion` (re-export shim needed), add `AnimatedTabPanel`                                                                                          | `/motion` | 🟡/⬜  |
+| 7 — Investment analytics       | `CostClassificationCard`, `ROIComparisonCard`, `ScenarioComparisonWidget`, `AmortizationScheduleTable`                                                                     | Main      | ⬜     |
 
 > **Note — superseded plan:** An earlier Phase H plan covered application shell components (`AppTopBar`, `AppLayout`, `LoginCard`, `AuthPageLayout`). That work is unscheduled — it depends on Phase D (`GiselleSettingsProvider`) being mature first and has no assigned phase label.
 
@@ -771,21 +1167,21 @@ Full spec: [`components/home-components-extraction-plan.md`](./components/home-c
 
 **Prerequisite:** `/motion` subpath — ✅ wired (7 May 2026).
 
-| Phase | Component | Blocker | Status |
-| ----- | --------- | ------- | ------ |
-| I-1 | `fadeVariants`, `scaleVariants`, `zoomVariants` motion variant factories | None — start here | ⬜ |
-| I-2 | `SectionTitle` + `SectionCaption` — animated `/motion` variants | Phase I-1 (`fadeVariants`) | ⬜ |
-| I-3 | `FloatingSideNav` — vertically stacked left-side pill nav | Phase I-1 (`fadeVariants`) | ⬜ |
-| I-4 | SVG animation primitives — `FloatLine`, `FloatTriangle`, `FloatDot` (internal, not exported) | Phase I-1 | ⬜ |
-| I-5 | `HeroBackground` — radial gradient backdrop + animated SVG grid | Phases I-1, I-4 | ⬜ |
-| I-6 | `FloatingIconCloud` — floating icon images with seeded pseudo-random positioning | None | ⬜ |
-| I-7 | `InteractiveHeroLogo` | Requires `useImagePreloader` utility (not yet in giselle-mui) | ⬜ |
+| Phase | Component                                                                                    | Blocker                                                       | Status |
+| ----- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ------ |
+| I-1   | `fadeVariants`, `scaleVariants`, `zoomVariants` motion variant factories                     | None — start here                                             | ⬜     |
+| I-2   | `SectionTitle` + `SectionCaption` — animated `/motion` variants                              | Phase I-1 (`fadeVariants`)                                    | ⬜     |
+| I-3   | `FloatingSideNav` — vertically stacked left-side pill nav                                    | Phase I-1 (`fadeVariants`)                                    | ⬜     |
+| I-4   | SVG animation primitives — `FloatLine`, `FloatTriangle`, `FloatDot` (internal, not exported) | Phase I-1                                                     | ⬜     |
+| I-5   | `HeroBackground` — radial gradient backdrop + animated SVG grid                              | Phases I-1, I-4                                               | ⬜     |
+| I-6   | `FloatingIconCloud` — floating icon images with seeded pseudo-random positioning             | None                                                          | ⬜     |
+| I-7   | `InteractiveHeroLogo`                                                                        | Requires `useImagePreloader` utility (not yet in giselle-mui) | ⬜     |
 
 ---
 
 ### Phase K — BranchedTimeline (Scenario Tree) — TBD ⚪ Good to have
 
-> **Library classification open.** This component sits at the boundary of what a pure UI library should own. The branch layout algorithm is complex enough that it may warrant a dedicated package (e.g. `@alexrebula/giselle-smart-components`) rather than bundling into `giselle-mui`. The classification decision must happen before any implementation work begins.
+> **Library classification open.** This component sits at the boundary of what a pure UI library should own. The branch layout algorithm is complex enough that it may warrant a dedicated package (e.g. `@littlebranches/giselle-smart-components`) rather than bundling into `giselle-mui`. The classification decision must happen before any implementation work begins.
 
 **The problem it solves:**
 
@@ -799,19 +1195,19 @@ A timeline where the main spine can split into N parallel arms at a fork point. 
 
 ```ts
 type BranchedTimelineNode =
-  | { type: 'phase'; data: TimelinePhase }                          // linear segment
+  | { type: 'phase'; data: TimelinePhase } // linear segment
   | { type: 'branch'; condition: string; arms: BranchedTimelineArm[] }; // fork point
 
 interface BranchedTimelineArm {
   id: string;
-  label: string;          // "Scenario A — Early launch"
+  label: string; // "Scenario A — Early launch"
   color?: PaletteKey;
-  nodes: BranchedTimelineNode[];  // recursive — arms can contain further forks
+  nodes: BranchedTimelineNode[]; // recursive — arms can contain further forks
 }
 
 interface BranchedTimelineData {
   title?: string;
-  trunk: BranchedTimelineNode[];  // main spine before and after any fork points
+  trunk: BranchedTimelineNode[]; // main spine before and after any fork points
 }
 ```
 
@@ -832,19 +1228,18 @@ This layout computation is a pure function with no React dependency — it belon
 
 Phase cards and milestone badges inside each arm are existing `TimelineTwoColumn` internals (`PhaseCard`, `MilestoneBadge`, `SpineConnector`). The new work is the branch/re-convergence layout shell, not the per-item rendering.
 
-| Task | Label | Status |
-| ---- | ----- | ------ |
-| **Decide library classification** — giselle-mui main bundle vs. dedicated smart-components package | Architecture | ⬜ |
-| Define `BranchedTimelineNode`, `BranchedTimelineArm`, `BranchedTimelineData` in `types.ts` | Components | ⬜ |
-| Implement branch layout algorithm in `utils.ts` — column widths, re-convergence detection, row alignment grid | Utilities | ⬜ |
-| Unit-test layout algorithm — fork with 2 arms, 3 arms, nested forks, re-convergence nodes | Utilities | ⬜ |
-| Implement `BranchedTimeline` — trunk spine, fork split, arm columns, re-convergence merge | Components | ⬜ |
-| Fork indicator: condition label, palette colour band threading through arm column | Components | ⬜ |
-| Re-convergence node: full-width card spanning all arm columns | Components | ⬜ |
-| Storybook story: two-arm fork, three-arm fork, nested fork, fork with re-convergence | Components | ⬜ |
-| Storybook story: `cleanup-workflow.md` data structure as the canonical real-world example | Components | ⬜ |
-| README: problem statement, data model, layout algorithm summary, library-classification rationale | Docs | ⬜ |
-
+| Task                                                                                                          | Label        | Status |
+| ------------------------------------------------------------------------------------------------------------- | ------------ | ------ |
+| **Decide library classification** — giselle-mui main bundle vs. dedicated smart-components package            | Architecture | ⬜     |
+| Define `BranchedTimelineNode`, `BranchedTimelineArm`, `BranchedTimelineData` in `types.ts`                    | Components   | ⬜     |
+| Implement branch layout algorithm in `utils.ts` — column widths, re-convergence detection, row alignment grid | Utilities    | ⬜     |
+| Unit-test layout algorithm — fork with 2 arms, 3 arms, nested forks, re-convergence nodes                     | Utilities    | ⬜     |
+| Implement `BranchedTimeline` — trunk spine, fork split, arm columns, re-convergence merge                     | Components   | ⬜     |
+| Fork indicator: condition label, palette colour band threading through arm column                             | Components   | ⬜     |
+| Re-convergence node: full-width card spanning all arm columns                                                 | Components   | ⬜     |
+| Storybook story: two-arm fork, three-arm fork, nested fork, fork with re-convergence                          | Components   | ⬜     |
+| Storybook story: `cleanup-workflow.md` data structure as the canonical real-world example                     | Components   | ⬜     |
+| README: problem statement, data model, layout algorithm summary, library-classification rationale             | Docs         | ⬜     |
 
 </div>
 <div className="giselle-roadmap-side">

@@ -31,12 +31,12 @@ const MotionAccordion = motion(Accordion);
  * accordions, decorative SVG elements (visible at ≥1440 px), and an optional
  * contact footer.
  *
- * Powered by `framer-motion` — import from `@alexrebula/giselle-mui/motion`.
+ * Powered by `framer-motion` — import from `@littlebranches/giselle-mui/motion`.
  *
  * ## Usage
  *
  * ```tsx
- * import { FaqSection } from '@alexrebula/giselle-mui/motion';
+ * import { FaqSection } from '@littlebranches/giselle-mui/motion';
  *
  * <FaqSection
  *   caption="Support"
@@ -87,7 +87,6 @@ export function FaqSection({
     <Box component="section" sx={[...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       <FaqMotionViewport sx={{ pt: 10, position: 'relative' }}>
         <FaqTopLines />
-
         <Container>
           <SectionTitle
             caption={caption}
@@ -95,7 +94,6 @@ export function FaqSection({
             txtGradient={txtGradient}
             sx={{ textAlign: 'center' }}
           />
-
           <Box sx={contentBoxSx}>
             {faqs.map((item: FaqItem, index: number) => (
               <MotionAccordion
@@ -119,22 +117,18 @@ export function FaqSection({
             ))}
           </Box>
         </Container>
-
         <Stack sx={{ position: 'relative' }}>
           <FaqBottomLines />
-
           {contactHref && (
             <Box sx={contactSectionSx}>
               <motion.div variants={fade('in')}>
                 <Typography variant="h4">{contactTitle}</Typography>
               </motion.div>
-
               <motion.div variants={fade('in')}>
                 <Typography sx={{ mt: 2, mb: 3, color: 'text.secondary' }}>
                   {contactDescription}
                 </Typography>
               </motion.div>
-
               <motion.div variants={fade('in')}>
                 <Button
                   color="inherit"
@@ -152,5 +146,4 @@ export function FaqSection({
     </Box>
   );
 }
-
 // ----------------------------------------------------------------------
