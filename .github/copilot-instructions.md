@@ -20,6 +20,15 @@ in this library exists because it solves a recurring problem that is either:
 - Vitest + jsdom for unit tests
 - Storybook for visual development and autodoc
 
+## Cross-agent behavior guardrails (Karpathy baseline)
+
+Apply these defaults on every task unless a stricter repo rule overrides them.
+
+1. **Think before coding.** State assumptions. If multiple interpretations exist, present them and ask when uncertain.
+2. **Simplicity first.** Implement the minimum solution that satisfies the request. Do not add speculative abstraction, configurability, or extra features.
+3. **Surgical changes.** Touch only what is required for the request. Avoid unrelated refactors, formatting drift, or drive-by cleanup.
+4. **Goal-driven execution.** Define verifiable success criteria and close the loop with checks (tests, lint, typecheck, or explicit validation).
+
 ## Brand identity — the Giselle mango tree
 
 The Giselle ecosystem is named after the Filipino partner of the author. The Philippine national fruit is the Carabao mango — both the logo mark and the ecosystem metaphor.
@@ -641,19 +650,21 @@ See full rules: [`docs/components/api-design-rules.md`](../docs/components/api-d
 
 Every component belongs to one tier. Identify the tier before designing props.
 
-| Tier | When to use | Props | JSDoc on props? |
-|---|---|---|---|
-| **1 — Pure extension** | Only value-add is enforcing a convention | Inherit everything from MUI base. Add zero new props. | None on Props interface |
-| **2 — Selective extension** | Narrowing MUI's API, adding a ReactNode slot, pre-wiring a non-obvious combination | Extend MUI base. Add only the truly new props. | Only on own props |
-| **3 — Composition** | Assembles multiple MUI primitives from a data array | `items: Item[]`, `sx?: SxProps<Theme>`, config props only — do not extend a specific MUI base | Document the item type |
+| Tier                        | When to use                                                                        | Props                                                                                         | JSDoc on props?         |
+| --------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------- |
+| **1 — Pure extension**      | Only value-add is enforcing a convention                                           | Inherit everything from MUI base. Add zero new props.                                         | None on Props interface |
+| **2 — Selective extension** | Narrowing MUI's API, adding a ReactNode slot, pre-wiring a non-obvious combination | Extend MUI base. Add only the truly new props.                                                | Only on own props       |
+| **3 — Composition**         | Assembles multiple MUI primitives from a data array                                | `items: Item[]`, `sx?: SxProps<Theme>`, config props only — do not extend a specific MUI base | Document the item type  |
 
 **Shared style vs shared component rule:**
+
 - Visual-only sharing (colours, spacing, shadows) → use a style constant in `*.styles.ts`
 - Structural sharing (recurring DOM shape with multiple named slots) → thin wrapper component
 
 **The `Paper` → card pattern:** all card components extend `PaperProps` directly and import a shared `cardBaseSx` constant. There is no `BaseCard` wrapper component. Exception: `ChartCardBase` — justified by a non-trivial shared structural shell (title + year-selector slot + chart area + legend).
 
 **7 prop design rules (non-negotiable):**
+
 1. Inherit first — check if MUI already has the prop before adding it.
 2. `ReactNode` for all slots — never accept a specific icon or image component type.
 3. `sx` always last — forwarded to the root element.
