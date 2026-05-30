@@ -1,5 +1,5 @@
 {
-  "name": "@alexrebula/giselle-mui",
+  "name": "@littlebranches/giselle-mui",
   "version": "0.1.0",
   "description": "MUI component library — accessible, theme-adaptive React components built on @mui/material with zero proprietary dependencies.",
   "license": "MIT",
@@ -28,6 +28,11 @@
       "types": "./dist/motion.d.ts",
       "import": "./dist/motion.js",
       "require": "./dist/motion.cjs"
+    },
+    "./lab": {
+      "types": "./dist/lab.d.ts",
+      "import": "./dist/lab.js",
+      "require": "./dist/lab.cjs"
     }
   },
   "publishConfig": {
@@ -82,8 +87,8 @@
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
     "@iconify/react": "^5.0.0 || ^6.0.0",
-    "@mui/lab": "^7.0.0",
-    "@mui/material": "^7.0.0",
+    "@mui/lab": "^7.0.0 || ^9.0.0-beta.3",
+    "@mui/material": "^7.0.0 || ^9.0.0",
     "apexcharts": "^5.10.1",
     "framer-motion": "^11.0.0 || ^12.0.0",
     "react": "^18.0.0 || ^19.0.0",
@@ -99,6 +104,9 @@
     },
     "react-apexcharts": {
       "optional": true
+    },
+    "@mui/lab": {
+      "optional": true
     }
   },
   "devDependencies": {
@@ -107,8 +115,8 @@
     "@eslint/js": "^9.0.0",
     "@iconify-json/solar": "^1.2.5",
     "@iconify/react": "^6.0.0",
-    "@mui/lab": "^7.0.0",
-    "@mui/material": "^7.0.0",
+    "@mui/lab": "^9.0.0-beta.3",
+    "@mui/material": "^9.0.0",
     "@storybook/addon-essentials": "^8.0.0",
     "@storybook/react": "^8.0.0",
     "@storybook/react-vite": "^8.0.0",

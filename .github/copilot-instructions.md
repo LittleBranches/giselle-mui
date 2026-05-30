@@ -1,4 +1,4 @@
-# @alexrebula/giselle-mui — Copilot Instructions
+# @littlebranches/giselle-mui — Copilot Instructions
 
 This is an open-source React component library built on top of `@mui/material` v7.
 It is authored by Alex Rebula and licensed MIT.
@@ -82,7 +82,7 @@ Never use bare indented code lines — they do not render as code blocks in Mark
    register inline SVG bodies from `@iconify-json/*` **without importing the full package**:
 
    ```ts
-   import { createIconRegistrar } from '@alexrebula/giselle-mui';
+   import { createIconRegistrar } from '@littlebranches/giselle-mui';
    export const registerIcons = createIconRegistrar({
      solar: { icons: { 'star-bold': { body: '<path ...>' } } },
      logos: { icons: { react: { body: '<path ...>', width: 256, height: 256 } } },
@@ -355,7 +355,7 @@ At the start of every new Copilot session in this package, read these files:
 
 ### Section-level companion types (canonical location)
 
-These types must be defined here and imported from `@alexrebula/giselle-mui` by all consumers.
+These types must be defined here and imported from `@littlebranches/giselle-mui` by all consumers.
 **Never re-define them in alexrebula data files or anywhere else.**
 
 | Type                   | Location                                              | Purpose                                                                            |
@@ -379,7 +379,7 @@ data files. Define once in giselle-mui, import everywhere.
 
 ### Additional allowed peer dependencies
 
-- `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). Acceptable under the zero-proprietary-dependencies rule. Goes in the **main bundle** (`dist/index.js`).
+- `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). **Goes exclusively in the `/lab` subpath entry** (`dist/lab.js`, `src/lab-index.ts`). Declared with `peerDependenciesMeta.optional: true` — consumers who never import from `./lab` do not need `@mui/lab` installed. Never import from `@mui/lab` in any file that is part of `src/index.ts`.
 - `framer-motion` — allowed **only in the `/motion` subpath entry** (`dist/motion.js`). Never import `framer-motion` from a file that is part of `src/index.ts` — it would impose the dep on every consumer. **Always use `motion.div`, never `m.div`.** The `m.*` API requires `LazyMotion` in the consumer's tree — this is an invisible requirement that breaks any app not using lazy motion (including Storybook). `motion.*` works without a provider and is correct for library components.
 - `apexcharts` + `react-apexcharts` — allowed **only in the `/charts` subpath entry** (`dist/charts.js`). Never import ApexCharts from a file that is part of `src/index.ts`. Components that embed a chart must accept `chart?: ReactNode` and let the consumer supply it — this keeps the component in the main bundle with zero chart dep. Declared with `peerDependenciesMeta.optional: true`.
 
@@ -388,23 +388,25 @@ data files. Define once in giselle-mui, import everywhere.
 `giselle-mui` uses **tsup subpath exports** to isolate heavy optional dependencies. This is the answer to "can I use framer-motion / ApexCharts here?" — yes, but only in the right entry point.
 
 ```
-@alexrebula/giselle-mui          → dist/index.js     MUI-only components + utils ('use client')
-@alexrebula/giselle-mui/utils    → dist/utils.js     Server-safe pure utilities (no 'use client')
-@alexrebula/giselle-mui/charts   → dist/charts.js    ApexCharts chart cards (optional peer dep)
-@alexrebula/giselle-mui/motion   → dist/motion.js    framer-motion components (optional peer dep)
+@littlebranches/giselle-mui          → dist/index.js     MUI-only components + utils ('use client')
+@littlebranches/giselle-mui/utils    → dist/utils.js     Server-safe pure utilities (no 'use client')
+@littlebranches/giselle-mui/charts   → dist/charts.js    ApexCharts chart cards (optional peer dep)
+@littlebranches/giselle-mui/motion   → dist/motion.js    framer-motion components (optional peer dep)
+@littlebranches/giselle-mui/lab      → dist/lab.js       @mui/lab Timeline components (optional peer dep)
 ```
 
-**The rule in one sentence:** if a component imports `framer-motion`, it goes in `src/motion-index.ts` → `dist/motion.js`. If it imports `apexcharts` or `react-apexcharts`, it goes in `src/charts-index.ts` → `dist/charts.js`. Everything else goes in `src/index.ts` → `dist/index.js`.
+**The rule in one sentence:** if a component imports `framer-motion`, it goes in `src/motion-index.ts` → `dist/motion.js`. If it imports `apexcharts`/`react-apexcharts`, it goes in `src/charts-index.ts` → `dist/charts.js`. If it imports from `@mui/lab`, it goes in `src/lab-index.ts` → `dist/lab.js`. Everything else goes in `src/index.ts` → `dist/index.js`.
 
 **Consumer contract:**
 
-- A project that imports only from `@alexrebula/giselle-mui` never needs ApexCharts or framer-motion installed.
+- A project that imports only from `@littlebranches/giselle-mui` never needs ApexCharts, framer-motion, or `@mui/lab` installed.
 - A project that imports from `.../charts` must have `apexcharts` + `react-apexcharts` as deps.
 - A project that imports from `.../motion` must have `framer-motion` as a dep.
+- A project that imports from `.../lab` must have `@mui/lab` as a dep.
 
 **Why not a separate repo?** One repo, one `yalc push`, no version drift. The subpath pattern is strictly better at this library's scale.
 
-**tsup config must declare all three entry points:**
+**tsup config must declare all five entry points:**
 
 ```ts
 // tsup.config.ts — required shape
@@ -413,6 +415,7 @@ defineConfig([
   { entry: { utils: 'src/utils-index.ts' },     ... },  // utils — server-safe
   { entry: { charts: 'src/charts-index.ts' },   ... },  // charts — ApexCharts
   { entry: { motion: 'src/motion-index.ts' },   ... },  // motion — framer-motion
+  { entry: { lab: 'src/lab-index.ts' },         ... },  // lab — @mui/lab Timeline components
 ]);
 ```
 
@@ -420,14 +423,15 @@ defineConfig([
 
 ```json
 "exports": {
-  ".": { "import": "./dist/index.mjs", "require": "./dist/index.js", "types": "./dist/index.d.ts" },
-  "./utils": { "import": "./dist/utils.mjs", "require": "./dist/utils.js", "types": "./dist/utils.d.ts" },
-  "./charts": { "import": "./dist/charts.mjs", "require": "./dist/charts.js", "types": "./dist/charts.d.ts" },
-  "./motion": { "import": "./dist/motion.mjs", "require": "./dist/motion.js", "types": "./dist/motion.d.ts" }
+  ".":       { "import": "./dist/index.js",  "require": "./dist/index.cjs",  "types": "./dist/index.d.ts" },
+  "./utils": { "import": "./dist/utils.js",  "require": "./dist/utils.cjs",  "types": "./dist/utils.d.ts" },
+  "./charts":{ "import": "./dist/charts.js", "require": "./dist/charts.cjs", "types": "./dist/charts.d.ts" },
+  "./motion":{ "import": "./dist/motion.js", "require": "./dist/motion.cjs", "types": "./dist/motion.d.ts" },
+  "./lab":   { "import": "./dist/lab.js",    "require": "./dist/lab.cjs",    "types": "./dist/lab.d.ts" }
 }
 ```
 
-**Status (7 May 2026):** `/utils` exists. `/charts` and `/motion` wired — `src/charts-index.ts`, `src/motion-index.ts`, tsup entries, and `package.json` exports map all in place. Build verified green. Placeholder barrels only — Phase H components will be exported from here.
+**Status (19 May 2026):** All five subpaths wired and build-verified green. `/lab` added in PR #61 — exports all Timeline components (`TimelineTwoColumn`, `TimelineCompact`, `TaskList`, `MilestoneBadge`, `PhaseCard`, `TimelineDot`) and the `assignMilestoneSidesByDone` utility. The `src/components/lab/` folder mirrors the `./lab` export path.
 
 ### tsup `external` rule — non-negotiable
 
@@ -494,7 +498,7 @@ steps **in order** before switching to the portfolio:
 # 1. Build the distributable (tsup) — produces dist/index.js and dist/index.d.ts
 npm run build
 
-# 2. Push to the portfolio via yalc — updates node_modules/@alexrebula/giselle-mui
+# 2. Push to the portfolio via yalc — updates node_modules/@littlebranches/giselle-mui
 yalc push
 
 # 3. In the portfolio — clear the Turbopack module-graph cache, then restart
@@ -503,7 +507,7 @@ yalc push
 #    means the old pre-fix bundle stays loaded — components that were null stay null.
 ```
 
-`yalc push` updates `node_modules/@alexrebula/giselle-mui` in the portfolio automatically.
+`yalc push` updates `node_modules/@littlebranches/giselle-mui` in the portfolio automatically.
 **Always clear `.next` in the portfolio after a `yalc push`.**
 
 ---

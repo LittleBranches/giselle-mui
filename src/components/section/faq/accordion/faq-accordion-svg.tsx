@@ -35,8 +35,8 @@ export function FaqFloatLine({ sx, vertical, ...other }: SvgProps & { vertical?:
           zIndex: 1,
           height: '1px',
           opacity: 0.24,
-          ...(vertical && { width: '1px', height: 1 }),
         }),
+        vertical && { width: '1px', height: 1 },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
       {...other}

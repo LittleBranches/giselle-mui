@@ -1,4 +1,4 @@
-# API Design Rules — `@alexrebula/giselle-mui`
+# API Design Rules — `@littlebranches/giselle-mui`
 
 > These rules govern every component API, prop interface, and JSDoc in this library.
 > They apply to every PR that adds or modifies a component — no exceptions.

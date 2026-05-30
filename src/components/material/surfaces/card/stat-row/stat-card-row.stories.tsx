@@ -121,7 +121,7 @@ export const Default: Story = {
 /**
  * With sparklines — `renderChart` factory wires `ReactApexChart` from the `/charts` subpath.
  *
- * The consuming app imports from `@alexrebula/giselle-mui/charts` and passes
+ * The consuming app imports from `@littlebranches/giselle-mui/charts` and passes
  * the factory in. The main `StatCardRow` bundle stays chart-free without it.
  */
 export const WithSparklines: Story = {

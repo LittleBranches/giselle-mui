@@ -1,4 +1,4 @@
-import type { TimelinePhase } from '../../components/section/timeline/two-column/types';
+import type { TimelinePhase } from '../../components/lab/timeline/two-column/types';
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ import type { TimelinePhase } from '../../components/section/timeline/two-column
  * @example
  * ```ts
  * // In sections-api/store-readiness/data.tsx
- * import { assignMilestoneSidesByDone } from '@alexrebula/giselle-mui';
+ * import { assignMilestoneSidesByDone } from '@littlebranches/giselle-mui';
  *
  * export const storeReadinessPhases = assignMilestoneSidesByDone(rawPhases);
  * ```

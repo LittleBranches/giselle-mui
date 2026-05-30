@@ -1,10 +1,10 @@
-// @alexrebula/giselle-mui — /motion subpath entry point
+// @littlebranches/giselle-mui — /motion subpath entry point
 //
 // framer-motion components (optional peer dep: framer-motion).
-// Import from '@alexrebula/giselle-mui/motion' — NOT from the root import.
+// Import from '@littlebranches/giselle-mui/motion' — NOT from the root import.
 //
 // Consumer contract:
-//   import { MotionContainer, fade, slide } from '@alexrebula/giselle-mui/motion';
+//   import { MotionContainer, fade, slide } from '@littlebranches/giselle-mui/motion';
 //   // requires: framer-motion in the consumer's own deps
 //
 // Important: always use motion.div, never m.div.
@@ -48,6 +48,13 @@ export type {
 } from './components/section/hero/interactive-logo';
 export { HeroButtonsRow } from './components/section/hero/buttons-row';
 export type { HeroButtonsRowProps, HeroButtonItem } from './components/section/hero/buttons-row';
+
+// --- Navigation components (framer-motion) ---
+export { FloatingSubNav } from './components/material/navigation/floating-sub-nav';
+export type {
+  FloatingSubNavProps,
+  FloatingSubNavItem,
+} from './components/material/navigation/floating-sub-nav';
 
 // --- Hero: ScrollParallaxHero ---
 export {

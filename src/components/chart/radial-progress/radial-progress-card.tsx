@@ -78,11 +78,10 @@ export function RadialProgressCard({
   );
 
   return (
-    <Card sx={[{}, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
+    <Card sx={[...(Array.isArray(sx) ? sx : [sx])]} {...other}>
       {(title !== undefined || subheader !== undefined) && (
         <CardHeader title={title} subheader={subheader} />
       )}
-
       <CardContent>
         <Box sx={chartWrapSx}>
           <Suspense fallback={<Box sx={{ height: chartHeight }} />}>
@@ -95,9 +94,7 @@ export function RadialProgressCard({
             />
           </Suspense>
         </Box>
-
         <Divider sx={{ my: 2 }} />
-
         <Box sx={legendRowSx}>
           {series.map((item, i) => (
             <Box key={item.label} sx={legendItemSx}>

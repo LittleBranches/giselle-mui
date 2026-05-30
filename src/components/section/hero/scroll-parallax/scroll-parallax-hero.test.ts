@@ -15,53 +15,12 @@ vi.mock('framer-motion', () => ({
   useMotionValueEvent: vi.fn(),
 }));
 
+// useMediaQuery requires window.matchMedia which jsdom does not support — mock to a fixed value.
 vi.mock('@mui/material/useMediaQuery', () => ({ default: vi.fn(() => false) }));
-
-vi.mock('@mui/material/Box', () => ({
-  default: ({
-    children,
-    sx: _sx,
-    component,
-    ref: _ref,
-    ...props
-  }: {
-    children?: React.ReactNode;
-    sx?: unknown;
-    component?: string;
-    ref?: unknown;
-    [key: string]: unknown;
-  }) =>
-    React.createElement(component ?? 'div', props as React.HTMLAttributes<HTMLElement>, children),
-}));
-
-vi.mock('@mui/material/Stack', () => ({
-  default: ({
-    children,
-    sx: _sx,
-    spacing: _s,
-    ...props
-  }: {
-    children?: React.ReactNode;
-    sx?: unknown;
-    spacing?: unknown;
-    [key: string]: unknown;
-  }) => React.createElement('div', props as React.HTMLAttributes<HTMLDivElement>, children),
-}));
-
-vi.mock('@mui/material/Container', () => ({
-  default: ({
-    children,
-    sx: _sx,
-    ...props
-  }: {
-    children?: React.ReactNode;
-    sx?: unknown;
-    [key: string]: unknown;
-  }) => React.createElement('div', props as React.HTMLAttributes<HTMLDivElement>, children),
-}));
 
 // ----------------------------------------------------------------------
 
+import { renderWithTheme } from '../../../../test-utils';
 import { ScrollParallaxHero } from './scroll-parallax-hero';
 import { AnimatedHeroHeading } from './animated-hero-heading';
 import { useScrollPercent } from './use-scroll-percent';
@@ -71,7 +30,7 @@ import { DEFAULT_PARALLAX_MULTIPLIERS } from './scroll-parallax-hero.const';
 
 describe('ScrollParallaxHero — slot rendering', () => {
   it('renders the logo slot when provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ScrollParallaxHero, {
         logo: React.createElement('img', { 'data-testid': 'hero-logo', alt: '' }),
       })
@@ -80,7 +39,7 @@ describe('ScrollParallaxHero — slot rendering', () => {
   });
 
   it('renders the heading slot when provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ScrollParallaxHero, {
         heading: React.createElement('h1', {}, 'My Heading'),
       })
@@ -89,7 +48,7 @@ describe('ScrollParallaxHero — slot rendering', () => {
   });
 
   it('renders the text slot when provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ScrollParallaxHero, {
         text: React.createElement('p', { 'data-testid': 'hero-text' }, 'Description'),
       })
@@ -99,7 +58,7 @@ describe('ScrollParallaxHero — slot rendering', () => {
   });
 
   it('renders the actions slot when provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ScrollParallaxHero, {
         actions: React.createElement('button', { 'data-testid': 'cta' }, 'Get Started'),
       })
@@ -108,7 +67,7 @@ describe('ScrollParallaxHero — slot rendering', () => {
   });
 
   it('renders the icons slot when provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ScrollParallaxHero, {
         icons: React.createElement('div', { 'data-testid': 'icon-strip' }),
       })
@@ -117,7 +76,7 @@ describe('ScrollParallaxHero — slot rendering', () => {
   });
 
   it('renders the background slot when provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ScrollParallaxHero, {
         background: React.createElement('div', { 'data-testid': 'hero-bg' }),
       })
@@ -126,19 +85,16 @@ describe('ScrollParallaxHero — slot rendering', () => {
   });
 
   it('omits logo wrapper div when logo slot is not provided', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ScrollParallaxHero, {
         heading: React.createElement('h1', {}, 'Only Heading'),
       })
     );
-    // heading present
     expect(html).toContain('Only Heading');
-    // no logo-box element (would have inline-flex style from heroLogoBoxSx)
-    // — simply confirm render does not throw and heading is present
   });
 
   it('renders all slots together without error', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ScrollParallaxHero, {
         logo: React.createElement('img', { alt: '', 'data-testid': 'all-logo' }),
         heading: React.createElement('h1', {}, 'Full Hero'),
@@ -156,12 +112,12 @@ describe('ScrollParallaxHero — slot rendering', () => {
   });
 
   it('renders as a <section> semantic element', () => {
-    const html = renderToStaticMarkup(React.createElement(ScrollParallaxHero, {}));
+    const html = renderWithTheme(React.createElement(ScrollParallaxHero, {}));
     expect(html).toContain('<section');
   });
 
   it('forwards extra props to the root section', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(ScrollParallaxHero, {
         'data-testid': 'hero-root',
         'aria-label': 'Hero section',
@@ -176,7 +132,7 @@ describe('ScrollParallaxHero — slot rendering', () => {
 
 describe('AnimatedHeroHeading', () => {
   it('renders the subheading text', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(AnimatedHeroHeading, {
         subheading: 'The work of',
         highlight: 'Platform Team',
@@ -186,7 +142,7 @@ describe('AnimatedHeroHeading', () => {
   });
 
   it('renders the highlight text', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(AnimatedHeroHeading, {
         subheading: 'The work of',
         highlight: 'Platform Team',
@@ -196,13 +152,12 @@ describe('AnimatedHeroHeading', () => {
   });
 
   it('renders subheading and highlight in the same element', () => {
-    const html = renderToStaticMarkup(
+    const html = renderWithTheme(
       React.createElement(AnimatedHeroHeading, {
         subheading: 'Hello',
         highlight: 'World',
       })
     );
-    // Both must appear in the output
     expect(html).toContain('Hello');
     expect(html).toContain('World');
   });

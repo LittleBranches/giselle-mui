@@ -63,32 +63,27 @@ export function QuoteCard({
         <Typography aria-hidden sx={quoteMarkSx(color)}>
           {'\u201C'}
         </Typography>
-
         {/* Right column — quote text + attribution */}
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography variant="body1" sx={quoteTextSx}>
             {quote}
           </Typography>
-
           {(author || source) && (
             <Stack
               direction="row"
               spacing={0.75}
-              alignItems="center"
-              sx={{ mt: 2, color: 'text.disabled' }}
+              sx={{ mt: 2, color: 'text.disabled', alignItems: 'center' }}
             >
               {author && (
                 <Typography variant="caption" sx={{ fontWeight: 'fontWeightMedium' }}>
                   {author}
                 </Typography>
               )}
-
               {author && source && (
                 <Typography variant="caption" aria-hidden sx={{ opacity: 0.6 }}>
                   {'·'}
                 </Typography>
               )}
-
               {source && (
                 <Typography variant="caption" sx={{ opacity: 0.72 }}>
                   {source}
