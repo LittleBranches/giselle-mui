@@ -1,13 +1,8 @@
-import type { StatusLabelStatus } from './types';
+import type { StatusColorKey, StatusConfig, StatusLabelStatus } from './types';
+
+export type { StatusColorKey, StatusConfig };
 
 // ----------------------------------------------------------------------
-
-export type StatusColorKey = 'success' | 'warning' | 'info' | 'error' | 'default';
-
-export interface StatusConfig {
-  color: StatusColorKey;
-  label: string;
-}
 
 /** Height (px) of the status chip — aligns with MUI Chip small variant. */
 export const STATUS_LABEL_HEIGHT = 24;

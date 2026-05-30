@@ -6,9 +6,6 @@ import { STATUS_CONFIG } from './status-label.const';
 import { statusChipSx } from './status-label.styles';
 import type { StatusLabelProps } from './types';
 
-// Re-export types so consumers can import from the component path directly.
-export type { StatusLabelStatus, StatusLabelProps } from './types';
-
 // ----------------------------------------------------------------------
 
 /**

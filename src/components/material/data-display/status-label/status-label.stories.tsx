@@ -3,7 +3,11 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-import { breakpointLabelSx, responsiveWrapperSx } from '../../../../stories-defaults';
+import {
+  breakpointLabelSx,
+  buildBreakpointWidthSx,
+  responsiveWrapperSx,
+} from '../../../../stories-defaults';
 import { StatusLabel } from './status-label';
 import type { StatusLabelStatus } from './types';
 
@@ -97,7 +101,7 @@ export const Responsive: Story = {
           <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
-          <Box sx={{ width }}>
+          <Box sx={buildBreakpointWidthSx(width)}>
             <Box sx={chipRowSx}>
               {ALL_STATUSES.map((status) => (
                 <StatusLabel key={status} status={status} />
