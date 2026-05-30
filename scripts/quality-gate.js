@@ -42,10 +42,16 @@
  *   - Core static checks (banned, structure, prettier, eslint, tsc) always run.
  */
 
-import { appendFileSync, existsSync } from 'fs';
+import { appendFileSync } from 'fs';
 import { execSync } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {
+  FULL_FILE_THRESHOLD,
+  resolveChangedFiles,
+  evaluateTriggers,
+  resolveTargetedTests,
+} from './smart-gate-core.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,153 +83,6 @@ const telemetry = {
     /** @type {Array<{name:string,status:string,duration?:number,result?:string,reason?:string}>} */ ([]),
   result: 'unknown',
 };
-
-// ── Diff resolution ────────────────────────────────────────────────────────
-
-const FULL_FILE_THRESHOLD = 25;
-
-/** @returns {{ files: string[] | null, basis: string }} */
-function resolveChangedFiles() {
-  // 1. Upstream tracking branch — most precise: only commits not yet pushed.
-  try {
-    const upstream = execSync('git rev-parse --abbrev-ref --symbolic-full-name @{u}', {
-      cwd: appDir,
-      stdio: ['ignore', 'pipe', 'ignore'],
-    })
-      .toString()
-      .trim();
-    const output = execSync(`git diff --name-only ${upstream}...HEAD`, {
-      cwd: appDir,
-      stdio: ['ignore', 'pipe', 'ignore'],
-    })
-      .toString()
-      .trim();
-    return { files: output ? output.split('\n').filter(Boolean) : [], basis: 'upstream' };
-  } catch {
-    // no upstream configured — fall through
-  }
-
-  // 2. Merge-base against default branch — covers squash/rebase workflows.
-  for (const branch of ['main', 'master']) {
-    try {
-      const base = execSync(`git merge-base HEAD ${branch}`, {
-        cwd: appDir,
-        stdio: ['ignore', 'pipe', 'ignore'],
-      })
-        .toString()
-        .trim();
-      const output = execSync(`git diff --name-only ${base}`, {
-        cwd: appDir,
-        stdio: ['ignore', 'pipe', 'ignore'],
-      })
-        .toString()
-        .trim();
-      return { files: output ? output.split('\n').filter(Boolean) : [], basis: 'merge-base' };
-    } catch {
-      // branch not found — try next
-    }
-  }
-
-  // 3. Fallback — ambiguous diff; caller must run full gate.
-  return { files: null, basis: 'fallback' };
-}
-
-// ── Trigger evaluation ────────────────────────────────────────────────────
-
-// File patterns that should trigger the tsup build step.
-const BUILD_TRIGGER = [/^src\//, /^tsup\.config\.ts$/, /^tsconfig\.json$/, /^package\.json$/];
-// File patterns that should trigger the Storybook build step.
-const STORY_TRIGGER = [/\.stories\.(ts|tsx)$/, /^\.storybook\//, /^src\//];
-// File patterns that have no bearing on tests (docs, config, CI definitions).
-const TEST_SKIP_ONLY = [
-  /^\.storybook\//,
-  /^\.github\//,
-  /^docs\//,
-  /^README/,
-  /\.md$/,
-  /\.mdx$/,
-  /^scripts\//,
-  /^\.githooks\//,
-];
-
-/** @param {string} file @param {RegExp[]} patterns */
-function matches(file, patterns) {
-  return patterns.some((p) => p.test(file));
-}
-
-/**
- * @param {string[] | null} files
- * @returns {{ tests: 'all' | 'targeted' | 'none', build: boolean, storybook: boolean }}
- */
-function evaluateTriggers(files) {
-  if (!files) return { tests: 'all', build: true, storybook: INCLUDE_STORYBOOK };
-
-  if (files.length === 0) return { tests: 'none', build: false, storybook: false };
-
-  const anyBuild = files.some((f) => matches(f, BUILD_TRIGGER));
-  const anyStory = files.some((f) => matches(f, STORY_TRIGGER));
-  const onlyNonTest = files.every((f) => matches(f, TEST_SKIP_ONLY));
-
-  let tests;
-  if (onlyNonTest) {
-    tests = 'none';
-  } else if (files.length > FULL_FILE_THRESHOLD) {
-    tests = 'all';
-  } else {
-    tests = 'targeted';
-  }
-
-  return { tests, build: anyBuild, storybook: INCLUDE_STORYBOOK && anyStory };
-}
-
-// ── Targeted test resolution ──────────────────────────────────────────────
-
-/**
- * Given the list of changed files, return the set of co-located .test.ts files to run.
- * Falls back to the full suite if the resolved set is empty.
- *
- * @param {string[]} changedFiles
- * @returns {string[]}
- */
-function resolveTargetedTests(changedFiles) {
-  const testFiles = new Set();
-
-  for (const f of changedFiles) {
-    if (!f.startsWith('src/')) continue;
-
-    const dir = path.dirname(f);
-    const base = path.basename(f);
-    const stem = base.replace(/\.(tsx?|js)$/, '');
-
-    // The file is itself a test file.
-    if (base.endsWith('.test.ts')) {
-      if (existsSync(path.resolve(appDir, f))) testFiles.add(f);
-      continue;
-    }
-
-    // foo.tsx / foo.ts / foo.utils.ts → foo.test.ts
-    const direct = path.join(dir, `${stem}.test.ts`);
-    if (existsSync(path.resolve(appDir, direct))) testFiles.add(direct);
-
-    // foo.styles.ts → foo.styles.test.ts + foo.test.ts (styles changes affect component tests too)
-    if (stem.endsWith('.styles')) {
-      const stylesTest = path.join(dir, `${stem}.test.ts`);
-      if (existsSync(path.resolve(appDir, stylesTest))) testFiles.add(stylesTest);
-      const componentStem = stem.replace(/\.styles$/, '');
-      const componentTest = path.join(dir, `${componentStem}.test.ts`);
-      if (existsSync(path.resolve(appDir, componentTest))) testFiles.add(componentTest);
-    }
-
-    // foo.utils.ts → foo.test.ts (util changes can affect the parent component's tests)
-    if (stem.endsWith('.utils')) {
-      const componentStem = stem.replace(/\.utils$/, '');
-      const componentTest = path.join(dir, `${componentStem}.test.ts`);
-      if (existsSync(path.resolve(appDir, componentTest))) testFiles.add(componentTest);
-    }
-  }
-
-  return [...testFiles];
-}
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -262,7 +121,7 @@ let triggers = { tests: 'all', build: true, storybook: INCLUDE_STORYBOOK };
 let changedFiles = null;
 
 if (RUN_SMART) {
-  const { files, basis } = resolveChangedFiles();
+  const { files, basis } = resolveChangedFiles(appDir);
   telemetry.basis = basis;
   changedFiles = files;
 
@@ -271,7 +130,7 @@ if (RUN_SMART) {
     telemetry.mode = 'smart→full-fallback';
   } else {
     telemetry.changedFileCount = files?.length ?? 0;
-    triggers = evaluateTriggers(files);
+    triggers = evaluateTriggers(files, { includeStorybook: INCLUDE_STORYBOOK });
   }
 }
 
@@ -341,7 +200,7 @@ if (!run('TypeScript (tsc --noEmit)', 'npx tsc --noEmit', { fatal: false })) {
 if (triggers.tests === 'none') {
   skip('Tests (vitest)', 'no source files changed');
 } else if (RUN_SMART && triggers.tests === 'targeted' && changedFiles) {
-  const targetFiles = resolveTargetedTests(changedFiles);
+  const targetFiles = resolveTargetedTests(changedFiles, appDir);
   if (targetFiles.length === 0) {
     // No co-located tests found for the changed files — run full suite as safe fallback.
     console.log('\n  (targeted: no co-located test files found — falling back to full suite)');
