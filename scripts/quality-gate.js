@@ -46,12 +46,7 @@ import { appendFileSync } from 'fs';
 import { execSync } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import {
-  FULL_FILE_THRESHOLD,
-  resolveChangedFiles,
-  evaluateTriggers,
-  resolveTargetedTests,
-} from './smart-gate-core.js';
+import { resolveChangedFiles, evaluateTriggers, resolveTargetedTests } from './smart-gate-core.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -130,7 +125,15 @@ if (RUN_SMART) {
     telemetry.mode = 'smart→full-fallback';
   } else {
     telemetry.changedFileCount = files?.length ?? 0;
-    triggers = evaluateTriggers(files, { includeStorybook: INCLUDE_STORYBOOK });
+    triggers = evaluateTriggers(files, {
+      includeStorybook: INCLUDE_STORYBOOK,
+      storyTrigger: [
+        /\.stories\.(ts|tsx)$/,
+        /^\.storybook\//,
+        /^src\/components\//,
+        /^src\/utils\//,
+      ],
+    });
   }
 }
 

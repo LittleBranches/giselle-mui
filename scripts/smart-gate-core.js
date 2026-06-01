@@ -97,7 +97,7 @@ export function resolveChangedFiles(appDir) {
       })
         .toString()
         .trim();
-      const output = execSync(`git diff --name-only ${base}`, {
+      const output = execSync(`git diff --name-only ${base}...HEAD`, {
         cwd: appDir,
         stdio: ['ignore', 'pipe', 'ignore'],
       })
@@ -202,8 +202,10 @@ export function resolveTargetedTests(changedFiles, appDir) {
       if (existsSync(path.resolve(appDir, componentTest))) testFiles.add(componentTest);
     }
 
-    // foo.utils.ts → foo.test.ts (util changes can affect the parent component's tests too)
+    // foo.utils.ts → foo.utils.test.ts + foo.test.ts (util changes can affect the parent component's tests too)
     if (stem.endsWith('.utils')) {
+      const utilsTest = path.join(dir, `${stem}.test.ts`);
+      if (existsSync(path.resolve(appDir, utilsTest))) testFiles.add(utilsTest);
       const componentStem = stem.replace(/\.utils$/, '');
       const componentTest = path.join(dir, `${componentStem}.test.ts`);
       if (existsSync(path.resolve(appDir, componentTest))) testFiles.add(componentTest);
