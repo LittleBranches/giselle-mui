@@ -13,3 +13,6 @@ src/quality-gate/audit-report.json
 
 # PR thread snapshot files — workflow debug artifacts, never committed
 .pr67_threads*.json
+
+# Smart gate telemetry log — local only, never committed
+scripts/gate-timing.log

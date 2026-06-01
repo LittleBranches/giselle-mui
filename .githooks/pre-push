@@ -27,4 +27,4 @@ if [ -z "$NODE" ]; then
   echo "pre-push: node not found — skipping quality gate. Install Node.js or run: npm run check:verify"
   exit 0
 fi
-"$NODE" scripts/quality-gate.js --verify --storybook
+"$NODE" scripts/quality-gate.js --verify --smart --storybook
