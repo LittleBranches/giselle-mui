@@ -11,6 +11,13 @@ export type StatusLabelStatus =
   | 'cancelled'
   | 'overdue';
 
+export type StatusColorKey = 'success' | 'warning' | 'info' | 'error' | 'default';
+
+export interface StatusConfig {
+  color: StatusColorKey;
+  label: string;
+}
+
 export interface StatusLabelProps extends Omit<ChipProps, 'label' | 'color' | 'icon'> {
   status: StatusLabelStatus;
   /** Override the default label derived from status. */

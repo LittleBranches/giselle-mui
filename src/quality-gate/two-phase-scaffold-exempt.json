@@ -56,6 +56,7 @@
     "src/components/material/data-display/news-feed-list/news-feed-list.test.ts",
     "src/components/material/data-display/progress-stats-list/progress-stats-list.test.ts",
     "src/components/material/data-display/related-items-list/related-items-list.test.ts",
+    "src/components/material/data-display/status-label/status-label.styles.test.ts",
     "src/components/material/data-display/status-label/status-label.test.ts",
     "src/components/material/feedback/section-pending-loader/section-pending-loader.test.ts",
     "src/components/material/input/option-with-blurb/option-with-blurb.test.ts",
