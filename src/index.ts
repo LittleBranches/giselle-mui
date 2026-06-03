@@ -47,6 +47,13 @@ export type {
 export { GiselleIcon } from './components/material/data-display/icon/giselle';
 export type { GiselleIconProps } from './components/material/data-display/icon/giselle';
 
+export { StatusLabel } from './components/material/data-display/status-label';
+export type {
+  StatusLabelProps,
+  StatusLabelStatus,
+  StatusColorKey,
+} from './components/material/data-display/status-label';
+
 export { Accordion } from './components/material/surfaces/card/accordion';
 export type { AccordionProps } from './components/material/surfaces/card/accordion';
 export { ACCORDION_DONE_MIN_TOUCH_TARGET } from './components/material/surfaces/card/accordion';
