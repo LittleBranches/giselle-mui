@@ -1,4 +1,4 @@
-# @alexrebula/giselle-mui — Copilot Instructions
+# @littlebranches/giselle-mui — Copilot Instructions
 
 This is an open-source React component library built on top of `@mui/material` v7.
 It is authored by Alex Rebula and licensed MIT.
@@ -19,6 +19,15 @@ in this library exists because it solves a recurring problem that is either:
 - `@iconify/react` for icons (Apache 2.0 — the only allowed icon peer dependency)
 - Vitest + jsdom for unit tests
 - Storybook for visual development and autodoc
+
+## Cross-agent behavior guardrails (Karpathy baseline)
+
+Apply these defaults on every task unless a stricter repo rule overrides them.
+
+1. **Think before coding.** State assumptions. If multiple interpretations exist, present them and ask when uncertain.
+2. **Simplicity first.** Implement the minimum solution that satisfies the request. Do not add speculative abstraction, configurability, or extra features.
+3. **Surgical changes.** Touch only what is required for the request. Avoid unrelated refactors, formatting drift, or drive-by cleanup.
+4. **Goal-driven execution.** Define verifiable success criteria and close the loop with checks (tests, lint, typecheck, or explicit validation).
 
 ## Brand identity — the Giselle mango tree
 
@@ -82,10 +91,10 @@ Never use bare indented code lines — they do not render as code blocks in Mark
    register inline SVG bodies from `@iconify-json/*` **without importing the full package**:
 
    ```ts
-   import { createIconRegistrar } from '@alexrebula/giselle-mui';
+   import { createIconRegistrar } from '@littlebranches/giselle-mui';
    export const registerIcons = createIconRegistrar({
      solar: { icons: { 'star-bold': { body: '<path ...>' } } },
-     logos: { icons: { 'react': { body: '<path ...>', width: 256, height: 256 } } },
+     logos: { icons: { react: { body: '<path ...>', width: 256, height: 256 } } },
    });
    ```
 
@@ -133,23 +142,37 @@ src/components/<name>/
 - **Internal sub-components → own `.tsx` files** (flat in the parent folder). See `Sub-component extraction rule` section below.
 - The `.tsx` file is the **composition layer only**: it imports from all of the above and renders JSX.
 
-**Domain/feature grouping:**
+**Domain/feature grouping — mirrors the "Components" nav:**
 Related components are grouped under a shared parent folder. The quality gate enforces that
 no `.tsx` file lives at `src/components/<file>.tsx` — every component is at least one
 subfolder deep.
 
+**Personal preference — non-negotiable:**
+The `src/components/` tree deliberately mirrors the navigation hierarchy that consumers will
+see in the documentation site and demo. Sub-groups follow MUI's own component category naming
+(surfaces, data-display, layout, navigation, input, feedback) — the same categories documented
+on mui.com. This makes the folder tree immediately predictable to any dev already familiar with
+MUI: they can navigate to a component without reading docs.
+
 ```
 src/components/
-  card/
-    metric/   — MetricCard + MetricCardDecoration
-    quote/    — QuoteCard
-    selectable/ — SelectableCard
-  action-bar/
-    icon/     — IconActionBar
-  icon/
-    giselle/  — GiselleIcon
-  timeline/
-    two-column/ — TimelineTwoColumn (see layout below)
+  chart/                       — chart components (ApexCharts wrappers and chart-card primitives)
+    radial-progress/
+  material/                    — MUI-based components (grouped by MUI category)
+    surfaces/card/             — accordion, metric, quote, selectable, stat, stat-row
+    data-display/icon/         — action-bar, giselle, tech-strip
+    data-display/              — animated-gradient and other display primitives
+    layout/                    — section-container, section-title, showcase-row
+    navigation/                — floating-sub-nav
+    input/                     — toggle-icon-button
+    feedback/
+    utils/
+  motion/                      — framer-motion components
+    container/ use-scroll-parallax/ variants/ viewport/
+  section/                     — section-level compositions
+    faq/ hero/ timeline/
+  theming/                     — theme/provider components
+    theme-provider/ settings-provider/
 ```
 
 ### TimelineTwoColumn internal file layout
@@ -158,7 +181,7 @@ The `timeline/two-column/` folder is the **reference implementation** for comple
 It demonstrates the full types/utils/styles/const/sub-component split:
 
 ```
-src/components/timeline/two-column/
+src/components/section/timeline/two-column/
   two-column.tsx                       — pure JSX composition only (no types, no logic functions)
   types.ts                             — all exported + internal TypeScript interfaces
   utils.ts                             — all pure logic functions (no JSX return); fully unit-testable
@@ -261,15 +284,16 @@ When updating or writing docs:
 - **Never** frame a utility as a "replacement for X" or "clean-room implementation of X from Y". Describe what it does: "`channelAlpha(channel, alpha)` creates an rgba tint from an MUI v7 CSS variable channel string."
 - **Never** reference `alexrebula/src/` paths, alexrebula migration status, or private codebase internals in any `giselle-mui/docs/` file.
 - **Never** write a "Copyright status" or "migration tracker" section in a component plan — that is private planning, not library documentation.
-- **Never** mention Minimals, any commercial MUI kit, or any third-party theme by name anywhere in `giselle-mui` — not in `docs/`, not in `src/`, not in component READMEs. There is nothing to credit: every utility in this library is an independent implementation described on its own terms. A reader of this library's public history should see no connection to any commercial product. If a rationale for a design decision is needed, describe the problem it solves — not what it replaces.
+- **Never** mention proprietary, copyrighted, or internal libraries by name in `giselle-mui/docs/` — this is a public library, not an internal migration. No "replaces X from Y" statements anywhere in `giselle-mui/docs/`, `src/`, or component READMEs.
+- **Describe components on their own terms.** Document the problem each component solves and the decisions it encodes — not what preceded it or what inspired it. This is standard practice for any library: React docs do not cite Angular; MUI docs do not cite Bootstrap. A `channelAlpha` entry should read "`channelAlpha(channel, alpha)` builds an rgba tint from an MUI v7 CSS variable channel string" — full stop. No "replaces X", no "unlike Y", no third-party theme names anywhere in `docs/`, `src/`, or component READMEs.
 
 ## Session shorthand commands
 
-| Command | Meaning |
-| ------- | ------- |
+| Command                    | Meaning                                                                                                                                 |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `cleanup component <Name>` | Read `docs/components/cleanup-workflow.md` and execute the full cleanup workflow on the named component. No further explanation needed. |
-| `review pr <N>` | Run the PR review workflow below on PR #N. |
-| `create pr <branch>` | Execute Phase 0 + Phase 1 of `docs/pr-review-workflow.md` for `<branch>`; stop after Copilot review is confirmed triggered. |
+| `review pr <N>`            | Run the PR review workflow below on PR #N.                                                                                              |
+| `create pr <branch>`       | Execute Phase 0 + Phase 1 of `docs/pr-review-workflow.md` for `<branch>`; stop after Copilot review is confirmed triggered.             |
 
 ## PR review workflow — `review pr <N>`
 
@@ -284,10 +308,12 @@ Note every unresolved Copilot comment: its `id`, file, and what it flags.
 
 **Phase 3 — Acknowledge in-thread (before fixing)**
 For each unresolved Copilot comment, post a reply in its thread using:
+
 ```sh
 gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies \
   --method POST -f body="✅ Valid. <one-sentence acknowledgement>. Fixing: <what will change>."
 ```
+
 ⚠️ **NEVER use `mcp_gitkraken_pull_request_create_review` for thread replies.**
 That tool creates a top-level review on the main PR thread — not a nested reply.
 `gh api .../replies` is the only correct tool for replying inside an existing thread.
@@ -297,10 +323,12 @@ Apply all fixes. Run `npm run check:verify`. Commit and push.
 
 **Phase 5 — Confirm in-thread (after fixing)**
 For each Copilot comment, post a follow-up reply in the same thread:
+
 ```sh
 gh api repos/{owner}/{repo}/pulls/{pr}/comments/{comment_id}/replies \
   --method POST -f body="Fixed at commit \`<sha>\`: <one sentence describing the change>."
 ```
+
 Use the same `comment_id` as Phase 3 — this nests the reply under the original comment.
 
 **Phase 6 — Branch owner sign-off**
@@ -312,39 +340,39 @@ Prompt the user to resolve the threads in the GitHub PR UI.
 
 At the start of every new Copilot session in this package, read these files:
 
-| File                                                                                    | Purpose                                                                                                        |
-| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [`docs/roadmap.md`](../docs/roadmap.md)                                                 | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
-| [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md)               | Full plan for `RoadmapTimeline` — next component to build                                                      |
-| [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                                   | How to wire this library into a Next.js app                                                                    |
-| [`docs/components/cleanup-workflow.md`](../docs/components/cleanup-workflow.md)         | Step-by-step playbook for creating or cleaning up any component — Definitions of Done for Scenario A and B    |
+| File                                                                            | Purpose                                                                                                        |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [`docs/roadmap.md`](../docs/roadmap.md)                                         | Phase A (theme utilities), Phase B (Giselle brand palette), Phase C (GiselleThemeProvider) — next planned work |
+| [`docs/components/timeline-plan.md`](../docs/components/timeline-plan.md)       | Full plan for `RoadmapTimeline` — next component to build                                                      |
+| [`docs/theming/nextjs.md`](../docs/theming/nextjs.md)                           | How to wire this library into a Next.js app                                                                    |
+| [`docs/components/cleanup-workflow.md`](../docs/components/cleanup-workflow.md) | Step-by-step playbook for creating or cleaning up any component — Definitions of Done for Scenario A and B     |
 
 ### Current components (shipped)
 
-| Component                                            | File                                  | Status                                     |
-| ---------------------------------------------------- | ------------------------------------- | ------------------------------------------ |
-| `GiselleIcon`                                        | `src/components/icon/giselle/`        | ✅ Shipped + tested                        |
-| `MetricCard` + `MetricCardDecoration`                | `src/components/card/metric/`         | ✅ Shipped + tested                        |
-| `QuoteCard`                                          | `src/components/card/quote/`          | ✅ Shipped + tested                        |
-| `SelectableCard`                                     | `src/components/card/selectable/`     | ✅ Shipped + tested                        |
-| `createIconRegistrar`                                | `src/utils/create-icon-registrar.ts`  | ✅ Shipped + tested                        |
-| `TimelineTwoColumn`                                  | `src/components/timeline/two-column/` | ✅ Shipped + tested                        |
-| `IconActionBar`                                      | `src/components/action-bar/icon/`     | ✅ Shipped + tested                        |
-| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme-utils.ts`            | ✅ Shipped + tested (Phase A — 4 May 2026) |
-| `giselleTheme`, palette constants                    | `src/utils/theme-preset.ts`           | ✅ Shipped + tested (Phase B — 5 May 2026) |
-| `StatCard`                                           | `src/components/card/stat/`           | ✅ Shipped + tested (5 May 2026)           |
+| Component                                            | File                                                    | Status                                     |
+| ---------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------ |
+| `GiselleIcon`                                        | `src/components/material/data-display/icon/giselle/`    | ✅ Shipped + tested                        |
+| `MetricCard` + `MetricCardDecoration`                | `src/components/material/surfaces/card/metric/`         | ✅ Shipped + tested                        |
+| `QuoteCard`                                          | `src/components/material/surfaces/card/quote/`          | ✅ Shipped + tested                        |
+| `SelectableCard`                                     | `src/components/material/surfaces/card/selectable/`     | ✅ Shipped + tested                        |
+| `createIconRegistrar`                                | `src/utils/icon/create-icon-registrar/`                 | ✅ Shipped + tested                        |
+| `TimelineTwoColumn`                                  | `src/components/section/timeline/two-column/`           | ✅ Shipped + tested                        |
+| `IconActionBar`                                      | `src/components/material/data-display/icon/action-bar/` | ✅ Shipped + tested                        |
+| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme/theme-utils/`                          | ✅ Shipped + tested (Phase A — 4 May 2026) |
+| `giselleTheme`, palette constants                    | `src/utils/theme/preset/`                               | ✅ Shipped + tested (Phase B — 5 May 2026) |
+| `StatCard`                                           | `src/components/material/surfaces/card/stat/`           | ✅ Shipped + tested (5 May 2026)           |
 
 ### Section-level companion types (canonical location)
 
-These types must be defined here and imported from `@alexrebula/giselle-mui` by all consumers.
+These types must be defined here and imported from `@littlebranches/giselle-mui` by all consumers.
 **Never re-define them in alexrebula data files or anywhere else.**
 
-| Type                   | Location                                      | Purpose                                                                            |
-| ---------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `TimelineSidebar`      | `src/components/timeline/two-column/types.ts` | Sidebar heading/body/chip for a timeline section page                              |
-| `TimelineColumnLabels` | `src/components/timeline/two-column/types.ts` | Column header labels (`left`, `right`, optional subtitles)                         |
-| `TimelineSectionData`  | `src/components/timeline/two-column/types.ts` | Aggregated `{ sidebar, columnLabels, phases }` — pass directly to a section view   |
-| `StatCardItem`         | `src/components/card/stat/types.ts`           | Data-layer shape for one `StatCard` entry (uses `iconId: string`, not `ReactNode`) |
+| Type                   | Location                                              | Purpose                                                                            |
+| ---------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `TimelineSidebar`      | `src/components/section/timeline/two-column/types.ts` | Sidebar heading/body/chip for a timeline section page                              |
+| `TimelineColumnLabels` | `src/components/section/timeline/two-column/types.ts` | Column header labels (`left`, `right`, optional subtitles)                         |
+| `TimelineSectionData`  | `src/components/section/timeline/two-column/types.ts` | Aggregated `{ sidebar, columnLabels, phases }` — pass directly to a section view   |
+| `StatCardItem`         | `src/components/material/surfaces/card/stat/types.ts` | Data-layer shape for one `StatCard` entry (uses `iconId: string`, not `ReactNode`) |
 
 **Why this matters:** Types defined in data files are invisible to consumers of this library.
 They also diverge over time — the same shape ends up with three different names across three
@@ -360,7 +388,7 @@ data files. Define once in giselle-mui, import everywhere.
 
 ### Additional allowed peer dependencies
 
-- `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). Acceptable under the zero-proprietary-dependencies rule. Goes in the **main bundle** (`dist/index.js`).
+- `@mui/lab` — needed for Timeline primitives (`Timeline`, `TimelineItem`, `TimelineSeparator`, etc.). **Goes exclusively in the `/lab` subpath entry** (`dist/lab.js`, `src/lab-index.ts`). Declared with `peerDependenciesMeta.optional: true` — consumers who never import from `./lab` do not need `@mui/lab` installed. Never import from `@mui/lab` in any file that is part of `src/index.ts`.
 - `framer-motion` — allowed **only in the `/motion` subpath entry** (`dist/motion.js`). Never import `framer-motion` from a file that is part of `src/index.ts` — it would impose the dep on every consumer. **Always use `motion.div`, never `m.div`.** The `m.*` API requires `LazyMotion` in the consumer's tree — this is an invisible requirement that breaks any app not using lazy motion (including Storybook). `motion.*` works without a provider and is correct for library components.
 - `apexcharts` + `react-apexcharts` — allowed **only in the `/charts` subpath entry** (`dist/charts.js`). Never import ApexCharts from a file that is part of `src/index.ts`. Components that embed a chart must accept `chart?: ReactNode` and let the consumer supply it — this keeps the component in the main bundle with zero chart dep. Declared with `peerDependenciesMeta.optional: true`.
 
@@ -369,22 +397,25 @@ data files. Define once in giselle-mui, import everywhere.
 `giselle-mui` uses **tsup subpath exports** to isolate heavy optional dependencies. This is the answer to "can I use framer-motion / ApexCharts here?" — yes, but only in the right entry point.
 
 ```
-@alexrebula/giselle-mui          → dist/index.js     MUI-only components + utils ('use client')
-@alexrebula/giselle-mui/utils    → dist/utils.js     Server-safe pure utilities (no 'use client')
-@alexrebula/giselle-mui/charts   → dist/charts.js    ApexCharts chart cards (optional peer dep)
-@alexrebula/giselle-mui/motion   → dist/motion.js    framer-motion components (optional peer dep)
+@littlebranches/giselle-mui          → dist/index.js     MUI-only components + utils ('use client')
+@littlebranches/giselle-mui/utils    → dist/utils.js     Server-safe pure utilities (no 'use client')
+@littlebranches/giselle-mui/charts   → dist/charts.js    ApexCharts chart cards (optional peer dep)
+@littlebranches/giselle-mui/motion   → dist/motion.js    framer-motion components (optional peer dep)
+@littlebranches/giselle-mui/lab      → dist/lab.js       @mui/lab Timeline components (optional peer dep)
 ```
 
-**The rule in one sentence:** if a component imports `framer-motion`, it goes in `src/motion-index.ts` → `dist/motion.js`. If it imports `apexcharts` or `react-apexcharts`, it goes in `src/charts-index.ts` → `dist/charts.js`. Everything else goes in `src/index.ts` → `dist/index.js`.
+**The rule in one sentence:** if a component imports `framer-motion`, it goes in `src/motion-index.ts` → `dist/motion.js`. If it imports `apexcharts`/`react-apexcharts`, it goes in `src/charts-index.ts` → `dist/charts.js`. If it imports from `@mui/lab`, it goes in `src/lab-index.ts` → `dist/lab.js`. Everything else goes in `src/index.ts` → `dist/index.js`.
 
 **Consumer contract:**
-- A project that imports only from `@alexrebula/giselle-mui` never needs ApexCharts or framer-motion installed.
+
+- A project that imports only from `@littlebranches/giselle-mui` never needs ApexCharts, framer-motion, or `@mui/lab` installed.
 - A project that imports from `.../charts` must have `apexcharts` + `react-apexcharts` as deps.
 - A project that imports from `.../motion` must have `framer-motion` as a dep.
+- A project that imports from `.../lab` must have `@mui/lab` as a dep.
 
 **Why not a separate repo?** One repo, one `yalc push`, no version drift. The subpath pattern is strictly better at this library's scale.
 
-**tsup config must declare all three entry points:**
+**tsup config must declare all five entry points:**
 
 ```ts
 // tsup.config.ts — required shape
@@ -393,6 +424,7 @@ defineConfig([
   { entry: { utils: 'src/utils-index.ts' },     ... },  // utils — server-safe
   { entry: { charts: 'src/charts-index.ts' },   ... },  // charts — ApexCharts
   { entry: { motion: 'src/motion-index.ts' },   ... },  // motion — framer-motion
+  { entry: { lab: 'src/lab-index.ts' },         ... },  // lab — @mui/lab Timeline components
 ]);
 ```
 
@@ -400,14 +432,15 @@ defineConfig([
 
 ```json
 "exports": {
-  ".": { "import": "./dist/index.mjs", "require": "./dist/index.js", "types": "./dist/index.d.ts" },
-  "./utils": { "import": "./dist/utils.mjs", "require": "./dist/utils.js", "types": "./dist/utils.d.ts" },
-  "./charts": { "import": "./dist/charts.mjs", "require": "./dist/charts.js", "types": "./dist/charts.d.ts" },
-  "./motion": { "import": "./dist/motion.mjs", "require": "./dist/motion.js", "types": "./dist/motion.d.ts" }
+  ".":       { "import": "./dist/index.js",  "require": "./dist/index.cjs",  "types": "./dist/index.d.ts" },
+  "./utils": { "import": "./dist/utils.js",  "require": "./dist/utils.cjs",  "types": "./dist/utils.d.ts" },
+  "./charts":{ "import": "./dist/charts.js", "require": "./dist/charts.cjs", "types": "./dist/charts.d.ts" },
+  "./motion":{ "import": "./dist/motion.js", "require": "./dist/motion.cjs", "types": "./dist/motion.d.ts" },
+  "./lab":   { "import": "./dist/lab.js",    "require": "./dist/lab.cjs",    "types": "./dist/lab.d.ts" }
 }
 ```
 
-**Status (7 May 2026):** `/utils` exists. `/charts` and `/motion` wired — `src/charts-index.ts`, `src/motion-index.ts`, tsup entries, and `package.json` exports map all in place. Build verified green. Placeholder barrels only — Phase H components will be exported from here.
+**Status (19 May 2026):** All five subpaths wired and build-verified green. `/lab` added in PR #61 — exports all Timeline components (`TimelineTwoColumn`, `TimelineCompact`, `TaskList`, `MilestoneBadge`, `PhaseCard`, `TimelineDot`) and the `assignMilestoneSidesByDone` utility. The `src/components/lab/` folder mirrors the `./lab` export path.
 
 ### tsup `external` rule — non-negotiable
 
@@ -474,7 +507,7 @@ steps **in order** before switching to the portfolio:
 # 1. Build the distributable (tsup) — produces dist/index.js and dist/index.d.ts
 npm run build
 
-# 2. Push to the portfolio via yalc — updates node_modules/@alexrebula/giselle-mui
+# 2. Push to the portfolio via yalc — updates node_modules/@littlebranches/giselle-mui
 yalc push
 
 # 3. In the portfolio — clear the Turbopack module-graph cache, then restart
@@ -483,7 +516,7 @@ yalc push
 #    means the old pre-fix bundle stays loaded — components that were null stay null.
 ```
 
-`yalc push` updates `node_modules/@alexrebula/giselle-mui` in the portfolio automatically.
+`yalc push` updates `node_modules/@littlebranches/giselle-mui` in the portfolio automatically.
 **Always clear `.next` in the portfolio after a `yalc push`.**
 
 ---
@@ -606,10 +639,76 @@ Any value or function inside a component that is:
 
 ### JSDoc
 
-Every exported component function and every exported prop interface must have JSDoc. Storybook autodoc generates prop tables from TypeScript types but will not show a component-level description or usage notes without JSDoc on the function itself.
+- **Component function:** one-sentence JSDoc describing what problem it solves — always required.
+- **Own props:** one-line JSDoc only when the purpose is non-obvious; add `@default value` for defaulted props.
+- **Inherited MUI props:** no JSDoc, ever — TypeScript inheritance carries MUI's own JSDoc into autodoc automatically.
+- **Multi-line JSDoc blocks are forbidden.** One line is the hard limit. If it takes more than one sentence, the API is probably wrong.
 
-- JSDoc goes on the exported function, not just the Props type.
-- Only document own props — never redeclare props inherited from MUI interfaces (rule 4). TypeScript inheritance carries MUI's own JSDoc into autodoc automatically.
+See full rules: [`docs/components/api-design-rules.md`](../docs/components/api-design-rules.md)
+
+### Component API — tier system (enforce always)
+
+Every component belongs to one tier. Identify the tier before designing props.
+
+| Tier                        | When to use                                                                        | Props                                                                                         | JSDoc on props?         |
+| --------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------- |
+| **1 — Pure extension**      | Only value-add is enforcing a convention                                           | Inherit everything from MUI base. Add zero new props.                                         | None on Props interface |
+| **2 — Selective extension** | Narrowing MUI's API, adding a ReactNode slot, pre-wiring a non-obvious combination | Extend MUI base. Add only the truly new props.                                                | Only on own props       |
+| **3 — Composition**         | Assembles multiple MUI primitives from a data array                                | `items: Item[]`, `sx?: SxProps<Theme>`, config props only — do not extend a specific MUI base | Document the item type  |
+
+**Shared style vs shared component rule:**
+
+- Visual-only sharing (colours, spacing, shadows) → use a style constant in `*.styles.ts`
+- Structural sharing (recurring DOM shape with multiple named slots) → thin wrapper component
+
+**The `Paper` → card pattern:** all card components extend `PaperProps` directly and import a shared `cardBaseSx` constant. There is no `BaseCard` wrapper component. Exception: `ChartCardBase` — justified by a non-trivial shared structural shell (title + year-selector slot + chart area + legend).
+
+**7 prop design rules (non-negotiable):**
+
+1. Inherit first — check if MUI already has the prop before adding it.
+2. `ReactNode` for all slots — never accept a specific icon or image component type.
+3. `sx` always last — forwarded to the root element.
+4. `color` follows MUI convention — `'primary' | 'secondary' | 'info' | 'success' | 'warning' | 'error'` with `@default 'primary'`.
+5. No boolean props that duplicate MUI — `disabled`, `fullWidth`, `variant` come through the extended interface.
+6. Data props use plain types — `items: Item[]` not `items: React.ComponentProps<...>`.
+7. No callback duplication — only add callbacks for events MUI does not expose.
+
+**Do not create a component if:** only a default prop value changed, it's identical to MUI, it's used in one place only, or the abstraction saves fewer lines than it adds.
+
+See full rules: [`docs/components/api-design-rules.md`](../docs/components/api-design-rules.md)
+
+---
+
+### Component implementation rules (non-negotiable)
+
+**`React.forwardRef` + `displayName` — required for all DOM-backed components.**
+Every exported component that renders a DOM element must use `React.forwardRef` and set `displayName` on the result. This enables ref forwarding for consumers and correct component names in React DevTools.
+
+```ts
+// ✅ Correct
+const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
+  function StatCard({ label, value, sx, ...other }, ref) {
+    return <Paper ref={ref} sx={[cardBaseSx, ...(Array.isArray(sx) ? sx : [sx])]} {...other} />;
+  }
+);
+StatCard.displayName = 'StatCard';
+```
+
+**Decorative icons — `aria-hidden="true"` required.**
+Icons that illustrate a point already conveyed by adjacent text must have `aria-hidden="true"`. Icon-only interactive elements: `aria-label` on the button, not the icon.
+
+---
+
+### Component naming rules
+
+**Prohibited prefixes — never use these:**
+`Base*`, `Custom*`, `Common*`, `Generic*`, `My*`, `New*`, `Advanced*`
+
+These prefixes convey nothing about the component's purpose. Find the specific noun instead — `CardShell` not `BaseCard`, `StatCard` not `CustomCard`.
+
+For suffix vocabulary, see [`docs/naming-conventions.md`](../docs/naming-conventions.md).
+
+---
 
 ### Component folder structure rule
 
@@ -617,32 +716,18 @@ A component gets its own subfolder (`src/components/<name>/`) **only when it is 
 
 Internal sub-components — helpers, local wrappers, private building blocks that only make sense inside their parent — stay flat in the parent's folder. Creating a subfolder for an internal component implies it is independently usable; that false signal causes confusion during refactors.
 
-### Storybook title grouping convention (enforce always — no exceptions)
+### Storybook title convention (enforce always — no exceptions)
 
-Every story file must use the correct group path. The `'Components'` group is **abolished** — it is a catch-all that gives no information. The canonical group map is:
+The `title` in every `.stories.tsx` file **must mirror the `src/components/` folder path exactly**, using `/` as the separator and title-casing each segment.
 
-| Group                             | Contents                              |
-| --------------------------------- | ------------------------------------- |
-| `Cards/Stat`                      | `StatCard`                            |
-| `Cards/Metric`                    | `MetricCard` + `MetricCardDecoration` |
-| `Cards/Quote`                     | `QuoteCard`                           |
-| `Cards/Selectable`                | `SelectableCard`                      |
-| `Data Display/Icon`               | `GiselleIcon`                         |
-| `Data Display/Action Bar`         | `IconActionBar`                       |
-| `Giselle MUI/Timeline/Two Column` | `TimelineTwoColumn`                   |
-| `Giselle MUI/Timeline/Dot`        | `TimelineDot`                         |
-| `Navigation/Floating Sub Nav`     | `FloatingSubNav`                      |
-| `Layout/Section Title`            | `SectionTitle`                        |
-| `Layout/Two Column Showcase Row`  | `TwoColumnShowcaseRow`                |
+**Rule:** `src/components/material/surfaces/card/stat/` → `title: 'Material/Surfaces/Card/Stat'`
 
-**Rules:**
+- Derive the title by reading the file path — never invent a title independently.
+- The `'Components'` group is **abolished** — it is a catch-all that gives no information.
+- If a `title` disagrees with its folder path, fix the `title` — never move the file to match a title.
+- Planned enforcement via `scripts/check-story-titles.js` — script not yet created; rule is documented here but not yet wired into CI.
 
-- New card-type components → `Cards/<Name>` (just the noun, no "Card" suffix in the story title)
-- New display/presentational components → `Data Display/<Name>`
-- New complex compositions tied to the Timeline → `Giselle MUI/Timeline/<Name>`
-- New navigation components → `Navigation/<Name>`
-- New page-layout helpers → `Layout/<Name>`
-- Never use `'Components'` as a group — it is not informative
+**Decision rule for which model to trust:** if a model (Copilot, Claude, or other) assigns a `title` that conflicts with the folder path, the folder path wins — always. Verbal agreements to a different convention that were not committed to this file are void.
 
 ---
 
@@ -660,9 +745,43 @@ Use `argTypes: { control: false }` for `ReactNode` and `SxProps` slots. Every st
 
 Every exported component must have a `Responsive` story that renders the component inside labeled containers at each MUI standard breakpoint width: xs (360px), sm (600px), md (900px), lg (1200px). Use `parameters: { layout: 'padded' }` on these stories. For grid-based components (cards in a collection), the column count should increase with width. Named component helpers are required when the story uses React hooks.
 
+**No hardcoded hex, rgb, or rgba literals in any story file — non-negotiable.** Story scaffold chrome (breakpoint labels, dashed borders, dividers) must use MUI theme tokens via `sx` on MUI components. Never use `style={{ color: '#666' }}` or `style={{ border: '1px dashed #ccc' }}`; use `sx={{ color: 'text.secondary' }}` and `sx={{ border: '1px dashed', borderColor: 'divider' }}` instead. This ensures story chrome respects dark mode automatically. Enforce this on every story file touched — not just new ones.
+
+**Zero inline `sx={{}}` in story files — non-negotiable.** Every `sx` object in a story file — regardless of property count — must be extracted to a module-level named constant before the first story export. Reasoning: (1) consistent discoverability — all styles are grep-findable at file top, (2) no per-render object allocations for static styles, (3) uniform enforcement avoids "is 2 properties ok?" debates. The `~3 properties` threshold does not apply to story files. There are **no exceptions** — not even single-property objects or `{ width }` loop variables.
+
+**Use shared story scaffold constants from `src/stories-defaults.ts`** — never re-define equivalent patterns inline. Import the relevant constant instead:
+
+| Constant                          | Usage                                                                         |
+| --------------------------------- | ----------------------------------------------------------------------------- |
+| `responsiveWrapperSx`             | Outer `<Box>` in `Responsive` stories (`flex`, `column`, `gap: 4`)            |
+| `breakpointLabelSx`               | `<Typography variant="caption">` breakpoint width label                       |
+| `breakpointContainerSx`           | Static `<Box>` styles (border, overflow) — use via one of the factories below |
+| `buildBreakpointWidthSx(w)`       | Standard container at pixel width `w` — use in all Responsive stories         |
+| `buildBreakpointPaddedWidthSx(w)` | Like above with `p: 1` — for stories that need inner padding                  |
+| `buildBreakpointMaxWidthSx(w)`    | Like above with `maxWidth: '100%'` — for responsive-capped stories            |
+| `variantGridSx`                   | `<Box>` wrapping a row of colour variant cards (`flex`, `wrap`, `gap: 2`)     |
+| `dotColumnSx`                     | `<Box>` stacking dot demos vertically with centre alignment                   |
+| `timelineStoryWrapperSx`          | `<Box>` wrapper for timeline stories (`maxWidth: 960`, `mx: 'auto'`, `p: 3`)  |
+| `MANGO_*` constants               | Giselle brand palette tokens for any story that needs brand colours           |
+
 ### `*.styles.ts` companion files for sx extraction (enforce always)
 
 Inline `sx` objects that span more than ~3 properties must be extracted to a co-located `<component-name>.styles.ts` file. This makes components scannable and the style logic independently testable.
+
+**`style={{}}` on `motion.*` elements — no inline object literals, ever.** Every `style` prop on a `motion.*` component must reference a named export from `<component-name>.styles.ts`, regardless of property count. `MotionValue`-based styles use a factory function defined in `*.styles.ts`; the call happens in JSX:
+
+```ts
+// scroll-parallax-hero.styles.ts
+import type { MotionValue } from 'framer-motion';
+export const parallaxYStyle = (y: MotionValue<number>) => ({ y });
+export const parallaxOpacityStyle = (opacity: MotionValue<number>) => ({ opacity });
+```
+
+```tsx
+// in JSX — never inline { y: y1 } here
+<motion.div style={parallaxYStyle(y1)}>
+<motion.div style={parallaxOpacityStyle(opacity)}>
+```
 
 **Pattern — non-negotiable:**
 
@@ -725,10 +844,11 @@ describe('paperSx', () => {
 **Enforcement checklist — run whenever a component file is edited:**
 
 1. Any new `sx={}` with more than ~3 properties → move to the styles file immediately
-2. Any existing inline `sx={}` touched during the edit → extract it at the same time (no mixed state)
-3. After extraction → run the styles test file to confirm the mock-theme assertions still pass
-4. **Name by structural role, not by child content.** A Box that positions a label is a *slot* — name it `*SlotSx` or `*WrapperSx`, not `*LabelSx`. The name describes what the element *is* structurally; naming it after what currently lives inside it becomes wrong the moment the child changes. Full rule: `docs/components/cleanup-workflow.md` Step 3.
-5. **Merge parallel variants into a factory.** Two constants that share the same structure and differ only by one argument (e.g. `side: 'left' | 'right'`) must be a single factory — never two separate exports. Separate constants diverge silently under refactoring. Canonical examples: `timelineColumnSx`, `msColumnBoxSx`, `markerLabelSlotSx`. Full rule: `docs/components/cleanup-workflow.md` Step 3.
+2. Any `style={{...}}` on a `motion.*` element (any property count) → move to the styles file immediately; use a factory if the values are `MotionValue` instances
+3. Any existing inline `sx={}` or `style={{}}` touched during the edit → extract it at the same time (no mixed state)
+4. After extraction → run the styles test file to confirm the mock-theme assertions still pass
+5. **Name by structural role, not by child content.** A Box that positions a label is a _slot_ — name it `*SlotSx` or `*WrapperSx`, not `*LabelSx`. The name describes what the element _is_ structurally; naming it after what currently lives inside it becomes wrong the moment the child changes. Full rule: `docs/components/cleanup-workflow.md` Step 3.
+6. **Merge parallel variants into a factory.** Two constants that share the same structure and differ only by one argument (e.g. `side: 'left' | 'right'`) must be a single factory — never two separate exports. Separate constants diverge silently under refactoring. Canonical examples: `timelineColumnSx`, `msColumnBoxSx`, `markerLabelSlotSx`. Full rule: `docs/components/cleanup-workflow.md` Step 3.
 
 ### `*.const.ts` companion files for constants (enforce always)
 
@@ -768,6 +888,7 @@ Then in the component: `width={PHASE_EYE_ICON_SIZE}` — named, testable, grep-f
 > **Scope of this rule:** `*.const.ts` is for **primitive constants only** — numbers, strings, booleans. Things like `ICON_SIZE = 20`, `FONT_SIZE = '0.75rem'`, `MIN_TOUCH_TARGET = 24`. Default value arrays that contain JSX (e.g. `DEFAULT_ICON_ACTIONS`) are **not** primitive constants — they belong in a separate `<component-name>.defaults.tsx` file instead. Never contort JSX into `createElement` calls just to satisfy a `.ts` extension.
 
 **Barrel export:** The const file must be added to the folder's `index.ts`:
+
 ```ts
 export * from './phase-card.const';
 ```
@@ -775,10 +896,7 @@ export * from './phase-card.const';
 **Regression tests — mandatory:** The component's `*.test.ts` must include a `describe('readability — minimum size constants', ...)` block that imports each constant and asserts it is at or above its minimum:
 
 ```ts
-import {
-  PHASE_EYE_ICON_SIZE,
-  CORNER_ALERT_ICON_SIZE,
-} from './phase-card.const';
+import { PHASE_EYE_ICON_SIZE, CORNER_ALERT_ICON_SIZE } from './phase-card.const';
 
 describe('readability — minimum size constants', () => {
   it('[regression] PHASE_EYE_ICON_SIZE >= 20px', () => {
@@ -814,11 +932,12 @@ Internal sub-components — functions that start with a capital letter and retur
 - A 600-line `.tsx` mixing 5 components is not maintainable. Finding a bug means searching the entire file.
 - Sub-components defined inline are untestable in isolation. After extraction, each gets its own focused test.
 - Even if a sub-component looks "internal today", it almost always becomes reusable later. Extracting now costs 2 minutes; extracting during a refactor costs much more.
-- The fact that a function is only *used* by one parent does not mean it should *live inside* that parent.
+- The fact that a function is only _used_ by one parent does not mean it should _live inside_ that parent.
 
 **What belongs in its own file:**
 
 Any function that:
+
 - starts with a capital letter (React component convention), OR
 - returns JSX (`ReactNode`), OR
 - has its own prop type in `types.ts`
@@ -831,10 +950,12 @@ Any function that:
 - Helper render variables (e.g. `const badge = <GiselleIcon ... />`) that do not have their own props.
 
 **File naming:** Use kebab-case matching the component's PascalCase name:
+
 - `CardCornerAlertBadge` → `card-corner-alert-badge.tsx`
 - `LabeledIconStrip` → `labeled-icon-strip.tsx`
 
 **Barrel export:** Every sub-component file must be added to the folder's `index.ts`:
+
 ```ts
 export * from './card-corner-alert-badge';
 export * from './labeled-icon-strip';
@@ -1002,6 +1123,7 @@ Use `cleanup component <Name>` to trigger the full workflow (`docs/components/cl
 
 - [ ] No `type`/`interface` in `.tsx` — all in parent `types.ts`
 - [ ] No sx with more than ~3 properties inline — all in parent `*.styles.ts`
+- [ ] No `style={{}}` on `motion.*` elements — all in parent `*.styles.ts` (factory pattern for MotionValues)
 - [ ] No duplicated JSX blocks — extracted to helper or util
 - [ ] All inline conditional logic that produces a derived value is in `utils.ts`
 - [ ] JSDoc covers all props including behaviour flags
@@ -1016,6 +1138,7 @@ Use `cleanup component <Name>` to trigger the full workflow (`docs/components/cl
 - [ ] Own subfolder created with all companion files present
 - [ ] No `type`/`interface` in `.tsx` — all in `types.ts`
 - [ ] No sx with more than ~3 properties inline — all in `<name>.styles.ts`
+- [ ] No `style={{}}` on `motion.*` elements — all in `<name>.styles.ts` (factory pattern for MotionValues)
 - [ ] `<name>.styles.test.ts` covers every exported factory
 - [ ] No named constants for sizes inline — all in `<name>.const.ts`
 - [ ] Regression tests for every size constant with a safety minimum

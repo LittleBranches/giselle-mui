@@ -158,9 +158,9 @@ export type { IconActionBarProps, IconActionItem } from './components/icon-actio
 
 ### Problem
 
-The portfolio consumed `@alexrebula/giselle-mui` via a Windows junction pointing at the TypeScript source. This worked with `transpilePackages` + webpack. When switched to Turbopack + yalc, two issues emerged:
+The portfolio consumed `@littlebranches/giselle-mui` via a Windows junction pointing at the TypeScript source. This worked with `transpilePackages` + webpack. When switched to Turbopack + yalc, two issues emerged:
 
-**Issue 1 — `Module not found: Can't resolve '@alexrebula/giselle-mui'`**
+**Issue 1 — `Module not found: Can't resolve '@littlebranches/giselle-mui'`**
 
 `package.json` root `exports` pointed to `./src/index.ts`. yalc copies `package.json` verbatim without applying `publishConfig`. Turbopack tried to load a TypeScript file from `node_modules` and gave up.
 

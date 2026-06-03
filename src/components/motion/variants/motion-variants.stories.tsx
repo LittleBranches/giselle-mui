@@ -25,7 +25,7 @@ function VariantShowcase({ children }: { children?: React.ReactNode }) {
 }
 
 const meta: Meta<typeof VariantShowcase> = {
-  title: 'Giselle MUI/Motion/Variants',
+  title: 'Motion/Variants',
   component: VariantShowcase,
   tags: ['autodocs'],
   parameters: {

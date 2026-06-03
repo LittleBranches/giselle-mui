@@ -50,5 +50,5 @@ All remaining inline `sx` objects in `two-column.tsx` extracted to `styles.ts`:
 ## Checklist
 
 - All quality gate checks pass (Structure ✓ Prettier ✓ ESLint ✓ tsc ✓ Vitest 504 ✓ tsup ✓ Storybook ✓)
-- Public barrel exports unchanged — consumers import from `@alexrebula/giselle-mui` as before
+- Public barrel exports unchanged — consumers import from `@littlebranches/giselle-mui` as before
 - `src/index.ts` updated to new paths

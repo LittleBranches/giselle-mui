@@ -11,7 +11,7 @@ import { MotionViewport } from './motion-viewport';
 // ----------------------------------------------------------------------
 
 const meta: Meta<typeof MotionViewport> = {
-  title: 'Giselle MUI/Motion/Viewport',
+  title: 'Motion/Viewport',
   component: MotionViewport,
   tags: ['autodocs'],
   parameters: {

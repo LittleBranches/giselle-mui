@@ -139,7 +139,7 @@ Fix in `alexrebula/next.config.ts`:
 
 ```ts
 config.module.rules.push({
-  test: /node_modules\/@alexrebula\/giselle-mui\/.*\.[jt]sx?$/,
+  test: /node_modules\/@littlebranches\/giselle-mui\/.*\.[jt]sx?$/,
   resolve: { fullySpecified: false },
 });
 ```

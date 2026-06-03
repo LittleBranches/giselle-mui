@@ -1,7 +1,7 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { CardProps } from '@mui/material/Card';
 
-import type { StatCardColor } from '../../card/stat/types';
+import type { StatCardColor } from '../../material/surfaces/card/stat/types';
 
 // ----------------------------------------------------------------------
 

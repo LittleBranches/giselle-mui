@@ -5,12 +5,27 @@ import type { Meta, StoryObj } from '@storybook/react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
+import type { SystemStyleObject } from '@mui/system';
+import type { Theme } from '@mui/material/styles';
+
+import {
+  breakpointLabelSx,
+  buildBreakpointMaxWidthSx,
+  responsiveWrapperSx,
+} from '../../../stories-defaults';
 import { RadialProgressCard } from './radial-progress-card';
 
 // ----------------------------------------------------------------------
 
+const chartFallbackSx: SystemStyleObject<Theme> = {
+  height: 320,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
 const meta: Meta<typeof RadialProgressCard> = {
-  title: 'Charts/Radial Progress',
+  title: 'Chart/Radial Progress',
   component: RadialProgressCard,
   parameters: { layout: 'padded' },
   argTypes: {
@@ -20,9 +35,7 @@ const meta: Meta<typeof RadialProgressCard> = {
     (Story) => (
       <Suspense
         fallback={
-          <Box
-            sx={{ height: 320, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          >
+          <Box sx={chartFallbackSx}>
             <Typography color="text.secondary">Loading chart…</Typography>
           </Box>
         }
@@ -94,13 +107,13 @@ export const SingleSeries: Story = {
 export const Responsive: Story = {
   parameters: { layout: 'padded' },
   render: () => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+    <Box sx={responsiveWrapperSx}>
       {[360, 600, 900, 1200].map((width) => (
         <Box key={width}>
-          <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+          <Typography variant="caption" sx={breakpointLabelSx}>
             {width}px
           </Typography>
-          <Box sx={{ width, maxWidth: '100%' }}>
+          <Box sx={buildBreakpointMaxWidthSx(width)}>
             <RadialProgressCard
               title="Store Readiness"
               total={35}

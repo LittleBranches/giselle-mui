@@ -1,6 +1,6 @@
 # Giselle MUI
 
-`@alexrebula/giselle-mui` — small, focused MUI wrapper components that encode non-obvious design and
+`@littlebranches/giselle-mui` — small, focused MUI wrapper components that encode non-obvious design and
 accessibility decisions — so consumers don't have to rediscover them.
 
 Built on `@mui/material` v7 (CSS variables mode). TypeScript-first. MIT licensed.
@@ -37,7 +37,7 @@ component encodes and why packaging it once is worth it.
 | `TimelineTwoColumn`                   | MUI Lab has a basic `Timeline`. Nothing provides alternating columns, phase cards, milestone badges, expandable rows, or a `done` state API                                                        | Full feature set, accessible eye-button interactions (WCAG 2.2 AA compliant where used), column-side invariants regression-tested, single `TimelinePhase[]` data shape |
 | `TimelineCompact`                     | The two-column layout does not fit mobile widths. The usual fix is a separate data shape or complex responsive logic in the data layer                                                             | Same `TimelinePhase[]` data shape — swap `TimelineTwoColumn` for `TimelineCompact` at `xs`/`sm`, one line of code, no data changes                                     |
 | Root MUI wrappers (`sx` spread)       | Most third-party MUI wrappers accept `sx` as a single value. Passing an array silently drops every entry after the first — which is the MUI-recommended way to extend styles                       | Components that expose root MUI styling props spread `sx` correctly: `sx={[base, ...(Array.isArray(sx) ? sx : [sx])]}`                                                 |
-| `/charts`, `/motion` subpaths         | A library that bundles ApexCharts or framer-motion forces those dependencies on every consumer, even those who use neither                                                                         | Separate tsup entries — `@alexrebula/giselle-mui` has zero chart or animation deps; opt in with `@alexrebula/giselle-mui/charts` or `.../motion`                       |
+| `/charts`, `/motion` subpaths         | A library that bundles ApexCharts or framer-motion forces those dependencies on every consumer, even those who use neither                                                                         | Separate tsup entries — `@littlebranches/giselle-mui` has zero chart or animation deps; opt in with `@littlebranches/giselle-mui/charts` or `.../motion`                       |
 | `useNestedChecklist`                  | No MUI equivalent for parent/child done-state cascade (mark a phase done → all its milestones become done; all milestones done → phase auto-completes)                                             | Framework-agnostic hook, reusable across any nested tree structure                                                                                                     |
 | `MetricCard`, `StatCard`              | Color-tinted cards that work in both light and dark mode usually require `useColorScheme()` re-renders or hardcoded hex pairs for each mode                                                        | `theme.vars.palette[color].mainChannel` — the CSS custom property flips automatically with the color scheme                                                            |
 
@@ -116,7 +116,7 @@ cards without backgrounds, icons without tint.
 This is intentional: the library delegates theme ownership to the consuming application,
 so it can integrate into any existing MUI theme without conflict.
 
-**Minimal setup:**
+**Basic setup:**
 
 ```tsx
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -155,7 +155,7 @@ Full integration guides:
 | `TimelineTwoColumn` + `PhaseCard` + `TimelineDot` | Two-column alternating timeline for career or roadmap layouts — phase cards, milestone badges, animated active dot, checklist mode.                                                                   |
 | `TimelineCompact`                                 | Single-column accordion timeline for the same `TimelinePhase[]` data — swap in at `xs`/`sm` breakpoints, no data layer changes required.                                                              |
 | `TaskList`                                        | Flat or nested task checklist driven by `TimelinePhase[]` task arrays — done-state, priority badges, and optional eye-button viewed tracking.                                                         |
-| `RadialProgressCard`                              | Multi-segment radial bar chart card showing one aggregate metric with per-dimension breakdown — encodes the ApexCharts radial-bar configuration once. Imported from `@alexrebula/giselle-mui/charts`. |
+| `RadialProgressCard`                              | Multi-segment radial bar chart card showing one aggregate metric with per-dimension breakdown — encodes the ApexCharts radial-bar configuration once. Imported from `@littlebranches/giselle-mui/charts`. |
 | `useNestedChecklist`                              | Framework-agnostic hook for parent/child done-state cascade — mark a phase done → all milestones become done; all milestones done → phase auto-completes.                                             |
 | `IconActionBar`                                   | Horizontal row of `Tooltip` + `IconButton` pairs — encodes the disabled-child `<span>` wrapper pattern so tooltips work on disabled buttons.                                                          |
 | `FloatingSubNav`                                  | Sticky / fixed floating pill navigation bar with `framer-motion` enter/exit animation — position-mode aware, scroll-offset configurable.                                                              |
@@ -174,7 +174,7 @@ Every component exists because it solves a problem that is either easy to get wr
 ## Install
 
 ```bash
-npm install @alexrebula/giselle-mui
+npm install @littlebranches/giselle-mui
 ```
 
 Peer dependencies (install separately if not already in your project):
@@ -216,7 +216,7 @@ import {
   MetricCardDecoration,
   SelectableCard,
   QuoteCard,
-} from '@alexrebula/giselle-mui';
+} from '@littlebranches/giselle-mui';
 
 // Wrap your app in ThemeProvider — see docs/theming-react.md for full setup
 <MetricCard
@@ -255,7 +255,7 @@ No CDN, no flicker, works in **any framework**.
 
 ```ts
 // src/icon-sets.ts
-import { createIconRegistrar } from '@alexrebula/giselle-mui';
+import { createIconRegistrar } from '@littlebranches/giselle-mui';
 
 export const registerIcons = createIconRegistrar({
   'solar:rocket-bold-duotone': {
@@ -314,7 +314,7 @@ npm install -g yalc
 npm run build && yalc push
 
 # in the consumer app — one-time
-yalc add @alexrebula/giselle-mui
+yalc add @littlebranches/giselle-mui
 ```
 
 Full workflow, publishing steps, and the reasoning behind yalc:
@@ -329,7 +329,7 @@ Full workflow, publishing steps, and the reasoning behind yalc:
 | Core components          | ✅ Done    | `GiselleIcon`, `MetricCard`, `SelectableCard`, `QuoteCard`, `TimelineTwoColumn` — all with unit tests + READMEs                       |
 | Storybook stories        | ✅ Done    | Stories shipped for all components. Deployed locally; public hosting planned.                                                         |
 | Phase A theme utilities  | ✅ Done    | `channelAlpha`, `hexToChannel`, `pxToRem`/`remToPx` — see [`docs/roadmap.md`](./docs/roadmap.mdx)                                     |
-| Phase B brand theme      | ✅ Done    | `giselleTheme` preset + palette constants — import from `@alexrebula/giselle-mui/utils` — see [`docs/roadmap.md`](./docs/roadmap.mdx) |
+| Phase B brand theme      | ✅ Done    | `giselleTheme` preset + palette constants — import from `@littlebranches/giselle-mui/utils` — see [`docs/roadmap.md`](./docs/roadmap.mdx) |
 | npm publish              | ⬜ Planned | Alongside portfolio launch, May/June 2026                                                                                             |
 | Additional components    | ⬜ Planned | Components extracted from portfolio patterns as they meet the extraction checklist                                                    |
 | Storybook public hosting | ⬜ Planned | Chromatic or self-hosted, cross-linked from Docusaurus                                                                                |
@@ -342,9 +342,9 @@ Full detail: [`docs/roadmap.md`](./docs/roadmap.mdx)
 
 | Package                            | Description                                              | Status |
 | ---------------------------------- | -------------------------------------------------------- | ------ |
-| `@alexrebula/giselle-mui`          | MUI wrapper components (this package)                    | Beta   |
-| `@alexrebula/giselle-ui`           | Framework-agnostic component primitives                  | Beta   |
-| `@alexrebula/giselle-sections-sdk` | Typed section data contracts for portfolio/product sites | Beta   |
+| `@littlebranches/giselle-mui`          | MUI wrapper components (this package)                    | Beta   |
+| `@littlebranches/giselle-ui`           | Framework-agnostic component primitives                  | Beta   |
+| `@littlebranches/giselle-sections-sdk` | Typed section data contracts for portfolio/product sites | Beta   |
 
 All packages are in active development and will be published together.
 

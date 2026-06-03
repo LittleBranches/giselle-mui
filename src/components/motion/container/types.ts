@@ -5,7 +5,7 @@ import type { BoxProps } from '@mui/material/Box';
 // ----------------------------------------------------------------------
 
 export type MotionContainerProps = Omit<BoxProps, 'animate' | 'children'> &
-  Omit<MotionProps, 'children'> & {
+  Omit<MotionProps, 'children' | 'animate'> & {
     /**
      * When `action` is `false` (default), the container always animates in.
      * When `action` is `true`, use the `animate` prop to toggle between

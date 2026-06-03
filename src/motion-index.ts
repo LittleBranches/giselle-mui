@@ -1,10 +1,10 @@
-// @alexrebula/giselle-mui — /motion subpath entry point
+// @littlebranches/giselle-mui — /motion subpath entry point
 //
 // framer-motion components (optional peer dep: framer-motion).
-// Import from '@alexrebula/giselle-mui/motion' — NOT from the root import.
+// Import from '@littlebranches/giselle-mui/motion' — NOT from the root import.
 //
 // Consumer contract:
-//   import { MotionContainer, fade, slide } from '@alexrebula/giselle-mui/motion';
+//   import { MotionContainer, fade, slide } from '@littlebranches/giselle-mui/motion';
 //   // requires: framer-motion in the consumer's own deps
 //
 // Important: always use motion.div, never m.div.
@@ -38,16 +38,23 @@ export { useScrollParallax } from './components/motion/use-scroll-parallax';
 export type { UseScrollParallaxResult } from './components/motion/use-scroll-parallax';
 
 // --- Hero components (framer-motion) ---
-export { InteractiveHeroLogo } from './components/hero/interactive-logo';
+export { InteractiveHeroLogo } from './components/section/hero/interactive-logo';
 export type {
   InteractiveHeroLogoProps,
   HoverPhase,
   PortraitDirection,
   PortraitSource,
   FadeTransition,
-} from './components/hero/interactive-logo';
-export { HeroButtonsRow } from './components/hero/buttons-row';
-export type { HeroButtonsRowProps, HeroButtonItem } from './components/hero/buttons-row';
+} from './components/section/hero/interactive-logo';
+export { HeroButtonsRow } from './components/section/hero/buttons-row';
+export type { HeroButtonsRowProps, HeroButtonItem } from './components/section/hero/buttons-row';
+
+// --- Navigation components (framer-motion) ---
+export { FloatingSubNav } from './components/material/navigation/floating-sub-nav';
+export type {
+  FloatingSubNavProps,
+  FloatingSubNavItem,
+} from './components/material/navigation/floating-sub-nav';
 
 // --- Hero: ScrollParallaxHero ---
 export {
@@ -55,19 +62,19 @@ export {
   AnimatedHeroHeading,
   useScrollPercent,
   useTransformY,
-} from './components/hero/scroll-parallax';
+} from './components/section/hero/scroll-parallax';
 export type {
   ScrollParallaxHeroProps,
   AnimatedHeroHeadingProps,
   UseScrollPercentResult,
   ParallaxMultipliers,
-} from './components/hero/scroll-parallax';
+} from './components/section/hero/scroll-parallax';
 
 // --- Phase D: FAQ Section ---
-export { FaqSection } from './components/faq/accordion';
-export type { FaqSectionProps, FaqItem } from './components/faq/accordion';
+export { FaqSection } from './components/section/faq/accordion';
+export type { FaqSectionProps, FaqItem } from './components/section/faq/accordion';
 // @deprecated — FaqAccordion was renamed to FaqSection in 0.1.x.
 /** @deprecated Use {@link FaqSection} instead. */
-export { FaqSection as FaqAccordion } from './components/faq/accordion';
+export { FaqSection as FaqAccordion } from './components/section/faq/accordion';
 /** @deprecated Use {@link FaqSectionProps} instead. */
-export type { FaqSectionProps as FaqAccordionProps } from './components/faq/accordion';
+export type { FaqSectionProps as FaqAccordionProps } from './components/section/faq/accordion';

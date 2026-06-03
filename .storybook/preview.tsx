@@ -1,7 +1,7 @@
 import type { Preview } from '@storybook/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { addCollection } from '@iconify/react';
-import { giselleTheme } from '../src/utils/theme-preset';
+import { giselleTheme } from '../src/utils/theme/preset/theme-preset';
 import { solarStorybookIcons } from './solar-storybook-icons';
 
 // Register the Solar icon set offline so icons don't flicker due to CDN fetches.

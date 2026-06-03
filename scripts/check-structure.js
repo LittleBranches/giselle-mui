@@ -2,49 +2,74 @@
 /**
  * check-structure.js
  *
- * Enforces the component folder structure convention:
+ * Enforces the component folder structure convention: every component must live
+ * in its own named subfolder inside its layer group. No .ts/.tsx files are
+ * permitted directly under a layer or category folder.
  *
- *   - No .tsx or .ts component files directly under src/components/
- *     Every component must live in its own named subfolder:
- *       ✅  src/components/giselle-icon/giselle-icon.tsx
- *       ✅  src/components/card/metric/metric-card.tsx
- *       ❌  src/components/giselle-icon.tsx
+ * Layer groups under src/components/:
+ *   material/surfaces  material/data-display  material/layout
+ *   material/navigation  material/input
+ *   chart  motion  section  theming
  *
- * This catches the pattern that existed before the refactor/structure-and-extract
- * branch, where components lived flat in src/components/<name>.tsx.
- *
- * The check is intentionally narrow — it only validates depth, not naming.
- * Naming conventions (e.g. <name>/<name>.tsx) are documented in copilot-instructions.md
- * and enforced by code review.
+ *   ✅  src/components/material/surfaces/card/metric/metric-card.tsx
+ *   ❌  src/components/material/surfaces/card/metric-card.tsx
+ *   ❌  src/components/material/surfaces/metric-card.tsx
  *
  * Exit codes: 0 = all OK, 1 = violations found.
  */
 
-import { readdirSync, statSync } from 'fs';
+import { readdirSync, statSync, existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const componentsDir = path.resolve(__dirname, '../src/components');
+const srcDir = path.resolve(__dirname, '../src');
 
-// Files allowed directly under src/components/ (none at the moment, but an
-// explicit allowlist makes the intent clear and prevents false positives).
-const ALLOWED_FLAT = new Set([
-  // e.g. 'index.ts' if a barrel ever lives here — currently src/index.ts is used
-]);
+// Layer and category folders where component files must NOT sit flat.
+// Every .ts/.tsx file found directly in one of these folders is a violation.
+// The rule: every component lives in its own named subfolder at least one level deeper.
+const PARENT_DIRS_TO_CHECK = [
+  'components/chart',
+  'components/material',
+  'components/material/surfaces',
+  'components/material/surfaces/card',
+  'components/material/data-display',
+  'components/material/data-display/icon',
+  'components/material/layout',
+  'components/material/navigation',
+  'components/material/input',
+  'components/motion',
+  'components/motion/variants',
+  'components/section',
+  'components/section/faq',
+  'components/section/hero',
+  'components/section/timeline',
+  'components/theming',
+];
 
 const violations = [];
 
-for (const entry of readdirSync(componentsDir)) {
-  // Only flag .tsx and .ts files — ignore directories and other file types.
-  if (!entry.endsWith('.tsx') && !entry.endsWith('.ts')) continue;
-  if (ALLOWED_FLAT.has(entry)) continue;
+// Files that are legitimate at any layer level (not component files).
+const ALLOWED_FLAT_FILES = new Set(['index.ts', 'index.tsx', 'types.ts']);
+const isAllowedFlat = (filename) =>
+  ALLOWED_FLAT_FILES.has(filename) ||
+  filename.startsWith('use-') || // shared hooks
+  filename.endsWith('.stories.tsx'); // group-level cross-component stories
 
-  const fullPath = path.join(componentsDir, entry);
-  if (statSync(fullPath).isFile()) {
-    violations.push(`src/components/${entry}`);
+for (const domain of PARENT_DIRS_TO_CHECK) {
+  const domainDir = path.join(srcDir, domain);
+  if (!existsSync(domainDir)) continue;
+
+  for (const entry of readdirSync(domainDir)) {
+    if (!entry.endsWith('.tsx') && !entry.endsWith('.ts')) continue;
+    if (isAllowedFlat(entry)) continue;
+
+    const fullPath = path.join(domainDir, entry);
+    if (statSync(fullPath).isFile()) {
+      violations.push(`src/${domain}/${entry}`);
+    }
   }
 }
 
@@ -55,8 +80,8 @@ if (violations.length > 0) {
   }
   console.error(
     '\nEach component must live in its own named subfolder:\n' +
-      '   ✅  src/components/<name>/<name>.tsx\n' +
-      '   ❌  src/components/<name>.tsx\n' +
+      '   ✅  src/components/material/surfaces/card/<name>/<name>.tsx\n' +
+      '   ❌  src/components/material/surfaces/card/<name>.tsx\n' +
       '\nSee File structure per component in .github/copilot-instructions.md'
   );
   process.exit(1);

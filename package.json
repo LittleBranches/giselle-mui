@@ -1,5 +1,5 @@
 {
-  "name": "@alexrebula/giselle-mui",
+  "name": "@littlebranches/giselle-mui",
   "version": "0.1.0",
   "description": "MUI component library — accessible, theme-adaptive React components built on @mui/material with zero proprietary dependencies.",
   "license": "MIT",
@@ -28,6 +28,11 @@
       "types": "./dist/motion.d.ts",
       "import": "./dist/motion.js",
       "require": "./dist/motion.cjs"
+    },
+    "./lab": {
+      "types": "./dist/lab.d.ts",
+      "import": "./dist/lab.js",
+      "require": "./dist/lab.cjs"
     }
   },
   "publishConfig": {
@@ -54,6 +59,9 @@
     "build-storybook": "storybook build",
     "check": "node scripts/quality-gate.js --fix",
     "check:verify": "node scripts/quality-gate.js --verify",
+    "check:verify:fast": "node scripts/quality-gate.js --verify --no-storybook",
+    "check:verify:smart": "node scripts/quality-gate.js --verify --smart --storybook",
+    "check:verify:full": "node scripts/quality-gate.js --verify --storybook",
     "clean": "rm -rf dist storybook-static",
     "postinstall": "node --input-type=module -e \"import('./scripts/setup-hooks.js').catch((error)=>{const msg=String(error?.message??'');const isMissingSetupHooks=error?.code==='ERR_MODULE_NOT_FOUND'&&(msg.includes('scripts/setup-hooks.js')||msg.includes('scripts\\\\setup-hooks.js'));if(!isMissingSetupHooks){console.error('Failed to run scripts/setup-hooks.js during postinstall.');console.error(error);process.exitCode=1;}})\""
   },
@@ -65,6 +73,9 @@
     "url": "https://github.com/AlexRebula/giselle-mui/issues"
   },
   "homepage": "https://github.com/AlexRebula/giselle-mui#readme",
+  "engines": {
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
+  },
   "keywords": [
     "react",
     "typescript",
@@ -78,12 +89,12 @@
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
     "@iconify/react": "^5.0.0 || ^6.0.0",
-    "@mui/lab": "^7.0.0",
-    "@mui/material": "^7.0.0",
-    "apexcharts": "^5.0.0",
+    "@mui/lab": "^7.0.0 || ^9.0.0-beta.3",
+    "@mui/material": "^7.0.0 || ^9.0.0",
+    "apexcharts": "^5.10.1",
     "framer-motion": "^11.0.0 || ^12.0.0",
     "react": "^18.0.0 || ^19.0.0",
-    "react-apexcharts": "^1.9.0",
+    "react-apexcharts": "^2.1.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "peerDependenciesMeta": {
@@ -95,6 +106,9 @@
     },
     "react-apexcharts": {
       "optional": true
+    },
+    "@mui/lab": {
+      "optional": true
     }
   },
   "devDependencies": {
@@ -103,31 +117,31 @@
     "@eslint/js": "^9.0.0",
     "@iconify-json/solar": "^1.2.5",
     "@iconify/react": "^6.0.0",
-    "@mui/lab": "^7.0.0",
-    "@mui/material": "^7.0.0",
+    "@mui/lab": "^9.0.0-beta.3",
+    "@mui/material": "^9.0.0",
     "@storybook/addon-essentials": "^8.0.0",
     "@storybook/react": "^8.0.0",
     "@storybook/react-vite": "^8.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@vitest/coverage-v8": "^3.0.0",
-    "apexcharts": "^5.10.6",
+    "@vitest/coverage-v8": "^4.1.5",
+    "apexcharts": "^5.11.0",
     "eslint": "^9.0.0",
     "eslint-plugin-react": "^7.0.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-unused-imports": "^4.0.0",
     "framer-motion": "^12.38.0",
     "globals": "^15.0.0",
-    "jsdom": "^26.0.0",
+    "jsdom": "^29.1.1",
     "prettier": "^3.0.0",
-    "react": "^19.0.0",
-    "react-apexcharts": "^1.9.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.6",
+    "react-apexcharts": "^2.1.0",
+    "react-dom": "^19.2.6",
     "storybook": "^8.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.0.0",
     "vite": "^5.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.1.5"
   }
 }

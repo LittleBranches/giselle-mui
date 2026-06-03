@@ -143,11 +143,11 @@ the type can be extended without a breaking change.
 ## `channelAlpha` dependency
 
 The component uses `channelAlpha` for the scenario step background tint. `channelAlpha` is
-exported from `src/utils/theme-utils.ts` and available from `@alexrebula/giselle-mui`
+exported from `src/utils/theme-utils.ts` and available from `@littlebranches/giselle-mui`
 as of Phase A (4 May 2026). This prerequisite is met.
 
 ```ts
-import { channelAlpha } from '@alexrebula/giselle-mui';
+import { channelAlpha } from '@littlebranches/giselle-mui';
 ```
 
 ---
@@ -180,7 +180,7 @@ utility package if the need arises across multiple consumer projects.
 
 ```ts
 // sections-api/roadmap/types.ts
-import type { TimelineStep } from '@alexrebula/giselle-mui';
+import type { TimelineStep } from '@littlebranches/giselle-mui';
 
 export interface RoadmapSectionProps {
   title?: string;

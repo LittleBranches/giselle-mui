@@ -9,15 +9,22 @@ This plan defines how the workspace migrates to MUI 9 without breaking current M
 
 ## Why this is a large effort
 
-`@alexrebula/giselle-mui` is a shared dependency used by multiple apps. A major MUI upgrade must be done in order and validated in each consumer.
+`@littlebranches/giselle-mui` is a shared dependency used by multiple apps. A major MUI upgrade must be done in order and validated in each consumer.
 
-## Current workspace snapshot (8 May 2026)
+## Current workspace snapshot (19 May 2026)
+
+- `giselle-mui`: **Phase 1 complete (PR #62).** Dev deps on MUI v9; peer deps support both v7 and v9. All 5 subpath entries build-verified. PR #62 open, pending PR #61 merge.
+- `alexrebula`: MUI 7 + MUI X v8. Phase 2a not yet started.
+- `[consumer-app-b]`: mixed majors (`@mui/material` v7 with `@mui/material-nextjs` v9) — prerequisite fix still pending.
+- `giselle-docs`: MUI 7. Phase 2c not yet started.
+- `giselle-ui` and `giselle-sections-sdk`: no MUI dependency (not part of this migration).
+
+### Previous snapshot (8 May 2026, for reference)
 
 - `giselle-mui`: MUI 7 in peers and dev deps.
 - `alexrebula`: MUI 7 + MUI X v8.
-- `first-branch`: mixed majors now (`@mui/material` v7 with `@mui/material-nextjs` v9) and must be aligned immediately.
+- `first-branch`: mixed majors (`@mui/material` v7 with `@mui/material-nextjs` v9) — must be aligned immediately.
 - `giselle-docs`: MUI 7.
-- `giselle-ui` and `giselle-sections-sdk`: no MUI dependency (not part of this migration).
 
 ## Migration principles
 
@@ -79,7 +86,7 @@ For each app:
 
 1. Upgrade all MUI family packages as one set.
 2. Run quality gate and build.
-3. Run focused visual QA on components using `@alexrebula/giselle-mui`.
+3. Run focused visual QA on components using `@littlebranches/giselle-mui`.
 4. Record any breakages back into this plan as checklist items.
 
 ## Phase 3 - Stabilization
@@ -133,7 +140,12 @@ This gives enough runway without maintaining dual-support forever.
 
 ## Decision log
 
-When decisions are made, append them here with date and rationale:
+| Date | Decision | Rationale |
+| ------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| 19 May 2026 | `@mui/material` peer range set to `">=7.0.0 <10.0.0"` | Allows v7 consumers to continue while v9 consumers are also supported. Upper bound `<10.0.0` prevents silent breakage on future majors. |
+| 19 May 2026 | `@mui/lab` peer range set to `"^7.0.0 \|\| ^9.0.0-beta.3"` | No stable v9 release of `@mui/lab` yet. Beta accepted for dev builds. OR range keeps v7 consumers working. |
+| 19 May 2026 | Dev dependencies upgraded to `@mui/material@^9.0.0`, `@mui/lab@^9.0.0-beta.3` | Library developed and CI-tested against v9 while publishing types compatible with both majors. |
+| 19 May 2026 | T0 defined as 19 May 2026 (date of PR #62 merge) | T0 + 4 weeks = ~16 Jun 2026 (all consumer migrations due). T0 + 10-12 weeks = ~28 Jul – 11 Aug 2026 (v7 support ends). |
 
 - Version targets selected for each repo
 - v7 support end date

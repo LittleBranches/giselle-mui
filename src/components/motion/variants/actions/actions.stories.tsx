@@ -17,7 +17,7 @@ function ActionsShowcase({ children }: { children?: React.ReactNode }) {
 }
 
 const meta: Meta<typeof ActionsShowcase> = {
-  title: 'Giselle MUI/Motion/Actions',
+  title: 'Motion/Variants/Actions',
   component: ActionsShowcase,
   tags: ['autodocs'],
   parameters: {
