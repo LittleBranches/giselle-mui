@@ -65,14 +65,10 @@ Use flow first, then structure at deliberate checkpoints:
    Discovery stage: flexible. Maintenance stage: one branch per PR.
 
 > **Non-negotiable at maintenance stage — one branch per PR.**
-> When a branch has an open PR, do not add new commits for unrelated work. If post-merge fixes are
-> needed, open a new `fix/` branch from `main`. A branch that produces more than one PR is a
-> discovery-stage exception, not the rule. During code review: if a branch appears to be adding
-> commits after a PR is already open for it, flag this as a workflow violation and ask the author
-> to split the work onto a separate branch.
+> 
+> When a branch has an open PR, do not add new commits for unrelated work. If post-merge fixes are needed, open a new `fix/` branch from `main`. A branch that produces more than one PR is a discovery-stage exception, not the rule. During code review: if a branch appears to be adding commits after a PR is already open for it, flag this as a workflow violation and ask the author o split the work onto a separate branch.
 
-Long-term best practice remains one branch per PR, but discovery-stage flexibility is valid.
-This staged policy aims for clean history without constant cognitive interruption.
+Long-term best practice remains one branch per PR, but discovery-stage flexibility is valid. This staged policy aims for clean history without constant cognitive interruption.
 
 Roadmap source of truth:
 
