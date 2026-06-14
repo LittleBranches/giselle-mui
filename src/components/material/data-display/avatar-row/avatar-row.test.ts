@@ -182,7 +182,11 @@ describe('AvatarRow — onSelect callback', () => {
     });
 
     const divs = container.querySelectorAll('div');
-    expect(() => act(() => { (divs[1] as HTMLElement).click(); })).not.toThrow();
+    expect(() =>
+      act(() => {
+        (divs[1] as HTMLElement).click();
+      })
+    ).not.toThrow();
 
     root.unmount();
     document.body.removeChild(container);
@@ -194,9 +198,7 @@ describe('AvatarRow — onSelect callback', () => {
 describe('AvatarRow — sx forwarding', () => {
   it('accepts object sx without crashing', () => {
     expect(() =>
-      renderToStaticMarkup(
-        React.createElement(AvatarRow, { items: ITEMS, sx: { mt: 2 } })
-      )
+      renderToStaticMarkup(React.createElement(AvatarRow, { items: ITEMS, sx: { mt: 2 } }))
     ).not.toThrow();
   });
 
