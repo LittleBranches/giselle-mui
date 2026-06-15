@@ -15,39 +15,38 @@ sidebar_label: 'Component Inventory'
 
 ## Currently shipped ✅
 
-| Component / Export                                                                 | Location                                | Subpath       | Phase | Notes                                                              |
-| ---------------------------------------------------------------------------------- | --------------------------------------- | ------------- | ----- | ------------------------------------------------------------------ |
-| `GiselleIcon`                                                                      | `icon/giselle/`                         | main          | —     | Offline Iconify wrapper                                            |
-| `createIconRegistrar`                                                              | `utils/`                                | main          | —     | Icon set registration utility                                      |
-| `MetricCard` + `MetricCardDecoration`                                              | `card/metric/`                          | main          | —     |                                                                    |
-| `QuoteCard`                                                                        | `card/quote/`                           | main          | —     |                                                                    |
-| `SelectableCard`                                                                   | `card/selectable/`                      | main          | —     |                                                                    |
-| `IconActionBar`                                                                    | `action-bar/icon/`                      | main          | —     |                                                                    |
-| `TimelineTwoColumn`                                                                | `timeline/two-column/`                  | main          | —     | Full two-column phase/milestone timeline                           |
-| `MilestoneBadge`, `PhaseCard`, `TimelineDot`                                       | `timeline/two-column/`                  | main          | —     | Sub-components of `TimelineTwoColumn`; independently exported      |
-| `StatCard`                                                                         | `card/stat/`                            | main          | E     | Shipped 5 May 2026                                                 |
-| `RadialProgressCard`                                                               | `chart/radial-progress/`                | `/charts`     | E     | Shipped 5 May 2026; exported from `/charts` subpath                |
-| `TimelineCompact` + `TaskDetailsRenderer`, `resolveCompactColor`                   | `timeline/compact/`                     | main          | E     | Shipped 7 May 2026; 29 tests (15 component + 14 styles), 4 stories |
-| `FloatingSubNav`                                                                   | `nav/floating-sub-nav/`                 | main          | —     | Should move to `/motion` in Phase H                                |
-| `TwoColumnShowcaseRow`                                                             | `layout/two-column-showcase-row/`       | main          | E     |                                                                    |
-| `SectionContainer`                                                                 | `layout/section-container/`             | main          | E     | `Container` + vertical padding + optional title/subtitle slot      |
-| `SectionTitle` + `SectionCaption`                                                  | `layout/section-title/`                 | main          | E     | Static base; animated `/motion` variants are Phase I               |
-| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx`                               | `utils/theme-utils.ts`                  | main + /utils | A     | Shipped 4 May 2026                                                 |
-| `giselleTheme`, `giselleThemeOptions`, palette constants                           | `utils/theme-preset.ts`                 | main + /utils | B     | Shipped 5 May 2026                                                 |
-| `GiselleThemeProvider`                                                             | `components/theme-provider/`            | main          | C     | Shipped 13 May 2026                                                |
-| `GiselleSettingsProvider`, `GiselleThemeAndSettingsProvider`, `useGiselleSettings` | `components/settings-provider/`         | main          | D     | Shipped 14 May 2026                                                |
-| `useLocalStorage`, `isDeepEqual`, `getCookieValue`, `setCookieValue`               | `utils/`                                | main          | D     | Shipped 14 May 2026                                                |
-| `resolveMaturityColor`, `resolveMaturityLabel`                                     | `utils/maturity-utils.ts`               | main + /utils | —     | Palette-key resolution helpers                                     |
-| `assignMilestoneSidesByDone`                                                       | `utils/timeline-utils.ts`               | main + /utils | —     | Timeline data utility                                              |
-| `useNestedChecklist`                                                               | `utils/use-nested-checklist.ts`         | main          | —     | Checklist state hook                                               |
-| `Accordion`                                                                        | `components/accordion/`                 | main          | E     | Shipped 13 May 2026                                                |
-| `ToggleIconButton`                                                                 | `components/inputs/button/toggle/icon/` | main          | E     | Shipped 13 May 2026; replaces deprecated `CheckIconButton`         |
-| `TaskList`                                                                         | `components/timeline/task-list/`        | main          | E     | Shipped 13 May 2026                                                |
-| `StatCardRow`                                                                      | `components/card/stat-row/`             | main          | H     | Shipped 13 May 2026                                                |
-| `FaqSection` (`FaqAccordion` deprecated alias)                                     | `components/faq/accordion/`             | `/motion`     | E     | Shipped 13 May 2026                                                |
+| Component / Export                                                                                                       | Location                                | Subpath       | Phase | Notes                                                              |
+| ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- | ------------- | ----- | ------------------------------------------------------------------ |
+| [[giselle/README\|GiselleIcon]]                                                                                        | `icon/giselle/`                         | main          | —     | Offline Iconify wrapper                                            |
+| `createIconRegistrar`                                                                                                    | `utils/`                                | main          | —     | Icon set registration utility                                      |
+| [[metric/README\|MetricCard]] + `MetricCardDecoration`                                                                 | `card/metric/`                          | main          | —     | —                                                                  |
+| [[quote/README\|QuoteCard]]                                                                                            | `card/quote/`                           | main          | —     | —                                                                  |
+| [[selectable/README\|SelectableCard]]                                                                                  | `card/selectable/`                      | main          | —     | —                                                                  |
+| [[action-bar/README\|IconActionBar]]                                                                                   | `action-bar/icon/`                      | main          | —     | —                                                                  |
+| [[two-column/README\|TimelineTwoColumn]]                                                                               | `timeline/two-column/`                  | main          | —     | Full two-column phase/milestone timeline                           |
+| [[milestone-badge/README\|MilestoneBadge]], [[phase-card/README\|PhaseCard]], [[timeline-dot/README\|TimelineDot]] | `timeline/two-column/`                  | main          | —     | Sub-components of `TimelineTwoColumn`; independently exported      |
+| [[stat/README\|StatCard]]                                                                                              | `card/stat/`                            | main          | E     | Shipped 5 May 2026                                                 |
+| [[radial-progress/README\|RadialProgressCard]]                                                                         | `chart/radial-progress/`                | `/charts`     | E     | Shipped 5 May 2026; exported from `/charts` subpath                |
+| [[compact/README\|TimelineCompact]] + `TaskDetailsRenderer`, `resolveCompactColor`                                     | `timeline/compact/`                     | main          | E     | Shipped 7 May 2026; 29 tests (15 component + 14 styles), 4 stories |
+| [[floating-sub-nav/README\|FloatingSubNav]]                                                                            | `nav/floating-sub-nav/`                 | main          | —     | Should move to `/motion` in Phase H                                |
+| [[showcase-row/README\|TwoColumnShowcaseRow]]                                                                          | `layout/two-column-showcase-row/`       | main          | E     | —                                                                  |
+| [[section-container/README\|SectionContainer]]                                                                         | `layout/section-container/`             | main          | E     | `Container` + vertical padding + optional title/subtitle slot      |
+| [[section-title/README\|SectionTitle]] + `SectionCaption`                                                              | `layout/section-title/`                 | main          | E     | Static base; animated `/motion` variants are Phase I               |
+| `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx`                                                                     | `utils/theme-utils.ts`                  | main + /utils | A     | Shipped 4 May 2026                                                 |
+| `giselleTheme`, `giselleThemeOptions`, palette constants                                                                 | `utils/theme-preset.ts`                 | main + /utils | B     | Shipped 5 May 2026                                                 |
+| [[theme-provider/giselle/README\|GiselleThemeProvider]]                                                                | `components/theme-provider/`            | main          | C     | Shipped 13 May 2026                                                |
+| [[settings-provider/README\|GiselleSettingsProvider]], `GiselleThemeAndSettingsProvider`, `useGiselleSettings`         | `components/settings-provider/`         | main          | D     | Shipped 14 May 2026                                                |
+| `useLocalStorage`, `isDeepEqual`, `getCookieValue`, `setCookieValue`                                                     | `utils/`                                | main          | D     | Shipped 14 May 2026                                                |
+| `resolveMaturityColor`, `resolveMaturityLabel`                                                                           | `utils/maturity-utils.ts`               | main + /utils | —     | Palette-key resolution helpers                                     |
+| `assignMilestoneSidesByDone`                                                                                             | `utils/timeline-utils.ts`               | main + /utils | —     | Timeline data utility                                              |
+| `useNestedChecklist`                                                                                                     | `utils/use-nested-checklist.ts`         | main          | —     | Checklist state hook                                               |
+| [[card/accordion/README\|Accordion]]                                                                                   | `components/accordion/`                 | main          | E     | Shipped 13 May 2026                                                |
+| [[toggle-icon-button/README\|ToggleIconButton]]                                                                        | `components/inputs/button/toggle/icon/` | main          | E     | Shipped 13 May 2026; replaces deprecated `CheckIconButton`         |
+| [[task-list/README\|TaskList]]                                                                                         | `components/timeline/task-list/`        | main          | E     | Shipped 13 May 2026                                                |
+| [[stat-row/README\|StatCardRow]]                                                                                       | `components/card/stat-row/`             | main          | H     | Shipped 13 May 2026                                                |
+| [[faq/accordion/README\|FaqSection]] (`FaqAccordion` deprecated alias)                                                 | `components/faq/accordion/`             | `/motion`     | E     | Shipped 13 May 2026                                                |
 
 **Shipped count: ~40 named exports across main bundle, `/charts`, `/motion`, and `/utils` subpaths**
-
 ---
 
 ## Quality status — shipped components
@@ -58,26 +57,26 @@ sidebar_label: 'Component Inventory'
 
 | Component                                                            | DoD   | Best practices | Last audited |
 | -------------------------------------------------------------------- | ----- | -------------- | ------------ |
-| `Accordion`                                                          | 21/21 | 13/13          | 13 May 2026  |
-| `TimelineTwoColumn` (+ `PhaseCard`, `TimelineDot`, `MilestoneBadge`) | 21/21 | 13/13          | 13 May 2026  |
-| `GiselleIcon`                                                        | 21/21 | 13/13          | 13 May 2026  |
-| `MetricCard` + `MetricCardDecoration`                                | 21/21 | 13/13          | 13 May 2026  |
-| `SelectableCard`                                                     | 21/21 | 13/13          | 13 May 2026  |
-| `QuoteCard`                                                          | 21/21 | 13/13          | 13 May 2026  |
-| `StatCard`                                                           | 21/21 | 13/13          | 13 May 2026  |
-| `RadialProgressCard`                                                 | 21/21 | 13/13          | 13 May 2026  |
-| `TimelineCompact`                                                    | 21/21 | 13/13          | 13 May 2026  |
-| `FloatingSubNav`                                                     | 21/21 | 13/13          | 13 May 2026  |
-| `TwoColumnShowcaseRow`                                               | 21/21 | 13/13          | 13 May 2026  |
-| `SectionTitle` + `SectionCaption`                                    | 21/21 | 13/13          | 13 May 2026  |
-| `SectionContainer`                                                   | 21/21 | 13/13          | 13 May 2026  |
-| `IconActionBar`                                                      | 21/21 | 13/13          | 13 May 2026  |
-| `TaskList`                                                           | 21/21 | 13/13          | 13 May 2026  |
-| `FaqSection`                                                         | 21/21 | 13/13          | 13 May 2026  |
-| `GiselleThemeProvider`                                               | ⬜    | ⬜             | —            |
-| `GiselleSettingsProvider` + `GiselleThemeAndSettingsProvider`        | ⬜    | ⬜             | —            |
-| `ToggleIconButton`                                                   | ⬜    | ⬜             | —            |
-| `StatCardRow`                                                        | ⬜    | ⬜             | —            |
+| [[card/accordion/README\|Accordion]]                                | 21/21 | 13/13          | 13 May 2026  |
+| [[two-column/README\|TimelineTwoColumn]] (+ [[phase-card/README\|PhaseCard]], [[timeline-dot/README\|TimelineDot]], [[milestone-badge/README\|MilestoneBadge]]) | 21/21 | 13/13 | 13 May 2026 |
+| [[giselle/README\|GiselleIcon]]                                     | 21/21 | 13/13          | 13 May 2026  |
+| [[metric/README\|MetricCard]] + `MetricCardDecoration`              | 21/21 | 13/13          | 13 May 2026  |
+| [[selectable/README\|SelectableCard]]                               | 21/21 | 13/13          | 13 May 2026  |
+| [[quote/README\|QuoteCard]]                                         | 21/21 | 13/13          | 13 May 2026  |
+| [[stat/README\|StatCard]]                                           | 21/21 | 13/13          | 13 May 2026  |
+| [[radial-progress/README\|RadialProgressCard]]                      | 21/21 | 13/13          | 13 May 2026  |
+| [[compact/README\|TimelineCompact]]                                 | 21/21 | 13/13          | 13 May 2026  |
+| [[floating-sub-nav/README\|FloatingSubNav]]                         | 21/21 | 13/13          | 13 May 2026  |
+| [[showcase-row/README\|TwoColumnShowcaseRow]]                       | 21/21 | 13/13          | 13 May 2026  |
+| [[section-title/README\|SectionTitle]] + `SectionCaption`           | 21/21 | 13/13          | 13 May 2026  |
+| [[section-container/README\|SectionContainer]]                      | 21/21 | 13/13          | 13 May 2026  |
+| [[action-bar/README\|IconActionBar]]                                | 21/21 | 13/13          | 13 May 2026  |
+| [[task-list/README\|TaskList]]                                      | 21/21 | 13/13          | 13 May 2026  |
+| [[faq/accordion/README\|FaqSection]]                                | 21/21 | 13/13          | 13 May 2026  |
+| [[theme-provider/giselle/README\|GiselleThemeProvider]]             | ⬜    | ⬜             | —            |
+| [[settings-provider/README\|GiselleSettingsProvider]] + `GiselleThemeAndSettingsProvider` | ⬜ | ⬜        | —            |
+| [[toggle-icon-button/README\|ToggleIconButton]]                     | ⬜    | ⬜             | —            |
+| [[stat-row/README\|StatCardRow]]                                    | ⬜    | ⬜             | —            |
 
 **DoD scale:** Scenario B = n/21 items · Scenario A (sub-component) = n/10 items  
 **Best practices scale:** 13 items — see `docs/components/cleanup-workflow.md` Step 14 for the rubric
@@ -88,7 +87,7 @@ sidebar_label: 'Component Inventory'
 
 | Component                                                                                                                                                      | Status |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| `GiselleThemeProvider` — wraps MUI `ThemeProvider`, ships Giselle palette as default. Accepts `themeOverrides` for partial overrides, `theme` for full bypass. | ✅     |
+| [[theme-provider/giselle/README\|GiselleThemeProvider]] — wraps MUI `ThemeProvider`, ships Giselle palette as default. Accepts `themeOverrides` for partial overrides, `theme` for full bypass. | ✅ |
 
 ---
 
@@ -98,7 +97,7 @@ sidebar_label: 'Component Inventory'
 
 | Component / Export                                                                           | Status | Notes                                                         |
 | -------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------- |
-| `GiselleSettingsProvider<T>` — settings context with localStorage / cookie / custom adapters | ✅     | Generic over state shape — consumer defines own settings type |
+| [[settings-provider/README\|GiselleSettingsProvider<T>]] — settings context with localStorage / cookie / custom adapters | ✅ | Generic over state shape — consumer defines own settings type |
 | `useLocalStorage<T>` utility                                                                 | ✅     | Internal dep, also exported for consumers                     |
 | `detectGiselleSettings()` — SSR-safe cookie read helper for Next.js App Router               | ⬜     | Not yet implemented; tracked as Phase D follow-up             |
 | `GiselleThemeAndSettingsProvider` — convenience wrapper combining both providers             | ✅     |                                                               |
@@ -111,20 +110,20 @@ sidebar_label: 'Component Inventory'
 
 | Component              | Source                              | Status                 | Blocker                                           |
 | ---------------------- | ----------------------------------- | ---------------------- | ------------------------------------------------- |
-| `StatCard`             | Written from scratch                | ✅ Shipped 5 May 2026  | —                                                 |
-| `RadialProgressCard`   | Written from scratch                | ✅ Shipped 5 May 2026  | —                                                 |
-| `TimelineCompact`      | Written from scratch                | ✅ Shipped 7 May 2026  | —                                                 |
-| `SectionContainer`     | Written from scratch                | ✅ Shipped 13 May 2026 | —                                                 |
-| `TwoColumnShowcaseRow` | alexrebula                          | ✅ Shipped 13 May 2026 | —                                                 |
-| `SectionTitle`         | Written from scratch                | ✅ Shipped 13 May 2026 | Animated `/motion` variant is Phase I item 2      |
-| `Accordion`            | Written from scratch                | ✅ Shipped 13 May 2026 | —                                                 |
-| `ToggleIconButton`     | Written from scratch                | ✅ Shipped 13 May 2026 | Replaces deprecated `CheckIconButton`             |
-| `TaskList`             | Written from scratch                | ✅ Shipped 13 May 2026 | —                                                 |
-| `FaqSection`           | Write from scratch                  | ✅ Shipped 13 May 2026 | Renamed from `FaqAccordion`; in `/motion` subpath |
-| `HeroSection`          | Written from scratch                | ✅ Shipped 16 May 2026 | —                                                 |
-| `OptionWithBlurb`      | alexrebula (tiny, ready to extract) | ⬜                     | None                                              |
-| `SectionPendingLoader` | alexrebula                          | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
-| `FloatingControlBar`   | alexrebula                          | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
+| [[stat/README\|StatCard]]             | Written from scratch                | ✅ Shipped 5 May 2026  | —                                                 |
+| [[radial-progress/README\|RadialProgressCard]] | Written from scratch         | ✅ Shipped 5 May 2026  | —                                                 |
+| [[compact/README\|TimelineCompact]]   | Written from scratch                | ✅ Shipped 7 May 2026  | —                                                 |
+| [[section-container/README\|SectionContainer]] | Written from scratch        | ✅ Shipped 13 May 2026 | —                                                 |
+| [[showcase-row/README\|TwoColumnShowcaseRow]] | alexrebula                 | ✅ Shipped 13 May 2026 | —                                                 |
+| [[section-title/README\|SectionTitle]] | Written from scratch               | ✅ Shipped 13 May 2026 | Animated `/motion` variant is Phase I item 2      |
+| [[card/accordion/README\|Accordion]]  | Written from scratch                | ✅ Shipped 13 May 2026 | —                                                 |
+| [[toggle-icon-button/README\|ToggleIconButton]] | Written from scratch       | ✅ Shipped 13 May 2026 | Replaces deprecated `CheckIconButton`             |
+| [[task-list/README\|TaskList]]        | Written from scratch                | ✅ Shipped 13 May 2026 | —                                                 |
+| [[faq/accordion/README\|FaqSection]]  | Write from scratch                  | ✅ Shipped 13 May 2026 | Renamed from `FaqAccordion`; in `/motion` subpath |
+| [[section/README\|HeroSection]]       | Written from scratch                | ✅ Shipped 16 May 2026 | —                                                 |
+| [[option-with-blurb/README\|OptionWithBlurb]] | alexrebula (tiny, ready to extract) | ⬜              | None                                              |
+| [[section-pending-loader/README\|SectionPendingLoader]] | alexrebula         | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
+| [[floating-control-bar/README\|FloatingControlBar]] | alexrebula            | ⬜                     | Replace `Iconify` → `GiselleIcon`                 |
 
 ---
 
@@ -132,7 +131,7 @@ sidebar_label: 'Component Inventory'
 
 | Component                                                                                                                 | Status |
 | ------------------------------------------------------------------------------------------------------------------------- | ------ |
-| `DetailsDrawer` — slide-in detail panel: shell only, content via slot. Responsive width, backdrop, header + footer slots. | ⬜     |
+| [[details-drawer/README\|DetailsDrawer]] — slide-in detail panel: shell only, content via slot. Responsive width, backdrop, header + footer slots. | ⬜ |
 
 ---
 
@@ -140,7 +139,7 @@ sidebar_label: 'Component Inventory'
 
 | Component                                                                                       | Status | Blocker |
 | ----------------------------------------------------------------------------------------------- | ------ | ------- |
-| `TimelineItemDetails` — read/edit panel for any timeline item. Rendered inside `DetailsDrawer`. | ⬜     | Phase F |
+| [[item-details/README\|TimelineItemDetails]] — read/edit panel for any timeline item. Rendered inside `DetailsDrawer`. | ⬜ | Phase F |
 
 ---
 
@@ -159,64 +158,64 @@ sidebar_label: 'Component Inventory'
 
 | Component                                                                    | Status |
 | ---------------------------------------------------------------------------- | ------ |
-| `StatCardRow` — responsive `Grid2` of `StatCard` items (Shipped 13 May 2026) | ✅     |
-| `BalanceSummaryCard` — large financial overview card with sparkline slot     | 🔴     |
-| `CreditCardDisplay` — presentational masked card number / holder / expiry    | 🔴     |
+| [[stat-row/README\|StatCardRow]] — responsive `Grid2` of `StatCard` items (Shipped 13 May 2026) | ✅ |
+| [[balance-summary/README\|BalanceSummaryCard]] — large financial overview card with sparkline slot | 🔴 |
+| [[credit-card-display/README\|CreditCardDisplay]] — presentational masked card number / holder / expiry | 🔴 |
 
 ### Group 2 — Chart cards (`/charts` subpath, ApexCharts peer dep)
 
 | Component                                                                                        | Status |
 | ------------------------------------------------------------------------------------------------ | ------ |
-| `SparklineBar` — tiny bar or area chart for embedding inside `StatCard`                          | 🔴     |
-| `DonutChartCard` — donut/pie chart with legend in a card shell                                   | 🔴     |
-| `AreaLineChartCard` — area or line chart, 1–2 series, year selector                              | 🔴     |
-| `BudgetVsActualChartCard` — planned vs actual spend with variance fill (error/success area fill) | 🔴     |
-| `GroupedBarChartCard` — grouped or stacked bar chart                                             | 🔴     |
-| `HorizontalBarChartCard` — horizontal progress-bar style chart                                   | 🔴     |
-| `RadarChartCard` — radar / spider chart                                                          | 🔴     |
-| `ProjectionChartCard` — dual-series cost vs projected return, break-even annotation              | 🔴     |
+| [[sparkline-bar/README\|SparklineBar]] — tiny bar or area chart for embedding inside `StatCard` | 🔴     |
+| [[donut-chart-card/README\|DonutChartCard]] — donut/pie chart with legend in a card shell       | 🔴     |
+| [[area-line-chart-card/README\|AreaLineChartCard]] — area or line chart, 1–2 series, year selector | 🔴  |
+| [[budget-vs-actual-card/README\|BudgetVsActualChartCard]] — planned vs actual spend with variance fill (error/success area fill) | 🔴 |
+| [[grouped-bar-chart-card/README\|GroupedBarChartCard]] — grouped or stacked bar chart           | 🔴     |
+| [[horizontal-bar-chart-card/README\|HorizontalBarChartCard]] — horizontal progress-bar style chart | 🔴  |
+| [[radar-chart-card/README\|RadarChartCard]] — radar / spider chart                              | 🔴     |
+| [[projection-card/README\|ProjectionChartCard]] — dual-series cost vs projected return, break-even annotation | 🔴 |
 
 ### Group 3 — Data lists and tables (main bundle)
 
 | Component                                                                               | Status |
 | --------------------------------------------------------------------------------------- | ------ |
-| `DataTable` — styled MUI `Table` (not DataGrid), optional per-row action menu           | 🔴     |
-| `ActivityFeedList` — avatar + primary/secondary text + timestamp + optional status chip | 🔴     |
-| `NewsFeedList` — thumbnail + title + snippet + relative time                            | 🔴     |
-| `RelatedItemsList` — tabbed list, each item has 3 stat numbers                          | 🔴     |
+| [[data-table/README\|DataTable]] — styled MUI `Table` (not DataGrid), optional per-row action menu | 🔴 |
+| [[activity-feed-list/README\|ActivityFeedList]] — avatar + primary/secondary text + timestamp + optional status chip | 🔴 |
+| [[news-feed-list/README\|NewsFeedList]] — thumbnail + title + snippet + relative time  | 🔴     |
+| [[related-items-list/README\|RelatedItemsList]] — tabbed list, each item has 3 stat numbers | 🔴  |
 
 ### Group 4 — Financial / action widgets (main bundle)
 
 | Component                                                                         | Status |
 | --------------------------------------------------------------------------------- | ------ |
-| `ProgressStatsList` — labeled `LinearProgress` rows (label + amount + percentage) | 🔴     |
-| `QuickTransferWidget` — avatar row + amount input + confirm button                | 🔴     |
-| `ContactsList` — compact avatar + email list, optional action icons               | 🔴     |
-| `BudgetBreakdownCard` — named budget, breakdown rows, optional donut chart slot   | 🔴     |
+| [[progress-stats-list/README\|ProgressStatsList]] — labeled `LinearProgress` rows (label + amount + percentage) | 🔴 |
+| [[quick-transfer/README\|QuickTransferWidget]] — avatar row + amount input + confirm button | 🔴     |
+| [[contacts-list/README\|ContactsList]] — compact avatar + email list, optional action icons | 🔴    |
+| [[budget-breakdown/README\|BudgetBreakdownCard]] — named budget, breakdown rows, optional donut chart slot | 🔴 |
 
 ### Group 5 — Hero / marketing cards (main bundle)
 
 | Component                                                                             | Status | Blocker                                                            |
 | ------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------ |
-| `HeroBannerCard` — gradient card with headline, subtitle, CTA slot, illustration slot | 🔴     | Phase C (gradient needs `theme.vars.palette.*` — no hardcoded hex) |
-| `FeaturedItemCard` — image-topped card with badge label, title, description, CTA      | 🔴     | None                                                               |
-| `PromoInviteCard` — accent card with incentive headline, email input, submit button   | 🔴     | None                                                               |
+| [[hero-banner/README\|HeroBannerCard]] — gradient card with headline, subtitle, CTA slot, illustration slot | 🔴 | Phase C (gradient needs `theme.vars.palette.*` — no hardcoded hex) |
+| [[featured-item/README\|FeaturedItemCard]] — image-topped card with badge label, title, description, CTA | 🔴 | None |
+| [[promo-invite/README\|PromoInviteCard]] — accent card with incentive headline, email input, submit button | 🔴 | None |
 
 ### Group 6 — Motion components (`/motion` subpath, framer-motion peer dep)
 
 | Component                                                                      | Status | Notes                                                                             |
 | ------------------------------------------------------------------------------ | ------ | --------------------------------------------------------------------------------- |
-| `FloatingSubNav` — move from main bundle → `/motion`                           | 🟡     | Breaking change for current consumers; needs re-export shim or minor version bump |
-| `AnimatedTabPanel` — wraps children in `motion.div` with enter/exit animations | 🔴     |                                                                                   |
+| [[floating-sub-nav/README\|FloatingSubNav]] — move from main bundle → `/motion` | 🟡   | Breaking change for current consumers; needs re-export shim or minor version bump |
+| [[animated-tab-panel/README\|AnimatedTabPanel]] — wraps children in `motion.div` with enter/exit animations | 🔴 |                                                              |
 
 ### Group 7 — Investment analytics / projection widgets (main bundle)
 
 | Component                                                                                                     | Status |
 | ------------------------------------------------------------------------------------------------------------- | ------ |
-| `CostClassificationCard` — categorised cost breakdown (CAPEX / OpEx / Investment / Opportunity)               | 🔴     |
-| `ROIComparisonCard` — material vs non-material return rows side-by-side, optional chart slot                  | 🔴     |
-| `ScenarioComparisonWidget` — interactive variables (`toggle` / `range` / `select`) → computed outcome metrics | 🔴     |
-| `AmortizationScheduleTable` — CAPEX amortized over periods (month/quarter), optional chart slot               | 🔴     |
+| [[cost-classification/README\|CostClassificationCard]] — categorised cost breakdown (CAPEX / OpEx / Investment / Opportunity) | 🔴 |
+| [[roi-comparison/README\|ROIComparisonCard]] — material vs non-material return rows side-by-side, optional chart slot | 🔴 |
+| [[scenario-comparison/README\|ScenarioComparisonWidget]] — interactive variables (`toggle` / `range` / `select`) → computed outcome metrics | 🔴 |
+| [[amortization-table/README\|AmortizationScheduleTable]] — CAPEX amortized over periods (month/quarter), optional chart slot | 🔴 |
 
 ---
 
@@ -226,15 +225,15 @@ sidebar_label: 'Component Inventory'
 >
 > All 7 phases go in the `/motion` subpath (`dist/motion.js`). `framer-motion` is already wired as an optional peer dep.
 
-| Phase | Component / Export                                                                                                    | Status | Blocker                                                                  |
-| ----- | --------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ |
-| 1     | `fadeVariants`, `scaleVariants`, `zoomVariants` — motion variant factory utilities                                    | ⬜     | None (start in parallel with anything)                                   |
-| 2     | `SectionTitle` + `SectionCaption` — **animated `/motion` variants** (static base shipped in Phase E)                  | ⬜     | Phase 1 (`fadeVariants`)                                                 |
-| 3     | `FloatingSideNav` — vertically stacked left-side pill nav (distinct from `FloatingSubNav`)                            | ⬜     | Phase 1 (`fadeVariants`)                                                 |
-| 4     | SVG animation primitives — `FloatLine`, `FloatTriangle`, `FloatDot`, `CircleDot`, `PlusSign` (internal, not exported) | ⬜     | Phase 1                                                                  |
-| 5     | `HeroBackground` — radial gradient backdrop + animated SVG grid layer                                                 | ⬜     | Phases 1, 4                                                              |
-| 6     | `FloatingIconCloud` — floating icon images with seeded pseudo-random positioning                                      | ⬜     | None                                                                     |
-| 7     | `InteractiveHeroLogo` — the most valuable single component in this plan                                               | ⬜     | Move `useImagePreloader` from alexrebula utils → giselle-mui utils first |
+| Phase | Component / Export                                                                                                    | Status                                                                                                 | Blocker                                |                                                                          |
+| ----- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------- | ------------------------------------------------------------------------ |
+| 1     | `fadeVariants`, `scaleVariants`, `zoomVariants` — motion variant factory utilities                                    | ⬜                                                                                                      | None (start in parallel with anything) |                                                                          |
+| 2     | [[section-title-animated/README                                                                                       \| `SectionTitle`]] + `SectionCaption` — **animated `/motion` variants** (static base shipped in Phase E) | ⬜                                      | Phase 1 (`fadeVariants`)                                                 |
+| 3     | [[floating-side-nav/README                                                                                            \| `FloatingSideNav`]] — vertically stacked left-side pill nav (distinct from `FloatingSubNav`)           | ⬜                                      | Phase 1 (`fadeVariants`)                                                 |
+| 4     | SVG animation primitives — `FloatLine`, `FloatTriangle`, `FloatDot`, `CircleDot`, `PlusSign` (internal, not exported) | ⬜                                                                                                      | Phase 1                                |                                                                          |
+| 5     | [[hero-background/README                                                                                              \| `HeroBackground`]] — radial gradient backdrop + animated SVG grid layer                                | ⬜                                      | Phases 1, 4                                                              |
+| 6     | [[floating-icon-cloud/README                                                                                          \| `FloatingIconCloud`]] — floating icon images with seeded pseudo-random positioning                     | ⬜                                      | None                                                                     |
+| 7     | [[interactive-hero-logo/README                                                                                        \| `InteractiveHeroLogo`]] — the most valuable single component in this plan                              | ⬜                                      | Move `useImagePreloader` from alexrebula utils → giselle-mui utils first |
 
 ---
 
@@ -255,32 +254,32 @@ sidebar_label: 'Component Inventory'
 
 | Component                                                                             | Status |
 | ------------------------------------------------------------------------------------- | ------ |
-| `ExpenseLineItem` — single expense row: icon + label + amount + optional note         | 🔴     |
-| `ExpenseCategoryGroup` — collapsible group: category chip + list of `ExpenseLineItem` | 🔴     |
+| [[expense-line-item/README\|ExpenseLineItem]] — single expense row: icon + label + amount + optional note | 🔴 |
+| [[expense-category-group/README\|ExpenseCategoryGroup]] — collapsible group: category chip + list of `ExpenseLineItem` | 🔴 |
 
 ### Group B — Period cards (main bundle)
 
 | Component                                                                             | Status |
 | ------------------------------------------------------------------------------------- | ------ |
-| `PeriodSummaryCard` — summary card for one period: title + total + progress bar + CTA | 🔴     |
+| [[period-summary/README\|PeriodSummaryCard]] — summary card for one period: title + total + progress bar + CTA | 🔴 |
 
 ### Group C — Motion components (`/motion` subpath)
 
 | Component                                                                                     | Status |
 | --------------------------------------------------------------------------------------------- | ------ |
-| `PeriodDetailSheet` — slide-in detail sheet for a single period (framer-motion)               | 🔴     |
-| `HorizontalScrollRail` — smooth horizontal carousel rail (framer-motion drag)                 | 🔴     |
-| `ExpandingPeriodStrip` — compact strip that expands on click (framer-motion layout animation) | 🔴     |
-| `BudgetSummaryDrawer` — bottom/side drawer with totals + category breakdown (framer-motion)   | 🔴     |
+| [[period-detail-sheet/README\|PeriodDetailSheet]] — slide-in detail sheet for a single period (framer-motion) | 🔴 |
+| [[horizontal-scroll-rail/README\|HorizontalScrollRail]] — smooth horizontal carousel rail (framer-motion drag) | 🔴 |
+| [[expanding-period-strip/README\|ExpandingPeriodStrip]] — compact strip that expands on click (framer-motion layout animation) | 🔴 |
+| [[budget-summary-drawer/README\|BudgetSummaryDrawer]] — bottom/side drawer with totals + category breakdown (framer-motion) | 🔴 |
 
 ### Group D — View containers (`/motion` subpath)
 
 | Component                                                                                     | Status |
 | --------------------------------------------------------------------------------------------- | ------ |
-| `BreakdownCarouselView` — horizontal carousel of `PeriodSummaryCard` + `PeriodDetailSheet`    | 🔴     |
-| `BreakdownExpandingView` — expanding strip view using `ExpandingPeriodStrip`                  | 🔴     |
-| `BreakdownStackedView` — vertical stacked accordion view (MUI `Accordion`)                    | 🔴     |
-| `WeeklyBreakdownPage` — top-level page: view switcher + selected view + `BudgetSummaryDrawer` | 🔴     |
+| [[breakdown-carousel-view/README\|BreakdownCarouselView]] — horizontal carousel of `PeriodSummaryCard` + `PeriodDetailSheet` | 🔴 |
+| [[breakdown-expanding-view/README\|BreakdownExpandingView]] — expanding strip view using `ExpandingPeriodStrip` | 🔴 |
+| [[breakdown-stacked-view/README\|BreakdownStackedView]] — vertical stacked accordion view (MUI `Accordion`) | 🔴 |
+| [[weekly-breakdown-page/README\|WeeklyBreakdownPage]] — top-level page: view switcher + selected view + `BudgetSummaryDrawer` | 🔴 |
 
 ---
 
@@ -312,11 +311,11 @@ sidebar_label: 'Component Inventory'
 
 #### `PhaseCard` visual fixes
 
-| Item                                                                                                                                                          | Status |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| Fix card hover elevation too low — shadow delta on hover is barely perceptible; increase it; expanded card retains hover-level elevation (does not snap back) | ⬜     |
-| Fix expanded card sibling blur — blur must not apply to the expanded card itself; expanded card holds hover elevation; blur applies to siblings only          | ⬜     |
-| WCAG: expanded bullet text — assess `text.secondary` at body size against paper background; fix if below AA (4.5:1)                                           | ⬜     |
+| Item                                                                                          | Status |
+| --------------------------------------------------------------------------------------------- | ------ |
+| Fix card hover elevation too low — shadow delta on hover is barely perceptible; increase it; expanded card retains hover-level elevation (does not snap back) | ⬜ |
+| Fix expanded card sibling blur — blur must not apply to the expanded card itself; expanded card holds hover elevation; blur applies to siblings only          | ⬜ |
+| WCAG: expanded bullet text — assess `text.secondary` at body size against paper background; fix if below AA (4.5:1)                                           | ⬜ |
 
 #### Storybook
 
