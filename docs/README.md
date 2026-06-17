@@ -16,8 +16,8 @@ Every component in this library exists because it solves a recurring problem tha
 - **[Component inventory](./component-inventory.md)** — Master list of all components across every phase: build status, location, and subpath.
 - **[Component compliance](./component-compliance.md)** — 3-tier README / JSDoc / Story JSDoc compliance report.
 - **[Roadmap](./roadmap.mdx)** — Phase A → H milestone timeline with detail.
-- **[Scaffold plan](./scaffold-plan.md)** — Library skeleton structure and strategy.
-- **[Standalone gap analysis](./standalone-gap-analysis.md)** — What a blank Next.js project needs from this library.
+- **[Scaffold plan](./scaffold-plan.md)** — Library skeleton structure and strategy. *(see also [Archive](#archive))*
+- **[Standalone gap analysis](./standalone-gap-analysis.md)** — What a blank Next.js project needs from this library. *(see also [Archive](#archive))*
 
 ### Standards and conventions
 
@@ -41,7 +41,22 @@ Every component in this library exists because it solves a recurring problem tha
 - **[Internal sync](./internal-sync.md)** — Versioned baseline digest recording the last clean compliance state.
 - **[PR messages index](./pr-messages/README.md)** — Historical PR descriptions and review checklists, grouped by PR number.
 - **[PR audits](./pr-audits/)** — Historical PR comment audits.
+  - [pr-25-comment-audit.md](./pr-audits/pr-25-comment-audit.md)
 - **[Incidents](./incidents/)** — Post-mortems: convention loss, regressions, and cleanup incidents.
+  - [cleanup-day-8-may-2026.md](./incidents/cleanup-day-8-may-2026.md)
+  - [model-handoff-convention-loss-may-2026.md](./incidents/model-handoff-convention-loss-may-2026.md)
+  - [timeline-hover-regression-may-2026.md](./incidents/timeline-hover-regression-may-2026.md)
+
+## Archive
+
+These are historical planning documents — not current constraints.
+
+- **[Scaffold plan](./scaffold-plan.md)** — Library skeleton structure and strategy.
+- **[Standalone gap analysis](./standalone-gap-analysis.md)** — What a blank Next.js project needs from this library.
+- **[PR messages](./pr-messages/README.md)** — Historical PR descriptions and review checklists, grouped by PR number.
+- **[PR audits](./pr-audits/)** — Historical PR comment audits (also linked in Tracking for discoverability).
+  - [pr-25-comment-audit.md](./pr-audits/pr-25-comment-audit.md)
+- **[Phase card developer notes](./components/timeline/two-column/phase-card/developer-notes/)** — Collapsed-state content inventory and troubleshooting notes.
 
 ## Install
 
