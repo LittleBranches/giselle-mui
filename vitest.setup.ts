@@ -7,6 +7,8 @@
 // Node.js 22+ adds an experimental globalThis.localStorage that vitest does not
 // override with jsdom's version (absent from vitest's KEYS allowlist). Redirect it
 // to the jsdom window so tests can use localStorage/sessionStorage normally.
+// globalThis.jsdom is set unconditionally by vitest's jsdom environment setup
+// (populateGlobal step in vitest/dist/chunks) — not public API, but stable across v3–4.
 type JsdomGlobal = typeof globalThis & { jsdom?: { window: Window & typeof globalThis } };
 const _jsdom = (globalThis as JsdomGlobal).jsdom;
 if (_jsdom) {
@@ -14,6 +16,7 @@ if (_jsdom) {
     get: () => _jsdom.window.localStorage,
     configurable: true,
   });
+  // sessionStorage shares the same root cause — patched pre-emptively.
   Object.defineProperty(globalThis, 'sessionStorage', {
     get: () => _jsdom.window.sessionStorage,
     configurable: true,
