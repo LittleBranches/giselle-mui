@@ -132,7 +132,7 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-unused-imports": "^4.0.0",
     "framer-motion": "^12.38.0",
-    "globals": "^15.0.0",
+    "globals": "^17.6.0",
     "jsdom": "^25.0.0",
     "prettier": "^3.0.0",
     "react": "^19.2.6",
