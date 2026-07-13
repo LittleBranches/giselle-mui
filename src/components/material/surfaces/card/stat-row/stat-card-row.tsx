@@ -44,7 +44,7 @@ export type { StatCardRowProps } from './types';
  * />
  * ```
  *
- * **Quality status (13 May 2026):** DoD — in progress
+ * **Quality status (July 2026):** DoD — complete
  */
 export function StatCardRow({ items, renderChart, sx, ...other }: StatCardRowProps) {
   return (
