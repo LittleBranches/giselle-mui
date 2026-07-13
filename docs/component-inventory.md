@@ -7,7 +7,7 @@ sidebar_label: 'Component Inventory'
 
 > Master inventory across all planning docs. Single source of truth for "what exists, what is planned, and what phase it belongs to."
 >
-> _Last updated: 16 May 2026_
+> _Last updated: 2026-07-08 — fixed stale entries: StatusLabel, TechIconStrip, AnimatedGradientText now correctly shown as shipped_
 >
 > **Source docs:** `roadmap.mdx`, `standalone-gap-analysis.md`, `components/dashboard-components-plan.md`, `components/home-components-extraction-plan.md`, `components/settings/settings-provider-plan.md`, `components/trip-planner-components-plan.md`
 
@@ -45,8 +45,11 @@ sidebar_label: 'Component Inventory'
 | [[task-list/README\|TaskList]]                                                                                         | `components/timeline/task-list/`        | main          | E     | Shipped 13 May 2026                                                |
 | [[stat-row/README\|StatCardRow]]                                                                                       | `components/card/stat-row/`             | main          | H     | Shipped 13 May 2026                                                |
 | [[faq/accordion/README\|FaqSection]] (`FaqAccordion` deprecated alias)                                                 | `components/faq/accordion/`             | `/motion`     | E     | Shipped 13 May 2026                                                |
+| [[animated-gradient/README\|AnimatedGradientText]]                                                                     | `material/data-display/animated-gradient/` | main       | I     | Shipped; fully compliant                                           |
+| [[status-label/README\|StatusLabel]]                                                                                   | `material/data-display/status-label/`   | main          | —     | Shipped stub — missing README                                      |
+| [[tech-strip/README\|TechIconStrip]]                                                                                   | `material/data-display/icon/tech-strip/` | main         | —     | Shipped; fully compliant                                           |
 
-**Shipped count: ~40 named exports across main bundle, `/charts`, `/motion`, and `/utils` subpaths**
+**Shipped count: ~43 named exports across main bundle, `/charts`, `/motion`, and `/utils` subpaths**
 ---
 
 ## Quality status — shipped components
@@ -432,10 +435,10 @@ src/components/
       icon/
         giselle/                         ✅                — GiselleIcon
         action-bar/                      ✅                — IconActionBar
-        tech-strip/                      ⬜ planned        — TechStrip
+        tech-strip/                      ✅               — TechIconStrip
       animated-gradient/                 ✅ Phase E        — AnimatedGradientText
       task-list/                         ✅ Phase E        — TaskList
-      status-label/                      ⬜ Phase J T1 fb  — StatusLabel (task status badge: open/in-progress/in-review/done)
+      status-label/                      ✅               — StatusLabel (task status badge: open/in-progress/in-review/done) — shipped stub (missing README)
       avatar-row/                        ⬜ Phase J T2     — AvatarRow
       data-table/                        🔴 Phase H G3 fb  — DataTable (task table in first-branch)
       activity-feed-list/                🔴 Phase H G3     — ActivityFeedList
