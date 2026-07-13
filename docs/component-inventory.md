@@ -45,8 +45,8 @@ sidebar_label: 'Component Inventory'
 | [[task-list/README\|TaskList]]                                                                                         | `components/timeline/task-list/`        | main          | E     | Shipped 13 May 2026                                                |
 | [[stat-row/README\|StatCardRow]]                                                                                       | `components/card/stat-row/`             | main          | H     | Shipped 13 May 2026                                                |
 | [[faq/accordion/README\|FaqSection]] (`FaqAccordion` deprecated alias)                                                 | `components/faq/accordion/`             | `/motion`     | E     | Shipped 13 May 2026                                                |
-| [[animated-gradient/README\|AnimatedGradientText]]                                                                     | `material/data-display/animated-gradient/` | main       | I     | Shipped; fully compliant                                           |
-| [[status-label/README\|StatusLabel]]                                                                                   | `material/data-display/status-label/`   | main          | —     | Shipped stub — missing README                                      |
+| [[animated-gradient/README\|AnimatedGradientText]]                                                                     | `material/data-display/animated-gradient/` | main       | E     | Shipped; fully compliant                                           |
+| [[status-label/README\|StatusLabel]]                                                                                   | `material/data-display/status-label/`   | main          | —     | Shipped; fully compliant                                           |
 | [[tech-strip/README\|TechIconStrip]]                                                                                   | `material/data-display/icon/tech-strip/` | main         | —     | Shipped; fully compliant                                           |
 
 **Shipped count: ~43 named exports across main bundle, `/charts`, `/motion`, and `/utils` subpaths**
@@ -438,7 +438,7 @@ src/components/
         tech-strip/                      ✅               — TechIconStrip
       animated-gradient/                 ✅ Phase E        — AnimatedGradientText
       task-list/                         ✅ Phase E        — TaskList
-      status-label/                      ✅               — StatusLabel (task status badge: open/in-progress/in-review/done) — shipped stub (missing README)
+      status-label/                      ✅               — StatusLabel (task status badge: open/in-progress/in-review/done)
       avatar-row/                        ⬜ Phase J T2     — AvatarRow
       data-table/                        🔴 Phase H G3 fb  — DataTable (task table in first-branch)
       activity-feed-list/                🔴 Phase H G3     — ActivityFeedList

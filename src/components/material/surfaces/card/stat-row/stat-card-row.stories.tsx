@@ -112,7 +112,7 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          'Four stat cards in a responsive `Grid2` row. No sparklines — `renderChart` omitted. Shows the layout contract at a glance.',
+          'Four stat cards in a responsive `Grid` row. No sparklines — `renderChart` omitted. Shows the layout contract at a glance.',
       },
     },
   },

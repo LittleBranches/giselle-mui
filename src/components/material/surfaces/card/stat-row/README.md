@@ -2,7 +2,7 @@
 
 ## Why it exists
 
-Dashboards always have a top row of KPI stat cards. Without a layout wrapper, every consuming app reimplements the same `Grid2` responsive breakpoints (`xs=12 sm=6 md=3`) and the same `StatCardItem[]` → `StatCard` mapping. `StatCardRow` encodes that once so no consumer has to rediscover it.
+Dashboards always have a top row of KPI stat cards. Without a layout wrapper, every consuming app reimplements the same `Grid` responsive breakpoints (`xs=12 sm=6 md=3`) and the same `StatCardItem[]` → `StatCard` mapping. `StatCardRow` encodes that once so no consumer has to rediscover it.
 
 ## Why it belongs here
 
@@ -34,7 +34,7 @@ Item labels are used as React keys. Labels must be unique within a row. Duplicat
 ## File structure
 
 ```
-src/components/card/stat-row/
+src/components/material/surfaces/card/stat-row/
   stat-card-row.tsx          — composition layer
   types.ts                   — StatCardRowProps
   stat-card-row.test.ts      — Vitest unit tests
