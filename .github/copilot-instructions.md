@@ -189,7 +189,7 @@ The `timeline/two-column/` folder is the **reference implementation** for comple
 It demonstrates the full types/utils/styles/const/sub-component split:
 
 ```
-src/components/section/timeline/two-column/
+src/components/lab/timeline/two-column/
   two-column.tsx                       — pure JSX composition only (no types, no logic functions)
   types.ts                             — all exported + internal TypeScript interfaces
   two-column.utils.ts                  — all pure logic functions (no JSX return); fully unit-testable
@@ -364,7 +364,7 @@ At the start of every new Copilot session in this package, read these files:
 | `QuoteCard`                                          | `src/components/material/surfaces/card/quote/`          | ✅ Shipped + tested                        |
 | `SelectableCard`                                     | `src/components/material/surfaces/card/selectable/`     | ✅ Shipped + tested                        |
 | `createIconRegistrar`                                | `src/utils/icon/create-icon-registrar/`                 | ✅ Shipped + tested                        |
-| `TimelineTwoColumn`                                  | `src/components/section/timeline/two-column/`           | ✅ Shipped + tested                        |
+| `TimelineTwoColumn`                                  | `src/components/lab/timeline/two-column/`               | ✅ Shipped + tested                        |
 | `IconActionBar`                                      | `src/components/material/data-display/icon/action-bar/` | ✅ Shipped + tested                        |
 | `channelAlpha`, `hexToChannel`, `pxToRem`, `remToPx` | `src/utils/theme/theme-utils/`                          | ✅ Shipped + tested (Phase A — 4 May 2026) |
 | `giselleTheme`, palette constants                    | `src/utils/theme/preset/`                               | ✅ Shipped + tested (Phase B — 5 May 2026) |
@@ -377,9 +377,9 @@ These types must be defined here and imported from `@littlebranches/giselle-mui`
 
 | Type                   | Location                                              | Purpose                                                                            |
 | ---------------------- | ----------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `TimelineSidebar`      | `src/components/section/timeline/two-column/types.ts` | Sidebar heading/body/chip for a timeline section page                              |
-| `TimelineColumnLabels` | `src/components/section/timeline/two-column/types.ts` | Column header labels (`left`, `right`, optional subtitles)                         |
-| `TimelineSectionData`  | `src/components/section/timeline/two-column/types.ts` | Aggregated `{ sidebar, columnLabels, phases }` — pass directly to a section view   |
+| `TimelineSidebar`      | `src/components/lab/timeline/two-column/types.ts`     | Sidebar heading/body/chip for a timeline section page                              |
+| `TimelineColumnLabels` | `src/components/lab/timeline/two-column/types.ts`     | Column header labels (`left`, `right`, optional subtitles)                         |
+| `TimelineSectionData`  | `src/components/lab/timeline/two-column/types.ts`     | Aggregated `{ sidebar, columnLabels, phases }` — pass directly to a section view   |
 | `StatCardItem`         | `src/components/material/surfaces/card/stat/types.ts` | Data-layer shape for one `StatCard` entry (uses `iconId: string`, not `ReactNode`) |
 
 **Why this matters:** Types defined in data files are invisible to consumers of this library.
