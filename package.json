@@ -63,6 +63,8 @@
     "check:verify:fast": "node scripts/quality-gate.js --verify --no-storybook",
     "check:verify:smart": "node scripts/quality-gate.js --verify --smart --storybook",
     "check:verify:full": "node scripts/quality-gate.js --verify --storybook",
+    "changeset": "changeset",
+    "release": "npm run build && changeset publish",
     "clean": "rm -rf dist storybook-static",
     "postinstall": "node --input-type=module -e \"import('./scripts/setup-hooks.js').catch((error)=>{const msg=String(error?.message??'');const isMissingSetupHooks=error?.code==='ERR_MODULE_NOT_FOUND'&&(msg.includes('scripts/setup-hooks.js')||msg.includes('scripts\\\\setup-hooks.js'));if(!isMissingSetupHooks){console.error('Failed to run scripts/setup-hooks.js during postinstall.');console.error(error);process.exitCode=1;}})\""
   },
@@ -113,6 +115,8 @@
     }
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.2",
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
     "@eslint/js": "^9.0.0",

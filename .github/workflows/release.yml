@@ -1,0 +1,90 @@
+name: Release
+
+# Runs on every push to main. Changesets' standard flow:
+#   1. If there are pending changesets (files in .changeset/, added by PRs),
+#      this opens or updates a "Version Packages" pull request that applies
+#      the version bump(s) and changelog entries.
+#   2. Once that PR is reviewed and merged, this workflow runs again on the
+#      resulting push to main. With no changesets left pending, `changesets/action`
+#      instead runs the publish script below, which builds and publishes the
+#      new version(s) to the public npm registry.
+#
+# Required GitHub repository secret (Settings → Secrets and variables → Actions):
+#   NPM_TOKEN — an npm access token with publish rights for
+#               @littlebranches/giselle-mui. Use an npm "Automation" token
+#               (bypasses 2FA/OTP) or a granular access token scoped to this
+#               package with "Read and write" permission.
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  # ── Job 1: Quality gate ────────────────────────────────────────────────────
+  # Mirrors ci.yml — publishing is blocked entirely if this fails.
+  quality-gate:
+    name: Quality gate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '26'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run quality gate (no Storybook)
+        run: npm run check:verify:fast
+
+  # ── Job 2: Version or Publish ───────────────────────────────────────────────
+  # changesets/action inspects .changeset/ on every run:
+  #   - Pending changesets exist  -> opens/updates the "Version Packages" PR.
+  #   - No pending changesets     -> runs `publish` (npm run release), which
+  #                                  builds and `changeset publish`es any
+  #                                  package whose version isn't on npm yet.
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [quality-gate]
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # changesets/action needs full history to diff changesets correctly.
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '26'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create Release Pull Request or publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: npm run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
