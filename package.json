@@ -64,16 +64,19 @@
     "check:verify:smart": "node scripts/quality-gate.js --verify --smart --storybook",
     "check:verify:full": "node scripts/quality-gate.js --verify --storybook",
     "clean": "rm -rf dist storybook-static",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "changeset publish",
     "postinstall": "node --input-type=module -e \"import('./scripts/setup-hooks.js').catch((error)=>{const msg=String(error?.message??'');const isMissingSetupHooks=error?.code==='ERR_MODULE_NOT_FOUND'&&(msg.includes('scripts/setup-hooks.js')||msg.includes('scripts\\\\setup-hooks.js'));if(!isMissingSetupHooks){console.error('Failed to run scripts/setup-hooks.js during postinstall.');console.error(error);process.exitCode=1;}})\""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlexRebula/giselle-mui.git"
+    "url": "git+https://github.com/LittleBranches/giselle-mui.git"
   },
   "bugs": {
-    "url": "https://github.com/AlexRebula/giselle-mui/issues"
+    "url": "https://github.com/LittleBranches/giselle-mui/issues"
   },
-  "homepage": "https://github.com/AlexRebula/giselle-mui#readme",
+  "homepage": "https://github.com/LittleBranches/giselle-mui#readme",
   "engines": {
     "node": "^20.19.0 || ^22.13.0 || >=24.0.0"
   },
@@ -113,6 +116,8 @@
     }
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.2",
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
     "@eslint/js": "^9.0.0",
