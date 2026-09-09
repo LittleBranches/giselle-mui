@@ -1,0 +1,66 @@
+name: Release
+
+# Standard Changesets release-PR flow:
+#   1. On every push to main, if there are pending changesets, this workflow
+#      opens/updates a "Version Packages" PR that bumps versions and rolls
+#      up changelogs (via `changeset version`).
+#   2. When a human merges that PR, this workflow runs again on the
+#      resulting push to main. This time there are no pending changesets,
+#      so `changesets/action` instead runs the publish command
+#      (`npm run release`, i.e. `changeset publish`) and pushes the new
+#      version's git tag.
+#
+# Required GitHub repository secret (Settings → Secrets → Actions):
+#   NPM_TOKEN — an npm automation/publish token with publish rights on the
+#               @littlebranches org, used to authenticate `npm publish`.
+#               As of this workflow's introduction, no such secret exists
+#               yet in this repo — it must be created before the release PR
+#               can actually publish. See docs/release-process.md.
+
+on:
+  push:
+    branches: [main]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '26'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run quality gate
+        run: npm run check:verify:fast
+
+      - name: Create release PR or publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: npm run release
+          version: npm run version
+          commit: 'chore: version packages'
+          title: 'chore: version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
