@@ -15,14 +15,13 @@
  * (in this same folder) is what wires this module's output into
  * docs/component-compliance.md's actual table.
  *
- * Ported from giselle-mui-poc's scripts/dod-docs/presence-fact-scanner/
- * presence-fact-scanner.ts — logic unchanged, adapted only to
- * this repo's plain-JS script convention (no separate .types.ts file). This
- * repo does have its own `docs/component-inventory.md` (DoD/best-practices
- * scores), but unlike poc's version it has no per-criterion checkmark
- * columns for this module to stay decoupled from — see
- * `update-component-compliance.js`'s own header comment for how the two
- * files divide responsibility in this repo.
+ * Ported from an internal sibling tool's presence-scanning logic — the
+ * mechanical checks are unchanged, adapted only to this repo's plain-JS
+ * script convention (no separate .types.ts file). This repo does have its
+ * own `docs/component-inventory.md` (DoD/best-practices scores), but it has
+ * no per-criterion checkmark columns for this module to stay decoupled
+ * from — see `update-component-compliance.js`'s own header comment for how
+ * the two files divide responsibility in this repo.
  *
  * Usage (optional CLI, for manual spot-checking — the importable
  * `scanComponentPresence` function below is the actual deliverable):
@@ -102,8 +101,11 @@ function readTextSafe(filePath) {
 
 /** Built excludes `.stories.tsx`, `.test.tsx`, and `.defaults.tsx` — matching
  * docs/component-compliance.md's own "Built" column definition verbatim.
- * @param {string} name */
-function isBuiltComponentFile(name) {
+ * Exported so `update-component-compliance.js`'s own folder-discovery logic
+ * (which needs the identical "does this folder own a built component file"
+ * check) shares this one definition instead of a second copy that could
+ * quietly drift from it. @param {string} name */
+export function isBuiltComponentFile(name) {
   return (
     name.endsWith('.tsx') &&
     !name.endsWith('.stories.tsx') &&

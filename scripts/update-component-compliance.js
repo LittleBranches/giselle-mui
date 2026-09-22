@@ -11,39 +11,36 @@
  * be a manual, easy-to-forget checklist item (see that step for context on
  * why it went unmaintained before).
  *
- * This is the giselle-mui counterpart to giselle-mui-poc's
- * scripts/dod-docs/merge-component-docs/merge-component-docs.ts — NOT a
- * port of that file. That script is tightly coupled to poc's own
- * docs/component-inventory.md shape: 27 hand-audited `DOD_CRITERIA` columns,
- * a provisional-DoD-score relabeling step, and a `hasRealAudit()` check that
- * decides whether an entire row's hand-audited fields must be left
- * untouched. docs/component-compliance.md has none of that — it has no
- * scored or per-criterion columns at all, so there is nothing for a
- * `hasRealAudit()` equivalent to gate. (This repo does have its own,
- * separate `docs/component-inventory.md` with DoD/best-practices scores —
- * see that file's own intro for how it divides responsibility from
+ * This is the giselle-mui-specific counterpart to an internal sibling
+ * tool's own merge/wiring script — NOT a port of that script. That tool's
+ * script is tightly coupled to a different, more elaborate compliance-table
+ * shape (dozens of hand-audited per-criterion columns, a provisional-score
+ * relabeling step, and a check that decides whether an entire row's
+ * hand-audited fields must be left untouched). docs/component-compliance.md
+ * has none of that — it has no scored or per-criterion columns at all, so
+ * there is nothing for that kind of check to gate. (This repo does have its
+ * own, separate `docs/component-inventory.md` with DoD/best-practices
+ * scores — see that file's own intro for how it divides responsibility from
  * component-compliance.md. This script never reads or writes it.) The one
- * column here that IS
- * hand-maintained free text is **Notes** (e.g. "unbuilt scaffold", "no
- * stories", "shipped, no README; no stories") — this script's own
- * equivalent of poc's hand-audited-field preservation is simpler: every
- * existing row's Notes cell is always carried forward verbatim, keyed by
- * folder path, and never regenerated from a formula. Component and Layer
+ * column here that IS hand-maintained free text is **Notes** (e.g. "unbuilt
+ * scaffold", "no stories", "shipped, no README; no stories") — this
+ * script's own equivalent of preserving hand-audited fields is simpler:
+ * every existing row's Notes cell is always carried forward verbatim, keyed
+ * by folder path, and never regenerated from a formula. Component and Layer
  * are also derived fresh from the folder path every run (Layer is just the
  * folder's first path segment) since they're always mechanically
  * recomputable and never hand-edited independently of the folder itself.
  *
  * Folder tracking mirrors this doc's own stated rule (see its intro banner):
  * "Every folder that owns a README.md, types.ts, roadmap.md, or a component
- * .tsx gets a row." Unlike poc's `discoverComponentFolders`, this does NOT
- * exclude `motion/variants/*` — giselle-mui's own table already tracks
- * `motion/variants` rows (poc's table does not), so porting that exclusion
- * as-is would silently drop real rows. It DOES still exclude `__fixtures__/`
- * folders (Storybook/demo fixture assets — e.g.
+ * .tsx gets a row." This does NOT exclude `motion/variants/*` — giselle-mui's
+ * own table already tracks `motion/variants` rows, so excluding that subtree
+ * would silently drop real rows. It DOES exclude `__fixtures__/` folders
+ * (Storybook/demo fixture assets — e.g.
  * `src/components/section/feature-flow/__fixtures__/`, which holds only
  * decorator components and images used by that section's own stories, not a
- * shipped or planned library component) for the same reason poc excludes
- * them — confirmed against this repo's real tree, not assumed from poc.
+ * shipped or planned library component) — confirmed against this repo's
+ * real tree.
  *
  * A folder tracked in the existing table but no longer found on disk is
  * dropped (it no longer exists to have a row). A folder found on disk with
@@ -56,20 +53,34 @@
  * itself; keeping that scope identical avoids this automation silently
  * doing more than the manual step it replaces.
  *
- * Usage: node scripts/update-component-compliance.js
- *   (no flags — re-running it re-scans presence facts for every tracked
- *   folder against the real disk tree; existing Notes text is always kept)
+ * Usage: node scripts/update-component-compliance.js [--help]
+ *   (no flags needed for a normal run — re-running it re-scans presence
+ *   facts for every tracked folder against the real disk tree; existing
+ *   Notes text is always kept)
  */
 
 import { readFileSync, writeFileSync, readdirSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { scanComponentPresence } from './presence-fact-scanner.js';
+import { parseArgs } from 'node:util';
+import { scanComponentPresence, isBuiltComponentFile } from './presence-fact-scanner.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(import.meta.dirname, '..');
 const COMPLIANCE_PATH = path.join(REPO_ROOT, 'docs/component-compliance.md');
 const COMPONENTS_ROOT = path.join(REPO_ROOT, 'src/components');
+
+const USAGE = `Usage: node scripts/update-component-compliance.js [--help]
+
+Re-scans every tracked folder under src/components/ and rewrites
+docs/component-compliance.md's Built / README / JSDoc / Story JSDoc /
+Roadmap / Roadmap done / Timeline columns from the real, current disk
+state. Each row's own hand-written Notes cell is preserved verbatim. Does
+not touch the "## Totals" counts or the "Last full regen" banner — update
+those by hand if this run changed the tracked folder count.
+
+  --help   Print this usage and exit 0.
+`;
 const ROADMAP_DOC_PATH = path.join(REPO_ROOT, 'docs/roadmap.md');
 
 const TABLE_HEADER_LABELS = [
@@ -166,20 +177,12 @@ export function parseComplianceTable(markdown) {
 // Folder discovery — the only part of this module (besides main()) that
 // touches disk.
 
-/** @param {string} name */
-function isBuiltComponentFileName(name) {
-  return (
-    name.endsWith('.tsx') &&
-    !name.endsWith('.stories.tsx') &&
-    !name.endsWith('.test.tsx') &&
-    !name.endsWith('.defaults.tsx')
-  );
-}
-
 /**
  * Mirrors docs/component-compliance.md's own stated tracking rule verbatim:
  * a folder gets a row if it owns a README.md, types.ts, roadmap.md, or a
- * component .tsx of its own. @param {{ name: string; isDirectory: boolean }[]} entries
+ * component .tsx of its own. Reuses `isBuiltComponentFile` from
+ * ./presence-fact-scanner.js — the same "built" definition, one source of
+ * truth. @param {{ name: string; isDirectory: boolean }[]} entries
  */
 export function isTrackedComponentFolder(entries) {
   const files = entries.filter((e) => !e.isDirectory).map((e) => e.name);
@@ -187,7 +190,7 @@ export function isTrackedComponentFolder(entries) {
     files.includes('README.md') ||
     files.includes('types.ts') ||
     files.includes('roadmap.md') ||
-    files.some(isBuiltComponentFileName)
+    files.some(isBuiltComponentFile)
   );
 }
 
@@ -316,6 +319,16 @@ function loadFile(filePath) {
 }
 
 async function main() {
+  const { values } = parseArgs({
+    args: process.argv.slice(2),
+    options: { help: { type: 'boolean', default: false } },
+  });
+
+  if (values.help) {
+    process.stdout.write(USAGE);
+    return 0;
+  }
+
   const complianceMarkdown = loadFile(COMPLIANCE_PATH);
   const roadmapDocText = loadFile(ROADMAP_DOC_PATH);
 
