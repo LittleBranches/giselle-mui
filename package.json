@@ -63,6 +63,7 @@
     "check:verify:fast": "node scripts/quality-gate.js --verify --no-storybook",
     "check:verify:smart": "node scripts/quality-gate.js --verify --smart --storybook",
     "check:verify:full": "node scripts/quality-gate.js --verify --storybook",
+    "compliance:update": "node scripts/update-component-compliance.js",
     "clean": "rm -rf dist storybook-static",
     "changeset": "changeset",
     "version": "changeset version",

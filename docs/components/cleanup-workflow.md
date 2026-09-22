@@ -313,21 +313,29 @@ Use `DoD (Scenario A)` and `n/12` for sub-components.
 Step 14 records quality status _inside_ the component's own files. It does not, by
 itself, keep `docs/component-compliance.md` (the repo-wide README/JSDoc/Story JSDoc/
 Roadmap compliance table, linked from `docs/README.md` and `AGENTS.md` §2) in sync —
-that required a separate manual step which had never been written down, so the table
-went unmaintained: it was last regenerated 2026-06-14 and had no row at all for
+that used to require a separate manual step which had never been written down, so the
+table went unmaintained: it was last regenerated 2026-06-14 and had no row at all for
 `FeatureFlowSection` or any of its sub-components, despite them shipping weeks later.
 
-Whenever a component is created, or an existing component's README/roadmap/stories/
-`ref`-forwarding compliance changes:
+This is now automated. Whenever a component is created, or an existing
+component's README/roadmap/stories/`ref`-forwarding compliance changes:
 
-- [ ] Add or update that component's row in `docs/component-compliance.md` (same layer
-      grouping as its folder; sub-components get their own row, noted as a sub-component
-      of their parent in the Notes column).
-- [ ] If the component doesn't yet have README/roadmap/stories at all (a known,
-      deliberately-deferred gap — e.g. a sub-component scoped out of the current PR),
-      record that honestly with ❌ in the relevant columns and a Notes entry explaining
-      why, rather than omitting the row. A missing row reads as "doesn't exist yet," not
-      "exists and is non-compliant" — the two need different follow-up.
+- [ ] Run `npm run compliance:update` from the repo root. It re-scans every tracked
+      folder under `src/components/` (`scripts/presence-fact-scanner.js` /
+      `scripts/update-component-compliance.js`) and rewrites `docs/component-compliance.md`'s
+      Built/README/JSDoc/Story JSDoc/Roadmap/Roadmap done/Timeline columns from the real,
+      current disk state — including for components other than the one you're cleaning up,
+      since it re-syncs the whole table each run. Each row's own hand-written Notes cell
+      (e.g. "unbuilt scaffold", "no stories") is preserved verbatim; only the mechanical
+      presence columns are refreshed.
+- [ ] Review the diff. If the component doesn't yet have README/roadmap/stories at all (a
+      known, deliberately-deferred gap — e.g. a sub-component scoped out of the current
+      PR), the script already records that honestly with ❌ in the relevant columns; add
+      a Notes entry by hand explaining why, rather than leaving it unexplained. A missing
+      row reads as "doesn't exist yet," not "exists and is non-compliant" — the two need
+      different follow-up, which is why every tracked folder always gets a row.
+- [ ] The script does not update the `## Totals` counts or the `_Last full regen_` banner
+      above the table — update those by hand if this run changed the tracked folder count.
 
 ---
 
