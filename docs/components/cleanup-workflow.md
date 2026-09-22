@@ -227,7 +227,7 @@ Update `README.md` with:
 
 ### Step 10b — Component roadmap
 
-The `roadmap.md` template and its rules are canonicalized in [`oss-quality-standards` `documentation-strategy.md` § "Component folder roadmap"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/documentation-strategy.md#component-folder-roadmap) — use that template shape exactly (`Status` / `Open improvements` / `Known gaps` / `Completed`, the `⬜`/`🔄`/`✅` status vocabulary, the `> Last updated:` maintenance rule, the zero-personal-data rule).
+The `roadmap.md` template and its rules are canonicalized in [`oss-quality-standards` `documentation-strategy.md` § "Component folder roadmap"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/documentation-strategy.md#component-folder-roadmap) — use that template shape exactly (`Status` / `Open improvements` / `Known gaps` / `Completed`, the `⬜`/`🔄`/`✅` status vocabulary, the `> Last updated:` maintenance rule, the [zero-personal-data rule](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/documentation-strategy.md#zero-personal-data-rule)).
 
 This repo's own deviation from the generic doc: the OSS QS version makes `roadmap.md` optional, created once a component has enough open work to track. In `giselle-mui`, it is **mandatory** — every standalone component folder must contain a `roadmap.md` file, always (create it if it does not exist; update it if it does). Naming is always `roadmap.md`, identical across every component. This repo's own maturity vocabulary for the `Status` line is the four Giselle-ecosystem ripeness labels: `alpha`, `beta`, `stable`, `lts` (the generic doc leaves this vocabulary to each project).
 
