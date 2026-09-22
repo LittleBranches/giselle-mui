@@ -111,18 +111,9 @@ Check every `*.styles.ts` file for sibling pairs. If they share the same shape a
 
 Applies to any component exported from `src/motion-index.ts` (compiled to `dist/motion.js`).
 
-- Move every framer-motion `Variants` object and `Transition` config out of `.tsx` files and into `<component-name>.animations.ts`.
-- Named `Variants` → `export const <name>Variants: Variants = { initial: {...}, animate: {...}, exit: {...} }`.
-- Named `Transition` → `export const <name>Transition: Transition = { duration: X, ease: [...] }`.
-- Export primitive curve/duration values as named constants so they can be referenced in tests and shared across related components:
-  ```ts
-  export const MY_EASING: [number, number, number, number] = [0.4, 0, 0.2, 1];
-  export const MY_DURATION = 0.28;
-  ```
-- Use the named variants API in JSX: `variants={myVariants} initial="initial" animate="animate" exit="exit"` — never inline objects.
-- **`animate={{}}` and `transition={{}}` props on `motion.*` elements are config objects — extract them** to `*.animations.ts` the same way `sx` objects are extracted to `*.styles.ts`. One-property objects (e.g. `animate={{ backgroundPosition: '200% center' }}`) may stay inline only if they are trivially obvious; anything with two or more keys must be extracted.
-- **`style={{}}` on `motion.*` elements — no inline object literals, ever.** See Step 3 for the full rule and the factory pattern for `MotionValue`-based styles.
-- No mock-theme test file is required (animations have no theme dependency), but add at least one smoke assertion in the component's `*.test.ts` if any variant value encodes a non-obvious design decision (e.g. `y` offsets for enter vs. exit differ intentionally).
+Follow the motion-configuration-extraction rule canonicalized in [`oss-quality-standards` `AGENTS.md` §16.2](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/AGENTS.md#162--motion-configuration-extraction) (full guide, the `variants`/`animate`/`transition` thresholds, and the `MotionValue`-factory example for `style`: [`component-configuration-conventions.md`](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/component-configuration-conventions.md#motion-configuration-extraction)). In this repo that means: every `Variants` and `Transition` object, and every `animate`/`transition` config past the one-trivially-obvious-key threshold, moves out of `.tsx` and into `<component-name>.animations.ts`; `style` objects on `motion.*` elements follow the same zero-tolerance rule but live in `<component-name>.styles.ts` per Step 3 (a static object as a module-level constant, a `MotionValue`-based one as a factory function). Export primitive curve/duration values as named constants (e.g. `MY_EASING`, `MY_DURATION`) so they're referenceable from tests and shared across related components.
+
+No mock-theme test file is required (animations have no theme dependency), but add at least one smoke assertion in the component's `*.test.ts` if any variant value encodes a non-obvious design decision (e.g. `y` offsets for enter vs. exit differ intentionally).
 
 ### Step 4 — Utils
 
@@ -131,8 +122,11 @@ Applies to any component exported from `src/motion-index.ts` (compiled to `dist/
 
 ### Step 5 — Sub-components
 
-- Any function that starts with a capital letter and returns JSX must not be defined inline in the parent `.tsx` file.
-- Extract each to its own named subfolder inside the parent folder — never a flat `.tsx` file. Every sub-component gets its own folder, unconditionally, with no size or complexity threshold (mirror `TimelineTwoColumn`'s `milestone-badge/`, `phase-card/`, `phase-warning-popover/`, `spine-connector/`, `timeline-dot/`).
+Apply the unconditional own-folder rule canonicalized in [`oss-quality-standards` `AGENTS.md` §5.6](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/AGENTS.md#56--standalone-vs-sub-component-test) (full rationale: [`component-structure.md`](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/component-structure.md#deciding-whether-a-component-is-standalone-or-a-sub-component)): every sub-component extracted out of a parent `.tsx` must live in its own further-nested subfolder, unconditionally, regardless of size. There is no flat-file fallback, no matter how small or trivial the sub-component looks.
+
+In this repo, apply it as follows:
+
+- Any function that starts with a capital letter and returns JSX must not be defined inline in the parent `.tsx` file — extract it to its own named subfolder (mirror `TimelineTwoColumn`'s `milestone-badge/`, `phase-card/`, `phase-warning-popover/`, `spine-connector/`, `timeline-dot/`).
 - Each sub-component folder gets its own `index.ts` barrel, its own `types.ts` if it has a props type (importing shared types from the parent's `types.ts` where needed), and its own co-located test file. Constants and shared logic that are genuinely parent-scoped stay in the parent's `*.const.ts` / `*.utils.ts`; anything specific to the sub-component moves with it.
 - Give every sub-component `displayName` and, where it wraps a DOM element or MUI component, `React.forwardRef` — see the Scenario A checklist below.
 - Add the sub-component to the parent folder's `index.ts` barrel (re-exporting from the sub-component's own folder).
@@ -157,7 +151,9 @@ The `.tsx` file is the **composition layer only** after the above steps. Verify:
 
 ### Step 6b — API surface consistency (required)
 
-For any standalone component exported from `src/index.ts`, verify its public prop surface is intentionally consistent.
+For any standalone component exported from `src/index.ts`, verify its public prop surface is intentionally consistent with the API contract canonicalized in [`oss-quality-standards` `component-api-contract.md`](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/component-api-contract.md) — specifically [§ "Props interface shape"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/component-api-contract.md#props-interface-shape), [§ "`sx` array-safety rule"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/component-api-contract.md#sx-array-safety-rule), and [§ "`...other` passthrough"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/component-api-contract.md#other-passthrough).
+
+In this repo, verify:
 
 - [ ] If the component is a MUI-root wrapper, its props type extends/omits from the matching MUI root props (`BoxProps`, `PaperProps`, `CardProps`, etc.)
 - [ ] If the component exposes `sx`, root merge is array-safe: `sx={[base, ...(Array.isArray(sx) ? sx : [sx])]}`
@@ -167,7 +163,9 @@ For any standalone component exported from `src/index.ts`, verify its public pro
 
 ### Step 7 — Tests
 
-Review the full `*.test.ts` file:
+Review the full `*.test.ts` file against [`oss-quality-standards` `testing.md`](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/testing.md) — specifically [§ "Test environment"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/testing.md#test-environment) (jsdom directive, why it's needed per-file), [§ "Testing without a full DOM renderer"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/testing.md#testing-without-a-full-dom-renderer) (`React.createElement` in `.ts` test files, `renderToStaticMarkup` for structure/ARIA), [§ "Testing interactions"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/testing.md#testing-interactions) (mounted, `act`-flushed renders for anything stateful), and [§ "Meaningful assertions"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/testing.md#meaningful-assertions) (no empty/placeholder assertions, no coverage-padding `it.todo`, regex for category-level negative assertions).
+
+In this repo, verify:
 
 - [ ] `// @vitest-environment jsdom` at the top
 - [ ] Uses `React.createElement` (not JSX) — avoids the JSX transform requirement in `.ts` files
@@ -229,49 +227,9 @@ Update `README.md` with:
 
 ### Step 10b — Component roadmap
 
-Every standalone component folder must contain a `roadmap.md` file. Create it if it does not exist; update it if it does.
+The `roadmap.md` template and its rules are canonicalized in [`oss-quality-standards` `documentation-strategy.md` § "Component folder roadmap"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/documentation-strategy.md#component-folder-roadmap) — use that template shape exactly (`Status` / `Open improvements` / `Known gaps` / `Completed`, the `⬜`/`🔄`/`✅` status vocabulary, the `> Last updated:` maintenance rule, the [zero-personal-data rule](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/documentation-strategy.md#zero-personal-data-rule)).
 
-**Naming:** always `roadmap.md` — identical across every component.
-
-**Format — non-negotiable (use this template exactly):**
-
-```md
-# <ComponentName> — Roadmap
-
-> Last updated: DD Mon YYYY
-
-## Status
-
-`alpha` _(replace with your status: `alpha` · `beta` · `stable` · `lts`)_
-
-One sentence on the current state of the component.
-
-## Open improvements
-
-| Task                               | Priority | Status |
-| ---------------------------------- | -------- | ------ |
-| Description of planned improvement | Medium   | ⬜     |
-
-## Known gaps
-
-Bullet list of anything missing from the current implementation that is not yet in the table above
-(e.g. missing story variants, untested edge cases, accessibility gaps).
-Write "None" if there are no known gaps.
-
-## Completed
-
-| Task                                 | Completed   |
-| ------------------------------------ | ----------- |
-| Description of completed improvement | DD Mon YYYY |
-```
-
-**Rules:**
-
-- Status values: `⬜` not started · `🔄` in progress · `✅` done
-- When a task from "Open improvements" is completed, move it to the "Completed" table with the date — do not delete it.
-- The "Status" line must be one of the four ripeness labels used across the Giselle ecosystem: `alpha`, `beta`, `stable`, `lts`.
-- Update `> Last updated:` every time the file is edited.
-- Do not add personal names, client names, or any content that could not safely appear in a public MIT-licensed repository.
+This repo's own deviation from the generic doc: the OSS QS version makes `roadmap.md` optional, created once a component has enough open work to track. In `giselle-mui`, it is **mandatory** — every standalone component folder must contain a `roadmap.md` file, always (create it if it does not exist; update it if it does). Naming is always `roadmap.md`, identical across every component. This repo's own maturity vocabulary for the `Status` line is the four Giselle-ecosystem ripeness labels: `alpha`, `beta`, `stable`, `lts` (the generic doc leaves this vocabulary to each project).
 
 This file is the single source of truth for planned work on this specific component. It is distinct from `docs/roadmap.md` (the library-level roadmap) — the library roadmap summarises phases and milestones; the component roadmap tracks granular per-component improvements.
 
@@ -297,6 +255,8 @@ npm run build
 Verify `dist/` contains the correct external references (not inlined source) for every peer dependency.
 
 ### Step 13 — Publish locally and validate
+
+This is this repo's local instantiation of the generalized "validate in a real consumer before done" practice canonicalized in [`oss-quality-standards` `quality-gate.md` § "Validate in a real consumer before done"](https://github.com/LittleBranches/oss-quality-standards/blob/main/docs/quality-gate.md#validate-in-a-real-consumer-before-done): an automated gate passing is not sufficient — a library change must be linked into a real consumer app and rebuilt there before it's considered done, because only that step catches a wrong `exports` path, a peer-dependency mismatch, or a runtime error that only surfaces once real app code imports and renders the change. The generic doc leaves the linking mechanism to each repo; this repo's mechanism is `yalc`:
 
 ```sh
 yalc push
