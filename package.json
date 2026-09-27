@@ -1,6 +1,6 @@
 {
   "name": "@littlebranches/giselle-mui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MUI component library — accessible, theme-adaptive React components built on @mui/material with zero proprietary dependencies.",
   "license": "MIT",
   "author": "Alex Rebula",
