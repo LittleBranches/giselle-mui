@@ -164,7 +164,7 @@ export const PricingVariant: Story = {
 };
 
 /**
- * Reproduces the hugepack sections' pattern: an arbitrary, data-driven array
+ * Reproduces a real showcase section's pattern: an arbitrary, data-driven array
  * of line/triangle accents — the exact shape `decoration` was designed to
  * cover, since this one never fit a fixed preset in the first place.
  */
@@ -178,7 +178,7 @@ export const DataDrivenLines: Story = {
     return (
       <BasicSection decoration={lines}>
         <Content
-          note={`Reproduces hugepack-elements.tsx's data-driven 'lines' prop pattern. ${WIDEN_NOTE}`}
+          note={`Reproduces a real showcase section's data-driven 'lines' prop pattern. ${WIDEN_NOTE}`}
         />
       </BasicSection>
     );
