@@ -41,7 +41,7 @@ section.
 | Full test suite (component + styles) and Storybook stories                                                                  | 31 Aug 2026 |
 | Redesigned `decorated: boolean` → `decoration: boolean \| DecorationElement[]`, after auditing every real consumer of the prior decoration primitives and finding 6 genuinely different patterns sharing no fixed offsets | 31 Aug 2026 |
 | Ported `corner-x`, `triangle-left`, `triangle-down`, `dot` kinds (in addition to the original `corner-plus`/`border-line`)   | 31 Aug 2026 |
-| Atomic stories (one per `DecorationElement` kind) and composed stories reproducing the FAQ, pricing, and hugepack real-world patterns | 31 Aug 2026 |
+| Atomic stories (one per `DecorationElement` kind) and composed stories reproducing the FAQ, pricing, and showcase real-world patterns | 31 Aug 2026 |
 | `FeatureFlowSection` composes `BasicSection` as its own root, replacing its local `<Box component="section">`               | 31 Aug 2026 |
 | Enforced `SectionContainer` internally (`containerMaxWidth`/`containerPy`/`containerSx` pass-through) — the component `SectionContainer` was built to solve had zero real consumers before this | 31 Aug 2026 |
 | Added `unconstrainedChildren`, after discovering `FeatureFlowItemDetail`'s own internal `Container` would otherwise double-nest inside the newly-enforced `SectionContainer` | 31 Aug 2026 |
